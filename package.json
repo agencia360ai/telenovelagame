@@ -27,7 +27,10 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "validate-story": "npx tsx scripts/validate-story.ts",
+    "build-manifest": "npx tsx scripts/build-manifest.ts"
   },
   "private": true
 }
