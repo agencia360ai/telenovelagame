@@ -1,5 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, Dimensions } from "react-native";
+import { Video, ResizeMode, AVPlaybackStatus } from "expo-av";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 import { Media } from "../lib/engine/types";
 import { getMediaUrl } from "../lib/supabase";
 import { colors } from "../theme/colors";
@@ -13,6 +20,22 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const IMAGE_HEIGHT = SCREEN_WIDTH * 0.6;
 
 export function SceneStage({ media, fallbackColor }: Props) {
+  const opacity = useSharedValue(0);
+  const [mediaKey, setMediaKey] = useState(media?.key);
+
+  useEffect(() => {
+    opacity.value = 0;
+    opacity.value = withTiming(1, {
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
+    });
+    setMediaKey(media?.key);
+  }, [media?.key]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
   if (!media) {
     return (
       <View
@@ -28,26 +51,30 @@ export function SceneStage({ media, fallbackColor }: Props) {
 
   if (media.type === "video") {
     return (
-      <View style={styles.container}>
-        <Image
+      <Animated.View style={[styles.container, animatedStyle]}>
+        <Video
           source={{ uri }}
-          style={styles.image}
-          resizeMode="cover"
-          defaultSource={require("../../assets/splash-icon.png")}
+          style={styles.video}
+          resizeMode={ResizeMode.COVER}
+          shouldPlay
+          isLooping
+          isMuted={false}
+          posterSource={require("../../assets/splash-icon.png")}
+          usePoster
         />
-      </View>
+      </Animated.View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, animatedStyle]}>
       <Image
         source={{ uri }}
         style={styles.image}
         resizeMode="cover"
         defaultSource={require("../../assets/splash-icon.png")}
       />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -56,8 +83,13 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     height: IMAGE_HEIGHT,
     backgroundColor: colors.bg.secondary,
+    overflow: "hidden",
   },
   image: {
+    width: "100%",
+    height: "100%",
+  },
+  video: {
     width: "100%",
     height: "100%",
   },

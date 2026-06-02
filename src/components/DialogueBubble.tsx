@@ -1,5 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withDelay,
+  Easing,
+} from "react-native-reanimated";
 import { CharacterAvatar } from "./CharacterAvatar";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
@@ -10,6 +17,7 @@ type Props = {
   expression: string;
   text: string;
   character?: CharacterDef;
+  index?: number;
 };
 
 const CHARACTER_COLORS: Record<string, string> = {
@@ -19,12 +27,37 @@ const CHARACTER_COLORS: Record<string, string> = {
   sebastian: colors.character.sebastian,
 };
 
-export function DialogueBubble({ speaker, expression, text, character }: Props) {
+export function DialogueBubble({
+  speaker,
+  expression,
+  text,
+  character,
+  index = 0,
+}: Props) {
   const avatarKey = character?.avatars?.[expression];
   const nameColor = CHARACTER_COLORS[speaker] ?? colors.accent.secondary;
 
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(12);
+
+  useEffect(() => {
+    opacity.value = withDelay(
+      index * 50,
+      withTiming(1, { duration: 300, easing: Easing.out(Easing.cubic) })
+    );
+    translateY.value = withDelay(
+      index * 50,
+      withTiming(0, { duration: 300, easing: Easing.out(Easing.cubic) })
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, animatedStyle]}>
       <CharacterAvatar
         avatarKey={avatarKey}
         characterId={speaker}
@@ -36,7 +69,7 @@ export function DialogueBubble({ speaker, expression, text, character }: Props) 
         </Text>
         <Text style={styles.text}>{text}</Text>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

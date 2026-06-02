@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  Pressable,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -21,7 +22,6 @@ import { useUserIdentity } from "../context/UserIdentityContext";
 import { useI18n } from "../context/I18nContext";
 import {
   Story,
-  Beat,
   Choice,
   Line,
   PlayerState,
@@ -168,7 +168,11 @@ export function ReaderScreen({ navigation, route }: Props) {
           progress.setCurrentBeat(nextChapter.start_beat);
           analytics.trackChapterStart(beat.next);
           const state = currentPlayerState();
-          savePlayerState({ ...state, current_chapter: beat.next, current_beat: nextChapter.start_beat });
+          savePlayerState({
+            ...state,
+            current_chapter: beat.next,
+            current_beat: nextChapter.start_beat,
+          });
         }
       } else {
         setBeatId(beat.next);
@@ -182,17 +186,13 @@ export function ReaderScreen({ navigation, route }: Props) {
   const handleChoice = useCallback(
     (choice: Choice) => {
       if (choice.gem_cost > 0 && economy.gems < choice.gem_cost) {
-        Alert.alert(
-          t("gems_insufficient"),
-          "",
-          [
-            { text: t("cancel"), style: "cancel" },
-            {
-              text: t("gems_go_shop"),
-              onPress: () => navigation.navigate("Shop"),
-            },
-          ]
-        );
+        Alert.alert(t("gems_insufficient"), "", [
+          { text: t("cancel"), style: "cancel" },
+          {
+            text: t("gems_go_shop"),
+            onPress: () => navigation.navigate("Shop"),
+          },
+        ]);
         return;
       }
 
@@ -243,6 +243,12 @@ export function ReaderScreen({ navigation, route }: Props) {
     [currentPlayerState, economy, narrative, progress, navigation, beatId, t]
   );
 
+  const handleTapDialogue = useCallback(() => {
+    if (!showChoices && !allLinesShown) {
+      advanceLine();
+    }
+  }, [showChoices, allLinesShown, advanceLine]);
+
   if (!chapter || !beat) {
     return (
       <View style={styles.container}>
@@ -251,10 +257,10 @@ export function ReaderScreen({ navigation, route }: Props) {
     );
   }
 
-  const chapterTitle = `${t("reader_chapter_title", {
+  const chapterTitle = t("reader_chapter_title", {
     number: chapter.order,
     title: chapter.title,
-  })}`;
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -267,31 +273,37 @@ export function ReaderScreen({ navigation, route }: Props) {
 
       <SceneStage media={beat.media} />
 
-      <ScrollView
-        ref={scrollRef}
+      <Pressable
         style={styles.dialogueArea}
-        contentContainerStyle={styles.dialogueContent}
-        showsVerticalScrollIndicator={false}
+        onPress={handleTapDialogue}
       >
-        {displayedLines.map((line, idx) => (
-          <DialogueBubble
-            key={`${beat.id}-${idx}`}
-            speaker={line.speaker}
-            expression={line.expr}
-            text={line.text}
-            character={story.characters[line.speaker]}
-          />
-        ))}
+        <ScrollView
+          ref={scrollRef}
+          style={styles.scrollView}
+          contentContainerStyle={styles.dialogueContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {displayedLines.map((line, idx) => (
+            <DialogueBubble
+              key={`${beat.id}-line-${idx}`}
+              speaker={line.speaker}
+              expression={line.expr}
+              text={line.text}
+              character={story.characters[line.speaker]}
+              index={idx === displayedLines.length - 1 ? 0 : undefined}
+            />
+          ))}
 
-        {showChoices && beat.decision && (
-          <ChoiceList
-            prompt={beat.decision.prompt}
-            choices={beat.decision.choices}
-            gems={economy.gems}
-            onSelect={handleChoice}
-          />
-        )}
-      </ScrollView>
+          {showChoices && beat.decision && (
+            <ChoiceList
+              prompt={beat.decision.prompt}
+              choices={beat.decision.choices}
+              gems={economy.gems}
+              onSelect={handleChoice}
+            />
+          )}
+        </ScrollView>
+      </Pressable>
 
       <View style={styles.bottomBar}>
         {!showChoices && !allLinesShown && (
@@ -326,6 +338,9 @@ const styles = StyleSheet.create({
     marginRight: sizes.spacing.sm,
   },
   dialogueArea: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   dialogueContent: {

@@ -1,5 +1,14 @@
-import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { Text, StyleSheet, Pressable, Platform } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  withSequence,
+  Easing,
+} from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 import { useI18n } from "../context/I18nContext";
@@ -8,17 +17,41 @@ type Props = {
   onPress: () => void;
 };
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export function NextButton({ onPress }: Props) {
   const { t } = useI18n();
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    scale.value = withRepeat(
+      withSequence(
+        withTiming(1.03, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 800, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePress = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    onPress();
+  };
 
   return (
-    <TouchableOpacity
-      style={styles.button}
-      onPress={onPress}
-      activeOpacity={0.8}
+    <AnimatedPressable
+      style={[styles.button, animatedStyle]}
+      onPress={handlePress}
     >
       <Text style={styles.text}>{t("reader_next")}</Text>
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }
 
