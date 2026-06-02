@@ -1,0 +1,380 @@
+{
+  "id": "corazon-en-roaming",
+  "title": "Corazón en Roaming",
+  "version": "1.0.0",
+  "locale_default": "es",
+  "start_chapter": "ch1",
+  "characters": {
+    "renata": {
+      "name": "Renata",
+      "avatars": {
+        "neutral": "portraits/renata/neutral.webp",
+        "happy": "portraits/renata/happy.webp",
+        "shock": "portraits/renata/shock.webp",
+        "sad": "portraits/renata/sad.webp",
+        "angry": "portraits/renata/angry.webp",
+        "flirt": "portraits/renata/flirt.webp"
+      }
+    },
+    "dante": {
+      "name": "Dante",
+      "avatars": {
+        "neutral": "portraits/dante/neutral.webp",
+        "guard": "portraits/dante/guard.webp",
+        "smile": "portraits/dante/smile.webp",
+        "serious": "portraits/dante/serious.webp"
+      }
+    },
+    "mariana": {
+      "name": "Mariana",
+      "avatars": {
+        "sweet": "portraits/mariana/sweet.webp",
+        "smug": "portraits/mariana/smug.webp"
+      }
+    },
+    "sebastian": {
+      "name": "Sebastián",
+      "avatars": {
+        "charm": "portraits/sebastian/charm.webp"
+      }
+    },
+    "narrator": {
+      "name": "Narrador",
+      "avatars": {}
+    }
+  },
+  "initial_variables": {
+    "dante_confianza": 0,
+    "dante_sospecha": 0,
+    "renata_eje": 0,
+    "mariana_rivalidad": 0,
+    "sebastian_interes": 0
+  },
+  "initial_flags": {},
+  "starting_gems": 10,
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "Sin Señal",
+      "order": 1,
+      "start_beat": "1.1",
+      "beats": [
+        {
+          "id": "1.1",
+          "type": "dialogue",
+          "background": "bg_ciudad",
+          "media": { "type": "image", "key": "scenes/ch1/1_1_moto.webp" },
+          "characters_on_scene": ["renata"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Ciudad de México. Una moto zigzaguea entre el tráfico de Reforma." },
+            { "speaker": "renata", "expr": "neutral", "text": "Llevo tres horas buscando el taller. Google Maps dice que ya llegué... pero solo veo un baldío." },
+            { "speaker": "renata", "expr": "shock", "text": "¿En serio? Mi celular se acaba de morir. Perfecto." }
+          ],
+          "next": "1.2"
+        },
+        {
+          "id": "1.2",
+          "type": "dialogue",
+          "background": "bg_taller_ext",
+          "media": { "type": "image", "key": "scenes/ch1/1_2_taller.webp" },
+          "characters_on_scene": ["renata", "dante"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Un letrero oxidado: 'TALLER MECÁNICO LUNA'. Renata empuja la puerta de metal." },
+            { "speaker": "dante", "expr": "guard", "text": "No atendemos sin cita." },
+            { "speaker": "renata", "expr": "shock", "text": "¡Necesito cargar mi celular! Mi moto se descompuso a tres cuadras y—" },
+            { "speaker": "dante", "expr": "neutral", "text": "Esto no es un café internet, fresa." }
+          ],
+          "next": "1.3"
+        },
+        {
+          "id": "1.3",
+          "type": "decision",
+          "background": "bg_taller",
+          "media": { "type": "image", "key": "scenes/ch1/1_3_garage.webp" },
+          "characters_on_scene": ["dante", "renata"],
+          "lines": [
+            { "speaker": "dante", "expr": "guard", "text": "'Hola Renata, somos NOVA, nos encantaría colaborar contigo…' Órale. Toda una celebridad." },
+            { "speaker": "renata", "expr": "shock", "text": "¡Eso es privado! Dame mi celular." }
+          ],
+          "decision": {
+            "prompt": "El extraño tiene tu teléfono… y acaba de leer tu DM. ¿Cómo reaccionas?",
+            "choices": [
+              { "id": "1.3a", "label": "Le coqueteas", "gem_cost": 0, "effects": { "dante_confianza": 1, "dante_sospecha": 1 }, "next": "1.4" },
+              { "id": "1.3b", "label": "Le reclamas", "gem_cost": 0, "effects": { "dante_confianza": -1 }, "next": "1.4" },
+              { "id": "1.3c", "label": "Finges que no te importa", "gem_cost": 0, "effects": { "dante_sospecha": 1 }, "next": "1.4" }
+            ]
+          }
+        },
+        {
+          "id": "1.4",
+          "type": "dialogue",
+          "background": "bg_taller",
+          "media": { "type": "image", "key": "scenes/ch1/1_4_faceoff.webp" },
+          "characters_on_scene": ["dante", "renata"],
+          "variants": [
+            { "when": { "choice": "1.3a" }, "lines": [
+              { "speaker": "dante", "expr": "guard", "text": "Las cámaras no te van a salvar aquí, fresa." },
+              { "speaker": "renata", "expr": "flirt", "text": "¿Quién dijo que quiero que me salven?" }
+            ]},
+            { "when": { "choice": "1.3b" }, "lines": [
+              { "speaker": "dante", "expr": "neutral", "text": "Tranquila. Ni que fuera a robarte tus likes." },
+              { "speaker": "renata", "expr": "angry", "text": "Mis likes no son tu problema. Mi moto sí." }
+            ]}
+          ],
+          "lines": [
+            { "speaker": "dante", "expr": "neutral", "text": "…Interesante." },
+            { "speaker": "renata", "expr": "neutral", "text": "¿Vas a arreglar mi moto o qué?" }
+          ],
+          "next": "1.5"
+        },
+        {
+          "id": "1.5",
+          "type": "decision",
+          "background": "bg_taller",
+          "media": { "type": "image", "key": "scenes/ch1/1_5_negotiate.webp" },
+          "characters_on_scene": ["dante", "renata"],
+          "lines": [
+            { "speaker": "dante", "expr": "neutral", "text": "Mira, te la puedo checar. Pero va a tomar unas horas." },
+            { "speaker": "renata", "expr": "neutral", "text": "¿Horas? No puedo quedarme aquí." },
+            { "speaker": "dante", "expr": "smile", "text": "¿Tienes algo mejor que hacer sin celular, sin moto, en medio de la nada?" }
+          ],
+          "decision": {
+            "prompt": "Dante tiene un punto. Estás varada. ¿Qué haces?",
+            "choices": [
+              { "id": "1.5a", "label": "Te quedas y lo observas trabajar", "gem_cost": 0, "effects": { "dante_confianza": 1 }, "next": "1.6" },
+              { "id": "1.5b", "label": "Llamas a alguien desde su teléfono", "gem_cost": 0, "effects": { "renata_eje": -1 }, "next": "1.6" },
+              { "id": "1.5c", "label": "Le propones colaborar en tu contenido", "gem_cost": 7, "premium": true, "effects": { "dante_confianza": 1, "sebastian_interes": 1 }, "next": "1.6" }
+            ]
+          }
+        },
+        {
+          "id": "1.6",
+          "type": "dialogue",
+          "background": "bg_taller",
+          "media": { "type": "image", "key": "scenes/ch1/1_6_working.webp" },
+          "characters_on_scene": ["dante", "renata"],
+          "variants": [
+            { "when": { "choice": "1.5c" }, "lines": [
+              { "speaker": "renata", "expr": "happy", "text": "Oye, ¿y si hacemos un video? 'Influencer varada en taller mecánico'. La gente se va a morir." },
+              { "speaker": "dante", "expr": "guard", "text": "No voy a ser tu payaso de TikTok." },
+              { "speaker": "renata", "expr": "flirt", "text": "No serías el payaso. Serías el interés amoroso." }
+            ]}
+          ],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Las horas pasan. Dante trabaja en silencio. Renata descubre un mundo que no conocía." },
+            { "speaker": "renata", "expr": "neutral", "text": "Oye… ¿por qué tienes tantos libros aquí? Filosofía, poesía…" },
+            { "speaker": "dante", "expr": "serious", "text": "¿Creías que solo sé de tuercas?" }
+          ],
+          "next": "1.7"
+        },
+        {
+          "id": "1.7",
+          "type": "dialogue",
+          "background": "bg_taller_atardecer",
+          "media": { "type": "image", "key": "scenes/ch1/1_7_sunset.webp" },
+          "characters_on_scene": ["dante", "renata"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "El sol cae. La luz dorada entra por las ventanas rotas del taller." },
+            { "speaker": "dante", "expr": "smile", "text": "Tu moto está lista. Era la bujía." },
+            { "speaker": "renata", "expr": "happy", "text": "Gracias… de verdad." },
+            { "speaker": "dante", "expr": "neutral", "text": "Son 800 pesos." },
+            { "speaker": "renata", "expr": "shock", "text": "¿800?! ¡Si solo fue la bujía!" },
+            { "speaker": "dante", "expr": "smile", "text": "También cargué tu teléfono. Servicio premium." }
+          ],
+          "next": "1.8"
+        },
+        {
+          "id": "1.8",
+          "type": "cliffhanger",
+          "background": "bg_taller_foto",
+          "media": { "type": "image", "key": "scenes/ch1/1_8_photo.webp" },
+          "characters_on_scene": ["renata", "dante"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Renata revisa su celular. 47 notificaciones. Un DM de NOVA confirmando la reunión de mañana." },
+            { "speaker": "narrator", "expr": "neutral", "text": "Pero hay algo más: una foto vieja en la galería de Dante que él no cerró. En la foto… está ella. De hace años. En un lugar que ella no recuerda." },
+            { "speaker": "renata", "expr": "shock", "text": "¿Qué es esto…?" },
+            { "speaker": "dante", "expr": "guard", "text": "¿Ya te vas o qué?" }
+          ],
+          "next": "ch2"
+        }
+      ]
+    },
+    {
+      "id": "ch2",
+      "title": "Doble Señal",
+      "order": 2,
+      "start_beat": "2.1",
+      "beats": [
+        {
+          "id": "2.1",
+          "type": "decision",
+          "background": "bg_depto_renata",
+          "media": { "type": "image", "key": "scenes/ch2/2_1_apartment.webp" },
+          "characters_on_scene": ["renata"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Departamento de Renata, Roma Norte. Mañana siguiente." },
+            { "speaker": "renata", "expr": "neutral", "text": "No dormí nada. Esa foto… ¿cómo tiene una foto mía de hace años?" },
+            { "speaker": "renata", "expr": "neutral", "text": "Tengo la junta con NOVA en dos horas. Pero no me puedo sacar esa imagen de la cabeza." }
+          ],
+          "decision": {
+            "prompt": "La foto misteriosa te atormenta. ¿Qué haces antes de la junta?",
+            "choices": [
+              { "id": "2.1a", "label": "Regresas al taller a confrontar a Dante", "gem_cost": 0, "effects": { "dante_sospecha": 1, "dante_confianza": 1 }, "next": "2.2" },
+              { "id": "2.1b", "label": "Te enfocas en la junta con NOVA", "gem_cost": 0, "effects": { "renata_eje": -1 }, "next": "2.3" },
+              { "id": "2.1c", "label": "Investigas la foto en tus redes", "gem_cost": 9, "premium": true, "effects": { "dante_sospecha": 2, "sebastian_interes": 1 }, "next": "2.2" }
+            ]
+          }
+        },
+        {
+          "id": "2.2",
+          "type": "dialogue",
+          "background": "bg_taller_ext",
+          "media": { "type": "image", "key": "scenes/ch2/2_2_return.webp" },
+          "characters_on_scene": ["renata", "dante"],
+          "variants": [
+            { "when": { "choice": "2.1c" }, "lines": [
+              { "speaker": "renata", "expr": "neutral", "text": "Busqué la ubicación de la foto con geotag inverso. Es un pueblo en Oaxaca. Nunca he ido a Oaxaca." },
+              { "speaker": "dante", "expr": "guard", "text": "Veo que eres más lista de lo que aparentas." },
+              { "speaker": "renata", "expr": "angry", "text": "Y tú más turbio de lo que aparentas. Explícame esa foto." }
+            ]},
+            { "when": { "choice": "2.1a" }, "lines": [
+              { "speaker": "renata", "expr": "angry", "text": "Vi la foto en tu teléfono. ¿Por qué tienes una foto mía?" },
+              { "speaker": "dante", "expr": "guard", "text": "No sé de qué hablas." },
+              { "speaker": "renata", "expr": "neutral", "text": "No te hagas. La vi cuando cargaste mi celular. Salgo yo, de chica, en un lugar que no conozco." }
+            ]}
+          ],
+          "lines": [
+            { "speaker": "dante", "expr": "serious", "text": "Hay cosas que no te puedo explicar todavía." },
+            { "speaker": "renata", "expr": "shock", "text": "¿Todavía? ¿Qué significa eso?" }
+          ],
+          "next": "2.4"
+        },
+        {
+          "id": "2.3",
+          "type": "dialogue",
+          "background": "bg_oficina_nova",
+          "media": { "type": "image", "key": "scenes/ch2/2_3_nova.webp" },
+          "characters_on_scene": ["renata", "sebastian"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Oficinas de NOVA Agency, Polanco." },
+            { "speaker": "sebastian", "expr": "charm", "text": "Renata Solís. Por fin nos conocemos en persona. Soy Sebastián, director creativo." },
+            { "speaker": "renata", "expr": "happy", "text": "Mucho gusto. Vi su portafolio, es impresionante." },
+            { "speaker": "sebastian", "expr": "charm", "text": "No tanto como tu engagement. 2.3 millones de seguidores y un promedio de 8% de interacción. Eso no se compra." },
+            { "speaker": "renata", "expr": "neutral", "text": "Bueno, algo se puede comprar…" },
+            { "speaker": "sebastian", "expr": "charm", "text": "Tenemos una propuesta que va a cambiar tu carrera. Pero necesito que confíes en mí." }
+          ],
+          "next": "2.4"
+        },
+        {
+          "id": "2.4",
+          "type": "dialogue",
+          "background": "bg_cafe",
+          "media": { "type": "image", "key": "scenes/ch2/2_4_cafe.webp" },
+          "characters_on_scene": ["renata", "mariana"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Café en la Condesa, esa tarde." },
+            { "speaker": "mariana", "expr": "sweet", "text": "¡Renatita! ¿Cómo te fue con NOVA? Cuéntame todo." },
+            { "speaker": "renata", "expr": "neutral", "text": "Bien… creo. Pero pasó algo raro ayer." },
+            { "speaker": "mariana", "expr": "sweet", "text": "¿Raro cómo?" },
+            { "speaker": "renata", "expr": "neutral", "text": "Conocí a un tipo en un taller mecánico. Y tenía una foto mía de hace años." },
+            { "speaker": "mariana", "expr": "smug", "text": "¿Un mecánico? Ay amiga, qué bajo hemos caído." }
+          ],
+          "next": "2.5"
+        },
+        {
+          "id": "2.5",
+          "type": "decision",
+          "background": "bg_cafe",
+          "media": { "type": "image", "key": "scenes/ch2/2_5_decision.webp" },
+          "characters_on_scene": ["renata", "mariana"],
+          "lines": [
+            { "speaker": "mariana", "expr": "sweet", "text": "Oye, cambiando de tema… Sebastián me escribió. Dice que le diste muy buena vibra." },
+            { "speaker": "renata", "expr": "shock", "text": "¿Tú conoces a Sebastián?" },
+            { "speaker": "mariana", "expr": "smug", "text": "Somos… amigos. ¿Por qué? ¿Te interesa?" }
+          ],
+          "decision": {
+            "prompt": "Mariana parece saber más de lo que dice. ¿Cómo respondes?",
+            "choices": [
+              { "id": "2.5a", "label": "Le cuentas todo sobre Dante y la foto", "gem_cost": 0, "effects": { "mariana_rivalidad": 1 }, "next": "2.6" },
+              { "id": "2.5b", "label": "Cambias el tema a la propuesta de NOVA", "gem_cost": 0, "effects": { "renata_eje": -1, "mariana_rivalidad": -1 }, "next": "2.6" },
+              { "id": "2.5c", "label": "Le preguntas directamente qué trae con Sebastián", "gem_cost": 0, "effects": { "sebastian_interes": 1, "mariana_rivalidad": 1 }, "next": "2.6" }
+            ]
+          }
+        },
+        {
+          "id": "2.6",
+          "type": "dialogue",
+          "background": "bg_calle_noche",
+          "media": { "type": "image", "key": "scenes/ch2/2_6_night.webp" },
+          "characters_on_scene": ["renata", "dante"],
+          "variants": [
+            { "when": { "var": "dante_confianza", "op": ">=", "value": 2 }, "lines": [
+              { "speaker": "narrator", "expr": "neutral", "text": "Renata camina de regreso a su departamento. Un mensaje de un número desconocido." },
+              { "speaker": "dante", "expr": "neutral", "text": "[Mensaje] Necesito hablar contigo. Es importante. No tiene que ver con la moto." },
+              { "speaker": "renata", "expr": "neutral", "text": "¿Cómo consiguió mi número?" }
+            ]},
+            { "when": { "var": "dante_confianza", "op": "<", "value": 2 }, "lines": [
+              { "speaker": "narrator", "expr": "neutral", "text": "Renata camina de regreso. Al doblar la esquina, lo ve: Dante, recargado en su camioneta." },
+              { "speaker": "dante", "expr": "serious", "text": "No te asustes. Solo vine a devolverte algo." },
+              { "speaker": "renata", "expr": "shock", "text": "¿Me seguiste?" }
+            ]}
+          ],
+          "lines": [
+            { "speaker": "dante", "expr": "serious", "text": "La foto que viste… no es lo que crees." },
+            { "speaker": "renata", "expr": "neutral", "text": "Entonces dime qué es." }
+          ],
+          "next": "2.7"
+        },
+        {
+          "id": "2.7",
+          "type": "decision",
+          "background": "bg_calle_noche",
+          "media": { "type": "image", "key": "scenes/ch2/2_7_confrontation.webp" },
+          "characters_on_scene": ["renata", "dante"],
+          "lines": [
+            { "speaker": "dante", "expr": "guard", "text": "Esa foto… la tomó alguien que ya no está. No es mía." },
+            { "speaker": "renata", "expr": "neutral", "text": "¿Entonces por qué la tienes?" },
+            { "speaker": "dante", "expr": "serious", "text": "Porque me la dejaron. Junto con una carta que dice que te cuide." }
+          ],
+          "decision": {
+            "prompt": "Dante suelta una bomba. ¿Qué sientes?",
+            "choices": [
+              { "id": "2.7a", "label": "Le crees y le pides que te explique", "gem_cost": 0, "effects": { "dante_confianza": 2 }, "next": "2.8" },
+              { "id": "2.7b", "label": "Piensas que está loco y te vas", "gem_cost": 0, "effects": { "dante_confianza": -2, "renata_eje": -1 }, "next": "2.8" },
+              { "id": "2.7c", "label": "Le exiges ver la carta", "gem_cost": 0, "effects": { "dante_sospecha": 1, "dante_confianza": 1 }, "next": "2.8" }
+            ]
+          }
+        },
+        {
+          "id": "2.8",
+          "type": "chapter_end",
+          "background": "bg_calle_noche",
+          "media": { "type": "image", "key": "scenes/ch2/2_8_cliffhanger.webp" },
+          "characters_on_scene": ["renata"],
+          "variants": [
+            { "when": { "choice": "2.7a" }, "lines": [
+              { "speaker": "dante", "expr": "serious", "text": "La carta dice: 'Cuando ella regrese, protégela. De todos. Incluyéndome.'" },
+              { "speaker": "renata", "expr": "shock", "text": "¿'Cuando ella regrese'? ¿Regrese de dónde?" },
+              { "speaker": "dante", "expr": "guard", "text": "Eso es lo que necesitamos averiguar." }
+            ]},
+            { "when": { "choice": "2.7b" }, "lines": [
+              { "speaker": "renata", "expr": "angry", "text": "Estás loco. No me busques." },
+              { "speaker": "narrator", "expr": "neutral", "text": "Renata se aleja caminando rápido. Su teléfono vibra. Un mensaje de Mariana:" },
+              { "speaker": "mariana", "expr": "smug", "text": "[Mensaje] Amiga, ¿sabías que Sebastián y tu mecánico se conocen? 😏" }
+            ]},
+            { "when": { "choice": "2.7c" }, "lines": [
+              { "speaker": "renata", "expr": "neutral", "text": "Enséñame la carta. Ahora." },
+              { "speaker": "dante", "expr": "guard", "text": "No la tengo aquí. Pero te la enseño mañana. En el taller. A las 7." },
+              { "speaker": "narrator", "expr": "neutral", "text": "El teléfono de Renata vibra. Notificación de Instagram: Sebastián Luna empezó a seguirte. Luna… como el taller." }
+            ]}
+          ],
+          "lines": [
+            { "speaker": "renata", "expr": "shock", "text": "¿Qué está pasando…?" },
+            { "speaker": "narrator", "expr": "neutral", "text": "La noche se traga la ciudad. Las respuestas tendrán que esperar." }
+          ],
+          "next": null
+        }
+      ]
+    }
+  ]
+}

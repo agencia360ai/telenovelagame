@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "stories": [
+    {
+      "id": "corazon-en-roaming",
+      "file": "stories/corazon-en-roaming.json",
+      "version": "1.0.0",
+      "chapters": 2,
+      "locale_default": "es"
+    }
+  ]
+}
