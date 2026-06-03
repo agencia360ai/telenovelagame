@@ -1,22 +1,26 @@
 {
   "expo": {
-    "name": "telenovelagame",
-    "slug": "telenovelagame",
+    "name": "Corazón en Roaming",
+    "slug": "corazon-en-roaming",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A0A2E"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.agencia360.corazonenroaming"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A0A2E"
       },
-      "predictiveBackGestureEnabled": false
+      "package": "com.agencia360.corazonenroaming"
     },
     "web": {
       "favicon": "./assets/favicon.png"
