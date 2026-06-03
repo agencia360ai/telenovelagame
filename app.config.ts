@@ -35,5 +35,4 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     revenueCatKeyAndroid:
       process.env.EXPO_PUBLIC_REVENUECAT_KEY_ANDROID ?? "",
   },
-  plugins: ["expo-av"],
 });

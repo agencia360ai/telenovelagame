@@ -36,9 +36,7 @@ export function ChapterEndScreen({ navigation, route }: Props) {
   const buttonTranslateY = useSharedValue(20);
 
   useEffect(() => {
-    if (Platform.OS !== "web") {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
+    try { Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); } catch {}
 
     titleOpacity.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.cubic) });
     titleScale.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.cubic) });
@@ -73,9 +71,7 @@ export function ChapterEndScreen({ navigation, route }: Props) {
   }));
 
   const handleContinue = () => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
+    try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); } catch {}
 
     if (type === "chapter_transition" && nextChapterId) {
       const nextChapter = getChapter(story, nextChapterId);

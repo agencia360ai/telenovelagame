@@ -32,14 +32,14 @@ export function ChoiceList({ prompt, choices, gems, onSelect }: Props) {
   }));
 
   const handleSelect = (choice: Choice) => {
-    if (Platform.OS !== "web") {
+    try {
       const isPremium = (choice.gem_cost ?? 0) > 0;
       Haptics.impactAsync(
         isPremium
           ? Haptics.ImpactFeedbackStyle.Heavy
           : Haptics.ImpactFeedbackStyle.Medium
       );
-    }
+    } catch {}
     onSelect(choice);
   };
 

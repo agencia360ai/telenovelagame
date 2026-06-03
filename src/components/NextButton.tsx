@@ -39,9 +39,7 @@ export function NextButton({ onPress }: Props) {
   }));
 
   const handlePress = () => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+    try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch {}
     onPress();
   };
 
