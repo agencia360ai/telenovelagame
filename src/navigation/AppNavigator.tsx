@@ -35,7 +35,6 @@ export function AppNavigator() {
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: colors.bg.primary },
-          animation: "fade",
         }}
       >
         <Stack.Screen name="Boot" component={BootScreen} />
