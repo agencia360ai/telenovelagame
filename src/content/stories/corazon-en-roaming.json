@@ -63,7 +63,7 @@
           "id": "1.0v",
           "type": "dialogue",
           "background": "bg_ciudad",
-          "media": { "type": "video", "key": "https://www.dropbox.com/scl/fi/29p7w6ahmv04qsk3aok24/M-1.mp4?rlkey=jrtt9h9fdwaxc0rkznfs8xp88&raw=1" },
+          "media": { "type": "video", "key": "videos/ch1/M-1.mp4" },
           "characters_on_scene": [],
           "lines": [
             { "speaker": "narrator", "expr": "neutral", "text": "Ciudad de México. Donde todo empieza… y nada es lo que parece." }
@@ -142,7 +142,7 @@
           "id": "1.4v",
           "type": "dialogue",
           "background": "bg_taller",
-          "media": { "type": "video", "key": "https://www.dropbox.com/scl/fi/pmt42dbx9upde7diw4lqp/M-2.mp4?rlkey=n01sjuoodnx0ynd6aapq2qu8c&raw=1" },
+          "media": { "type": "video", "key": "videos/ch1/M-2.mp4" },
           "characters_on_scene": [],
           "lines": [
             { "speaker": "narrator", "expr": "neutral", "text": "El taller cobra vida. Herramientas, chispas, el sonido de un motor que renace." }
@@ -209,7 +209,7 @@
           "id": "1.7v",
           "type": "dialogue",
           "background": "bg_taller_atardecer",
-          "media": { "type": "video", "key": "https://www.dropbox.com/scl/fi/sgpnw5olpjle9k89gpoqu/M-3.mp4?rlkey=v9e6nxyzng47d1686wew2kyoc&raw=1" },
+          "media": { "type": "video", "key": "videos/ch1/M-3.mp4" },
           "characters_on_scene": [],
           "lines": [
             { "speaker": "narrator", "expr": "neutral", "text": "Algo no cuadra. Una foto. Un secreto. El pasado nunca se queda atrás." }

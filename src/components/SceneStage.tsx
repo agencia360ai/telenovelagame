@@ -9,6 +9,7 @@ import Animated, {
 import { useVideoPlayer, VideoView } from "expo-video";
 import { Media } from "../lib/engine/types";
 import { getMediaUrl } from "../lib/supabase";
+import { getVideoAsset } from "../lib/videoAssets";
 import { colors } from "../theme/colors";
 
 type Props = {
@@ -21,8 +22,8 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const IMAGE_HEIGHT = SCREEN_WIDTH * 0.6;
 const VIDEO_HEIGHT = SCREEN_WIDTH * 0.75;
 
-function VideoStage({ uri, onVideoEnd }: { uri: string; onVideoEnd?: () => void }) {
-  const player = useVideoPlayer(uri, (p) => {
+function VideoStage({ source, onVideoEnd }: { source: number | string; onVideoEnd?: () => void }) {
+  const player = useVideoPlayer(source, (p) => {
     p.loop = false;
     p.play();
   });
@@ -71,17 +72,18 @@ export function SceneStage({ media, fallbackColor, onVideoEnd }: Props) {
     );
   }
 
-  const uri = getMediaUrl(media.key);
-
   if (media.type === "video") {
+    const videoSource = getVideoAsset(media.key);
     return (
       <Animated.View
         style={[styles.container, { height: VIDEO_HEIGHT }, animatedStyle]}
       >
-        <VideoStage key={uri} uri={uri} onVideoEnd={onVideoEnd} />
+        <VideoStage key={media.key} source={videoSource} onVideoEnd={onVideoEnd} />
       </Animated.View>
     );
   }
+
+  const uri = getMediaUrl(media.key);
 
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
