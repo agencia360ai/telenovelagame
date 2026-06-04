@@ -57,8 +57,19 @@
       "id": "ch1",
       "title": "Sin Señal",
       "order": 1,
-      "start_beat": "1.1",
+      "start_beat": "1.0v",
       "beats": [
+        {
+          "id": "1.0v",
+          "type": "dialogue",
+          "background": "bg_ciudad",
+          "media": { "type": "video", "key": "videos/ch1/opening.mp4" },
+          "characters_on_scene": [],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Ciudad de México. Donde todo empieza… y nada es lo que parece." }
+          ],
+          "next": "1.1"
+        },
         {
           "id": "1.1",
           "type": "dialogue",
@@ -125,6 +136,17 @@
             { "speaker": "dante", "expr": "neutral", "text": "…Interesante." },
             { "speaker": "renata", "expr": "neutral", "text": "¿Vas a arreglar mi moto o qué?" }
           ],
+          "next": "1.4v"
+        },
+        {
+          "id": "1.4v",
+          "type": "dialogue",
+          "background": "bg_taller",
+          "media": { "type": "video", "key": "videos/ch1/taller_montage.mp4" },
+          "characters_on_scene": [],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "El taller cobra vida. Herramientas, chispas, el sonido de un motor que renace." }
+          ],
           "next": "1.5"
         },
         {
@@ -180,6 +202,17 @@
             { "speaker": "dante", "expr": "neutral", "text": "Son 800 pesos." },
             { "speaker": "renata", "expr": "shock", "text": "¿800?! ¡Si solo fue la bujía!" },
             { "speaker": "dante", "expr": "smile", "text": "También cargué tu teléfono. Servicio premium." }
+          ],
+          "next": "1.7v"
+        },
+        {
+          "id": "1.7v",
+          "type": "dialogue",
+          "background": "bg_taller_atardecer",
+          "media": { "type": "video", "key": "videos/ch1/sunset_reveal.mp4" },
+          "characters_on_scene": [],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Algo no cuadra. Una foto. Un secreto. El pasado nunca se queda atrás." }
           ],
           "next": "1.8"
         },
