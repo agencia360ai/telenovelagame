@@ -19,6 +19,9 @@ export const supabase = supabaseUrl
   : null;
 
 export function getMediaUrl(key: string): string {
+  if (key.startsWith("http://") || key.startsWith("https://")) {
+    return key;
+  }
   const cdnBase = Constants.expoConfig?.extra?.cdnBase;
   if (cdnBase) {
     return `${cdnBase}/${key}`;
