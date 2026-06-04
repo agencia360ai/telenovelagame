@@ -57,16 +57,41 @@
       "id": "ch1",
       "title": "Sin Señal",
       "order": 1,
-      "start_beat": "1.0v",
+      "start_beat": "1.0a",
       "beats": [
         {
-          "id": "1.0v",
+          "id": "1.0a",
           "type": "dialogue",
           "background": "bg_ciudad",
           "media": { "type": "video", "key": "videos/ch1/M-1.mp4" },
           "characters_on_scene": [],
           "lines": [
-            { "speaker": "narrator", "expr": "neutral", "text": "Ciudad de México. Donde todo empieza… y nada es lo que parece." }
+            { "speaker": "narrator", "expr": "neutral", "text": "Ciudad de México. 9 millones de historias cruzándose al mismo tiempo." },
+            { "speaker": "narrator", "expr": "neutral", "text": "Y en algún lugar entre el tráfico y el caos, una chica está a punto de perderlo todo." }
+          ],
+          "next": "1.0b"
+        },
+        {
+          "id": "1.0b",
+          "type": "dialogue",
+          "background": "bg_ciudad",
+          "media": { "type": "video", "key": "videos/ch1/M-2.mp4" },
+          "characters_on_scene": ["renata"],
+          "lines": [
+            { "speaker": "renata", "expr": "shock", "text": "¡No, no, no! ¡Mi celular!" },
+            { "speaker": "narrator", "expr": "neutral", "text": "El teléfono cae al asfalto. Y con él, su vida entera: fotos, contratos, 2.3 millones de seguidores." }
+          ],
+          "next": "1.0c"
+        },
+        {
+          "id": "1.0c",
+          "type": "dialogue",
+          "background": "bg_ciudad",
+          "media": { "type": "video", "key": "videos/ch1/M-3.mp4" },
+          "characters_on_scene": [],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Alguien lo recoge. Manos de mecánico. Dedos manchados de grasa." },
+            { "speaker": "narrator", "expr": "neutral", "text": "Mira la pantalla. Ve su cara. Y algo en sus ojos cambia." }
           ],
           "next": "1.1"
         },
@@ -77,9 +102,9 @@
           "media": { "type": "image", "key": "scenes/ch1/1_1_moto.webp" },
           "characters_on_scene": ["renata"],
           "lines": [
-            { "speaker": "narrator", "expr": "neutral", "text": "Ciudad de México. Una moto zigzaguea entre el tráfico de Reforma." },
-            { "speaker": "renata", "expr": "neutral", "text": "Llevo tres horas buscando el taller. Google Maps dice que ya llegué... pero solo veo un baldío." },
-            { "speaker": "renata", "expr": "shock", "text": "¿En serio? Mi celular se acaba de morir. Perfecto." }
+            { "speaker": "narrator", "expr": "neutral", "text": "Horas después. Renata rastreó su celular hasta un barrio que jamás había pisado." },
+            { "speaker": "renata", "expr": "neutral", "text": "La ubicación dice que está aquí… pero solo veo un baldío y un taller." },
+            { "speaker": "renata", "expr": "shock", "text": "¿Quién tiene mi teléfono?" }
           ],
           "next": "1.2"
         },
@@ -92,8 +117,8 @@
           "lines": [
             { "speaker": "narrator", "expr": "neutral", "text": "Un letrero oxidado: 'TALLER MECÁNICO LUNA'. Renata empuja la puerta de metal." },
             { "speaker": "dante", "expr": "guard", "text": "No atendemos sin cita." },
-            { "speaker": "renata", "expr": "shock", "text": "¡Necesito cargar mi celular! Mi moto se descompuso a tres cuadras y—" },
-            { "speaker": "dante", "expr": "neutral", "text": "Esto no es un café internet, fresa." }
+            { "speaker": "renata", "expr": "angry", "text": "No vengo por una cita. Vengo por mi celular. Sé que tú lo tienes." },
+            { "speaker": "dante", "expr": "neutral", "text": "Ah… la del teléfono. Tardaste." }
           ],
           "next": "1.3"
         },
@@ -104,11 +129,12 @@
           "media": { "type": "image", "key": "scenes/ch1/1_3_garage.webp" },
           "characters_on_scene": ["dante", "renata"],
           "lines": [
-            { "speaker": "dante", "expr": "guard", "text": "'Hola Renata, somos NOVA, nos encantaría colaborar contigo…' Órale. Toda una celebridad." },
-            { "speaker": "renata", "expr": "shock", "text": "¡Eso es privado! Dame mi celular." }
+            { "speaker": "dante", "expr": "guard", "text": "'Hola Renata, somos NOVA, nos encantaría colaborar contigo…' Interesante lectura." },
+            { "speaker": "renata", "expr": "shock", "text": "¿Leíste mis mensajes? ¡Eso es privado!" },
+            { "speaker": "dante", "expr": "neutral", "text": "La pantalla estaba encendida. No es mi culpa que tu vida sea pública." }
           ],
           "decision": {
-            "prompt": "El extraño tiene tu teléfono… y acaba de leer tu DM. ¿Cómo reaccionas?",
+            "prompt": "Este tipo recogió tu teléfono, leyó tus DMs y no parece arrepentido. ¿Cómo reaccionas?",
             "choices": [
               { "id": "1.3a", "label": "Le coqueteas", "gem_cost": 0, "effects": { "dante_confianza": 1, "dante_sospecha": 1 }, "next": "1.4" },
               { "id": "1.3b", "label": "Le reclamas", "gem_cost": 0, "effects": { "dante_confianza": -1 }, "next": "1.4" },
@@ -135,17 +161,6 @@
           "lines": [
             { "speaker": "dante", "expr": "neutral", "text": "…Interesante." },
             { "speaker": "renata", "expr": "neutral", "text": "¿Vas a arreglar mi moto o qué?" }
-          ],
-          "next": "1.4v"
-        },
-        {
-          "id": "1.4v",
-          "type": "dialogue",
-          "background": "bg_taller",
-          "media": { "type": "video", "key": "videos/ch1/M-2.mp4" },
-          "characters_on_scene": [],
-          "lines": [
-            { "speaker": "narrator", "expr": "neutral", "text": "El taller cobra vida. Herramientas, chispas, el sonido de un motor que renace." }
           ],
           "next": "1.5"
         },
@@ -202,17 +217,6 @@
             { "speaker": "dante", "expr": "neutral", "text": "Son 800 pesos." },
             { "speaker": "renata", "expr": "shock", "text": "¿800?! ¡Si solo fue la bujía!" },
             { "speaker": "dante", "expr": "smile", "text": "También cargué tu teléfono. Servicio premium." }
-          ],
-          "next": "1.7v"
-        },
-        {
-          "id": "1.7v",
-          "type": "dialogue",
-          "background": "bg_taller_atardecer",
-          "media": { "type": "video", "key": "videos/ch1/M-3.mp4" },
-          "characters_on_scene": [],
-          "lines": [
-            { "speaker": "narrator", "expr": "neutral", "text": "Algo no cuadra. Una foto. Un secreto. El pasado nunca se queda atrás." }
           ],
           "next": "1.8"
         },
