@@ -43,3 +43,4 @@ yarn-error.*
 
 # bundled video assets (too large for git)
 assets/videos/*.mp4
+assets/videos/*.MP4
