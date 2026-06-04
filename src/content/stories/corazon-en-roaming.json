@@ -85,26 +85,62 @@
         },
         {
           "id": "1.0c",
-          "type": "dialogue",
+          "type": "decision",
           "background": "bg_ciudad",
           "media": { "type": "video", "key": "videos/ch1/M-3.mp4" },
-          "characters_on_scene": [],
+          "characters_on_scene": ["renata"],
           "lines": [
             { "speaker": "narrator", "expr": "neutral", "text": "Alguien lo recoge. Manos de mecánico. Dedos manchados de grasa." },
-            { "speaker": "narrator", "expr": "neutral", "text": "Mira la pantalla. Ve su cara. Y algo en sus ojos cambia." }
+            { "speaker": "narrator", "expr": "neutral", "text": "Mira la pantalla. Ve su cara. Y algo en sus ojos cambia." },
+            { "speaker": "renata", "expr": "shock", "text": "¡Oye! ¡Ese es mi celular!" },
+            { "speaker": "narrator", "expr": "neutral", "text": "Pero el extraño ya desapareció entre la gente." }
           ],
-          "next": "1.1"
+          "decision": {
+            "prompt": "Tu celular está en manos de un desconocido. Tienes segundos para actuar.",
+            "choices": [
+              { "id": "1.0c_a", "label": "Corres tras él", "gem_cost": 0, "effects": { "dante_confianza": 1 }, "next": "1.1a" },
+              { "id": "1.0c_b", "label": "Rastrear con Find My iPhone", "gem_cost": 0, "effects": { "dante_sospecha": 1 }, "next": "1.1b" },
+              { "id": "1.0c_c", "label": "Le gritas que ofreces recompensa", "gem_cost": 5, "premium": true, "effects": { "dante_confianza": 1, "sebastian_interes": 1 }, "next": "1.1c" }
+            ]
+          }
         },
         {
-          "id": "1.1",
+          "id": "1.1a",
           "type": "dialogue",
           "background": "bg_ciudad",
           "media": { "type": "image", "key": "scenes/ch1/1_1_moto.webp" },
           "characters_on_scene": ["renata"],
           "lines": [
-            { "speaker": "narrator", "expr": "neutral", "text": "Horas después. Renata rastreó su celular hasta un barrio que jamás había pisado." },
-            { "speaker": "renata", "expr": "neutral", "text": "La ubicación dice que está aquí… pero solo veo un baldío y un taller." },
-            { "speaker": "renata", "expr": "shock", "text": "¿Quién tiene mi teléfono?" }
+            { "speaker": "narrator", "expr": "neutral", "text": "Renata corre entre la gente. Lo pierde en una esquina. Pero alcanza a ver a dónde entra: un taller mecánico." },
+            { "speaker": "renata", "expr": "neutral", "text": "Un taller… en medio de la nada. Perfecto." },
+            { "speaker": "renata", "expr": "angry", "text": "Ese tipo no sabe con quién se metió." }
+          ],
+          "next": "1.2"
+        },
+        {
+          "id": "1.1b",
+          "type": "dialogue",
+          "background": "bg_ciudad",
+          "media": { "type": "image", "key": "scenes/ch1/1_1_moto.webp" },
+          "characters_on_scene": ["renata"],
+          "lines": [
+            { "speaker": "narrator", "expr": "neutral", "text": "Renata pide prestado un celular. Abre Find My. El punto azul parpadea a tres cuadras." },
+            { "speaker": "renata", "expr": "neutral", "text": "Taller Mecánico Luna… ¿Qué clase de nombre es ese?" },
+            { "speaker": "renata", "expr": "shock", "text": "El punto dejó de moverse. Ahí lo tiene." }
+          ],
+          "next": "1.2"
+        },
+        {
+          "id": "1.1c",
+          "type": "dialogue",
+          "background": "bg_ciudad",
+          "media": { "type": "image", "key": "scenes/ch1/1_1_moto.webp" },
+          "characters_on_scene": ["renata"],
+          "lines": [
+            { "speaker": "renata", "expr": "neutral", "text": "¡Oye! ¡Te doy 500 pesos si me lo regresas!" },
+            { "speaker": "narrator", "expr": "neutral", "text": "El tipo se detiene un segundo. La mira. Y sigue caminando, pero más lento. Lo suficiente para que Renata lo siga." },
+            { "speaker": "renata", "expr": "neutral", "text": "Entró a ese taller… OK. Vamos." },
+            { "speaker": "narrator", "expr": "neutral", "text": "Lo que no sabe es que él la dejó seguirlo a propósito." }
           ],
           "next": "1.2"
         },
@@ -114,11 +150,26 @@
           "background": "bg_taller_ext",
           "media": { "type": "image", "key": "scenes/ch1/1_2_taller.webp" },
           "characters_on_scene": ["renata", "dante"],
+          "variants": [
+            { "when": { "choice": "1.0c_a" }, "lines": [
+              { "speaker": "narrator", "expr": "neutral", "text": "Un letrero oxidado: 'TALLER MECÁNICO LUNA'. Renata empuja la puerta sin pensarlo." },
+              { "speaker": "renata", "expr": "angry", "text": "¡Tú! ¡Te vi recoger mi celular!" },
+              { "speaker": "dante", "expr": "guard", "text": "Vaya. Corres rápido para traer tacones." }
+            ]},
+            { "when": { "choice": "1.0c_b" }, "lines": [
+              { "speaker": "narrator", "expr": "neutral", "text": "Un letrero oxidado: 'TALLER MECÁNICO LUNA'. La ubicación coincide." },
+              { "speaker": "renata", "expr": "neutral", "text": "Sé que mi celular está aquí. Find My no miente." },
+              { "speaker": "dante", "expr": "guard", "text": "Qué moderno. Rastrear a un desconocido con tecnología. Muy de influencer." }
+            ]},
+            { "when": { "choice": "1.0c_c" }, "lines": [
+              { "speaker": "narrator", "expr": "neutral", "text": "Un letrero oxidado: 'TALLER MECÁNICO LUNA'. Renata entra con cautela." },
+              { "speaker": "renata", "expr": "neutral", "text": "Bueno… aquí estoy. ¿Dónde están mis 500 pesos y mi celular?" },
+              { "speaker": "dante", "expr": "smile", "text": "Yo nunca dije que aceptaba. Solo quería ver si de verdad venías." }
+            ]}
+          ],
           "lines": [
-            { "speaker": "narrator", "expr": "neutral", "text": "Un letrero oxidado: 'TALLER MECÁNICO LUNA'. Renata empuja la puerta de metal." },
-            { "speaker": "dante", "expr": "guard", "text": "No atendemos sin cita." },
-            { "speaker": "renata", "expr": "angry", "text": "No vengo por una cita. Vengo por mi celular. Sé que tú lo tienes." },
-            { "speaker": "dante", "expr": "neutral", "text": "Ah… la del teléfono. Tardaste." }
+            { "speaker": "dante", "expr": "neutral", "text": "Tranquila. Tu teléfono está bien. Mejor que tú, probablemente." },
+            { "speaker": "renata", "expr": "angry", "text": "Dámelo. Ahora." }
           ],
           "next": "1.3"
         },
