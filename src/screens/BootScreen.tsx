@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withDelay,
+  withRepeat,
   withSequence,
   Easing,
 } from "react-native-reanimated";
@@ -20,16 +21,27 @@ type Props = NativeStackScreenProps<RootStackParamList, "Boot">;
 export function BootScreen({ navigation }: Props) {
   const { userId, loading } = useUserIdentity();
 
+  const badgeOpacity = useSharedValue(0);
+  const badgeScale = useSharedValue(0.8);
+  const ringPulse = useSharedValue(0.6);
   const titleOpacity = useSharedValue(0);
-  const titleScale = useSharedValue(0.9);
   const subtitleOpacity = useSharedValue(0);
   const loaderOpacity = useSharedValue(0);
 
   useEffect(() => {
-    titleOpacity.value = withTiming(1, { duration: 800, easing: Easing.out(Easing.cubic) });
-    titleScale.value = withTiming(1, { duration: 800, easing: Easing.out(Easing.cubic) });
-    subtitleOpacity.value = withDelay(400, withTiming(1, { duration: 600 }));
-    loaderOpacity.value = withDelay(800, withTiming(1, { duration: 400 }));
+    badgeOpacity.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.cubic) });
+    badgeScale.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.back(1.4)) });
+    ringPulse.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 900, easing: Easing.out(Easing.quad) }),
+        withTiming(0.6, { duration: 900, easing: Easing.in(Easing.quad) })
+      ),
+      -1,
+      false
+    );
+    titleOpacity.value = withDelay(300, withTiming(1, { duration: 600 }));
+    subtitleOpacity.value = withDelay(600, withTiming(1, { duration: 600 }));
+    loaderOpacity.value = withDelay(900, withTiming(1, { duration: 400 }));
   }, []);
 
   useEffect(() => {
@@ -38,39 +50,42 @@ export function BootScreen({ navigation }: Props) {
       analytics.track("app_open");
       const timer = setTimeout(() => {
         navigation.replace("DispatchLobby");
-      }, 1200);
+      }, 1600);
       return () => clearTimeout(timer);
     }
   }, [loading, userId, navigation]);
 
-  const titleStyle = useAnimatedStyle(() => ({
-    opacity: titleOpacity.value,
-    transform: [{ scale: titleScale.value }],
+  const badgeStyle = useAnimatedStyle(() => ({
+    opacity: badgeOpacity.value,
+    transform: [{ scale: badgeScale.value }],
   }));
-
-  const subtitleStyle = useAnimatedStyle(() => ({
-    opacity: subtitleOpacity.value,
+  const ringStyle = useAnimatedStyle(() => ({
+    opacity: ringPulse.value * 0.5,
+    transform: [{ scale: 0.9 + ringPulse.value * 0.5 }],
   }));
-
-  const loaderStyle = useAnimatedStyle(() => ({
-    opacity: loaderOpacity.value,
-  }));
+  const titleStyle = useAnimatedStyle(() => ({ opacity: titleOpacity.value }));
+  const subtitleStyle = useAnimatedStyle(() => ({ opacity: subtitleOpacity.value }));
+  const loaderStyle = useAnimatedStyle(() => ({ opacity: loaderOpacity.value }));
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Animated.Text style={[styles.heart, titleStyle]}>
-          {"❤️"}
-        </Animated.Text>
-        <Animated.Text style={[styles.title, titleStyle]}>
-          {"Corazón\nen Roaming"}
-        </Animated.Text>
+        <View style={styles.badgeWrap}>
+          <Animated.View style={[styles.ring, ringStyle]} />
+          <Animated.View style={[styles.badge, badgeStyle]}>
+            <Animated.Text style={styles.badgeText}>911</Animated.Text>
+          </Animated.View>
+        </View>
+        <Animated.Text style={[styles.title, titleStyle]}>DISPATCH</Animated.Text>
         <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-          Una historia de amor y secretos
+          Emergency Response Simulator
         </Animated.Text>
       </View>
       <Animated.View style={[styles.loaderWrap, loaderStyle]}>
-        <ActivityIndicator size="small" color={colors.accent.secondary} />
+        <ActivityIndicator size="small" color={colors.dispatch.cyan} />
+        <Animated.Text style={styles.loaderText}>
+          INITIALIZING DISPATCH CENTER…
+        </Animated.Text>
       </Animated.View>
     </View>
   );
@@ -79,7 +94,7 @@ export function BootScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bg.primary,
+    backgroundColor: colors.dispatch.bg,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -87,25 +102,60 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: sizes.spacing.md,
   },
-  heart: {
-    fontSize: 48,
+  badgeWrap: {
+    width: 140,
+    height: 140,
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: sizes.spacing.sm,
+  },
+  ring: {
+    position: "absolute",
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    borderWidth: 2,
+    borderColor: colors.dispatch.cyan,
+  },
+  badge: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: colors.dispatch.panel,
+    borderWidth: 3,
+    borderColor: colors.dispatch.cyan,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  badgeText: {
+    color: colors.dispatch.cyan,
+    fontSize: 38,
+    fontWeight: "900",
+    letterSpacing: 2,
   },
   title: {
     fontSize: sizes.font.title,
-    fontWeight: "800",
-    color: colors.accent.primary,
-    letterSpacing: 1,
+    fontWeight: "900",
+    color: colors.dispatch.text,
+    letterSpacing: 8,
     textAlign: "center",
-    lineHeight: 42,
   },
   subtitle: {
-    fontSize: sizes.font.md,
-    color: colors.text.secondary,
-    marginTop: sizes.spacing.xs,
+    fontSize: sizes.font.sm,
+    color: colors.dispatch.textMuted,
+    letterSpacing: 1,
+    fontWeight: "600",
   },
   loaderWrap: {
     position: "absolute",
-    bottom: 80,
+    bottom: 70,
+    alignItems: "center",
+    gap: sizes.spacing.sm,
+  },
+  loaderText: {
+    color: colors.dispatch.textMuted,
+    fontSize: sizes.font.xs,
+    letterSpacing: 1.5,
+    fontWeight: "700",
   },
 });

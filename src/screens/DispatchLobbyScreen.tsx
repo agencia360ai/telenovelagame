@@ -19,8 +19,9 @@ import Animated, {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { OfficerScene3D } from "../components/OfficerScene3D";
-import { useEconomy } from "../context/EconomyContext";
+import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { getRandomCallId } from "../content/calls";
+import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
@@ -29,12 +30,17 @@ type Props = NativeStackScreenProps<RootStackParamList, "DispatchLobby">;
 const COUNTDOWN_START = 10;
 
 export function DispatchLobbyScreen({ navigation }: Props) {
-  const economy = useEconomy();
+  const progress = useDispatchProgress();
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
 
   const pulse = useSharedValue(1);
   const glow = useSharedValue(0.4);
+
+  // Lobby ambience — resumes whenever we return here from a call.
+  useEffect(() => {
+    audio.playMusic("lobby");
+  }, []);
 
   // Countdown to the next incoming call
   useEffect(() => {
@@ -47,7 +53,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     return () => clearTimeout(t);
   }, [countdown, phase]);
 
-  // Ringing: pulse the button + haptic buzz
+  // Ringing: pulse the button + haptic buzz + ring tone
   useEffect(() => {
     if (phase === "ringing") {
       pulse.value = withRepeat(
@@ -66,9 +72,11 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         -1,
         false
       );
+      audio.playSfx("ring");
       const buzz = setInterval(() => {
+        audio.playSfx("ring");
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-      }, 900);
+      }, 2000);
       return () => {
         clearInterval(buzz);
         cancelAnimation(pulse);
@@ -80,6 +88,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   }, [phase]);
 
   const answerCall = () => {
+    audio.playSfx("dispatch");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPhase("connecting");
     setTimeout(() => {
@@ -105,7 +114,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         <Text style={styles.title}>DISPATCH CENTER</Text>
         <View style={styles.scoreChip}>
           <Text style={styles.scoreIcon}>★</Text>
-          <Text style={styles.scoreValue}>{economy.gems}</Text>
+          <Text style={styles.scoreValue}>{progress.score}</Text>
         </View>
       </View>
 
@@ -125,7 +134,11 @@ export function DispatchLobbyScreen({ navigation }: Props) {
             <Text style={styles.countdown}>
               0:{countdown.toString().padStart(2, "0")}
             </Text>
-            <Text style={styles.standbyHint}>Stand by, operator…</Text>
+            <Text style={styles.standbyHint}>
+              {progress.callsHandled > 0
+                ? `${progress.callsHandled} handled · streak ${progress.currentStreak} · best ${progress.bestStreak}`
+                : "Stand by, operator…"}
+            </Text>
           </View>
         )}
 

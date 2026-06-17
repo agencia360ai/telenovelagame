@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,16 +9,19 @@ import {
   Dimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
+import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
-import { useEconomy } from "../context/EconomyContext";
+import { useDispatchProgress } from "../context/DispatchProgressContext";
 import {
   getCallById,
   getDispatchLabel,
   DISPATCH_OPTIONS,
-  DispatchType,
 } from "../content/calls";
+import { DispatchType } from "../game/types";
+import { resolveVideo } from "../game/assets";
+import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
@@ -32,46 +35,67 @@ const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
 export function CallScreen({ navigation, route }: Props) {
   const { callId } = route.params;
   const call = getCallById(callId);
-  const economy = useEconomy();
+  const progress = useDispatchProgress();
   const scrollRef = useRef<ScrollView>(null);
 
   const [phase, setPhase] = useState<Phase>("dialogue");
-  const [visibleCount, setVisibleCount] = useState(1);
+  // Start empty — the first message only appears on the first tap.
+  const [visibleCount, setVisibleCount] = useState(0);
   const [chosenDispatch, setChosenDispatch] = useState<DispatchType | null>(
     null
   );
 
-  const player = useVideoPlayer(call.videoUrl, (p) => {
+  const player = useVideoPlayer(resolveVideo(call.video), (p) => {
     p.loop = true;
     p.play();
   });
 
+  // The call's own audio (the scene) plays — pause any background music.
+  useEffect(() => {
+    audio.stopMusic();
+  }, []);
+
   const allShown = visibleCount >= call.messages.length;
+
+  const scrollSoon = () =>
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
 
   const handleTap = () => {
     if (phase !== "dialogue") return;
     if (!allShown) {
+      audio.playSfx("tap");
+      Haptics.selectionAsync();
       setVisibleCount((v) => v + 1);
-      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
+      scrollSoon();
     } else {
+      audio.playSfx("tap");
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       setPhase("dispatch");
-      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
+      scrollSoon();
     }
   };
 
   const handleDispatch = (choice: DispatchType) => {
+    audio.playSfx("dispatch");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     const correct = choice === call.correctDispatch;
     setChosenDispatch(choice);
-    if (correct) {
-      economy.earn(call.reward);
-    }
+    progress.recordResult(correct, call.reward);
     setPhase("result");
-    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
+    scrollSoon();
+
+    setTimeout(() => {
+      audio.playSfx(correct ? "success" : "fail");
+      Haptics.notificationAsync(
+        correct
+          ? Haptics.NotificationFeedbackType.Success
+          : Haptics.NotificationFeedbackType.Error
+      );
+    }, 250);
+
     setTimeout(() => {
       navigation.replace("DispatchLobby");
-    }, 2800);
+    }, 3000);
   };
 
   const isCorrect = chosenDispatch === call.correctDispatch;
@@ -105,9 +129,18 @@ export function CallScreen({ navigation, route }: Props) {
           contentContainerStyle={styles.chatContent}
           showsVerticalScrollIndicator={false}
         >
+          {visibleCount === 0 && phase === "dialogue" && (
+            <Animated.View entering={FadeIn} style={styles.introWrap}>
+              <Text style={styles.introText}>
+                Tap to listen to the caller…
+              </Text>
+            </Animated.View>
+          )}
+
           {call.messages.slice(0, visibleCount).map((msg, idx) => (
-            <View
+            <Animated.View
               key={idx}
+              entering={FadeInDown.duration(240)}
               style={[
                 styles.bubble,
                 msg.sender === "caller"
@@ -126,11 +159,11 @@ export function CallScreen({ navigation, route }: Props) {
                 {msg.sender === "caller" ? call.callerName : "You (Dispatch)"}
               </Text>
               <Text style={styles.bubbleText}>{msg.text}</Text>
-            </View>
+            </Animated.View>
           ))}
 
           {phase === "dispatch" && (
-            <View style={styles.dispatchSection}>
+            <Animated.View entering={FadeInDown} style={styles.dispatchSection}>
               <Text style={styles.dispatchPrompt}>WHO DO YOU DISPATCH?</Text>
               <View style={styles.dispatchRow}>
                 {DISPATCH_OPTIONS.map((opt) => (
@@ -144,28 +177,29 @@ export function CallScreen({ navigation, route }: Props) {
                   </Pressable>
                 ))}
               </View>
-            </View>
+            </Animated.View>
           )}
 
           {phase === "result" && chosenDispatch != null && (
-            <View
+            <Animated.View
+              entering={FadeInDown}
               style={[
                 styles.resultBox,
                 isCorrect ? styles.resultSuccess : styles.resultFail,
               ]}
             >
-              <Text style={styles.resultEmoji}>
-                {isCorrect ? "✓" : "✗"}
-              </Text>
+              <Text style={styles.resultEmoji}>{isCorrect ? "✓" : "✗"}</Text>
               <Text style={styles.resultTitle}>
                 {isCorrect ? "CORRECT DISPATCH!" : "WRONG UNIT!"}
               </Text>
               <Text style={styles.resultSub}>
                 {isCorrect
                   ? `+${call.reward} ★ earned`
-                  : `Should have sent: ${getDispatchLabel(call.correctDispatch)}`}
+                  : `Should have sent: ${getDispatchLabel(
+                      call.correctDispatch
+                    )}`}
               </Text>
-            </View>
+            </Animated.View>
           )}
         </ScrollView>
       </Pressable>
@@ -254,6 +288,15 @@ const styles = StyleSheet.create({
     padding: sizes.spacing.md,
     paddingBottom: sizes.spacing.xl,
     gap: 10,
+  },
+  introWrap: {
+    paddingVertical: sizes.spacing.xl,
+    alignItems: "center",
+  },
+  introText: {
+    color: colors.dispatch.textMuted,
+    fontSize: sizes.font.md,
+    fontStyle: "italic",
   },
 
   bubble: {

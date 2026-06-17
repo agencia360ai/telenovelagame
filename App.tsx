@@ -1,19 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { UserIdentityProvider } from "./src/context/UserIdentityContext";
-import { SettingsProvider } from "./src/context/SettingsContext";
+import { SettingsProvider, useSettings } from "./src/context/SettingsContext";
 import { I18nProvider } from "./src/context/I18nContext";
 import { EconomyProvider } from "./src/context/EconomyContext";
 import { StoryProgressProvider } from "./src/context/StoryProgressContext";
 import { NarrativeStateProvider } from "./src/context/NarrativeStateContext";
 import { SubscriptionProvider } from "./src/context/SubscriptionContext";
+import { DispatchProgressProvider } from "./src/context/DispatchProgressContext";
 import { AppNavigator } from "./src/navigation/AppNavigator";
+import { audio } from "./src/lib/audio";
 import storyData from "./src/content/stories/corazon-en-roaming.json";
 
 const initialVariables = (storyData as any).initial_variables ?? {};
 const initialFlags = (storyData as any).initial_flags ?? {};
 const startingGems = (storyData as any).starting_gems ?? 10;
+
+/** Initializes the audio engine once and keeps it in sync with the sound setting. */
+function AudioBridge() {
+  const { soundEnabled } = useSettings();
+  useEffect(() => {
+    audio.init();
+  }, []);
+  useEffect(() => {
+    audio.setMuted(!soundEnabled);
+  }, [soundEnabled]);
+  return null;
+}
 
 export default function App() {
   return (
@@ -28,8 +42,11 @@ export default function App() {
                   initialFlags={initialFlags}
                 >
                   <SubscriptionProvider>
-                    <StatusBar style="light" />
-                    <AppNavigator />
+                    <DispatchProgressProvider>
+                      <StatusBar style="light" />
+                      <AudioBridge />
+                      <AppNavigator />
+                    </DispatchProgressProvider>
                   </SubscriptionProvider>
                 </NarrativeStateProvider>
               </StoryProgressProvider>

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Corazón en Roaming",
+    "name": "911 Dispatch",
     "slug": "corazon-en-roaming",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1A0A2E"
+      "backgroundColor": "#0A0E1A"
     },
     "ios": {
       "supportsTablet": false,
