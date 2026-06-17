@@ -20,12 +20,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { OfficerScene3D } from "../components/OfficerScene3D";
 import { useEconomy } from "../context/EconomyContext";
+import { getRandomCallId } from "../content/calls";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DispatchLobby">;
 
-const COUNTDOWN_START = 8;
+const COUNTDOWN_START = 10;
 
 export function DispatchLobbyScreen({ navigation }: Props) {
   const economy = useEconomy();
@@ -81,12 +82,9 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   const answerCall = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPhase("connecting");
-    // Increment 2 will navigate into the real call flow here.
-    // For now, simulate the connection then return to standby.
     setTimeout(() => {
-      setPhase("idle");
-      setCountdown(COUNTDOWN_START);
-    }, 1800);
+      navigation.replace("Call", { callId: getRandomCallId() });
+    }, 800);
   };
 
   const buttonStyle = useAnimatedStyle(() => ({
