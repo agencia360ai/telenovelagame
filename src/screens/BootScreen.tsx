@@ -37,7 +37,7 @@ export function BootScreen({ navigation }: Props) {
       analytics.init();
       analytics.track("app_open");
       const timer = setTimeout(() => {
-        navigation.replace("Home");
+        navigation.replace("DispatchLobby");
       }, 1200);
       return () => clearTimeout(timer);
     }

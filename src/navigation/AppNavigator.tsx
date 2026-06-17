@@ -2,6 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { BootScreen } from "../screens/BootScreen";
+import { DispatchLobbyScreen } from "../screens/DispatchLobbyScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { ReaderScreen } from "../screens/ReaderScreen";
 import { ShopScreen } from "../screens/ShopScreen";
@@ -11,6 +12,7 @@ import { colors } from "../theme/colors";
 
 export type RootStackParamList = {
   Boot: undefined;
+  DispatchLobby: undefined;
   Home: undefined;
   Reader: {
     storyId: string;
@@ -39,6 +41,7 @@ export function AppNavigator() {
         }}
       >
         <Stack.Screen name="Boot" component={BootScreen} />
+        <Stack.Screen name="DispatchLobby" component={DispatchLobbyScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen
           name="Reader"
