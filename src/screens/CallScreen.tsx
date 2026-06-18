@@ -45,6 +45,9 @@ export function CallScreen({ navigation, route }: Props) {
   const [visibleCount, setVisibleCount] = useState(0);
   const [dispatchTimer, setDispatchTimer] = useState(DISPATCH_TIME_LIMIT);
   const dispatchStartTime = useRef<number>(0);
+  // Captured once at mount so it stays true through the result screen even
+  // after callsHandled increments. Drives the first-time tutorial coachmarks.
+  const isFirstCall = useRef(progress.callsHandled === 0).current;
 
   const player = useVideoPlayer(resolveVideo(call.video), (p) => {
     p.loop = true;
@@ -153,8 +156,19 @@ export function CallScreen({ navigation, route }: Props) {
         >
           {visibleCount === 0 && phase === "dialogue" && (
             <Animated.View entering={FadeIn} style={styles.introWrap}>
+              {isFirstCall && (
+                <View style={styles.tutorialCard}>
+                  <Text style={styles.tutorialTitle}>👋 WELCOME, OPERATOR</Text>
+                  <Text style={styles.tutorialBody}>
+                    Read the emergency, then send the right unit. Tap anywhere
+                    to hear the caller.
+                  </Text>
+                </View>
+              )}
               <Text style={styles.introText}>
-                Tap to listen to the caller…
+                {isFirstCall
+                  ? "Tap to begin…"
+                  : "Tap to listen to the caller…"}
               </Text>
             </Animated.View>
           )}
@@ -188,6 +202,11 @@ export function CallScreen({ navigation, route }: Props) {
             <Animated.View entering={FadeInDown} style={styles.dispatchSection}>
               <DispatchTimer seconds={dispatchTimer} />
               <Text style={styles.dispatchPrompt}>WHO DO YOU DISPATCH?</Text>
+              {isFirstCall && (
+                <Text style={styles.tutorialHint}>
+                  💡 Match the emergency type to the unit
+                </Text>
+              )}
               <View style={styles.dispatchRow}>
                 {DISPATCH_OPTIONS.map((opt) => (
                   <Pressable
@@ -258,6 +277,9 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.xs,
     fontWeight: "900",
     letterSpacing: 1,
+    textShadowColor: "rgba(0,0,0,0.6)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   location: {
     color: colors.dispatch.textMuted,
@@ -336,6 +358,34 @@ const styles = StyleSheet.create({
     color: colors.dispatch.textMuted,
     fontSize: sizes.font.md,
     fontStyle: "italic",
+  },
+  tutorialCard: {
+    backgroundColor: "rgba(34, 211, 238, 0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(34, 211, 238, 0.3)",
+    borderRadius: sizes.radius.md,
+    padding: sizes.spacing.md,
+    marginBottom: sizes.spacing.md,
+    gap: 6,
+  },
+  tutorialTitle: {
+    color: colors.dispatch.cyan,
+    fontSize: sizes.font.sm,
+    fontWeight: "900",
+    letterSpacing: 1,
+    textAlign: "center",
+  },
+  tutorialBody: {
+    color: colors.dispatch.text,
+    fontSize: sizes.font.sm,
+    lineHeight: 19,
+    textAlign: "center",
+  },
+  tutorialHint: {
+    color: colors.dispatch.cyan,
+    fontSize: sizes.font.sm,
+    fontWeight: "700",
+    textAlign: "center",
   },
   bubble: {
     maxWidth: "82%",
