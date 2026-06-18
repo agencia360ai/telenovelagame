@@ -60,6 +60,6 @@ export const MUSIC_VOLUME: Record<MusicKey, number> = {
 };
 
 // ── 3D models (bundled GLB or remote URL) ────────────────────────────────────
-// FBX must be converted to GLB first (see docs/CONTENT_GUIDE.md). Example:
-//   export const MODELS = { officer: require("../../assets/models/officer.glb") };
-export const MODELS: Record<string, string | number> = {};
+export const MODELS: Record<string, string | number> = {
+  officer: require("../../assets/models/officer.glb"),
+};
