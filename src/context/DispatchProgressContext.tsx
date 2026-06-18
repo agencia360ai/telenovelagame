@@ -45,7 +45,9 @@ function todayStr(): string {
 }
 
 function isYesterday(dateStr: string): boolean {
+  if (!dateStr) return false;
   const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return false;
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   return d.toISOString().slice(0, 10) === yesterday.toISOString().slice(0, 10);
@@ -133,7 +135,7 @@ export function DispatchProgressProvider({
             currentStreak: 0,
             lastResult: null,
             dailyStreak,
-            lastPlayDate: lastPlayDate === today ? today : saved.lastPlayDate,
+            lastPlayDate,
           }));
         } catch {}
       }
