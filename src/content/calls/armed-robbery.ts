@@ -7,7 +7,7 @@ export const armedRobbery: CallScenario = {
   location: "QuickMart · 5th & Main",
   video: "armed-robbery",
   difficulty: 2,
-  reward: 5,
+  reward: 8,
   correctDispatch: "police",
   messages: [
     {

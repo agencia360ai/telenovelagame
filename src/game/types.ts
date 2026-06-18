@@ -50,3 +50,22 @@ export type CallResult = {
   correct: boolean;
   reward: number;
 };
+
+export type CallResultDetails = {
+  correct: boolean;
+  baseReward: number;
+  streakMultiplier: number;
+  streakBonus: number;
+  speedBonusXP: number;
+  speedLabel: string;
+  shiftBonus: number;
+  perfectShiftBonus: number;
+  totalXP: number;
+  newStreak: number;
+  newAchievements: string[];
+  rankedUp: boolean;
+  newRankName: string;
+  newRankIcon: string;
+  shiftComplete: boolean;
+  shiftPerfect: boolean;
+};

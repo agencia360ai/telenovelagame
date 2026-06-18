@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { BootScreen } from "../screens/BootScreen";
 import { DispatchLobbyScreen } from "../screens/DispatchLobbyScreen";
 import { CallScreen } from "../screens/CallScreen";
+import { StatsScreen } from "../screens/StatsScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { ReaderScreen } from "../screens/ReaderScreen";
 import { ShopScreen } from "../screens/ShopScreen";
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   Boot: undefined;
   DispatchLobby: undefined;
   Call: { callId: string };
+  Stats: undefined;
   Home: undefined;
   Reader: {
     storyId: string;
@@ -49,6 +51,7 @@ export function AppNavigator() {
           component={CallScreen}
           options={{ gestureEnabled: false }}
         />
+        <Stack.Screen name="Stats" component={StatsScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen
           name="Reader"

@@ -7,7 +7,7 @@ export const borderRunners: CallScenario = {
   location: "Highway 2 · Mile 47",
   video: "border-runners",
   difficulty: 2,
-  reward: 5,
+  reward: 8,
   correctDispatch: "border_patrol",
   messages: [
     {

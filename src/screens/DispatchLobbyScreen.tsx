@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,8 +19,11 @@ import Animated, {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { OfficerScene3D } from "../components/OfficerScene3D";
+import { RankBadge } from "../components/RankBadge";
+import { XPBar } from "../components/XPBar";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { getRandomCallId } from "../content/calls";
+import { getXPProgress, SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
@@ -37,12 +40,17 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   const pulse = useSharedValue(1);
   const glow = useSharedValue(0.4);
 
-  // Lobby ambience — resumes whenever we return here from a call.
+  const xpInfo = getXPProgress(progress.xp, progress.rankIndex);
+  const accuracy =
+    progress.callsHandled > 0
+      ? Math.round((progress.correctCount / progress.callsHandled) * 100)
+      : 0;
+
   useEffect(() => {
     audio.playMusic("lobby");
+    progress.clearLastResult();
   }, []);
 
-  // Countdown to the next incoming call
   useEffect(() => {
     if (phase !== "idle") return;
     if (countdown <= 0) {
@@ -53,7 +61,6 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     return () => clearTimeout(t);
   }, [countdown, phase]);
 
-  // Ringing: pulse the button + haptic buzz + ring tone
   useEffect(() => {
     if (phase === "ringing") {
       pulse.value = withRepeat(
@@ -105,17 +112,29 @@ export function DispatchLobbyScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header / console bar */}
+      {/* Header */}
       <View style={styles.header}>
-        <View style={styles.statusRow}>
-          <View style={styles.onlineDot} />
-          <Text style={styles.statusText}>ON DUTY</Text>
+        <View style={styles.headerLeft}>
+          <RankBadge rankIndex={progress.rankIndex} />
         </View>
         <Text style={styles.title}>DISPATCH CENTER</Text>
-        <View style={styles.scoreChip}>
+        <Pressable
+          style={styles.scoreChip}
+          onPress={() => navigation.navigate("Stats" as any)}
+        >
           <Text style={styles.scoreIcon}>★</Text>
-          <Text style={styles.scoreValue}>{progress.score}</Text>
-        </View>
+          <Text style={styles.scoreValue}>{progress.xp}</Text>
+        </Pressable>
+      </View>
+
+      {/* XP Progress */}
+      <View style={styles.xpRow}>
+        <XPBar
+          current={xpInfo.current}
+          needed={xpInfo.needed}
+          percent={xpInfo.percent}
+          showLabel={false}
+        />
       </View>
 
       {/* 3D officer viewport */}
@@ -124,6 +143,13 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         <View style={styles.viewportLabel}>
           <Text style={styles.viewportLabelText}>UNIT 911 · LIVE</Text>
         </View>
+        {progress.currentStreak >= 3 && (
+          <View style={styles.streakTag}>
+            <Text style={styles.streakTagText}>
+              🔥 {progress.currentStreak}
+            </Text>
+          </View>
+        )}
       </View>
 
       {/* Bottom console */}
@@ -134,11 +160,35 @@ export function DispatchLobbyScreen({ navigation }: Props) {
             <Text style={styles.countdown}>
               0:{countdown.toString().padStart(2, "0")}
             </Text>
-            <Text style={styles.standbyHint}>
-              {progress.callsHandled > 0
-                ? `${progress.callsHandled} handled · streak ${progress.currentStreak} · best ${progress.bestStreak}`
-                : "Stand by, operator…"}
-            </Text>
+
+            {progress.callsHandled > 0 ? (
+              <View style={styles.statsRow}>
+                <StatChip label="Calls" value={progress.callsHandled} />
+                <StatChip label="Accuracy" value={`${accuracy}%`} />
+                <StatChip label="Streak" value={progress.currentStreak} />
+                <StatChip label="Best" value={progress.bestStreak} />
+              </View>
+            ) : (
+              <Text style={styles.standbyHint}>Stand by, operator…</Text>
+            )}
+
+            {/* Shift progress */}
+            <View style={styles.shiftRow}>
+              <Text style={styles.shiftLabel}>
+                SHIFT {progress.shiftsCompleted + 1}
+              </Text>
+              <View style={styles.shiftDots}>
+                {Array.from({ length: SHIFT_SIZE }).map((_, i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.shiftDot,
+                      i < progress.shiftProgress && styles.shiftDotFilled,
+                    ]}
+                  />
+                ))}
+              </View>
+            </View>
           </View>
         )}
 
@@ -172,6 +222,21 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   );
 }
 
+function StatChip({
+  label,
+  value,
+}: {
+  label: string;
+  value: number | string;
+}) {
+  return (
+    <View style={styles.statChip}>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -181,27 +246,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: sizes.spacing.lg,
+    paddingHorizontal: sizes.spacing.md,
     paddingTop: sizes.spacing.sm,
-    paddingBottom: sizes.spacing.md,
+    paddingBottom: 4,
   },
-  statusRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    width: 90,
-  },
-  onlineDot: {
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    backgroundColor: colors.dispatch.answer,
-  },
-  statusText: {
-    color: colors.dispatch.answer,
-    fontSize: sizes.font.xs,
-    fontWeight: "800",
-    letterSpacing: 1,
+  headerLeft: {
+    width: 100,
   },
   title: {
     color: colors.dispatch.cyan,
@@ -219,7 +269,7 @@ const styles = StyleSheet.create({
     borderRadius: sizes.radius.full,
     paddingHorizontal: 12,
     paddingVertical: 5,
-    width: 90,
+    width: 100,
     justifyContent: "flex-end",
   },
   scoreIcon: {
@@ -230,6 +280,10 @@ const styles = StyleSheet.create({
     color: colors.dispatch.text,
     fontSize: sizes.font.sm,
     fontWeight: "800",
+  },
+  xpRow: {
+    paddingHorizontal: sizes.spacing.md,
+    marginBottom: sizes.spacing.sm,
   },
   viewport: {
     flex: 1,
@@ -255,15 +309,33 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     letterSpacing: 1,
   },
+  streakTag: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "rgba(239, 68, 68, 0.15)",
+    borderRadius: sizes.radius.sm,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: "rgba(239, 68, 68, 0.3)",
+  },
+  streakTagText: {
+    color: "#FF6B6B",
+    fontSize: 13,
+    fontWeight: "900",
+  },
   console: {
-    height: 220,
+    minHeight: 220,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: sizes.spacing.lg,
+    paddingBottom: sizes.spacing.sm,
   },
   standby: {
     alignItems: "center",
     gap: 6,
+    width: "100%",
   },
   standbyLabel: {
     color: colors.dispatch.textMuted,
@@ -280,6 +352,61 @@ const styles = StyleSheet.create({
   standbyHint: {
     color: colors.dispatch.textMuted,
     fontSize: sizes.font.sm,
+  },
+  statsRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 2,
+  },
+  statChip: {
+    alignItems: "center",
+    backgroundColor: colors.dispatch.panel,
+    borderRadius: sizes.radius.sm,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: colors.dispatch.border,
+    minWidth: 60,
+  },
+  statValue: {
+    color: colors.dispatch.text,
+    fontSize: 15,
+    fontWeight: "900",
+  },
+  statLabel: {
+    color: colors.dispatch.textMuted,
+    fontSize: 9,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
+  shiftRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 6,
+  },
+  shiftLabel: {
+    color: colors.dispatch.textMuted,
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 1,
+  },
+  shiftDots: {
+    flexDirection: "row",
+    gap: 4,
+  },
+  shiftDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(34, 211, 238, 0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(34, 211, 238, 0.3)",
+  },
+  shiftDotFilled: {
+    backgroundColor: colors.dispatch.cyan,
+    borderColor: colors.dispatch.cyan,
   },
   connecting: {
     color: colors.dispatch.amber,

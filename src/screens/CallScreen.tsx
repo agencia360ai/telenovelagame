@@ -16,12 +16,14 @@ import { RootStackParamList } from "../navigation/AppNavigator";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import {
   getCallById,
-  getDispatchLabel,
   DISPATCH_OPTIONS,
 } from "../content/calls";
 import { DispatchType } from "../game/types";
 import { resolveVideo } from "../game/assets";
+import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
+import { DispatchTimer } from "../components/DispatchTimer";
+import { ResultBreakdown } from "../components/ResultBreakdown";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
@@ -31,6 +33,7 @@ type Phase = "dialogue" | "dispatch" | "result";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
+const DISPATCH_TIME_LIMIT = 15;
 
 export function CallScreen({ navigation, route }: Props) {
   const { callId } = route.params;
@@ -39,21 +42,26 @@ export function CallScreen({ navigation, route }: Props) {
   const scrollRef = useRef<ScrollView>(null);
 
   const [phase, setPhase] = useState<Phase>("dialogue");
-  // Start empty — the first message only appears on the first tap.
   const [visibleCount, setVisibleCount] = useState(0);
-  const [chosenDispatch, setChosenDispatch] = useState<DispatchType | null>(
-    null
-  );
+  const [dispatchTimer, setDispatchTimer] = useState(DISPATCH_TIME_LIMIT);
+  const dispatchStartTime = useRef<number>(0);
 
   const player = useVideoPlayer(resolveVideo(call.video), (p) => {
     p.loop = true;
     p.play();
   });
 
-  // The call's own audio (the scene) plays — pause any background music.
   useEffect(() => {
     audio.stopMusic();
   }, []);
+
+  // Dispatch countdown timer
+  useEffect(() => {
+    if (phase !== "dispatch") return;
+    if (dispatchTimer <= 0) return;
+    const t = setTimeout(() => setDispatchTimer((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [phase, dispatchTimer]);
 
   const allShown = visibleCount >= call.messages.length;
 
@@ -70,6 +78,7 @@ export function CallScreen({ navigation, route }: Props) {
     } else {
       audio.playSfx("tap");
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      dispatchStartTime.current = Date.now();
       setPhase("dispatch");
       scrollSoon();
     }
@@ -78,9 +87,10 @@ export function CallScreen({ navigation, route }: Props) {
   const handleDispatch = (choice: DispatchType) => {
     audio.playSfx("dispatch");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+
+    const elapsed = (Date.now() - dispatchStartTime.current) / 1000;
     const correct = choice === call.correctDispatch;
-    setChosenDispatch(choice);
-    progress.recordResult(correct, call.reward);
+    progress.recordResult(correct, call.reward, elapsed);
     setPhase("result");
     scrollSoon();
 
@@ -95,10 +105,10 @@ export function CallScreen({ navigation, route }: Props) {
 
     setTimeout(() => {
       navigation.replace("DispatchLobby");
-    }, 3000);
+    }, 4500);
   };
 
-  const isCorrect = chosenDispatch === call.correctDispatch;
+  const shiftLabel = `${progress.shiftProgress + 1}/${SHIFT_SIZE}`;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -107,7 +117,12 @@ export function CallScreen({ navigation, route }: Props) {
           <View style={styles.liveDot} />
           <Text style={styles.callType}>{call.callType}</Text>
         </View>
-        <Text style={styles.location}>{call.location}</Text>
+        <View style={styles.headerRight}>
+          <View style={styles.shiftPill}>
+            <Text style={styles.shiftText}>SHIFT {shiftLabel}</Text>
+          </View>
+          <Text style={styles.location}>{call.location}</Text>
+        </View>
       </View>
 
       <View style={styles.videoWrap}>
@@ -120,6 +135,13 @@ export function CallScreen({ navigation, route }: Props) {
         <View style={styles.callerTag}>
           <Text style={styles.callerTagText}>{call.callerName}</Text>
         </View>
+        {call.difficulty && (
+          <View style={styles.difficultyTag}>
+            <Text style={styles.difficultyText}>
+              {"⬥".repeat(call.difficulty)}
+            </Text>
+          </View>
+        )}
       </View>
 
       <Pressable style={styles.chatArea} onPress={handleTap}>
@@ -164,6 +186,7 @@ export function CallScreen({ navigation, route }: Props) {
 
           {phase === "dispatch" && (
             <Animated.View entering={FadeInDown} style={styles.dispatchSection}>
+              <DispatchTimer seconds={dispatchTimer} />
               <Text style={styles.dispatchPrompt}>WHO DO YOU DISPATCH?</Text>
               <View style={styles.dispatchRow}>
                 {DISPATCH_OPTIONS.map((opt) => (
@@ -177,29 +200,16 @@ export function CallScreen({ navigation, route }: Props) {
                   </Pressable>
                 ))}
               </View>
+              {progress.currentStreak >= 2 && (
+                <Text style={styles.streakHint}>
+                  🔥 {progress.currentStreak} streak — keep it going!
+                </Text>
+              )}
             </Animated.View>
           )}
 
-          {phase === "result" && chosenDispatch != null && (
-            <Animated.View
-              entering={FadeInDown}
-              style={[
-                styles.resultBox,
-                isCorrect ? styles.resultSuccess : styles.resultFail,
-              ]}
-            >
-              <Text style={styles.resultEmoji}>{isCorrect ? "✓" : "✗"}</Text>
-              <Text style={styles.resultTitle}>
-                {isCorrect ? "CORRECT DISPATCH!" : "WRONG UNIT!"}
-              </Text>
-              <Text style={styles.resultSub}>
-                {isCorrect
-                  ? `+${call.reward} ★ earned`
-                  : `Should have sent: ${getDispatchLabel(
-                      call.correctDispatch
-                    )}`}
-              </Text>
-            </Animated.View>
+          {phase === "result" && progress.lastResult && (
+            <ResultBreakdown result={progress.lastResult} />
           )}
         </ScrollView>
       </Pressable>
@@ -231,6 +241,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
+    flex: 1,
+  },
+  headerRight: {
+    alignItems: "flex-end",
+    gap: 3,
   },
   liveDot: {
     width: 8,
@@ -249,7 +264,18 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.xs,
     fontWeight: "600",
   },
-
+  shiftPill: {
+    backgroundColor: "rgba(34, 211, 238, 0.1)",
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  shiftText: {
+    color: colors.dispatch.cyan,
+    fontSize: 9,
+    fontWeight: "900",
+    letterSpacing: 1,
+  },
   videoWrap: {
     height: VIDEO_HEIGHT,
     marginHorizontal: sizes.spacing.sm,
@@ -277,7 +303,20 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.xs,
     fontWeight: "700",
   },
-
+  difficultyTag: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "rgba(245, 158, 11, 0.2)",
+    borderRadius: sizes.radius.sm,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  difficultyText: {
+    color: colors.dispatch.amber,
+    fontSize: 12,
+    letterSpacing: 2,
+  },
   chatArea: {
     flex: 1,
   },
@@ -286,7 +325,7 @@ const styles = StyleSheet.create({
   },
   chatContent: {
     padding: sizes.spacing.md,
-    paddingBottom: sizes.spacing.xl,
+    paddingBottom: sizes.spacing.xxl,
     gap: 10,
   },
   introWrap: {
@@ -298,7 +337,6 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.md,
     fontStyle: "italic",
   },
-
   bubble: {
     maxWidth: "82%",
     borderRadius: sizes.radius.md,
@@ -337,7 +375,6 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.md,
     lineHeight: 21,
   },
-
   dispatchSection: {
     marginTop: sizes.spacing.md,
     alignItems: "center",
@@ -373,41 +410,11 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textAlign: "center",
   },
-
-  resultBox: {
-    marginTop: sizes.spacing.md,
-    borderRadius: sizes.radius.lg,
-    padding: sizes.spacing.lg,
-    alignItems: "center",
-    gap: 6,
+  streakHint: {
+    color: "#FF6B6B",
+    fontSize: 12,
+    fontWeight: "700",
   },
-  resultSuccess: {
-    backgroundColor: "rgba(34, 197, 94, 0.15)",
-    borderWidth: 2,
-    borderColor: colors.dispatch.answer,
-  },
-  resultFail: {
-    backgroundColor: "rgba(239, 68, 68, 0.15)",
-    borderWidth: 2,
-    borderColor: colors.dispatch.decline,
-  },
-  resultEmoji: {
-    fontSize: 40,
-    color: "#fff",
-    fontWeight: "900",
-  },
-  resultTitle: {
-    fontSize: sizes.font.xl,
-    fontWeight: "900",
-    color: "#fff",
-    letterSpacing: 1,
-  },
-  resultSub: {
-    fontSize: sizes.font.md,
-    color: colors.dispatch.text,
-    fontWeight: "600",
-  },
-
   bottomBar: {
     paddingVertical: sizes.spacing.md,
     alignItems: "center",
