@@ -22,6 +22,7 @@ import { OfficerScene3D } from "../components/OfficerScene3D";
 import { RankBadge } from "../components/RankBadge";
 import { XPBar } from "../components/XPBar";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
+import { usePaywall } from "../context/PaywallContext";
 import { getRandomCallId } from "../content/calls";
 import { getXPProgress, SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
@@ -34,6 +35,7 @@ const COUNTDOWN_START = 10;
 
 export function DispatchLobbyScreen({ navigation }: Props) {
   const progress = useDispatchProgress();
+  const { canPlay, isTrialActive, trialDaysLeft, isSubscribed } = usePaywall();
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
 
@@ -95,6 +97,10 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   }, [phase]);
 
   const answerCall = () => {
+    if (!canPlay) {
+      navigation.navigate("Paywall" as any);
+      return;
+    }
     audio.playSfx("dispatch");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPhase("connecting");
@@ -127,7 +133,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         </Pressable>
       </View>
 
-      {/* XP Progress */}
+      {/* XP Progress + Trial indicator */}
       <View style={styles.xpRow}>
         <XPBar
           current={xpInfo.current}
@@ -135,6 +141,16 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           percent={xpInfo.percent}
           showLabel={false}
         />
+        {isTrialActive && !isSubscribed && (
+          <Pressable
+            onPress={() => navigation.navigate("Paywall" as any)}
+            style={styles.trialPill}
+          >
+            <Text style={styles.trialText}>
+              FREE TRIAL · {trialDaysLeft}d left
+            </Text>
+          </Pressable>
+        )}
       </View>
 
       {/* 3D officer viewport */}
@@ -284,6 +300,22 @@ const styles = StyleSheet.create({
   xpRow: {
     paddingHorizontal: sizes.spacing.md,
     marginBottom: sizes.spacing.sm,
+    gap: 4,
+  },
+  trialPill: {
+    alignSelf: "center",
+    backgroundColor: "rgba(245, 158, 11, 0.12)",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 3,
+    borderWidth: 1,
+    borderColor: "rgba(245, 158, 11, 0.25)",
+  },
+  trialText: {
+    color: colors.dispatch.amber,
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 1,
   },
   viewport: {
     flex: 1,

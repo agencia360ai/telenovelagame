@@ -5,6 +5,7 @@ import { BootScreen } from "../screens/BootScreen";
 import { DispatchLobbyScreen } from "../screens/DispatchLobbyScreen";
 import { CallScreen } from "../screens/CallScreen";
 import { StatsScreen } from "../screens/StatsScreen";
+import { PaywallScreen } from "../screens/PaywallScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { ReaderScreen } from "../screens/ReaderScreen";
 import { ShopScreen } from "../screens/ShopScreen";
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   DispatchLobby: undefined;
   Call: { callId: string };
   Stats: undefined;
+  Paywall: undefined;
   Home: undefined;
   Reader: {
     storyId: string;
@@ -52,6 +54,11 @@ export function AppNavigator() {
           options={{ gestureEnabled: false }}
         />
         <Stack.Screen name="Stats" component={StatsScreen} />
+        <Stack.Screen
+          name="Paywall"
+          component={PaywallScreen}
+          options={{ gestureEnabled: false }}
+        />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen
           name="Reader"

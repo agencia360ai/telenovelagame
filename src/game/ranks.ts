@@ -1,21 +1,23 @@
 export type Rank = {
+  id: string;
   name: string;
   minXP: number;
   icon: string;
 };
 
 export const RANKS: Rank[] = [
-  { name: "Trainee", minXP: 0, icon: "📋" },
-  { name: "Dispatcher", minXP: 50, icon: "📞" },
-  { name: "Sr. Dispatcher", minXP: 150, icon: "🎧" },
-  { name: "Supervisor", minXP: 350, icon: "⭐" },
-  { name: "Commander", minXP: 700, icon: "🏅" },
-  { name: "Chief", minXP: 1500, icon: "👑" },
+  { id: "trainee", name: "Trainee", minXP: 0, icon: "📋" },
+  { id: "dispatcher", name: "Dispatcher", minXP: 50, icon: "📞" },
+  { id: "senior", name: "Sr. Dispatcher", minXP: 150, icon: "🎧" },
+  { id: "supervisor", name: "Supervisor", minXP: 350, icon: "⭐" },
+  { id: "commander", name: "Commander", minXP: 700, icon: "🏅" },
+  { id: "chief", name: "Chief Operator", minXP: 1200, icon: "🎖️" },
+  { id: "director", name: "Director", minXP: 2000, icon: "🏆" },
 ];
 
 export const SHIFT_SIZE = 5;
-export const SHIFT_COMPLETE_BONUS = 5;
-export const PERFECT_SHIFT_BONUS = 10;
+export const SHIFT_COMPLETE_BONUS = 15;
+export const PERFECT_SHIFT_BONUS = 25;
 
 export function getRankForXP(xp: number): number {
   for (let i = RANKS.length - 1; i >= 0; i--) {
@@ -24,16 +26,12 @@ export function getRankForXP(xp: number): number {
   return 0;
 }
 
-export function getXPProgress(
-  xp: number,
-  rankIndex: number
-): { current: number; needed: number; percent: number } {
-  if (rankIndex >= RANKS.length - 1) return { current: 0, needed: 0, percent: 1 };
-  const currentMin = RANKS[rankIndex].minXP;
-  const nextMin = RANKS[rankIndex + 1].minXP;
-  const current = xp - currentMin;
-  const needed = nextMin - currentMin;
-  return { current, needed, percent: current / needed };
+export function getRankProgress(xp: number): number {
+  const idx = getRankForXP(xp);
+  if (idx >= RANKS.length - 1) return 1;
+  const current = RANKS[idx];
+  const next = RANKS[idx + 1];
+  return (xp - current.minXP) / (next.minXP - current.minXP);
 }
 
 export function getStreakMultiplier(streak: number): number {
@@ -44,9 +42,9 @@ export function getStreakMultiplier(streak: number): number {
 }
 
 export function getSpeedBonus(seconds: number): number {
-  if (seconds <= 3) return 5;
-  if (seconds <= 5) return 3;
-  if (seconds <= 10) return 1;
+  if (seconds <= 3) return 15;
+  if (seconds <= 5) return 10;
+  if (seconds <= 10) return 5;
   return 0;
 }
 
@@ -55,4 +53,20 @@ export function getSpeedLabel(seconds: number): string {
   if (seconds <= 5) return "FAST";
   if (seconds <= 10) return "GOOD";
   return "";
+}
+
+export function getXPProgress(
+  xp: number,
+  rankIndex: number
+): { current: number; needed: number; percent: number } {
+  const currentRank = RANKS[rankIndex] ?? RANKS[0];
+  const nextRank = RANKS[rankIndex + 1];
+  if (!nextRank) return { current: 0, needed: 0, percent: 1 };
+  const range = nextRank.minXP - currentRank.minXP;
+  const into = xp - currentRank.minXP;
+  return {
+    current: into,
+    needed: range,
+    percent: range > 0 ? into / range : 1,
+  };
 }

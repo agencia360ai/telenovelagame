@@ -9,6 +9,7 @@ import { StoryProgressProvider } from "./src/context/StoryProgressContext";
 import { NarrativeStateProvider } from "./src/context/NarrativeStateContext";
 import { SubscriptionProvider } from "./src/context/SubscriptionContext";
 import { DispatchProgressProvider } from "./src/context/DispatchProgressContext";
+import { PaywallProvider } from "./src/context/PaywallContext";
 import { AppNavigator } from "./src/navigation/AppNavigator";
 import { audio } from "./src/lib/audio";
 import storyData from "./src/content/stories/corazon-en-roaming.json";
@@ -43,9 +44,11 @@ export default function App() {
                 >
                   <SubscriptionProvider>
                     <DispatchProgressProvider>
-                      <StatusBar style="light" />
-                      <AudioBridge />
-                      <AppNavigator />
+                      <PaywallProvider>
+                        <StatusBar style="light" />
+                        <AudioBridge />
+                        <AppNavigator />
+                      </PaywallProvider>
                     </DispatchProgressProvider>
                   </SubscriptionProvider>
                 </NarrativeStateProvider>
