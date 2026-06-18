@@ -26,12 +26,13 @@ import {
   DISPATCH_OPTIONS,
 } from "../content/calls";
 import { DispatchType } from "../game/types";
-import { resolveVideo } from "../game/assets";
+import { resolveVideo, IMAGES } from "../game/assets";
 import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
 import { CutscenePlayer } from "../components/CutscenePlayer";
+import { CinematicImage } from "../components/CinematicImage";
 import { ResultBreakdown } from "../components/ResultBreakdown";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
@@ -56,6 +57,7 @@ export function CallScreen({ navigation, route }: Props) {
   const [visibleCount, setVisibleCount] = useState(0);
   const [dispatchTimer, setDispatchTimer] = useState(DISPATCH_TIME_LIMIT);
   const [chosenDispatch, setChosenDispatch] = useState<DispatchType | null>(null);
+  const [showRankUp, setShowRankUp] = useState(false);
   const dispatchStartTime = useRef<number>(0);
   const isFirstCall = useRef(progress.callsHandled === 0).current;
 
@@ -150,6 +152,14 @@ export function CallScreen({ navigation, route }: Props) {
   const handleNextCall = () => {
     audio.playSfx("tap");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // Cap a rank-up with a full-screen celebration — the cinematic "end" beat
+    // of the session (peak-end). Falls through to the lobby when no rank-up.
+    if (progress.lastResult?.rankedUp && IMAGES["rank-up"]) {
+      audio.playSfx("success");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setShowRankUp(true);
+      return;
+    }
     navigation.replace("DispatchLobby");
   };
 
@@ -303,6 +313,21 @@ export function CallScreen({ navigation, route }: Props) {
             caption={call.introCaption}
             tag={`INCOMING · ${call.location}`}
             onComplete={() => setPhase("dialogue")}
+          />
+        </View>
+      )}
+
+      {showRankUp && IMAGES["rank-up"] && (
+        <View style={StyleSheet.absoluteFill}>
+          <CinematicImage
+            source={IMAGES["rank-up"]}
+            tag="PROMOTION"
+            title="PROMOTED"
+            caption={`You made ${
+              progress.lastResult?.newRankName ?? "the next rank"
+            }!`}
+            durationMs={4200}
+            onComplete={() => navigation.replace("DispatchLobby")}
           />
         </View>
       )}

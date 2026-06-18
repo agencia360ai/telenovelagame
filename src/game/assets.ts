@@ -100,6 +100,8 @@ export const IMAGES: Record<string, number | string> = {
   //   • host on Dropbox (?dl=1) / Supabase and paste that URL here.
   "dispatch-center":
     "https://media.app.layer.ai/workspaces/48383e6c-48d9-40cd-801b-2e20b2e8d7a4/files/af5f73dc-65d2-4de9-a817-dad7518bfbd7/cinematic_establishing_shot_of_a_911_emergency_dispatch_center_at-2026-06-18-233301.png",
+  "rank-up":
+    "https://media.app.layer.ai/workspaces/48383e6c-48d9-40cd-801b-2e20b2e8d7a4/files/5dabd7fb-87dc-41c0-92cf-d0ba598788b2/cinematic_celebratory_hero_shot_of_a_proud_911_dispatch_operator-2026-06-18-234906.png",
 };
 
 /** Resolve an IMAGES key (or raw value) to a React Native image source. */
