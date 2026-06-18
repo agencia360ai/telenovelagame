@@ -20,8 +20,8 @@
 // Host the files (Supabase Storage recommended — see docs/CONTENT_GUIDE.md),
 // then paste the public URL here. Dropbox share links work too: end them with
 // `?dl=1` so they serve the raw mp4.
-export const VIDEOS: Record<string, string> = {
-  // In-call looping backgrounds
+export const VIDEOS: Record<string, string | number> = {
+  // In-call looping backgrounds (still streamed from Dropbox; large originals).
   "border-runners":
     "https://www.dropbox.com/scl/fi/29p7w6ahmv04qsk3aok24/M-1.mp4?rlkey=jrtt9h9fdwaxc0rkznfs8xp88&dl=1",
   "kitchen-fire":
@@ -29,15 +29,13 @@ export const VIDEOS: Record<string, string> = {
   "armed-robbery":
     "https://www.dropbox.com/scl/fi/sgpnw5olpjle9k89gpoqu/M-3.mp4?rlkey=v9e6nxyzng47d1686wew2kyoc&dl=1",
 
-  // Full-screen intro cutscenes (telenovela establishing shots), hosted on
-  // Dropbox with ?dl=1 so they stream the raw mp4. To swap which clip plays
-  // before a scene, just move the URL to a different "-intro" key.
-  "border-runners-intro":
-    "https://www.dropbox.com/scl/fi/3vf7n9tztxqkieqwyoe6z/hf_20260612_160621_132bea1f-f893-43e2-8922-94207952cf8f.mp4?rlkey=j7hfidyrozj916402lk8oea7r&dl=1",
-  "kitchen-fire-intro":
-    "https://www.dropbox.com/scl/fi/e1nwg4hwycowu0bcimpv5/hf_20260612_161209_914c1153-3e49-40b8-ab2f-572d7de138ba.mp4?rlkey=q7km3gxvk8pqht5o0i9jnj8rm&dl=1",
-  "armed-robbery-intro":
-    "https://www.dropbox.com/scl/fi/e46ec3zy5shzfzk8h6mxy/hf_20260612_160344_f0f015e6-b37e-4c74-b43a-af91454666dc.mp4?rlkey=kvua91dpmimqcf6js0y40xwoy&dl=1",
+  // Full-screen intro cutscenes (telenovela establishing shots). Compressed to
+  // 720p (~0.5–2.7 MB each) and BUNDLED so they play instantly with no buffering
+  // — the intro is the first thing seen each call. Swap a clip by changing the
+  // require() path here.
+  "border-runners-intro": require("../../assets/videos/border-runners-intro.mp4"),
+  "kitchen-fire-intro": require("../../assets/videos/kitchen-fire-intro.mp4"),
+  "armed-robbery-intro": require("../../assets/videos/armed-robbery-intro.mp4"),
 };
 
 /** Resolve a CallScenario.video value to something expo-video can play. */

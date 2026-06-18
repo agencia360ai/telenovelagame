@@ -44,6 +44,8 @@ yarn-error.*
 # bundled video assets (too large for git)
 assets/videos/*.mp4
 assets/videos/*.MP4
+# …except the compressed 720p intro cutscenes (small enough to bundle)
+!assets/videos/*-intro.mp4
 
 # build tool artifacts
 *.tgz
