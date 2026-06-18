@@ -6,6 +6,8 @@ export const armedRobbery: CallScenario = {
   callType: "CRIME IN PROGRESS",
   location: "QuickMart · 5th & Main",
   video: "armed-robbery",
+  introVideo: "armed-robbery-intro",
+  introCaption: "QuickMart, 5th & Main — armed robbery in progress",
   difficulty: 2,
   reward: 8,
   correctDispatch: "police",

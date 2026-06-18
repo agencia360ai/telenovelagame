@@ -31,13 +31,14 @@ import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
+import { CutscenePlayer } from "../components/CutscenePlayer";
 import { ResultBreakdown } from "../components/ResultBreakdown";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Call">;
 
-type Phase = "dialogue" | "dispatch" | "deploying" | "result";
+type Phase = "intro" | "dialogue" | "dispatch" | "deploying" | "result";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
@@ -49,7 +50,9 @@ export function CallScreen({ navigation, route }: Props) {
   const progress = useDispatchProgress();
   const scrollRef = useRef<ScrollView>(null);
 
-  const [phase, setPhase] = useState<Phase>("dialogue");
+  const [phase, setPhase] = useState<Phase>(
+    call.introVideo ? "intro" : "dialogue"
+  );
   const [visibleCount, setVisibleCount] = useState(0);
   const [dispatchTimer, setDispatchTimer] = useState(DISPATCH_TIME_LIMIT);
   const [chosenDispatch, setChosenDispatch] = useState<DispatchType | null>(null);
@@ -70,6 +73,18 @@ export function CallScreen({ navigation, route }: Props) {
   useEffect(() => {
     audio.stopMusic();
   }, []);
+
+  // Mute/pause the looping background video while the full-screen intro
+  // cutscene is on top, so their audio doesn't clash; resume on dialogue.
+  useEffect(() => {
+    try {
+      if (phase === "intro") {
+        player.pause();
+      } else {
+        player.play();
+      }
+    } catch {}
+  }, [phase]);
 
   // Dispatch countdown timer
   useEffect(() => {
@@ -278,6 +293,17 @@ export function CallScreen({ navigation, route }: Props) {
           <Pressable style={styles.nextCallBtn} onPress={handleNextCall}>
             <Text style={styles.nextCallText}>NEXT CALL ▸</Text>
           </Pressable>
+        </View>
+      )}
+
+      {phase === "intro" && call.introVideo && (
+        <View style={StyleSheet.absoluteFill}>
+          <CutscenePlayer
+            source={call.introVideo}
+            caption={call.introCaption}
+            tag={`INCOMING · ${call.location}`}
+            onComplete={() => setPhase("dialogue")}
+          />
         </View>
       )}
 

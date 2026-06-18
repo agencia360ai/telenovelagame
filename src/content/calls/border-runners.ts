@@ -6,6 +6,8 @@ export const borderRunners: CallScenario = {
   callType: "SUSPICIOUS ACTIVITY",
   location: "Highway 2 · Mile 47",
   video: "border-runners",
+  introVideo: "border-runners-intro",
+  introCaption: "Highway 2, Mile 47 — suspicious vehicles heading for the border",
   difficulty: 2,
   reward: 8,
   correctDispatch: "border_patrol",

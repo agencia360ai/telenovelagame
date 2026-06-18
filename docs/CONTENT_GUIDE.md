@@ -44,21 +44,56 @@ That's it — it now appears in the random rotation.
 
 ## 2. Add a video
 
-Videos are **large**, so they are streamed from a URL (never bundled). Add the
-URL to `VIDEOS` in `src/game/assets.ts`, keyed by the call id:
+Videos are **large**, so they are streamed from a URL (never bundled). Each
+scene can have **two** clips:
+
+| Key in `VIDEOS`   | Role                                                     |
+| ----------------- | -------------------------------------------------------- |
+| `"<id>"`          | looping background shown **during** the call             |
+| `"<id>-intro"`    | full-screen cinematic that plays **once** before dialogue |
 
 ```ts
 export const VIDEOS = {
-  "warehouse-collapse": "https://<cdn>/warehouse.mp4",
+  "warehouse-collapse": "https://<cdn>/warehouse-loop.mp4",
+  "warehouse-collapse-intro": "https://<cdn>/warehouse-cinematic.mp4",
 };
 ```
 
-**Where to host videos** (pick one):
-- **Supabase Storage** — already a dependency; make a public `videos` bucket and
-  use the public URL. Best long-term home.
-- **Cloudflare R2 / AWS S3 + CloudFront** — production CDN.
-- **Dropbox** (current quick option) — share link with `?dl=1` at the end so it
-  serves the raw file. Fine for prototyping, not for production traffic.
+Then on the scenario:
+
+```ts
+export const myCall: CallScenario = {
+  // …
+  video: "warehouse-collapse",
+  introVideo: "warehouse-collapse-intro",
+  introCaption: "Dockside Warehouse 9 — partial roof collapse",
+};
+```
+
+**Graceful fallback:** if a `"<id>-intro"` entry is empty, the intro reuses the
+base `"<id>"` video automatically — so the cinematic works even before you've
+made a dedicated intro clip. Paste the real URL later and it upgrades itself.
+
+### Where to host videos (recommended: Supabase Storage)
+
+You already have `@supabase/supabase-js`. Steps:
+
+1. In your Supabase project → **Storage** → create a **public** bucket named
+   `videos`.
+2. Upload your `.mp4` files (drag-and-drop in the dashboard, or the CLI).
+3. Click a file → **Copy URL** (public). It looks like:
+   `https://<project>.supabase.co/storage/v1/object/public/videos/kitchen-fire-intro.mp4`
+4. Paste that URL into the matching key in `VIDEOS`.
+
+Other options:
+- **Cloudflare R2 / Bunny.net / AWS S3 + CloudFront** — best for heavy video
+  traffic at scale.
+- **Dropbox** (quick prototype) — share link with `?dl=1` at the end so it
+  serves the raw file. Rate-limited; fine for testing, not production.
+
+**Keep cinematics short & light:** 5–10 s, H.264 mp4, ≤ ~5 MB each. Long/large
+clips buffer slowly on mobile and the player will show a "CONNECTING FEED…"
+state while it loads.
 
 ## 3. Add sounds / music
 

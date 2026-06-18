@@ -32,8 +32,17 @@ export type CallScenario = {
   /**
    * Video key resolved through the asset registry (src/game/assets.ts).
    * May also be a raw http(s) URL or a require() number as a fallback.
+   * This is the looping background shown during the call.
    */
   video: string | number;
+  /**
+   * Optional full-screen cinematic that plays ONCE before the dialogue —
+   * the "establishing shot" that makes each call feel like a scene.
+   * Omit it and the call starts straight at the chat (backward compatible).
+   */
+  introVideo?: string | number;
+  /** Optional caption overlaid on the intro cutscene. */
+  introCaption?: string;
   /** Scripted back-and-forth revealed one tap at a time. */
   messages: CallMessage[];
   /** The unit that earns the reward. */

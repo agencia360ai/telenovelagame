@@ -6,6 +6,8 @@ export const kitchenFire: CallScenario = {
   callType: "FIRE EMERGENCY",
   location: "742 Oak Avenue",
   video: "kitchen-fire",
+  introVideo: "kitchen-fire-intro",
+  introCaption: "742 Oak Avenue — caller reports a kitchen fire",
   difficulty: 1,
   reward: 5,
   correctDispatch: "firefighters",
