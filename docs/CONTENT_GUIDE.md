@@ -95,6 +95,38 @@ Other options:
 clips buffer slowly on mobile and the player will show a "CONNECTING FEED…"
 state while it loads.
 
+## 2b. Cinematic stills (placeholders for video moments)
+
+Some "movie" moments don't have a video yet (boot intro, rank-up, result). Use a
+**still image** as a cinematic placeholder via `CinematicImage` — it adds
+letterbox bars, a slow Ken-Burns zoom, a caption, and tap/auto-advance, so a
+static image still feels like a film beat. If the image fails to load it falls
+back to a themed "911" title-card (never a broken image).
+
+1. Generate or draw the image (we used Layer.ai → **GPT Image 2**, portrait
+   1024×1536).
+2. Add it to `IMAGES` in `src/game/assets.ts`:
+   ```ts
+   export const IMAGES = {
+     "dispatch-center": require("../../assets/images/cinematics/dispatch-center.png"),
+     // …or a remote URL string (Dropbox `?dl=1` / Supabase public URL)
+   };
+   ```
+3. Render it where you want the beat:
+   ```tsx
+   <CinematicImage
+     source={IMAGES["dispatch-center"]}
+     tag="DISPATCH CENTER · LIVE"
+     title="NIGHT SHIFT"
+     caption="The city is calling, operator."
+     onComplete={goNext}
+   />
+   ```
+
+The boot intro already uses this (`src/screens/BootScreen.tsx`). When you have a
+real **video** for the moment, add it to `VIDEOS` and switch to `CutscenePlayer`
+instead — same framing, so it's a drop-in upgrade.
+
 ## 3. Add sounds / music
 
 Small audio files **are** bundled. Drop the file in `assets/audio/` and register

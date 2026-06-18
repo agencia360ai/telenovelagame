@@ -86,6 +86,31 @@ export const MUSIC_VOLUME: Record<MusicKey, number> = {
   lobby: 0.5,
 };
 
+// ── Cinematic stills (placeholders) ──────────────────────────────────────────
+// Full-screen "film" images used where a real video clip doesn't exist yet
+// (boot intro, rank-up, result). Small enough to bundle. Each is a stand-in:
+// swap it for a real video by adding a key to VIDEOS and pointing the moment at
+// that instead. A value may be a require() number (bundled) or a remote URL.
+export const IMAGES: Record<string, number | string> = {
+  // Generated with Layer.ai (GPT Image 2). Placeholder served from the Layer
+  // workspace CDN. For production, download it from app.layer.ai and either:
+  //   • drop it in assets/images/cinematics/ and use require(...) (bundled), or
+  //   • host on Dropbox (?dl=1) / Supabase and paste that URL here.
+  "dispatch-center":
+    "https://media.app.layer.ai/workspaces/48383e6c-48d9-40cd-801b-2e20b2e8d7a4/files/af5f73dc-65d2-4de9-a817-dad7518bfbd7/cinematic_establishing_shot_of_a_911_emergency_dispatch_center_at-2026-06-18-233301.png",
+};
+
+/** Resolve an IMAGES key (or raw value) to a React Native image source. */
+export function resolveImage(
+  keyOrSource: number | string
+): number | { uri: string } {
+  if (typeof keyOrSource === "number") return keyOrSource;
+  const found = IMAGES[keyOrSource];
+  if (typeof found === "number") return found;
+  if (typeof found === "string" && found) return { uri: found };
+  return { uri: keyOrSource }; // assume it's already a URL
+}
+
 // ── 3D models (bundled GLB or remote URL) ────────────────────────────────────
 export const MODELS: Record<string, string | number> = {
   officer: require("../../assets/models/officer.glb"),

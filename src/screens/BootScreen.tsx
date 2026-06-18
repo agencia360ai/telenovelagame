@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import Animated, {
   useSharedValue,
@@ -12,14 +12,20 @@ import Animated, {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useUserIdentity } from "../context/UserIdentityContext";
+import { CinematicImage } from "../components/CinematicImage";
+import { IMAGES } from "../game/assets";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 import { analytics } from "../lib/analytics";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Boot">;
 
+// Optional cinematic establishing shot shown once after the splash.
+const INTRO_IMAGE_KEY = "dispatch-center";
+
 export function BootScreen({ navigation }: Props) {
   const { userId, loading } = useUserIdentity();
+  const [showIntro, setShowIntro] = useState(false);
 
   const badgeOpacity = useSharedValue(0);
   const badgeScale = useSharedValue(0.8);
@@ -49,11 +55,28 @@ export function BootScreen({ navigation }: Props) {
       analytics.init();
       analytics.track("app_open");
       const timer = setTimeout(() => {
-        navigation.replace("DispatchLobby");
+        // Play the cinematic intro if we have one; otherwise go straight in.
+        if (IMAGES[INTRO_IMAGE_KEY]) {
+          setShowIntro(true);
+        } else {
+          navigation.replace("DispatchLobby");
+        }
       }, 1600);
       return () => clearTimeout(timer);
     }
   }, [loading, userId, navigation]);
+
+  if (showIntro) {
+    return (
+      <CinematicImage
+        source={IMAGES[INTRO_IMAGE_KEY]}
+        tag="DISPATCH CENTER · LIVE"
+        title="NIGHT SHIFT"
+        caption="The city is calling. Every second counts, operator."
+        onComplete={() => navigation.replace("DispatchLobby")}
+      />
+    );
+  }
 
   const badgeStyle = useAnimatedStyle(() => ({
     opacity: badgeOpacity.value,
