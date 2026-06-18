@@ -9,6 +9,8 @@ export const borderRunners: CallScenario = {
   difficulty: 2,
   reward: 8,
   correctDispatch: "border_patrol",
+  correctExplanation:
+    "Suspicious cross-border vehicle activity falls under BORDER PATROL jurisdiction — they monitor and intercept at border zones.",
   messages: [
     {
       sender: "caller",

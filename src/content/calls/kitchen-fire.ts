@@ -9,6 +9,8 @@ export const kitchenFire: CallScenario = {
   difficulty: 1,
   reward: 5,
   correctDispatch: "firefighters",
+  correctExplanation:
+    "Active fires with people trapped require FIRE DEPT — they have the gear to suppress flames and perform rescue operations.",
   messages: [
     { sender: "caller", text: "Help! My kitchen is on fire! Oh God!" },
     { sender: "operator", text: "Ma'am, are you inside the house?" },

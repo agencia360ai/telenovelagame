@@ -9,7 +9,14 @@ import {
   Dimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
-import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+  FadeIn,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSequence,
+} from "react-native-reanimated";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -44,10 +51,15 @@ export function CallScreen({ navigation, route }: Props) {
   const [phase, setPhase] = useState<Phase>("dialogue");
   const [visibleCount, setVisibleCount] = useState(0);
   const [dispatchTimer, setDispatchTimer] = useState(DISPATCH_TIME_LIMIT);
+  const [chosenDispatch, setChosenDispatch] = useState<DispatchType | null>(null);
   const dispatchStartTime = useRef<number>(0);
-  // Captured once at mount so it stays true through the result screen even
-  // after callsHandled increments. Drives the first-time tutorial coachmarks.
   const isFirstCall = useRef(progress.callsHandled === 0).current;
+
+  const flashOpacity = useSharedValue(0);
+  const flashColor = useRef<string>(colors.dispatch.answer);
+  const flashStyle = useAnimatedStyle(() => ({
+    opacity: flashOpacity.value,
+  }));
 
   const player = useVideoPlayer(resolveVideo(call.video), (p) => {
     p.loop = true;
@@ -93,9 +105,16 @@ export function CallScreen({ navigation, route }: Props) {
 
     const elapsed = (Date.now() - dispatchStartTime.current) / 1000;
     const correct = choice === call.correctDispatch;
+    setChosenDispatch(choice);
     progress.recordResult(correct, call.reward, elapsed);
     setPhase("result");
     scrollSoon();
+
+    flashColor.current = correct ? colors.dispatch.answer : colors.dispatch.decline;
+    flashOpacity.value = withSequence(
+      withTiming(0.45, { duration: 80 }),
+      withTiming(0, { duration: 350 })
+    );
 
     setTimeout(() => {
       audio.playSfx(correct ? "success" : "fail");
@@ -105,10 +124,12 @@ export function CallScreen({ navigation, route }: Props) {
           : Haptics.NotificationFeedbackType.Error
       );
     }, 250);
+  };
 
-    setTimeout(() => {
-      navigation.replace("DispatchLobby");
-    }, 4500);
+  const handleNextCall = () => {
+    audio.playSfx("tap");
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    navigation.replace("DispatchLobby");
   };
 
   const shiftLabel = `${progress.shiftProgress + 1}/${SHIFT_SIZE}`;
@@ -228,7 +249,12 @@ export function CallScreen({ navigation, route }: Props) {
           )}
 
           {phase === "result" && progress.lastResult && (
-            <ResultBreakdown result={progress.lastResult} />
+            <ResultBreakdown
+              result={progress.lastResult}
+              correctDispatch={call.correctDispatch}
+              correctExplanation={call.correctExplanation}
+              chosenDispatch={chosenDispatch ?? undefined}
+            />
           )}
         </ScrollView>
       </Pressable>
@@ -240,6 +266,23 @@ export function CallScreen({ navigation, route }: Props) {
           </Text>
         </View>
       )}
+
+      {phase === "result" && (
+        <View style={styles.bottomBar}>
+          <Pressable style={styles.nextCallBtn} onPress={handleNextCall}>
+            <Text style={styles.nextCallText}>NEXT CALL ▸</Text>
+          </Pressable>
+        </View>
+      )}
+
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          StyleSheet.absoluteFill,
+          { backgroundColor: flashColor.current },
+          flashStyle,
+        ]}
+      />
     </SafeAreaView>
   );
 }
@@ -474,5 +517,17 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.sm,
     fontWeight: "700",
     letterSpacing: 1,
+  },
+  nextCallBtn: {
+    backgroundColor: colors.dispatch.cyan,
+    borderRadius: sizes.radius.md,
+    paddingHorizontal: 32,
+    paddingVertical: 14,
+  },
+  nextCallText: {
+    color: "#0A0E1A",
+    fontSize: sizes.font.md,
+    fontWeight: "900",
+    letterSpacing: 2,
   },
 });

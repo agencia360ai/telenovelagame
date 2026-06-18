@@ -9,6 +9,8 @@ export const armedRobbery: CallScenario = {
   difficulty: 2,
   reward: 8,
   correctDispatch: "police",
+  correctExplanation:
+    "Armed crime in progress requires POLICE — they're trained to respond to active threats and secure the scene.",
   messages: [
     {
       sender: "caller",

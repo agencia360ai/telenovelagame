@@ -15,6 +15,7 @@ import Animated, {
   withSequence,
   Easing,
   cancelAnimation,
+  FadeIn,
 } from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -24,7 +25,7 @@ import { XPBar } from "../components/XPBar";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { usePaywall } from "../context/PaywallContext";
 import { getNextCallId } from "../content/calls";
-import { getXPProgress, SHIFT_SIZE } from "../game/ranks";
+import { getXPProgress, RANKS, SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
@@ -43,10 +44,31 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   const glow = useSharedValue(0.4);
 
   const xpInfo = getXPProgress(progress.xp, progress.rankIndex);
+  const nearRankUp = xpInfo.percent >= 0.7 && xpInfo.needed > 0;
+  const nextRank = RANKS[progress.rankIndex + 1];
   const accuracy =
     progress.callsHandled > 0
       ? Math.round((progress.correctCount / progress.callsHandled) * 100)
       : 0;
+
+  const goalGlow = useSharedValue(0.5);
+
+  useEffect(() => {
+    if (!nearRankUp) return;
+    goalGlow.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.5, { duration: 1200, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      false
+    );
+    return () => cancelAnimation(goalGlow);
+  }, [nearRankUp]);
+
+  const goalGlowStyle = useAnimatedStyle(() => ({
+    opacity: goalGlow.value,
+  }));
 
   useEffect(() => {
     audio.playMusic("lobby");
@@ -143,6 +165,13 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           percent={xpInfo.percent}
           showLabel={false}
         />
+        {nearRankUp && nextRank && (
+          <Animated.View style={[styles.goalGradient, goalGlowStyle]}>
+            <Text style={styles.goalText}>
+              Almost {nextRank.icon} {nextRank.name}!
+            </Text>
+          </Animated.View>
+        )}
         {isTrialActive && !isSubscribed && (
           <Pressable
             onPress={() => navigation.navigate("Paywall" as any)}
@@ -180,12 +209,20 @@ export function DispatchLobbyScreen({ navigation }: Props) {
             </Text>
 
             {progress.callsHandled > 0 ? (
-              <View style={styles.statsRow}>
-                <StatChip label="Calls" value={progress.callsHandled} />
-                <StatChip label="Accuracy" value={`${accuracy}%`} />
-                <StatChip label="Streak" value={progress.currentStreak} />
-                <StatChip label="Best" value={progress.bestStreak} />
-              </View>
+              <>
+                <Animated.Text
+                  entering={FadeIn.duration(600)}
+                  style={styles.primingText}
+                >
+                  {progress.correctCount} emergencies resolved · lives impacted
+                </Animated.Text>
+                <View style={styles.statsRow}>
+                  <StatChip label="Calls" value={progress.callsHandled} />
+                  <StatChip label="Accuracy" value={`${accuracy}%`} />
+                  <StatChip label="Streak" value={progress.currentStreak} />
+                  <StatChip label="Best" value={progress.bestStreak} />
+                </View>
+              </>
             ) : (
               <Text style={styles.standbyHint}>Stand by, operator…</Text>
             )}
@@ -304,6 +341,17 @@ const styles = StyleSheet.create({
     marginBottom: sizes.spacing.sm,
     gap: 4,
   },
+  goalGradient: {
+    alignSelf: "center",
+    marginTop: 2,
+  },
+  goalText: {
+    color: colors.dispatch.cyan,
+    fontSize: 11,
+    fontWeight: "900",
+    letterSpacing: 0.5,
+    textAlign: "center",
+  },
   trialPill: {
     alignSelf: "center",
     backgroundColor: "rgba(245, 158, 11, 0.12)",
@@ -386,6 +434,13 @@ const styles = StyleSheet.create({
   standbyHint: {
     color: colors.dispatch.textMuted,
     fontSize: sizes.font.sm,
+  },
+  primingText: {
+    color: colors.dispatch.answer,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.3,
+    textAlign: "center",
   },
   statsRow: {
     flexDirection: "row",

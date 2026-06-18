@@ -1,29 +1,59 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Animated, { FadeInDown, FadeIn, ZoomIn } from "react-native-reanimated";
-import { CallResultDetails } from "../game/types";
+import { CallResultDetails, DispatchType } from "../game/types";
 import { getAchievement } from "../game/achievements";
 import { getXPProgress } from "../game/ranks";
+import { getDispatchLabel } from "../content/calls";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { XPBar } from "./XPBar";
 import { colors } from "../theme/colors";
 
 type Props = {
   result: CallResultDetails;
+  correctDispatch: DispatchType;
+  correctExplanation?: string;
+  chosenDispatch?: DispatchType;
 };
 
-export function ResultBreakdown({ result }: Props) {
+export function ResultBreakdown({
+  result,
+  correctDispatch,
+  correctExplanation,
+  chosenDispatch,
+}: Props) {
   const progress = useDispatchProgress();
   const xpInfo = getXPProgress(progress.xp, progress.rankIndex);
 
   if (!result.correct) {
+    const correctLabel = getDispatchLabel(correctDispatch);
+    const chosenLabel = chosenDispatch
+      ? getDispatchLabel(chosenDispatch)
+      : "—";
+
     return (
       <Animated.View
         entering={FadeInDown.duration(400)}
         style={[styles.box, styles.boxFail]}
       >
         <Text style={styles.emoji}>✗</Text>
-        <Text style={styles.title}>WRONG UNIT!</Text>
+        <Text style={styles.title}>WRONG UNIT</Text>
+        <View style={styles.teachSection}>
+          <Text style={styles.teachSent}>
+            You sent {chosenLabel}
+          </Text>
+          <Text style={styles.teachCorrect}>
+            The right call was {correctLabel}
+          </Text>
+          {correctExplanation && (
+            <Animated.Text
+              entering={FadeIn.delay(400).duration(300)}
+              style={styles.teachWhy}
+            >
+              {correctExplanation}
+            </Animated.Text>
+          )}
+        </View>
         <Text style={styles.sub}>Streak reset — keep going!</Text>
       </Animated.View>
     );
@@ -202,6 +232,33 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.dispatch.textMuted,
     fontWeight: "600",
+  },
+  teachSection: {
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.25)",
+    borderRadius: 10,
+    padding: 14,
+    gap: 6,
+    alignItems: "center",
+  },
+  teachSent: {
+    color: colors.dispatch.decline,
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  teachCorrect: {
+    color: colors.dispatch.answer,
+    fontSize: 14,
+    fontWeight: "900",
+  },
+  teachWhy: {
+    color: colors.dispatch.text,
+    fontSize: 12,
+    fontWeight: "500",
+    lineHeight: 18,
+    textAlign: "center",
+    marginTop: 2,
+    opacity: 0.85,
   },
   breakdown: {
     width: "100%",

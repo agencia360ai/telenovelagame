@@ -42,6 +42,8 @@ export type CallScenario = {
   reward: number;
   /** 1 = easy, 2 = medium, 3 = hard. Reserved for future call selection. */
   difficulty?: 1 | 2 | 3;
+  /** Shown on wrong answers — teaches why the correct unit was the right call. */
+  correctExplanation?: string;
 };
 
 export type CallResult = {
