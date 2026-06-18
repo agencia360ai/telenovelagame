@@ -30,13 +30,14 @@ import { resolveVideo } from "../game/assets";
 import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
+import { DispatchRadar } from "../components/DispatchRadar";
 import { ResultBreakdown } from "../components/ResultBreakdown";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Call">;
 
-type Phase = "dialogue" | "dispatch" | "result";
+type Phase = "dialogue" | "dispatch" | "deploying" | "result";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
@@ -104,17 +105,22 @@ export function CallScreen({ navigation, route }: Props) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
     const elapsed = (Date.now() - dispatchStartTime.current) / 1000;
-    const correct = choice === call.correctDispatch;
     setChosenDispatch(choice);
-    progress.recordResult(correct, call.reward, elapsed);
+    progress.recordResult(choice === call.correctDispatch, call.reward, elapsed);
+
+    flashColor.current = colors.dispatch.cyan;
+    flashOpacity.value = withSequence(
+      withTiming(0.3, { duration: 80 }),
+      withTiming(0, { duration: 300 })
+    );
+
+    setPhase("deploying");
+  };
+
+  const handleDeployComplete = () => {
+    const correct = chosenDispatch === call.correctDispatch;
     setPhase("result");
     scrollSoon();
-
-    flashColor.current = correct ? colors.dispatch.answer : colors.dispatch.decline;
-    flashOpacity.value = withSequence(
-      withTiming(0.45, { duration: 80 }),
-      withTiming(0, { duration: 350 })
-    );
 
     setTimeout(() => {
       audio.playSfx(correct ? "success" : "fail");
@@ -123,7 +129,7 @@ export function CallScreen({ navigation, route }: Props) {
           ? Haptics.NotificationFeedbackType.Success
           : Haptics.NotificationFeedbackType.Error
       );
-    }, 250);
+    }, 200);
   };
 
   const handleNextCall = () => {
@@ -272,6 +278,24 @@ export function CallScreen({ navigation, route }: Props) {
           <Pressable style={styles.nextCallBtn} onPress={handleNextCall}>
             <Text style={styles.nextCallText}>NEXT CALL ▸</Text>
           </Pressable>
+        </View>
+      )}
+
+      {phase === "deploying" && chosenDispatch && (
+        <View style={StyleSheet.absoluteFill}>
+          <DispatchRadar
+            location={call.location}
+            unitIcon={
+              DISPATCH_OPTIONS.find((o) => o.id === chosenDispatch)?.icon ??
+              "🚔"
+            }
+            unitLabel={
+              DISPATCH_OPTIONS.find((o) => o.id === chosenDispatch)
+                ?.label.replace("\n", " ") ?? "UNIT"
+            }
+            callId={call.id}
+            onComplete={handleDeployComplete}
+          />
         </View>
       )}
 

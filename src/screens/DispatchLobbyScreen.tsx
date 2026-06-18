@@ -244,6 +244,26 @@ export function DispatchLobbyScreen({ navigation }: Props) {
                 ))}
               </View>
             </View>
+
+            {/* Zeigarnik open-loop: nudge when 1 call left in shift */}
+            {progress.shiftProgress === SHIFT_SIZE - 1 && (
+              <Animated.Text
+                entering={FadeIn.duration(400)}
+                style={styles.shiftNudge}
+              >
+                1 call left to complete your shift!
+              </Animated.Text>
+            )}
+
+            {/* Daily login streak (loss aversion #3) */}
+            {progress.dailyStreak >= 2 && (
+              <View style={styles.dailyStreakRow}>
+                <Text style={styles.dailyStreakIcon}>📅</Text>
+                <Text style={styles.dailyStreakText}>
+                  {progress.dailyStreak} day streak — don't break it!
+                </Text>
+              </View>
+            )}
           </View>
         )}
 
@@ -441,6 +461,33 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     letterSpacing: 0.3,
     textAlign: "center",
+  },
+  shiftNudge: {
+    color: colors.dispatch.amber,
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.3,
+    textAlign: "center",
+  },
+  dailyStreakRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "rgba(245, 158, 11, 0.08)",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: "rgba(245, 158, 11, 0.2)",
+    marginTop: 2,
+  },
+  dailyStreakIcon: {
+    fontSize: 14,
+  },
+  dailyStreakText: {
+    color: colors.dispatch.amber,
+    fontSize: 11,
+    fontWeight: "700",
   },
   statsRow: {
     flexDirection: "row",

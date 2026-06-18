@@ -33,10 +33,23 @@ export type DispatchProgress = {
   shiftProgress: number;
   unlockedAchievements: string[];
   lastResult: CallResultDetails | null;
+  dailyStreak: number;
+  lastPlayDate: string;
   recordResult: (correct: boolean, baseReward: number, dispatchSeconds: number) => void;
   clearLastResult: () => void;
   reset: () => void;
 };
+
+function todayStr(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function isYesterday(dateStr: string): boolean {
+  const d = new Date(dateStr);
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  return d.toISOString().slice(0, 10) === yesterday.toISOString().slice(0, 10);
+}
 
 type State = {
   score: number;
@@ -53,6 +66,8 @@ type State = {
   fastestDispatch: number;
   unlockedAchievements: string[];
   lastResult: CallResultDetails | null;
+  dailyStreak: number;
+  lastPlayDate: string;
 };
 
 const DEFAULTS: State = {
@@ -70,6 +85,8 @@ const DEFAULTS: State = {
   fastestDispatch: 0,
   unlockedAchievements: [],
   lastResult: null,
+  dailyStreak: 0,
+  lastPlayDate: "",
 };
 
 const STORAGE_KEY = "dispatch_progress_v2";
@@ -79,6 +96,8 @@ const DispatchProgressContext = createContext<DispatchProgress>({
   recordResult: () => {},
   clearLastResult: () => {},
   reset: () => {},
+  dailyStreak: 0,
+  lastPlayDate: "",
 });
 
 export function DispatchProgressProvider({
@@ -94,11 +113,27 @@ export function DispatchProgressProvider({
       if (raw) {
         try {
           const saved = JSON.parse(raw);
+          const today = todayStr();
+          let dailyStreak = saved.dailyStreak ?? 0;
+          const lastPlayDate = saved.lastPlayDate ?? "";
+
+          if (lastPlayDate === today) {
+            // Already played today — keep streak
+          } else if (isYesterday(lastPlayDate)) {
+            // Consecutive day — bump streak
+            dailyStreak += 1;
+          } else if (lastPlayDate) {
+            // Missed a day — reset
+            dailyStreak = 1;
+          }
+
           setState((s) => ({
             ...s,
             ...saved,
             currentStreak: 0,
             lastResult: null,
+            dailyStreak,
+            lastPlayDate: lastPlayDate === today ? today : saved.lastPlayDate,
           }));
         } catch {}
       }
@@ -112,6 +147,7 @@ export function DispatchProgressProvider({
       score, xp, callsHandled, correctCount, bestStreak,
       rankIndex, shiftsCompleted, perfectShifts, shiftProgress,
       shiftCorrect, fastestDispatch, unlockedAchievements,
+      dailyStreak, lastPlayDate,
     } = state;
     AsyncStorage.setItem(
       STORAGE_KEY,
@@ -119,6 +155,7 @@ export function DispatchProgressProvider({
         score, xp, callsHandled, correctCount, bestStreak,
         rankIndex, shiftsCompleted, perfectShifts, shiftProgress,
         shiftCorrect, fastestDispatch, unlockedAchievements,
+        dailyStreak, lastPlayDate,
       })
     ).catch(() => {});
   }, [
@@ -126,6 +163,7 @@ export function DispatchProgressProvider({
     state.bestStreak, state.rankIndex, state.shiftsCompleted,
     state.perfectShifts, state.shiftProgress, state.shiftCorrect,
     state.fastestDispatch, state.unlockedAchievements,
+    state.dailyStreak, state.lastPlayDate,
   ]);
 
   const recordResult = useCallback(
@@ -211,6 +249,12 @@ export function DispatchProgressProvider({
           shiftPerfect,
         };
 
+        const today = todayStr();
+        let dailyStreak = prev.dailyStreak;
+        if (prev.lastPlayDate !== today) {
+          dailyStreak = isYesterday(prev.lastPlayDate) ? prev.dailyStreak + 1 : 1;
+        }
+
         return {
           score: newScore,
           xp: newXP,
@@ -229,6 +273,8 @@ export function DispatchProgressProvider({
             ...newAchievements,
           ],
           lastResult,
+          dailyStreak,
+          lastPlayDate: today,
         };
       });
     },
@@ -257,6 +303,8 @@ export function DispatchProgressProvider({
     shiftProgress: state.shiftProgress,
     unlockedAchievements: state.unlockedAchievements,
     lastResult: state.lastResult,
+    dailyStreak: state.dailyStreak,
+    lastPlayDate: state.lastPlayDate,
     recordResult,
     clearLastResult,
     reset,
