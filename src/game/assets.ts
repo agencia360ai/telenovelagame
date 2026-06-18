@@ -29,13 +29,15 @@ export const VIDEOS: Record<string, string> = {
   "armed-robbery":
     "https://www.dropbox.com/scl/fi/sgpnw5olpjle9k89gpoqu/M-3.mp4?rlkey=v9e6nxyzng47d1686wew2kyoc&dl=1",
 
-  // Full-screen intro cutscenes (establishing shots). Paste your hosted
-  // telenovela clips here. While these are empty, each scenario falls back to
-  // reusing its in-call video as the intro (see the call files), so the
-  // cinematic transition works out of the box.
-  "border-runners-intro": "",
-  "kitchen-fire-intro": "",
-  "armed-robbery-intro": "",
+  // Full-screen intro cutscenes (telenovela establishing shots), hosted on
+  // Dropbox with ?dl=1 so they stream the raw mp4. To swap which clip plays
+  // before a scene, just move the URL to a different "-intro" key.
+  "border-runners-intro":
+    "https://www.dropbox.com/scl/fi/3vf7n9tztxqkieqwyoe6z/hf_20260612_160621_132bea1f-f893-43e2-8922-94207952cf8f.mp4?rlkey=j7hfidyrozj916402lk8oea7r&dl=1",
+  "kitchen-fire-intro":
+    "https://www.dropbox.com/scl/fi/e1nwg4hwycowu0bcimpv5/hf_20260612_161209_914c1153-3e49-40b8-ab2f-572d7de138ba.mp4?rlkey=q7km3gxvk8pqht5o0i9jnj8rm&dl=1",
+  "armed-robbery-intro":
+    "https://www.dropbox.com/scl/fi/e46ec3zy5shzfzk8h6mxy/hf_20260612_160344_f0f015e6-b37e-4c74-b43a-af91454666dc.mp4?rlkey=kvua91dpmimqcf6js0y40xwoy&dl=1",
 };
 
 /** Resolve a CallScenario.video value to something expo-video can play. */
