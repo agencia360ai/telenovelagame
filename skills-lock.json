@@ -30,6 +30,12 @@
       "sourceType": "github",
       "skillPath": "skills/monetization-systems/SKILL.md",
       "computedHash": "1877d45048810742b4cd655cc6d6420af7db1564baa76ffb818de92fa6d37284"
+    },
+    "rodin3d-skill": {
+      "source": "deemostech/rodin3d-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rodin3d-skill/SKILL.md",
+      "computedHash": "fab620a12b1e01f529a1638ed4f13492e156276188464b870b405e64a0e8a005"
     }
   }
 }
