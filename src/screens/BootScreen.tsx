@@ -66,18 +66,6 @@ export function BootScreen({ navigation }: Props) {
     }
   }, [loading, userId, navigation]);
 
-  if (showIntro) {
-    return (
-      <CinematicImage
-        source={IMAGES[INTRO_IMAGE_KEY]}
-        tag="DISPATCH CENTER · LIVE"
-        title="NIGHT SHIFT"
-        caption="The city is calling. Every second counts, operator."
-        onComplete={() => navigation.replace("DispatchLobby")}
-      />
-    );
-  }
-
   const badgeStyle = useAnimatedStyle(() => ({
     opacity: badgeOpacity.value,
     transform: [{ scale: badgeScale.value }],
@@ -89,6 +77,18 @@ export function BootScreen({ navigation }: Props) {
   const titleStyle = useAnimatedStyle(() => ({ opacity: titleOpacity.value }));
   const subtitleStyle = useAnimatedStyle(() => ({ opacity: subtitleOpacity.value }));
   const loaderStyle = useAnimatedStyle(() => ({ opacity: loaderOpacity.value }));
+
+  if (showIntro) {
+    return (
+      <CinematicImage
+        source={IMAGES[INTRO_IMAGE_KEY]}
+        tag="DISPATCH CENTER · LIVE"
+        title="NIGHT SHIFT"
+        caption="The city is calling. Every second counts, operator."
+        onComplete={() => navigation.replace("DispatchLobby")}
+      />
+    );
+  }
 
   return (
     <View style={styles.container}>
