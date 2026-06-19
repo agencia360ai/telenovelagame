@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { BootScreen } from "../screens/BootScreen";
 import { DispatchLobbyScreen } from "../screens/DispatchLobbyScreen";
 import { CallScreen } from "../screens/CallScreen";
+import { MissionScreen } from "../screens/MissionScreen";
 import { StatsScreen } from "../screens/StatsScreen";
 import { PaywallScreen } from "../screens/PaywallScreen";
 import { HomeScreen } from "../screens/HomeScreen";
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   Boot: undefined;
   DispatchLobby: undefined;
   Call: { callId: string };
+  Mission: { missionId: string };
   Stats: undefined;
   Paywall: undefined;
   Home: undefined;
@@ -51,6 +53,11 @@ export function AppNavigator() {
         <Stack.Screen
           name="Call"
           component={CallScreen}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Mission"
+          component={MissionScreen}
           options={{ gestureEnabled: false }}
         />
         <Stack.Screen name="Stats" component={StatsScreen} />

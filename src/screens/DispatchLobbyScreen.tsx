@@ -24,7 +24,7 @@ import { RankBadge } from "../components/RankBadge";
 import { XPBar } from "../components/XPBar";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { usePaywall } from "../context/PaywallContext";
-import { getNextCallId } from "../content/calls";
+import { getNextMissionId } from "../content/missions";
 import { getXPProgress, RANKS, SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
@@ -127,8 +127,8 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPhase("connecting");
     setTimeout(() => {
-      navigation.replace("Call", {
-        callId: getNextCallId(progress.callsHandled, progress.rankIndex),
+      navigation.replace("Mission", {
+        missionId: getNextMissionId(progress.callsHandled, progress.rankIndex),
       });
     }, 800);
   };

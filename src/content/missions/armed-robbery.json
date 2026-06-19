@@ -1,0 +1,113 @@
+{
+  "schema": "mission@1",
+  "id": "armed-robbery",
+  "title": "Armed Robbery in Progress",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": ["crime", "weapons"],
+  "caller": {
+    "name": "Anonymous Caller",
+    "type": "CRIME IN PROGRESS",
+    "location": "QuickMart · 5th & Main"
+  },
+  "reward": 8,
+  "time_limit_seconds": 15,
+  "initial_variables": { "panic": 1, "intel": 0, "score_bonus": 0 },
+  "initial_flags": {},
+  "start": "b1",
+  "assets": [
+    {
+      "key": "armed-robbery-intro",
+      "type": "video",
+      "role": "intro",
+      "required": true,
+      "caption": "QuickMart, 5th & Main — armed robbery in progress",
+      "spec": { "aspect": "9:16", "max_seconds": 10, "max_mb": 5, "codec": "h264", "loop": false }
+    },
+    {
+      "key": "armed-robbery",
+      "type": "video",
+      "role": "ambient",
+      "spec": { "aspect": "9:16", "loop": true, "muted": true }
+    },
+    {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "deploy",
+      "spec": { "aspect": "9:16", "loop": true, "muted": true }
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "type": "dialogue",
+      "media": { "key": "armed-robbery", "role": "ambient" },
+      "lines": [
+        { "speaker": "caller", "text": "I'm whispering because I'm hiding. There's a robbery at the QuickMart on 5th and Main." },
+        { "speaker": "operator", "text": "I've got you. Are you safe right now?" }
+      ],
+      "next": "d1"
+    },
+    {
+      "id": "d1",
+      "type": "decision",
+      "prompt": "The caller is whispering and scared. What do you do first?",
+      "choices": [
+        {
+          "id": "d1_calm",
+          "label": "Keep your voice low and stay hidden — I'm sending help.",
+          "effects": { "panic": -1, "intel": 1, "score_bonus": 1 },
+          "feedback": "Calm caller, clearer details.",
+          "next": "b2"
+        },
+        {
+          "id": "d1_count",
+          "label": "How many of them, and are there weapons?",
+          "effects": { "intel": 1 },
+          "next": "b2"
+        },
+        {
+          "id": "d1_nego",
+          "label": "Patch in a hostage negotiator on standby.",
+          "gem_cost": 5,
+          "premium": true,
+          "effects": { "panic": -2, "intel": 2, "score_bonus": 2 },
+          "feedback": "Negotiator standing by — you have the full picture.",
+          "next": "b2"
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "type": "dialogue",
+      "media": { "key": "armed-robbery", "role": "ambient" },
+      "variants": [
+        {
+          "when": { "var": "intel", "op": ">=", "value": 2 },
+          "lines": [
+            { "speaker": "caller", "text": "Two men, ski masks. One has a handgun on the cashier. The other's watching the door." },
+            { "speaker": "caller", "text": "They keep shouting about the safe. I'm behind the drinks fridge." }
+          ]
+        }
+      ],
+      "lines": [
+        { "speaker": "caller", "text": "There's a guy with a gun. The cashier looks terrified — please hurry!" }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "An armed crime in progress requires POLICE — they're trained to respond to active threats and secure the scene.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": { "key": "border-runners-intro", "role": "deploy" }
+    }
+  ]
+}

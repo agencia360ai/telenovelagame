@@ -1,0 +1,112 @@
+{
+  "schema": "mission@1",
+  "id": "kitchen-fire",
+  "title": "Apartment Kitchen Fire",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": ["fire", "rescue"],
+  "caller": {
+    "name": "Resident",
+    "type": "FIRE EMERGENCY",
+    "location": "Maple Court Apts · Unit 4B"
+  },
+  "reward": 6,
+  "time_limit_seconds": 15,
+  "initial_variables": { "intel": 0, "score_bonus": 0 },
+  "initial_flags": { "people_inside": false },
+  "start": "b1",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "required": true,
+      "caption": "Maple Court Apartments — kitchen fire, Unit 4B",
+      "spec": { "aspect": "9:16", "max_seconds": 10, "max_mb": 5, "codec": "h264", "loop": false }
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient",
+      "spec": { "aspect": "9:16", "loop": true, "muted": true }
+    },
+    {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "deploy",
+      "spec": { "aspect": "9:16", "loop": true, "muted": true }
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "type": "dialogue",
+      "media": { "key": "kitchen-fire", "role": "ambient" },
+      "lines": [
+        { "speaker": "caller", "text": "My stove caught fire — the grease just went up! Flames are on the cabinets now!" },
+        { "speaker": "operator", "text": "Stay calm. Do not throw water on a grease fire. Is anyone still inside the apartment?" }
+      ],
+      "next": "d1"
+    },
+    {
+      "id": "d1",
+      "type": "decision",
+      "prompt": "Before you send anyone, what's your priority question?",
+      "choices": [
+        {
+          "id": "d1_people",
+          "label": "Is anyone trapped or unable to get out?",
+          "effects": { "intel": 1, "score_bonus": 1 },
+          "set_flags": { "people_inside": true },
+          "feedback": "Knowing there are people inside changes the response priority.",
+          "next": "b2"
+        },
+        {
+          "id": "d1_spread",
+          "label": "Get out now — how fast is it spreading?",
+          "effects": { "intel": 1 },
+          "next": "b2"
+        },
+        {
+          "id": "d1_extinguish",
+          "label": "Try to smother it with a lid or baking soda.",
+          "effects": { "score_bonus": -1 },
+          "feedback": "Risky — never coach a panicking caller to fight a spreading fire.",
+          "next": "b2"
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "type": "dialogue",
+      "media": { "key": "kitchen-fire", "role": "ambient" },
+      "variants": [
+        {
+          "when": { "flag": "people_inside", "eq": true },
+          "lines": [
+            { "speaker": "caller", "text": "My grandmother's in the back room — she can't move fast!" },
+            { "speaker": "operator", "text": "Get low, get to her, and head for the nearest exit. Help is on the way." }
+          ]
+        }
+      ],
+      "lines": [
+        { "speaker": "caller", "text": "It's climbing the wall — I can't put this out!" }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "A spreading structure fire — with a possible trapped resident — requires FIRE DEPT: suppression plus search-and-rescue.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": { "key": "border-runners-intro", "role": "deploy" }
+    }
+  ]
+}

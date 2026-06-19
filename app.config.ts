@@ -28,6 +28,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? "",
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "",
     cdnBase: process.env.EXPO_PUBLIC_CDN_BASE ?? "",
+    // Turns on the cloud content catalog + progressive download (off by
+    // default → the app uses the bundled missions). See docs/CONTENT_FRAMEWORK.md.
+    remoteContent: process.env.EXPO_PUBLIC_REMOTE_CONTENT === "true",
     mockSubscriptions:
       process.env.EXPO_PUBLIC_MOCK_SUBSCRIPTIONS === "true",
     mockIAP: process.env.EXPO_PUBLIC_MOCK_IAP === "true",

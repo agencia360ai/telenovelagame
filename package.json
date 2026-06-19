@@ -10,6 +10,7 @@
     "expo": "54.0.0",
     "expo-audio": "1.0.10",
     "expo-constants": "18.0.7",
+    "expo-file-system": "~19.0.11",
     "expo-gl": "16.0.6",
     "expo-haptics": "15.0.6",
     "expo-status-bar": "3.0.7",
@@ -37,6 +38,7 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "validate-story": "npx tsx scripts/validate-story.ts",
+    "validate-missions": "npx tsx scripts/validate-missions.ts",
     "build-manifest": "npx tsx scripts/build-manifest.ts"
   },
   "private": true

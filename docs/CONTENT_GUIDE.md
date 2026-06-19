@@ -1,5 +1,12 @@
 # 911 Dispatch — Content Guide
 
+> **New (interactive missions):** calls are now authored as branching JSON
+> **missions** — short lines + decisions *during* the call, ending in the
+> dispatch. See **[CONTENT_FRAMEWORK.md](./CONTENT_FRAMEWORK.md)** for the
+> `mission@1` schema, the media spec, the Supabase model, and progressive
+> download. The linear `CallScenario` system below still works and is kept for
+> reference, but new content should use the mission framework.
+
 How to add content to the game without touching screen code. The game is
 **data-driven**: screens read from registries, so adding content = adding data.
 
