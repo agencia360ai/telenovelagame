@@ -69,12 +69,14 @@ export function MissionScreen({ navigation, route }: Props) {
   const economy = useEconomy();
   const scrollRef = useRef<ScrollView>(null);
 
-  // The asset used as the looping CCTV background for the whole call.
-  const ambientKey =
-    mission.assets.find((a) => a.role === "ambient")?.key ??
-    mission.assets.find((a) => a.role === "intro")?.key ??
-    mission.id;
   const introAsset = mission.assets.find((a) => a.role === "intro");
+  // Looping CCTV background for the whole call. Prefer the bundled intro clip:
+  // it loads instantly with no buffering, where the streamed "ambient" URL may
+  // not play on mobile (the CCTV "CONNECTING FEED" fallback covers that case).
+  const ambientKey =
+    introAsset?.key ??
+    mission.assets.find((a) => a.role === "ambient")?.key ??
+    mission.id;
   const timeLimit = mission.time_limit_seconds ?? 15;
   const units = mission.units ?? DISPATCH_OPTIONS.map((o) => o.id);
   const unitOptions = DISPATCH_OPTIONS.filter((o) => units.includes(o.id));
