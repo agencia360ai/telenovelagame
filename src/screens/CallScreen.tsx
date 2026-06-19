@@ -26,7 +26,7 @@ import {
   DISPATCH_OPTIONS,
 } from "../content/calls";
 import { DispatchType } from "../game/types";
-import { resolveVideo, IMAGES } from "../game/assets";
+import { resolveVideo, IMAGES, VIDEOS } from "../game/assets";
 import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
@@ -72,6 +72,14 @@ export function CallScreen({ navigation, route }: Props) {
     p.play();
   });
 
+  const deployPlayer = useVideoPlayer(
+    VIDEOS["border-runners-intro"] as number,
+    (p) => {
+      p.loop = true;
+      p.muted = true;
+    }
+  );
+
   useEffect(() => {
     audio.stopMusic();
   }, []);
@@ -80,10 +88,20 @@ export function CallScreen({ navigation, route }: Props) {
   // cutscene is on top, so their audio doesn't clash; resume on dialogue.
   useEffect(() => {
     try {
-      if (phase === "intro") {
+      if (phase === "intro" || phase === "deploying") {
         player.pause();
       } else {
         player.play();
+      }
+    } catch {}
+  }, [phase]);
+
+  useEffect(() => {
+    try {
+      if (phase === "deploying") {
+        deployPlayer.replay();
+      } else {
+        deployPlayer.pause();
       }
     } catch {}
   }, [phase]);
@@ -181,12 +199,38 @@ export function CallScreen({ navigation, route }: Props) {
       </View>
 
       <View style={styles.videoWrap}>
+        {/* Fallback visible when the remote video stream hasn't loaded */}
+        <View style={styles.feedFallback}>
+          <View style={styles.feedGrid}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <View key={`h${i}`} style={[styles.feedGridLine, { top: `${(i + 1) * 14.2}%` }]} />
+            ))}
+            {Array.from({ length: 4 }).map((_, i) => (
+              <View key={`v${i}`} style={[styles.feedGridLineV, { left: `${(i + 1) * 20}%` }]} />
+            ))}
+          </View>
+          <Text style={styles.feedStatus}>CONNECTING FEED…</Text>
+        </View>
+
         <VideoView
           player={player}
           style={styles.video}
           contentFit="cover"
           nativeControls={false}
         />
+
+        {/* CCTV corner brackets */}
+        <View pointerEvents="none" style={[styles.cctvCorner, styles.cctvTL]} />
+        <View pointerEvents="none" style={[styles.cctvCorner, styles.cctvTR]} />
+        <View pointerEvents="none" style={[styles.cctvCorner, styles.cctvBL]} />
+        <View pointerEvents="none" style={[styles.cctvCorner, styles.cctvBR]} />
+
+        {/* REC indicator */}
+        <View style={styles.recWrap}>
+          <View style={styles.recDotLive} />
+          <Text style={styles.recLabel}>REC</Text>
+        </View>
+
         <View style={styles.callerTag}>
           <Text style={styles.callerTagText}>{call.callerName}</Text>
         </View>
@@ -334,6 +378,13 @@ export function CallScreen({ navigation, route }: Props) {
 
       {phase === "deploying" && chosenDispatch && (
         <View style={StyleSheet.absoluteFill}>
+          <VideoView
+            player={deployPlayer}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            nativeControls={false}
+          />
+          <View style={styles.deployVideoOverlay} />
           <DispatchRadar
             location={call.location}
             unitIcon={
@@ -425,9 +476,91 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#000",
   },
+  feedFallback: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#060A14",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  feedGrid: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  feedGridLine: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: "rgba(34, 211, 238, 0.04)",
+  },
+  feedGridLineV: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    width: 1,
+    backgroundColor: "rgba(34, 211, 238, 0.04)",
+  },
+  feedStatus: {
+    color: "rgba(34, 211, 238, 0.35)",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 3,
+  },
   video: {
     width: "100%",
     height: "100%",
+  },
+  cctvCorner: {
+    position: "absolute",
+    width: 18,
+    height: 18,
+  },
+  cctvTL: {
+    top: 6,
+    left: 6,
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: "rgba(34, 211, 238, 0.4)",
+  },
+  cctvTR: {
+    top: 6,
+    right: 6,
+    borderTopWidth: 2,
+    borderRightWidth: 2,
+    borderColor: "rgba(34, 211, 238, 0.4)",
+  },
+  cctvBL: {
+    bottom: 6,
+    left: 6,
+    borderBottomWidth: 2,
+    borderLeftWidth: 2,
+    borderColor: "rgba(34, 211, 238, 0.4)",
+  },
+  cctvBR: {
+    bottom: 6,
+    right: 6,
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderColor: "rgba(34, 211, 238, 0.4)",
+  },
+  recWrap: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  recDotLive: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: colors.dispatch.decline,
+  },
+  recLabel: {
+    color: colors.dispatch.decline,
+    fontSize: 9,
+    fontWeight: "900",
+    letterSpacing: 1,
   },
   callerTag: {
     position: "absolute",
@@ -446,7 +579,7 @@ const styles = StyleSheet.create({
   difficultyTag: {
     position: "absolute",
     top: 8,
-    right: 8,
+    right: 40,
     backgroundColor: "rgba(245, 158, 11, 0.2)",
     borderRadius: sizes.radius.sm,
     paddingHorizontal: 8,
@@ -456,6 +589,10 @@ const styles = StyleSheet.create({
     color: colors.dispatch.amber,
     fontSize: 12,
     letterSpacing: 2,
+  },
+  deployVideoOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(5, 8, 16, 0.55)",
   },
   chatArea: {
     flex: 1,

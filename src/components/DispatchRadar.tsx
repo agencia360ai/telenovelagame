@@ -208,7 +208,7 @@ export function DispatchRadar({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#050810",
+    backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
     gap: 20,
