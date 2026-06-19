@@ -50,6 +50,8 @@ import { DispatchRadar } from "../components/DispatchRadar";
 import { CutscenePlayer } from "../components/CutscenePlayer";
 import { CinematicImage } from "../components/CinematicImage";
 import { ResultBreakdown } from "../components/ResultBreakdown";
+import { Avatar3D } from "../components/Avatar3D";
+import { MODELS } from "../game/assets";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
@@ -77,6 +79,9 @@ export function MissionScreen({ navigation, route }: Props) {
     introAsset?.key ??
     mission.assets.find((a) => a.role === "ambient")?.key ??
     mission.id;
+  const callerAvatar =
+    mission.caller.avatar ??
+    (MODELS["officer"] != null ? "officer" : undefined);
   const timeLimit = mission.time_limit_seconds ?? 15;
   const units = mission.units ?? DISPATCH_OPTIONS.map((o) => o.id);
   const unitOptions = DISPATCH_OPTIONS.filter((o) => units.includes(o.id));
@@ -360,8 +365,23 @@ export function MissionScreen({ navigation, route }: Props) {
           <Text style={styles.recLabel}>REC</Text>
         </View>
 
-        <View style={styles.callerTag}>
-          <Text style={styles.callerTagText}>{mission.caller.name}</Text>
+        <View style={styles.callerPortrait}>
+          {callerAvatar ? (
+            <Avatar3D
+              source={callerAvatar}
+              mode="bust"
+              size={64}
+              rimColor={0xf59e0b}
+              bgColor={0x0d1117}
+            />
+          ) : (
+            <View style={styles.callerInitial}>
+              <Text style={styles.callerInitialText}>
+                {mission.caller.name.charAt(0)}
+              </Text>
+            </View>
+          )}
+          <Text style={styles.callerName}>{mission.caller.name}</Text>
         </View>
         <View style={styles.difficultyTag}>
           <Text style={styles.difficultyText}>{"⬥".repeat(mission.difficulty)}</Text>
@@ -634,16 +654,37 @@ const styles = StyleSheet.create({
   recWrap: { position: "absolute", top: 10, left: 10, flexDirection: "row", alignItems: "center", gap: 4 },
   recDotLive: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.dispatch.decline },
   recLabel: { color: colors.dispatch.decline, fontSize: 9, fontWeight: "900", letterSpacing: 1 },
-  callerTag: {
+  callerPortrait: {
     position: "absolute",
-    bottom: 8,
-    left: 8,
-    backgroundColor: "rgba(0,0,0,0.7)",
-    borderRadius: sizes.radius.sm,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    bottom: 6,
+    left: 6,
+    alignItems: "center",
+    gap: 3,
   },
-  callerTagText: { color: "#fff", fontSize: sizes.font.xs, fontWeight: "700" },
+  callerInitial: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "rgba(245, 158, 11, 0.2)",
+    borderWidth: 2,
+    borderColor: "rgba(245, 158, 11, 0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  callerInitialText: {
+    color: colors.dispatch.amber,
+    fontSize: 24,
+    fontWeight: "900",
+  },
+  callerName: {
+    color: "#fff",
+    fontSize: 9,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+    textShadowColor: "rgba(0,0,0,0.8)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
   difficultyTag: {
     position: "absolute",
     top: 8,

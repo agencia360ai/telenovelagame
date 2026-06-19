@@ -114,6 +114,19 @@ export function resolveImage(
 }
 
 // ── 3D models (bundled GLB or remote URL) ────────────────────────────────────
+// Register GLBs here by key — used by OfficerScene3D, Avatar3D, and mission
+// caller portraits. Streamoji-generated GLBs can be a remote URL or bundled.
 export const MODELS: Record<string, string | number> = {
   officer: require("../../assets/models/officer.glb"),
 };
+
+/** Resolve a MODELS key, require() number, or raw URL to a loadable source. */
+export function resolveModel(
+  keyOrSource: string | number
+): number | { uri: string } {
+  if (typeof keyOrSource === "number") return keyOrSource;
+  const found = MODELS[keyOrSource];
+  if (typeof found === "number") return found;
+  if (typeof found === "string" && found) return { uri: found };
+  return { uri: keyOrSource };
+}

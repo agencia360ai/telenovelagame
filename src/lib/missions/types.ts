@@ -120,7 +120,13 @@ export type Mission = {
   difficulty: 1 | 2 | 3;
   tags?: string[];
 
-  caller: { name: string; type: string; location: string };
+  caller: {
+    name: string;
+    type: string;
+    location: string;
+    /** MODELS key or GLB URL for the caller's 3D portrait (Streamoji). */
+    avatar?: string;
+  };
 
   units?: DispatchType[];
   reward: number;

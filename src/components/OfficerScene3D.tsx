@@ -6,18 +6,16 @@ import * as THREE from "three";
 
 const MODEL_ASSET = require("../../assets/models/officer.glb");
 
-// The Rodin-generated GLB ships real PBR textures. Set this to true to render
-// them as-is; set false to force the stylized holographic look instead. If a
-// model's textures don't decode in Expo GL and it renders untextured, flip
-// this to false for the clean fallback.
 const USE_REAL_TEXTURES = true;
 
-// expo-three can't always decode a GLB's embedded textures inside Expo GL, so
-// GLTFLoader may log a (harmless) "Couldn't load texture" error that pops the
-// red LogBox overlay. Silence that one specific, expected message.
 LogBox.ignoreLogs([/THREE.GLTFLoader: Couldn't load texture/]);
 
-export function OfficerScene3D() {
+type Props = {
+  /** Override the default officer model — a require() asset or remote URL. */
+  source?: number | string;
+};
+
+export function OfficerScene3D({ source }: Props = {}) {
   const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -85,7 +83,13 @@ export function OfficerScene3D() {
 
     // Try loading the real GLB model; fall back to primitives if it fails.
     try {
-      const gltf = await loadAsync(MODEL_ASSET);
+      const asset =
+        source != null
+          ? typeof source === "number"
+            ? source
+            : { uri: source }
+          : MODEL_ASSET;
+      const gltf = await loadAsync(asset);
       const model: THREE.Object3D = gltf.scene ?? gltf;
 
       // Material handling. With USE_REAL_TEXTURES we keep the GLB's own PBR

@@ -31,6 +31,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // Turns on the cloud content catalog + progressive download (off by
     // default → the app uses the bundled missions). See docs/CONTENT_FRAMEWORK.md.
     remoteContent: process.env.EXPO_PUBLIC_REMOTE_CONTENT === "true",
+    streamojiApiKey: process.env.EXPO_PUBLIC_STREAMOJI_API_KEY ?? "",
     mockSubscriptions:
       process.env.EXPO_PUBLIC_MOCK_SUBSCRIPTIONS === "true",
     mockIAP: process.env.EXPO_PUBLIC_MOCK_IAP === "true",
