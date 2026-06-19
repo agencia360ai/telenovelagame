@@ -67,8 +67,14 @@ export function CallScreen({ navigation, route }: Props) {
     opacity: flashOpacity.value,
   }));
 
-  const player = useVideoPlayer(resolveVideo(call.video), (p) => {
+  // Use the bundled intro clip as the in-call background too: it loads
+  // instantly (no Dropbox buffering or "CONNECTING FEED" gap mid-conversation)
+  // and keeps the scene visually cohesive with the establishing shot. Falls
+  // back to the streamed call video for any scene without a bundled intro.
+  const backgroundSource = call.introVideo ?? call.video;
+  const player = useVideoPlayer(resolveVideo(backgroundSource), (p) => {
     p.loop = true;
+    p.muted = true;
     p.play();
   });
 

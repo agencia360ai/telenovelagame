@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, LogBox } from "react-native";
 import { GLView, ExpoWebGLRenderingContext } from "expo-gl";
 import { Renderer, loadAsync } from "expo-three";
 import * as THREE from "three";
 
 const MODEL_ASSET = require("../../assets/models/officer.glb");
+
+// expo-three can't decode the GLB's embedded textures inside Expo GL, so
+// GLTFLoader logs a (harmless) "Couldn't load texture" error that pops the red
+// LogBox overlay. We override every material below — textures aren't needed —
+// so silence that one specific, expected message.
+LogBox.ignoreLogs([/THREE.GLTFLoader: Couldn't load texture/]);
 
 export function OfficerScene3D() {
   const frameRef = useRef<number | null>(null);
@@ -76,6 +82,22 @@ export function OfficerScene3D() {
     try {
       const gltf = await loadAsync(MODEL_ASSET);
       const model: THREE.Object3D = gltf.scene ?? gltf;
+
+      // Give every mesh a clean holographic material. This makes the unit read
+      // as a stylized command-center display and, crucially, removes any
+      // dependency on the embedded textures (which don't decode in Expo GL).
+      model.traverse((child) => {
+        const mesh = child as THREE.Mesh;
+        if (mesh.isMesh) {
+          mesh.material = new THREE.MeshStandardMaterial({
+            color: 0x33597f,
+            emissive: 0x22d3ee,
+            emissiveIntensity: 0.18,
+            roughness: 0.45,
+            metalness: 0.35,
+          });
+        }
+      });
 
       // Normalize to ~2.2 units tall.
       let box = new THREE.Box3().setFromObject(model);
