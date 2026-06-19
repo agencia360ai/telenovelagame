@@ -6,10 +6,15 @@ import * as THREE from "three";
 
 const MODEL_ASSET = require("../../assets/models/officer.glb");
 
-// expo-three can't decode the GLB's embedded textures inside Expo GL, so
-// GLTFLoader logs a (harmless) "Couldn't load texture" error that pops the red
-// LogBox overlay. We override every material below — textures aren't needed —
-// so silence that one specific, expected message.
+// The Rodin-generated GLB ships real PBR textures. Set this to true to render
+// them as-is; set false to force the stylized holographic look instead. If a
+// model's textures don't decode in Expo GL and it renders untextured, flip
+// this to false for the clean fallback.
+const USE_REAL_TEXTURES = true;
+
+// expo-three can't always decode a GLB's embedded textures inside Expo GL, so
+// GLTFLoader may log a (harmless) "Couldn't load texture" error that pops the
+// red LogBox overlay. Silence that one specific, expected message.
 LogBox.ignoreLogs([/THREE.GLTFLoader: Couldn't load texture/]);
 
 export function OfficerScene3D() {
@@ -83,12 +88,21 @@ export function OfficerScene3D() {
       const gltf = await loadAsync(MODEL_ASSET);
       const model: THREE.Object3D = gltf.scene ?? gltf;
 
-      // Give every mesh a clean holographic material. This makes the unit read
-      // as a stylized command-center display and, crucially, removes any
-      // dependency on the embedded textures (which don't decode in Expo GL).
+      // Material handling. With USE_REAL_TEXTURES we keep the GLB's own PBR
+      // materials so the generated textures show; we only patch a material that
+      // would otherwise render pure white (e.g. a texture that failed to decode)
+      // so the unit never looks blown-out. Otherwise we replace everything with
+      // a stylized holographic material for the command-center look.
       model.traverse((child) => {
         const mesh = child as THREE.Mesh;
-        if (mesh.isMesh) {
+        if (!mesh.isMesh) return;
+        if (USE_REAL_TEXTURES) {
+          const mat = mesh.material as THREE.MeshStandardMaterial | undefined;
+          if (mat && !mat.map && mat.color && mat.color.getHex() === 0xffffff) {
+            // Untextured default-white material → give it a navy uniform tint.
+            mat.color = new THREE.Color(0x2a3f5f);
+          }
+        } else {
           mesh.material = new THREE.MeshStandardMaterial({
             color: 0x33597f,
             emissive: 0x22d3ee,
