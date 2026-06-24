@@ -1,0 +1,133 @@
+{
+  "schema": "mission@1",
+  "id": "call_a_man_fell_from_a_2nd_floor",
+  "title": "A man fell from a 2nd floor!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "real",
+    "ambulance"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "MEDICAL EMERGENCY",
+    "location": "14 Almond Court"
+  },
+  "units": [
+    "ambulance",
+    "firefighters",
+    "police",
+    "no_unit"
+  ],
+  "reward": 7,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_a_man_fell_from_a_2nd_floor.intro",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "A man fell from a 2nd floor!"
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-ambulance",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_a_man_fell_from_a_2nd_floor.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A small crowd, a man on the pavement, a phone shaking in someone's hand."
+        }
+      ],
+      "next": "call_a_man_fell_from_a_2nd_floor.v1"
+    },
+    {
+      "id": "call_a_man_fell_from_a_2nd_floor.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "A man fell from a 2nd floor! He's not moving much!"
+        }
+      ],
+      "next": "call_a_man_fell_from_a_2nd_floor.d1"
+    },
+    {
+      "id": "call_a_man_fell_from_a_2nd_floor.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_a_man_fell_from_a_2nd_floor.d1_0",
+          "label": "Is he breathing? Don't move him.",
+          "next": "call_a_man_fell_from_a_2nd_floor.v2",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_a_man_fell_from_a_2nd_floor.d1_1",
+          "label": "Okay — what's your location?",
+          "next": "call_a_man_fell_from_a_2nd_floor.v2"
+        },
+        {
+          "id": "call_a_man_fell_from_a_2nd_floor.d1_2",
+          "label": "Walk it off, champ.",
+          "next": "call_a_man_fell_from_a_2nd_floor.v2",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_a_man_fell_from_a_2nd_floor.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "He's breathing but groaning. We didn't touch him."
+        },
+        {
+          "speaker": "caller",
+          "text": "We're at 14 Almond Court, by the bakery."
+        }
+      ],
+      "next": "call_a_man_fell_from_a_2nd_floor.d2"
+    },
+    {
+      "id": "call_a_man_fell_from_a_2nd_floor.d2",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "ambulance",
+      "explanation": "Paramedics get there fast. He'll keep his spine and his bad luck. The city exhales.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-ambulance",
+        "role": "deploy"
+      }
+    }
+  ]
+}

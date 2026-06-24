@@ -1,0 +1,201 @@
+{
+  "schema": "mission@1",
+  "id": "caso_trex",
+  "title": "I Found a Baby Dinosaur",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "exotic",
+    "animal_control"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "ANIMAL CONTROL",
+    "location": "Unknown location"
+  },
+  "units": [
+    "animal_control",
+    "firefighters",
+    "police",
+    "ambulance"
+  ],
+  "reward": 7,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "caso_trex.intro",
+  "assets": [
+    {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "I Found a Baby Dinosaur"
+    },
+    {
+      "key": "border-runners",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-animal_control",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "caso_trex.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A dim alley. Something small shuffles between the trash cans. The caller is not breathing easy."
+        }
+      ],
+      "next": "caso_trex.voz1"
+    },
+    {
+      "id": "caso_trex.voz1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I found a baby dinosaur!"
+        }
+      ],
+      "next": "caso_trex.d1"
+    },
+    {
+      "id": "caso_trex.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "caso_trex.d1_0",
+          "label": "Impossible. Dinosaurs don't exist.",
+          "next": "caso_trex.d1b"
+        },
+        {
+          "id": "caso_trex.d1_1",
+          "label": "Are you hurt?",
+          "next": "caso_trex.d2"
+        },
+        {
+          "id": "caso_trex.d1_2",
+          "label": "OMG, what breed?",
+          "next": "caso_trex.d2"
+        }
+      ]
+    },
+    {
+      "id": "caso_trex.d1b",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "That's what I thought too. Until now."
+        }
+      ],
+      "next": "caso_trex.d1c"
+    },
+    {
+      "id": "caso_trex.d1c",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "caso_trex.d1c_0",
+          "label": "Let's say I believe you… what breed?",
+          "next": "caso_trex.d2"
+        },
+        {
+          "id": "caso_trex.d1c_1",
+          "label": "Are YOU hurt?",
+          "next": "caso_trex.d2"
+        }
+      ]
+    },
+    {
+      "id": "caso_trex.d2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "No, it's a baby! I think it's a T-REX. Maybe?"
+        }
+      ],
+      "next": "caso_trex.d3"
+    },
+    {
+      "id": "caso_trex.d3",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "caso_trex.d3_0",
+          "label": "Send me your location, fast!",
+          "next": "caso_trex.loc"
+        },
+        {
+          "id": "caso_trex.d3_1",
+          "label": "I WANT IT!",
+          "next": "caso_trex.loc",
+          "effects": {
+            "trust": -1
+          }
+        },
+        {
+          "id": "caso_trex.d3_2",
+          "label": "Shoot that thing.",
+          "next": "caso_trex.loc_patrol",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "caso_trex.loc",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "18th, Jurassic St."
+        }
+      ],
+      "next": "caso_trex.d4"
+    },
+    {
+      "id": "caso_trex.loc_patrol",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "18th, Jurassic St."
+        }
+      ],
+      "next": "caso_trex.d4"
+    },
+    {
+      "id": "caso_trex.d4",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "animal_control",
+      "explanation": "Right unit for a weird one. That's how it's done.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-animal_control",
+        "role": "deploy"
+      }
+    }
+  ]
+}

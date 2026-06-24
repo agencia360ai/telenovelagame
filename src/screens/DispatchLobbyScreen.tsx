@@ -4,8 +4,11 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  SafeAreaView,
+  Alert,
+  DevSettings,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import Animated, {
   useSharedValue,
@@ -22,9 +25,12 @@ import { RootStackParamList } from "../navigation/AppNavigator";
 import { OfficerScene3D } from "../components/OfficerScene3D";
 import { RankBadge } from "../components/RankBadge";
 import { XPBar } from "../components/XPBar";
+import { SkinAvatar } from "../components/SkinAvatar";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { useCalendar } from "../context/CalendarContext";
+import { useWardrobe } from "../context/WardrobeContext";
 import { usePaywall } from "../context/PaywallContext";
+import { resolveSkin } from "../game/assets";
 import { getXPProgress, RANKS } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
@@ -37,7 +43,30 @@ const COUNTDOWN_START = 10;
 export function DispatchLobbyScreen({ navigation }: Props) {
   const progress = useDispatchProgress();
   const calendar = useCalendar();
+  const { equippedId } = useWardrobe();
   const { canPlay, isTrialActive, trialDaysLeft, isSubscribed } = usePaywall();
+  // Show the equipped 2D skin in the viewport whenever it has art (including the
+  // default "rookie" sprite); fall back to the 3D officer only when there's no art.
+  const showSkin = resolveSkin(equippedId) != null;
+
+  // Dev helper: long-press the avatar to wipe all saved progress and reload.
+  const resetProgress = () => {
+    Alert.alert(
+      "Reiniciar progreso",
+      "Borra rango, llamadas, vestuario y guardado. ¿Seguro?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Reiniciar",
+          style: "destructive",
+          onPress: async () => {
+            await AsyncStorage.clear();
+            DevSettings.reload();
+          },
+        },
+      ]
+    );
+  };
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
 
@@ -46,6 +75,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
 
   const xpInfo = getXPProgress(progress.xp, progress.rankIndex);
   const nearRankUp = xpInfo.percent >= 0.7 && xpInfo.needed > 0;
+  const currentRank = RANKS[progress.rankIndex];
   const nextRank = RANKS[progress.rankIndex + 1];
   const accuracy =
     progress.callsHandled > 0
@@ -155,9 +185,12 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
+        <Pressable
+          style={styles.headerLeft}
+          onPress={() => navigation.navigate("Wardrobe" as any)}
+        >
           <RankBadge rankIndex={progress.rankIndex} />
-        </View>
+        </Pressable>
         <Text style={styles.title}>DISPATCH CENTER</Text>
         <Pressable
           style={styles.scoreChip}
@@ -168,36 +201,30 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         </Pressable>
       </View>
 
-      {/* XP Progress + Trial indicator */}
-      <View style={styles.xpRow}>
-        <XPBar
-          current={xpInfo.current}
-          needed={xpInfo.needed}
-          percent={xpInfo.percent}
-          showLabel={false}
-        />
-        {nearRankUp && nextRank && (
-          <Animated.View style={[styles.goalGradient, goalGlowStyle]}>
-            <Text style={styles.goalText}>
-              Almost {nextRank.icon} {nextRank.name}!
-            </Text>
-          </Animated.View>
-        )}
-        {isTrialActive && !isSubscribed && (
-          <Pressable
-            onPress={() => navigation.navigate("Paywall" as any)}
-            style={styles.trialPill}
-          >
-            <Text style={styles.trialText}>
-              FREE TRIAL · {trialDaysLeft}d left
-            </Text>
-          </Pressable>
-        )}
-      </View>
+      {/* Free-trial banner (top) */}
+      {isTrialActive && !isSubscribed && (
+        <Pressable
+          onPress={() => navigation.navigate("Paywall" as any)}
+          style={styles.trialBanner}
+        >
+          <Text style={styles.trialText}>FREE TRIAL · {trialDaysLeft}d left</Text>
+        </Pressable>
+      )}
 
-      {/* 3D officer viewport */}
+      {/* Officer viewport: equipped 2D skin if it has art, else the 3D scene */}
       <View style={styles.viewport}>
-        <OfficerScene3D />
+        {showSkin ? (
+          <Pressable
+            style={styles.skinViewport}
+            onPress={() => navigation.navigate("Wardrobe" as any)}
+            onLongPress={resetProgress}
+            delayLongPress={700}
+          >
+            <SkinAvatar skinId={equippedId} size={200} shape="portrait" />
+          </Pressable>
+        ) : (
+          <OfficerScene3D />
+        )}
         <View style={styles.viewportLabel}>
           <Text style={styles.viewportLabelText}>UNIT 911 · LIVE</Text>
         </View>
@@ -210,6 +237,32 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         )}
       </View>
 
+      {/* Persistent player card under the avatar: rank, progress, resolved cases */}
+      <View style={styles.infoPanel}>
+        <View style={styles.infoRankRow}>
+          <Text style={styles.infoRankName}>
+            {currentRank?.icon} {currentRank?.name ?? "Operator"}
+          </Text>
+          {nearRankUp && nextRank && (
+            <Animated.Text style={[styles.goalText, goalGlowStyle]}>
+              Almost {nextRank.icon} {nextRank.name}!
+            </Animated.Text>
+          )}
+        </View>
+        <XPBar
+          current={xpInfo.current}
+          needed={xpInfo.needed}
+          percent={xpInfo.percent}
+          showLabel={false}
+        />
+        <View style={styles.statsRow}>
+          <StatChip label="Resolved" value={progress.correctCount} />
+          <StatChip label="Calls" value={progress.callsHandled} />
+          <StatChip label="Accuracy" value={`${accuracy}%`} />
+          <StatChip label="Streak" value={progress.currentStreak} />
+        </View>
+      </View>
+
       {/* Bottom console */}
       <View style={styles.console}>
         {phase === "idle" && (
@@ -219,24 +272,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
               0:{countdown.toString().padStart(2, "0")}
             </Text>
 
-            {progress.callsHandled > 0 ? (
-              <>
-                <Animated.Text
-                  entering={FadeIn.duration(600)}
-                  style={styles.primingText}
-                >
-                  {progress.correctCount} emergencies resolved · lives impacted
-                </Animated.Text>
-                <View style={styles.statsRow}>
-                  <StatChip label="Calls" value={progress.callsHandled} />
-                  <StatChip label="Accuracy" value={`${accuracy}%`} />
-                  <StatChip label="Streak" value={progress.currentStreak} />
-                  <StatChip label="Best" value={progress.bestStreak} />
-                </View>
-              </>
-            ) : (
-              <Text style={styles.standbyHint}>Stand by, operator…</Text>
-            )}
+            <Text style={styles.standbyHint}>Stand by, operator…</Text>
 
             {/* Week / day progress */}
             <View style={styles.shiftRow}>
@@ -393,6 +429,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(245, 158, 11, 0.25)",
   },
+  trialBanner: {
+    alignSelf: "center",
+    backgroundColor: "rgba(245, 158, 11, 0.12)",
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 4,
+    marginTop: 2,
+    marginBottom: 4,
+    borderWidth: 1,
+    borderColor: "rgba(245, 158, 11, 0.25)",
+  },
   trialText: {
     color: colors.dispatch.amber,
     fontSize: 10,
@@ -407,6 +454,11 @@ const styles = StyleSheet.create({
     borderColor: colors.dispatch.border,
     backgroundColor: "#070A12",
     overflow: "hidden",
+  },
+  skinViewport: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   viewportLabel: {
     position: "absolute",
@@ -500,6 +552,25 @@ const styles = StyleSheet.create({
     color: colors.dispatch.amber,
     fontSize: 11,
     fontWeight: "700",
+  },
+  infoPanel: {
+    paddingHorizontal: sizes.spacing.md,
+    paddingTop: sizes.spacing.sm,
+    paddingBottom: sizes.spacing.sm,
+    gap: 8,
+    alignItems: "center",
+  },
+  infoRankRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  infoRankName: {
+    color: colors.dispatch.text,
+    fontSize: sizes.font.sm,
+    fontWeight: "900",
+    letterSpacing: 1,
   },
   statsRow: {
     flexDirection: "row",

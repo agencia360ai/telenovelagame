@@ -1,0 +1,133 @@
+{
+  "schema": "mission@1",
+  "id": "call_i_m_stuck_in_an_elevator",
+  "title": "I'm stuck in an elevator!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "Unknown location"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_i_m_stuck_in_an_elevator.intro",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "I'm stuck in an elevator!"
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_i_m_stuck_in_an_elevator.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A dim elevator car, stalled between floors, one bar of signal."
+        }
+      ],
+      "next": "call_i_m_stuck_in_an_elevator.v1"
+    },
+    {
+      "id": "call_i_m_stuck_in_an_elevator.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm stuck in an elevator! It just stopped!"
+        }
+      ],
+      "next": "call_i_m_stuck_in_an_elevator.d1"
+    },
+    {
+      "id": "call_i_m_stuck_in_an_elevator.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_i_m_stuck_in_an_elevator.d1_0",
+          "label": "Stay calm. Are you alone in there?",
+          "next": "call_i_m_stuck_in_an_elevator.v2",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_i_m_stuck_in_an_elevator.d1_1",
+          "label": "Okay — what's your location?",
+          "next": "call_i_m_stuck_in_an_elevator.v2"
+        },
+        {
+          "id": "call_i_m_stuck_in_an_elevator.d1_2",
+          "label": "Try the trapdoor like in movies.",
+          "next": "call_i_m_stuck_in_an_elevator.v2",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_i_m_stuck_in_an_elevator.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Yeah, alone. It's getting stuffy."
+        },
+        {
+          "speaker": "caller",
+          "text": "Tower B, Westgate Apartments. Between 4 and 5."
+        }
+      ],
+      "next": "call_i_m_stuck_in_an_elevator.d2"
+    },
+    {
+      "id": "call_i_m_stuck_in_an_elevator.d2",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Rescue pries the doors. You stayed on the line the whole way. The city notices that.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

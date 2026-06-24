@@ -1,0 +1,199 @@
+{
+  "schema": "mission@1",
+  "id": "caso_bitcoin",
+  "title": "I Lost Everything in Bitcoin",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "mixed",
+    "police"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "POLICE REPORT",
+    "location": "Unknown location"
+  },
+  "units": [
+    "police",
+    "firefighters",
+    "ambulance"
+  ],
+  "reward": 7,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "caso_bitcoin.intro",
+  "assets": [
+    {
+      "key": "armed-robbery-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "I Lost Everything in Bitcoin"
+    },
+    {
+      "key": "armed-robbery",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-police",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "caso_bitcoin.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A man in front of a screen of red, plunging charts. He dials a number he shouldn't."
+        }
+      ],
+      "next": "caso_bitcoin.voz1"
+    },
+    {
+      "id": "caso_bitcoin.voz1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I bought bitcoin and lost everything."
+        }
+      ],
+      "next": "caso_bitcoin.d1"
+    },
+    {
+      "id": "caso_bitcoin.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "caso_bitcoin.d1_0",
+          "label": "And you're calling here because…?",
+          "next": "caso_bitcoin.d2"
+        },
+        {
+          "id": "caso_bitcoin.d1_1",
+          "label": "Yikes. What are you gonna do?",
+          "next": "caso_bitcoin.d2"
+        },
+        {
+          "id": "caso_bitcoin.d1_2",
+          "label": "Hey, chin up, it'll be okay.",
+          "next": "caso_bitcoin.d_ther2"
+        }
+      ]
+    },
+    {
+      "id": "caso_bitcoin.d2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I think I'll rob a bank."
+        }
+      ],
+      "next": "caso_bitcoin.d3"
+    },
+    {
+      "id": "caso_bitcoin.d3",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "caso_bitcoin.d3_0",
+          "label": "I'm going to have to send the police.",
+          "next": "caso_bitcoin.d_ther2",
+          "effects": {
+            "money": 200,
+            "trust": 1,
+            "case_file": 1,
+            "integrity": 1
+          }
+        },
+        {
+          "id": "caso_bitcoin.d3_1",
+          "label": "Can I come? I'm broke too.",
+          "next": "caso_bitcoin.d3b"
+        },
+        {
+          "id": "caso_bitcoin.d3_2",
+          "label": "You should call a therapist.",
+          "next": "caso_bitcoin.d_ther"
+        }
+      ]
+    },
+    {
+      "id": "caso_bitcoin.d3b",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "80% for me, 20% for you?"
+        }
+      ],
+      "next": "caso_bitcoin.d3c"
+    },
+    {
+      "id": "caso_bitcoin.d3c",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "caso_bitcoin.d3c_0",
+          "label": "Deal.",
+          "next": "caso_bitcoin.d_ther2",
+          "effects": {
+            "money": 150,
+            "don": 1,
+            "trust": -2
+          }
+        },
+        {
+          "id": "caso_bitcoin.d3c_1",
+          "label": "Nah, not worth it.",
+          "next": "caso_bitcoin.d_ther2",
+          "effects": {
+            "money": 200,
+            "trust": 1,
+            "case_file": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "caso_bitcoin.d_ther",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I need therapy to get over this."
+        }
+      ],
+      "next": "caso_bitcoin.d_ther2"
+    },
+    {
+      "id": "caso_bitcoin.d_ther2",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Patrol on the way. Good call.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "schema": "mission@1",
+  "id": "call_my_cat_is_stuck_on_a_tall_tree",
+  "title": "My cat is stuck on a tall tree",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "Unknown location"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_my_cat_is_stuck_on_a_tall_tree.intro",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "My cat is stuck on a tall tree"
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_my_cat_is_stuck_on_a_tall_tree.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "An old oak, a tiny furious silhouette near the top, a worried owner below."
+        }
+      ],
+      "next": "call_my_cat_is_stuck_on_a_tall_tree.v1"
+    },
+    {
+      "id": "call_my_cat_is_stuck_on_a_tall_tree.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My cat is stuck on a tall tree and won't come down!"
+        }
+      ],
+      "next": "call_my_cat_is_stuck_on_a_tall_tree.d1"
+    },
+    {
+      "id": "call_my_cat_is_stuck_on_a_tall_tree.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_my_cat_is_stuck_on_a_tall_tree.d1_0",
+          "label": "Is the cat hurt, or just stubborn?",
+          "next": "call_my_cat_is_stuck_on_a_tall_tree.v2",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_my_cat_is_stuck_on_a_tall_tree.d1_1",
+          "label": "Okay — what's your location?",
+          "next": "call_my_cat_is_stuck_on_a_tall_tree.v2"
+        },
+        {
+          "id": "call_my_cat_is_stuck_on_a_tall_tree.d1_2",
+          "label": "Let it live up there. New life.",
+          "next": "call_my_cat_is_stuck_on_a_tall_tree.v2",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_my_cat_is_stuck_on_a_tall_tree.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Just stubborn. And judging me, honestly."
+        },
+        {
+          "speaker": "caller",
+          "text": "Corner of Maple and 3rd, the big tree."
+        }
+      ],
+      "next": "call_my_cat_is_stuck_on_a_tall_tree.d2"
+    },
+    {
+      "id": "call_my_cat_is_stuck_on_a_tall_tree.d2",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Firefighters humor you, and the cat. Down it comes, unimpressed. The internet loves it.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

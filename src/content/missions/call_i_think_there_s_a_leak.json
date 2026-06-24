@@ -1,0 +1,133 @@
+{
+  "schema": "mission@1",
+  "id": "call_i_think_there_s_a_leak",
+  "title": "I think there's a leak!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "5 Cobble Lane"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 7,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_i_think_there_s_a_leak.intro",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "I think there's a leak!"
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_i_think_there_s_a_leak.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Water — or worse — pooling under a sink, and a caller who can't tell which."
+        }
+      ],
+      "next": "call_i_think_there_s_a_leak.v1"
+    },
+    {
+      "id": "call_i_think_there_s_a_leak.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I think there's a leak! Something's dripping and it stinks."
+        }
+      ],
+      "next": "call_i_think_there_s_a_leak.d1"
+    },
+    {
+      "id": "call_i_think_there_s_a_leak.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_i_think_there_s_a_leak.d1_0",
+          "label": "Does it smell sweet or like rotten eggs?",
+          "next": "call_i_think_there_s_a_leak.v2",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_i_think_there_s_a_leak.d1_1",
+          "label": "Okay — what's your location?",
+          "next": "call_i_think_there_s_a_leak.v2"
+        },
+        {
+          "id": "call_i_think_there_s_a_leak.d1_2",
+          "label": "Taste it to check.",
+          "next": "call_i_think_there_s_a_leak.v2",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_i_think_there_s_a_leak.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Rotten eggs, definitely. And hissing."
+        },
+        {
+          "speaker": "caller",
+          "text": "It's 5 Cobble Lane, the corner unit."
+        }
+      ],
+      "next": "call_i_think_there_s_a_leak.d2"
+    },
+    {
+      "id": "call_i_think_there_s_a_leak.d2",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Gas leak, caught early. Crew seals it. No boom, just relief.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

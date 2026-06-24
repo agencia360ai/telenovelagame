@@ -11,7 +11,14 @@ import * as path from "path";
 
 type Err = { file: string; path: string; message: string };
 
-const UNITS = new Set(["police", "firefighters", "border_patrol"]);
+const UNITS = new Set([
+  "police",
+  "firefighters",
+  "border_patrol",
+  "ambulance",
+  "animal_control",
+  "no_unit",
+]);
 const SPEAKERS = new Set(["caller", "operator", "dispatch", "narrator"]);
 
 function validateMission(file: string, m: any): Err[] {

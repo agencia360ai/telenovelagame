@@ -43,7 +43,7 @@ import {
   MissionRuntime,
 } from "../lib/missions/types";
 import { DispatchType } from "../game/types";
-import { resolveVideo, IMAGES } from "../game/assets";
+import { resolveVideo, IMAGES, DEPLOY_VIDEOS } from "../game/assets";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
@@ -61,6 +61,9 @@ type Phase = "intro" | "play" | "dispatch" | "deploying" | "result";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
+
+// Default deploy clip used as the fallback when a unit has no tailored video.
+const DEPLOY_KEY = "border-runners-intro";
 
 export function MissionScreen({ navigation, route }: Props) {
   const { missionId } = route.params;
@@ -101,17 +104,21 @@ export function MissionScreen({ navigation, route }: Props) {
     initRuntime(mission)
   );
   const [displayedLines, setDisplayedLines] = useState<MissionLine[]>([]);
-  const [lineIndex, setLineIndex] = useState(0);
   const [showChoices, setShowChoices] = useState(false);
-  const [allLinesShown, setAllLinesShown] = useState(false);
-  const pendingNext = useRef<string | null>(null);
+  // How many lines of the CURRENT beat are revealed (chat accumulates across beats).
+  const [revealIndex, setRevealIndex] = useState(0);
 
   const [dispatchTimer, setDispatchTimer] = useState(timeLimit);
   const [chosenDispatch, setChosenDispatch] = useState<DispatchType | null>(null);
+  // Deploy plays in two stages: the unit's video CLIP first, then the radar closer.
+  const [deployStage, setDeployStage] = useState<"clip" | "radar">("clip");
   const [correctUnit, setCorrectUnit] = useState<DispatchType>("police");
   const [explanation, setExplanation] = useState<string | undefined>(undefined);
   const [showRankUp, setShowRankUp] = useState(false);
   const dispatchStartTime = useRef<number>(0);
+  // While true (right after a choice) the caller's reply auto-plays and the
+  // next options appear after a short beat — instead of waiting on a tap.
+  const autoMode = useRef(false);
   const isFirstMission = useRef(progress.callsHandled === 0).current;
 
   const beat = getBeat(mission, beatId);
@@ -142,12 +149,37 @@ export function MissionScreen({ navigation, route }: Props) {
   }, [phase]);
 
   useEffect(() => {
-    if (!deploySource) return;
-    try {
-      if (phase === "deploying") deployPlayer.replay();
-      else deployPlayer.pause();
-    } catch {}
-  }, [phase]);
+    if (phase !== "deploying") {
+      try {
+        deployPlayer.pause();
+      } catch {}
+      return;
+    }
+    if (deployStage === "clip") {
+      // Stage 1: play the unit's deploy clip full-screen for a fixed beat, then
+      // hand off to the radar closer. (Loops in case the clip is shorter.)
+      try {
+        deployPlayer.loop = true;
+        deployPlayer.muted = false;
+        try {
+          deployPlayer.currentTime = 0;
+        } catch {}
+        deployPlayer.play();
+      } catch {}
+      const t = setTimeout(() => setDeployStage("radar"), 3500);
+      return () => clearTimeout(t);
+    } else {
+      // Stage 2: the clip loops softly (muted) behind the radar closer.
+      try {
+        deployPlayer.loop = true;
+        deployPlayer.muted = true;
+        try {
+          deployPlayer.currentTime = 0;
+        } catch {}
+        deployPlayer.play();
+      } catch {}
+    }
+  }, [phase, deployStage]);
 
   // Dispatch countdown.
   useEffect(() => {
@@ -165,28 +197,57 @@ export function MissionScreen({ navigation, route }: Props) {
   const loadBeat = useCallback(
     (b: MissionBeat, rt: MissionRuntime) => {
       if (b.type === "dispatch") {
+        autoMode.current = false;
         setCorrectUnit(resolveCorrectUnit(b, rt));
         setExplanation(b.explanation);
         dispatchStartTime.current = Date.now();
         setDispatchTimer(timeLimit);
         setPhase("dispatch");
+        // Scroll the dispatch buttons into view (the chat above can be long).
+        scrollSoon();
         return;
       }
-      const lines = resolveLines(b, rt);
-      if (lines.length > 0) {
-        setDisplayedLines([lines[0]]);
-        setLineIndex(1);
-        setShowChoices(false);
-        setAllLinesShown(false);
-      } else {
-        setDisplayedLines([]);
-        setLineIndex(0);
-        if (b.type === "decision") {
-          setShowChoices(true);
-          setAllLinesShown(false);
+      const lines = resolveLines(b, rt).filter((l) => l.speaker !== "narrator");
+
+      // Auto mode (right after a choice): reveal the caller's reply in full,
+      // then pause ~1s before the next options — no tap needed.
+      if (autoMode.current) {
+        if (lines.length > 0) {
+          setDisplayedLines((prev) => [...prev, ...lines]);
+          setRevealIndex(lines.length);
         } else {
-          setShowChoices(false);
-          setAllLinesShown(true);
+          setRevealIndex(0);
+        }
+        setShowChoices(false);
+        if (b.type === "decision") {
+          autoMode.current = false;
+          setTimeout(() => {
+            setShowChoices(true);
+            scrollSoon();
+          }, 1000);
+        } else if (b.next) {
+          goToBeat(b.next);
+        } else {
+          autoMode.current = false;
+        }
+        scrollSoon();
+        return;
+      }
+
+      // Normal tap mode: reveal the FIRST line; the rest appear one per tap.
+      // Narrator lines are skipped so the call reads as a caller/operator chat.
+      if (lines.length > 0) {
+        setDisplayedLines((prev) => [...prev, lines[0]]);
+        setRevealIndex(1);
+        setShowChoices(false);
+      } else {
+        setRevealIndex(0);
+        if (b.type === "decision") {
+          // No lines on this beat → show options right away.
+          setShowChoices(true);
+        } else if (b.next) {
+          // Narrator-only / empty beat → skip straight ahead.
+          goToBeat(b.next);
         }
       }
       scrollSoon();
@@ -201,12 +262,23 @@ export function MissionScreen({ navigation, route }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beatId, phase]);
 
-  const advanceLine = () => {
-    if (!beat) return;
-    const lines = resolveLines(beat, runtime);
-    if (lineIndex < lines.length) {
-      setDisplayedLines((prev) => [...prev, lines[lineIndex]]);
-      setLineIndex((i) => i + 1);
+  const goToBeat = (nextId: string | null | undefined) => {
+    if (!nextId) return;
+    setShowChoices(false);
+    setBeatId(nextId);
+  };
+
+  // Tap anywhere in the call area to reveal the next line; once a beat's lines
+  // are all shown, the next tap advances the conversation (no Continue button).
+  const handleTap = () => {
+    if (phase !== "play" || !beat) return;
+    if (showChoices) return; // waiting on a choice
+    const lines = resolveLines(beat, runtime).filter(
+      (l) => l.speaker !== "narrator"
+    );
+    if (revealIndex < lines.length) {
+      setDisplayedLines((prev) => [...prev, lines[revealIndex]]);
+      setRevealIndex((i) => i + 1);
       audio.playSfx("tap");
       Haptics.selectionAsync();
       scrollSoon();
@@ -214,33 +286,8 @@ export function MissionScreen({ navigation, route }: Props) {
       setShowChoices(true);
       scrollSoon();
     } else {
-      setAllLinesShown(true);
+      goToBeat(beat.next);
     }
-  };
-
-  const goToBeat = (nextId: string | null | undefined) => {
-    if (!nextId) return;
-    setShowChoices(false);
-    setAllLinesShown(false);
-    setBeatId(nextId);
-  };
-
-  const handleTap = () => {
-    if (phase !== "play") return;
-    if (showChoices || allLinesShown) return; // waiting on a button
-    advanceLine();
-  };
-
-  const handleNext = () => {
-    audio.playSfx("tap");
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (pendingNext.current) {
-      const next = pendingNext.current;
-      pendingNext.current = null;
-      goToBeat(next);
-      return;
-    }
-    if (beat) goToBeat(beat.next);
   };
 
   const handleChoice = (choice: MissionChoice) => {
@@ -265,18 +312,17 @@ export function MissionScreen({ navigation, route }: Props) {
     setRuntime(nextRuntime);
     setShowChoices(false);
 
-    if (choice.feedback) {
-      // Surface the consequence as a dispatch note, then tap to continue.
-      setDisplayedLines((prev) => [
-        ...prev,
-        { speaker: "dispatch", text: choice.feedback as string },
-      ]);
-      setAllLinesShown(true);
-      pendingNext.current = choice.next;
-      scrollSoon();
-    } else {
-      goToBeat(choice.next);
-    }
+    // Echo what the operator chose (plus any feedback note), then auto-play the
+    // caller's reply and reveal the next options after a ~1s beat.
+    setDisplayedLines((prev) => [
+      ...prev,
+      { speaker: "operator", text: choice.label },
+      ...(choice.feedback
+        ? [{ speaker: "dispatch", text: choice.feedback as string }]
+        : []),
+    ]);
+    autoMode.current = true;
+    goToBeat(choice.next);
   };
 
   const handleDispatch = (choice: DispatchType) => {
@@ -291,10 +337,23 @@ export function MissionScreen({ navigation, route }: Props) {
     progress.recordResult(correct, reward, elapsed);
     calendar.completeMission(mission.id, correct);
 
+    // Swap in the reusable deploy clip for the chosen unit ONLY when it differs
+    // from the one already loaded — otherwise replacing with the same source
+    // forces a reload and flashes the video for a frame.
+    try {
+      const deployKey = DEPLOY_VIDEOS[choice] ?? DEPLOY_KEY;
+      const nextSrc = resolveVideo(deployKey);
+      const currentSrc = resolveVideo(DEPLOY_KEY);
+      if (nextSrc !== currentSrc) {
+        deployPlayer.replace(nextSrc);
+      }
+    } catch {}
+
     flashOpacity.value = withSequence(
       withTiming(0.3, { duration: 80 }),
       withTiming(0, { duration: 300 })
     );
+    setDeployStage("clip");
     setPhase("deploying");
   };
 
@@ -521,17 +580,11 @@ export function MissionScreen({ navigation, route }: Props) {
         </ScrollView>
       </Pressable>
 
-      {phase === "play" && (showChoices === false) && (allLinesShown ? (
-        <View style={styles.bottomBar}>
-          <Pressable style={styles.nextInlineBtn} onPress={handleNext}>
-            <Text style={styles.nextInlineText}>CONTINUE ▸</Text>
-          </Pressable>
-        </View>
-      ) : (
+      {phase === "play" && !showChoices && (
         <View style={styles.bottomBar}>
           <Text style={styles.hintText}>TAP TO CONTINUE ▸</Text>
         </View>
-      ))}
+      )}
 
       {phase === "result" && (
         <View style={styles.bottomBar}>
@@ -565,7 +618,29 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
       )}
 
-      {phase === "deploying" && chosenDispatch && (
+      {phase === "deploying" && chosenDispatch && deployStage === "clip" && (
+        // Stage 1: the deploy clip, full-screen (no overlay so it's fully visible).
+        <View style={StyleSheet.absoluteFill}>
+          <VideoView
+            player={deployPlayer}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            nativeControls={false}
+          />
+          <View style={styles.deployClipTag}>
+            <Text style={styles.deployClipText}>
+              DISPATCHING{" "}
+              {unitOptions
+                .find((o) => o.id === chosenDispatch)
+                ?.label.replace("\n", " ") ?? "UNIT"}
+              …
+            </Text>
+          </View>
+        </View>
+      )}
+
+      {phase === "deploying" && chosenDispatch && deployStage === "radar" && (
+        // Stage 2: the radar closer (clip loops softly behind a dark overlay).
         <View style={StyleSheet.absoluteFill}>
           {deploySource && (
             <>
@@ -710,6 +785,21 @@ const styles = StyleSheet.create({
   },
   difficultyText: { color: colors.dispatch.amber, fontSize: 12, letterSpacing: 2 },
   deployVideoOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(5, 8, 16, 0.55)" },
+  deployClipTag: {
+    position: "absolute",
+    bottom: 40,
+    alignSelf: "center",
+    backgroundColor: "rgba(0,0,0,0.6)",
+    borderRadius: 999,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  deployClipText: {
+    color: "#fff",
+    fontSize: sizes.font.sm,
+    fontWeight: "900",
+    letterSpacing: 2,
+  },
   chatArea: { flex: 1 },
   chatScroll: { flex: 1 },
   chatContent: { padding: sizes.spacing.md, paddingBottom: sizes.spacing.xxl, gap: 10 },
