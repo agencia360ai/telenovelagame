@@ -42,7 +42,7 @@ import {
   MissionRuntime,
 } from "../lib/missions/types";
 import { DispatchType } from "../game/types";
-import { resolveVideo, IMAGES, VIDEOS } from "../game/assets";
+import { resolveVideo, IMAGES } from "../game/assets";
 import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
@@ -62,8 +62,6 @@ type Phase = "intro" | "play" | "dispatch" | "deploying" | "result";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
 
-const DEPLOY_KEY = "border-runners-intro";
-
 export function MissionScreen({ navigation, route }: Props) {
   const { missionId } = route.params;
   const mission = getMissionById(missionId);
@@ -82,6 +80,13 @@ export function MissionScreen({ navigation, route }: Props) {
   const callerAvatar =
     mission.caller.avatar ??
     (MODELS["officer"] != null ? "officer" : undefined);
+  // The dispatch ("deploying") clip, read from the mission's outcome beat — or
+  // an asset declared with role "deploy". Optional: missions without it skip the
+  // video and just show the radar over the feed.
+  const deployKey: string | undefined =
+    mission.beats.find((b) => b.type === "outcome")?.deploy_media?.key ??
+    mission.assets.find((a) => a.role === "deploy")?.key;
+  const deploySource = deployKey ? resolveVideo(deployKey) : null;
   const timeLimit = mission.time_limit_seconds ?? 15;
   const units = mission.units ?? DISPATCH_OPTIONS.map((o) => o.id);
   const unitOptions = DISPATCH_OPTIONS.filter((o) => units.includes(o.id));
@@ -115,7 +120,7 @@ export function MissionScreen({ navigation, route }: Props) {
     p.muted = true;
     p.play();
   });
-  const deployPlayer = useVideoPlayer(VIDEOS[DEPLOY_KEY] as number, (p) => {
+  const deployPlayer = useVideoPlayer(deploySource, (p) => {
     p.loop = true;
     p.muted = true;
   });
@@ -133,6 +138,7 @@ export function MissionScreen({ navigation, route }: Props) {
   }, [phase]);
 
   useEffect(() => {
+    if (!deploySource) return;
     try {
       if (phase === "deploying") deployPlayer.replay();
       else deployPlayer.pause();
@@ -557,13 +563,17 @@ export function MissionScreen({ navigation, route }: Props) {
 
       {phase === "deploying" && chosenDispatch && (
         <View style={StyleSheet.absoluteFill}>
-          <VideoView
-            player={deployPlayer}
-            style={StyleSheet.absoluteFill}
-            contentFit="cover"
-            nativeControls={false}
-          />
-          <View style={styles.deployVideoOverlay} />
+          {deploySource && (
+            <>
+              <VideoView
+                player={deployPlayer}
+                style={StyleSheet.absoluteFill}
+                contentFit="cover"
+                nativeControls={false}
+              />
+              <View style={styles.deployVideoOverlay} />
+            </>
+          )}
           <DispatchRadar
             location={mission.caller.location}
             unitIcon={unitOptions.find((o) => o.id === chosenDispatch)?.icon ?? "🚔"}
