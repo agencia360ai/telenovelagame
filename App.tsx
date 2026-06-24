@@ -9,6 +9,7 @@ import { StoryProgressProvider } from "./src/context/StoryProgressContext";
 import { NarrativeStateProvider } from "./src/context/NarrativeStateContext";
 import { SubscriptionProvider } from "./src/context/SubscriptionContext";
 import { DispatchProgressProvider } from "./src/context/DispatchProgressContext";
+import { CalendarProvider } from "./src/context/CalendarContext";
 import { PaywallProvider } from "./src/context/PaywallContext";
 import { AppNavigator } from "./src/navigation/AppNavigator";
 import { audio } from "./src/lib/audio";
@@ -44,11 +45,13 @@ export default function App() {
                 >
                   <SubscriptionProvider>
                     <DispatchProgressProvider>
-                      <PaywallProvider>
-                        <StatusBar style="light" />
-                        <AudioBridge />
-                        <AppNavigator />
-                      </PaywallProvider>
+                      <CalendarProvider>
+                        <PaywallProvider>
+                          <StatusBar style="light" />
+                          <AudioBridge />
+                          <AppNavigator />
+                        </PaywallProvider>
+                      </CalendarProvider>
                     </DispatchProgressProvider>
                   </SubscriptionProvider>
                 </NarrativeStateProvider>

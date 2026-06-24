@@ -12,6 +12,7 @@ import { ReaderScreen } from "../screens/ReaderScreen";
 import { ShopScreen } from "../screens/ShopScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { ChapterEndScreen } from "../screens/ChapterEndScreen";
+import { WeekCompleteScreen } from "../screens/WeekCompleteScreen";
 import { colors } from "../theme/colors";
 
 export type RootStackParamList = {
@@ -19,6 +20,7 @@ export type RootStackParamList = {
   DispatchLobby: undefined;
   Call: { callId: string };
   Mission: { missionId: string };
+  WeekComplete: undefined;
   Stats: undefined;
   Paywall: undefined;
   Home: undefined;
@@ -58,6 +60,11 @@ export function AppNavigator() {
         <Stack.Screen
           name="Mission"
           component={MissionScreen}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="WeekComplete"
+          component={WeekCompleteScreen}
           options={{ gestureEnabled: false }}
         />
         <Stack.Screen name="Stats" component={StatsScreen} />

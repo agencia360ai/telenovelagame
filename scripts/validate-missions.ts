@@ -26,6 +26,9 @@ function validateMission(file: string, m: any): Err[] {
   }
   if (typeof m.reward !== "number") add("root", "missing numeric reward");
   if (![1, 2, 3].includes(m.difficulty)) add("root", "difficulty must be 1, 2 or 3");
+  if (m.category !== undefined && !["daily", "game_plot", "weekend"].includes(m.category)) {
+    add("root", `bad category: ${m.category} (expected daily | game_plot | weekend)`);
+  }
 
   const assetKeys = new Set<string>((m.assets ?? []).map((a: any) => a.key));
   for (const a of m.assets ?? []) {

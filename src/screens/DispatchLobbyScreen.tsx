@@ -23,9 +23,9 @@ import { OfficerScene3D } from "../components/OfficerScene3D";
 import { RankBadge } from "../components/RankBadge";
 import { XPBar } from "../components/XPBar";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
+import { useCalendar } from "../context/CalendarContext";
 import { usePaywall } from "../context/PaywallContext";
-import { getNextMissionId } from "../content/missions";
-import { getXPProgress, RANKS, SHIFT_SIZE } from "../game/ranks";
+import { getXPProgress, RANKS } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
@@ -36,6 +36,7 @@ const COUNTDOWN_START = 10;
 
 export function DispatchLobbyScreen({ navigation }: Props) {
   const progress = useDispatchProgress();
+  const calendar = useCalendar();
   const { canPlay, isTrialActive, trialDaysLeft, isSubscribed } = usePaywall();
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
@@ -74,6 +75,13 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     audio.playMusic("lobby");
     progress.clearLastResult();
   }, []);
+
+  // The week's calls are all handled → go to the week summary + reward screen.
+  useEffect(() => {
+    if (calendar.isWeekComplete) {
+      navigation.replace("WeekComplete");
+    }
+  }, [calendar.isWeekComplete]);
 
   useEffect(() => {
     if (phase !== "idle") return;
@@ -123,13 +131,16 @@ export function DispatchLobbyScreen({ navigation }: Props) {
       navigation.navigate("Paywall" as any);
       return;
     }
+    const next = calendar.getNextMission();
+    if (!next) {
+      navigation.replace("WeekComplete");
+      return;
+    }
     audio.playSfx("dispatch");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setPhase("connecting");
     setTimeout(() => {
-      navigation.replace("Mission", {
-        missionId: getNextMissionId(progress.callsHandled, progress.rankIndex),
-      });
+      navigation.replace("Mission", { missionId: next.missionId });
     }, 800);
   };
 
@@ -227,33 +238,34 @@ export function DispatchLobbyScreen({ navigation }: Props) {
               <Text style={styles.standbyHint}>Stand by, operator…</Text>
             )}
 
-            {/* Shift progress */}
+            {/* Week / day progress */}
             <View style={styles.shiftRow}>
-              <Text style={styles.shiftLabel}>
-                SHIFT {progress.shiftsCompleted + 1}
-              </Text>
+              <Text style={styles.shiftLabel}>{calendar.shortLabel}</Text>
               <View style={styles.shiftDots}>
-                {Array.from({ length: SHIFT_SIZE }).map((_, i) => (
-                  <View
-                    key={i}
-                    style={[
-                      styles.shiftDot,
-                      i < progress.shiftProgress && styles.shiftDotFilled,
-                    ]}
-                  />
-                ))}
+                {Array.from({ length: Math.max(calendar.dayMissionCount, 1) }).map(
+                  (_, i) => (
+                    <View
+                      key={i}
+                      style={[
+                        styles.shiftDot,
+                        i < calendar.dayMissionIndex && styles.shiftDotFilled,
+                      ]}
+                    />
+                  )
+                )}
               </View>
             </View>
 
-            {/* Zeigarnik open-loop: nudge when 1 call left in shift */}
-            {progress.shiftProgress === SHIFT_SIZE - 1 && (
-              <Animated.Text
-                entering={FadeIn.duration(400)}
-                style={styles.shiftNudge}
-              >
-                1 call left to complete your shift!
-              </Animated.Text>
-            )}
+            {/* Zeigarnik open-loop: nudge when 1 call left in the day */}
+            {calendar.dayMissionCount > 1 &&
+              calendar.dayMissionIndex === calendar.dayMissionCount - 1 && (
+                <Animated.Text
+                  entering={FadeIn.duration(400)}
+                  style={styles.shiftNudge}
+                >
+                  1 call left to finish {calendar.dayLabel}!
+                </Animated.Text>
+              )}
 
             {/* Daily login streak (loss aversion #3) */}
             {progress.dailyStreak >= 2 && (

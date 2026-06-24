@@ -27,7 +27,6 @@ import {
 } from "../content/calls";
 import { DispatchType } from "../game/types";
 import { resolveVideo, IMAGES, VIDEOS } from "../game/assets";
-import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
@@ -187,8 +186,6 @@ export function CallScreen({ navigation, route }: Props) {
     navigation.replace("DispatchLobby");
   };
 
-  const shiftLabel = `${progress.shiftProgress + 1}/${SHIFT_SIZE}`;
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -198,7 +195,7 @@ export function CallScreen({ navigation, route }: Props) {
         </View>
         <View style={styles.headerRight}>
           <View style={styles.shiftPill}>
-            <Text style={styles.shiftText}>SHIFT {shiftLabel}</Text>
+            <Text style={styles.shiftText}>● LIVE</Text>
           </View>
           <Text style={styles.location}>{call.location}</Text>
         </View>

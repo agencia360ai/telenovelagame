@@ -111,6 +111,15 @@ export type MissionBeat = {
 };
 
 // ── Mission ──────────────────────────────────────────────────────────────────
+/**
+ * Where a mission fits in the in-game weekly calendar (see src/lib/calendar).
+ * - "daily"     → drawn at random from the daily pool on a normal weekday.
+ * - "game_plot" → ordered story call, served on the week's plot day (see gamePlot.ts).
+ * - "weekend"   → drawn from the weekend pool on weekend days.
+ * Defaults to "daily" when omitted (keeps older content valid).
+ */
+export type MissionCategory = "daily" | "game_plot" | "weekend";
+
 export type Mission = {
   schema: "mission@1";
   id: string;
@@ -119,6 +128,10 @@ export type Mission = {
   locale_default: string;
   difficulty: 1 | 2 | 3;
   tags?: string[];
+  /** Calendar bucket (default "daily"). */
+  category?: MissionCategory;
+  /** Ordering hint for "game_plot" missions (lower plays first). */
+  order?: number;
 
   caller: {
     name: string;

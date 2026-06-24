@@ -22,6 +22,7 @@ import { useVideoPlayer, VideoView } from "expo-video";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
+import { useCalendar } from "../context/CalendarContext";
 import { useEconomy } from "../context/EconomyContext";
 import {
   getMissionById,
@@ -43,7 +44,6 @@ import {
 } from "../lib/missions/types";
 import { DispatchType } from "../game/types";
 import { resolveVideo, IMAGES } from "../game/assets";
-import { SHIFT_SIZE } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
@@ -66,8 +66,12 @@ export function MissionScreen({ navigation, route }: Props) {
   const { missionId } = route.params;
   const mission = getMissionById(missionId);
   const progress = useDispatchProgress();
+  const calendar = useCalendar();
   const economy = useEconomy();
   const scrollRef = useRef<ScrollView>(null);
+
+  // Capture the week/day label once so it stays stable after the call advances.
+  const calendarLabel = useRef(calendar.shortLabel).current;
 
   const introAsset = mission.assets.find((a) => a.role === "intro");
   // Looping CCTV background for the whole call. Prefer the bundled intro clip:
@@ -285,6 +289,7 @@ export function MissionScreen({ navigation, route }: Props) {
 
     setChosenDispatch(choice);
     progress.recordResult(correct, reward, elapsed);
+    calendar.completeMission(mission.id, correct);
 
     flashOpacity.value = withSequence(
       withTiming(0.3, { duration: 80 }),
@@ -319,7 +324,6 @@ export function MissionScreen({ navigation, route }: Props) {
     navigation.replace("DispatchLobby");
   };
 
-  const shiftLabel = `${progress.shiftProgress + 1}/${SHIFT_SIZE}`;
   const isDecisionPrompt = beat?.type === "decision" && showChoices;
 
   const senderName = (speaker: string) =>
@@ -340,7 +344,7 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
         <View style={styles.headerRight}>
           <View style={styles.shiftPill}>
-            <Text style={styles.shiftText}>SHIFT {shiftLabel}</Text>
+            <Text style={styles.shiftText}>{calendarLabel}</Text>
           </View>
           <Text style={styles.location}>{mission.caller.location}</Text>
         </View>
