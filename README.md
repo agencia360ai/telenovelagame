@@ -200,7 +200,22 @@ Un **grafo de beats** con decisiones a mitad de llamada. Esquema en
 [src/content/missions/](src/content/missions/) (`armed-robbery.json`, `kitchen-fire.json`,
 `border-runners.json`).
 
-Tipos de beat: `dialogue` · `decision` · `dispatch` · `outcome`.
+**¿Qué es un beat?** Es la **unidad mínima de una conversación**: un solo "momento" del
+guion con un `id` único y un `type`. Una misión es literalmente una lista de beats
+(`mission.beats`) enlazados por el campo `next`, formando un grafo. Hay cuatro tipos:
+
+- **`dialogue`** — muestra líneas (tap a tap) y avanza a `next`.
+- **`decision`** — presenta un `prompt` con varias `choices`; la elección muta el estado
+  y decide a qué beat saltar.
+- **`dispatch`** — el momento de elegir la unidad; calcula cuál es la correcta.
+- **`outcome`** — el cierre/desenlace (puede reproducir un video de despliegue).
+
+**¿Por qué un grafo de beats y no una lista plana de mensajes?** Precisamente para soportar
+diálogo **ramificado y reactivo al estado**: cada beat (y cada `choice`) apunta a `next`,
+de modo que la conversación puede bifurcarse y reconverger; las `variants` dejan que un
+mismo beat reaccione a decisiones previas sin reescribir la llamada entera; y el estado
+acumulado puede cambiar hasta cuál es la respuesta correcta. Eso es lo que distingue a una
+`Mission` de un `CallScenario` lineal.
 
 ```ts
 export type Mission = {
@@ -290,6 +305,33 @@ motor en [src/lib/engine/](src/lib/engine/)). Define **personajes con avatares p
 expresión** (`neutral`, `happy`, `angry`, …), variables de relación y gemas iniciales. El
 sistema de misiones replica deliberadamente su lenguaje de condiciones para mantener
 consistentes el autoring y las herramientas.
+
+### CallScenario vs Mission: ¿cuándo se usa cada uno?
+
+Ambos representan **la misma idea** —una llamada de emergencia— pero son **dos
+generaciones** del concepto: `CallScenario` es la versión simple/antigua (llamada lineal)
+y `Mission` es la evolución (llamada interactiva ramificada, el corazón de 911 Dispatch).
+
+| | **CallScenario** | **Mission (`mission@1`)** |
+| --- | --- | --- |
+| Formato | `.ts` ([src/content/calls/](src/content/calls/)) | `.json` ([src/content/missions/](src/content/missions/)) |
+| Estructura | **Lineal**: lista plana de `messages` + un único `correctDispatch` | **Grafo ramificado** de beats con variables, flags, decisiones y corrección condicional |
+| Estado durante la llamada | Ninguno | `MissionRuntime` (variables / flags / elecciones) |
+| Registro | `CALLS` en [calls/index.ts](src/content/calls/index.ts) | `catalog` en [missions/index.ts](src/content/missions/index.ts) |
+| Pantalla | [CallScreen](src/screens/CallScreen.tsx) (`callId`) | [MissionScreen](src/screens/MissionScreen.tsx) (`missionId`) |
+| Motor | No tiene; la pantalla recorre la lista | [src/lib/missions/engine.ts](src/lib/missions/engine.ts) (funciones puras) |
+| Contenido remoto (Supabase) | No | Sí (`setMissionCatalog`) |
+
+**¿Son dependientes? No.** Cada uno tiene su propio registro, su propia pantalla y su
+propia función de selección por dificultad (`getNextCallId` vs `getNextMissionId`), con
+código casi idéntico duplicado en ambos. Lo único que comparten son tipos núcleo —
+`DispatchType` y `DISPATCH_OPTIONS`— que de hecho están **duplicados** en los dos
+`index.ts`.
+
+Un detalle revelador: **los mismos tres casos** (`armed-robbery`, `kitchen-fire`,
+`border-runners`) existen en *ambos* formatos. Una `Mission` puede degradarse a algo
+equivalente a un `CallScenario` (un beat `dialogue` → un beat `dispatch`), pero no al
+revés. Para contenido nuevo se prefiere el formato `Mission`.
 
 ---
 
