@@ -28,5 +28,17 @@
   "cancel": "Cancelar",
   "confirm": "Confirmar",
   "premium_choice": "Opción premium",
-  "premium_unlock": "Desbloquear por {{cost}} 💎"
+  "premium_unlock": "Desbloquear por {{cost}} 💎",
+  "wardrobe_title": "Vestuario",
+  "wardrobe_back": "Atrás",
+  "wardrobe_equipped": "Equipado",
+  "wardrobe_equip": "Equipar",
+  "wardrobe_unlock_free": "Reclamar",
+  "wardrobe_unlock_gems": "Comprar {{cost}}",
+  "wardrobe_need_rank": "Requiere {{rank}}",
+  "wardrobe_need_gems": "Faltan gemas ({{cost}})",
+  "wardrobe_tier_rank": "Por rango",
+  "wardrobe_tier_premium": "Premium",
+  "wardrobe_tier_prestige": "Prestigio",
+  "lobby_wardrobe": "Vestuario"
 }

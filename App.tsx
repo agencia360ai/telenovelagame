@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { UserIdentityProvider } from "./src/context/UserIdentityContext";
 import { SettingsProvider, useSettings } from "./src/context/SettingsContext";
 import { I18nProvider } from "./src/context/I18nContext";
@@ -9,6 +10,7 @@ import { StoryProgressProvider } from "./src/context/StoryProgressContext";
 import { NarrativeStateProvider } from "./src/context/NarrativeStateContext";
 import { SubscriptionProvider } from "./src/context/SubscriptionContext";
 import { DispatchProgressProvider } from "./src/context/DispatchProgressContext";
+import { WardrobeProvider } from "./src/context/WardrobeContext";
 import { PaywallProvider } from "./src/context/PaywallContext";
 import { AppNavigator } from "./src/navigation/AppNavigator";
 import { audio } from "./src/lib/audio";
@@ -33,6 +35,7 @@ function AudioBridge() {
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
       <UserIdentityProvider>
         <SettingsProvider>
           <I18nProvider>
@@ -44,11 +47,13 @@ export default function App() {
                 >
                   <SubscriptionProvider>
                     <DispatchProgressProvider>
-                      <PaywallProvider>
-                        <StatusBar style="light" />
-                        <AudioBridge />
-                        <AppNavigator />
-                      </PaywallProvider>
+                      <WardrobeProvider>
+                        <PaywallProvider>
+                          <StatusBar style="light" />
+                          <AudioBridge />
+                          <AppNavigator />
+                        </PaywallProvider>
+                      </WardrobeProvider>
                     </DispatchProgressProvider>
                   </SubscriptionProvider>
                 </NarrativeStateProvider>
@@ -57,6 +62,7 @@ export default function App() {
           </I18nProvider>
         </SettingsProvider>
       </UserIdentityProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

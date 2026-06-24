@@ -1,0 +1,133 @@
+{
+  "schema": "mission@1",
+  "id": "call_there_s_a_fire_in_my_bathroom",
+  "title": "There's a fire in my bathroom!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "19 Sienna Road"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_there_s_a_fire_in_my_bathroom.intro",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "There's a fire in my bathroom!"
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_there_s_a_fire_in_my_bathroom.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A scented candle, a towel, and a very bad decision, now spreading."
+        }
+      ],
+      "next": "call_there_s_a_fire_in_my_bathroom.v1"
+    },
+    {
+      "id": "call_there_s_a_fire_in_my_bathroom.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "There's a fire in my bathroom! It's climbing the towels!"
+        }
+      ],
+      "next": "call_there_s_a_fire_in_my_bathroom.d1"
+    },
+    {
+      "id": "call_there_s_a_fire_in_my_bathroom.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_there_s_a_fire_in_my_bathroom.d1_0",
+          "label": "Close the door and get out. Don't fight it.",
+          "next": "call_there_s_a_fire_in_my_bathroom.v2",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_there_s_a_fire_in_my_bathroom.d1_1",
+          "label": "Okay — what's your location?",
+          "next": "call_there_s_a_fire_in_my_bathroom.v2"
+        },
+        {
+          "id": "call_there_s_a_fire_in_my_bathroom.d1_2",
+          "label": "Shower it out.",
+          "next": "call_there_s_a_fire_in_my_bathroom.v2",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_there_s_a_fire_in_my_bathroom.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Door's closed, I'm in the hall."
+        },
+        {
+          "speaker": "caller",
+          "text": "Flat 7, 19 Sienna Road."
+        }
+      ],
+      "next": "call_there_s_a_fire_in_my_bathroom.d2"
+    },
+    {
+      "id": "call_there_s_a_fire_in_my_bathroom.d2",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "One room lost, a building saved. Clean work. Trust ticks up.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

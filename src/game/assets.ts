@@ -28,6 +28,9 @@ export const VIDEOS: Record<string, string | number> = {
     "https://www.dropbox.com/scl/fi/pmt42dbx9upde7diw4lqp/M-2.mp4?rlkey=n01sjuoodnx0ynd6aapq2qu8c&dl=1",
   "armed-robbery":
     "https://www.dropbox.com/scl/fi/sgpnw5olpjle9k89gpoqu/M-3.mp4?rlkey=v9e6nxyzng47d1686wew2kyoc&dl=1",
+  // Scene video for the "My Kitchen's on Fire" call (caso_cocina).
+  "kitchen-on-fire":
+    "https://www.dropbox.com/scl/fi/jevsjs3f94pz7aylcojsv/Kitchen-is-on-Fire.mp4?rlkey=gcccxx54we2kmh5t6k41elbz9&dl=1",
 
   // Full-screen intro cutscenes (telenovela establishing shots). Compressed to
   // 720p (~0.5–2.7 MB each) and BUNDLED so they play instantly with no buffering
@@ -36,6 +39,34 @@ export const VIDEOS: Record<string, string | number> = {
   "border-runners-intro": require("../../assets/videos/border-runners-intro.mp4"),
   "kitchen-fire-intro": require("../../assets/videos/kitchen-fire-intro.mp4"),
   "armed-robbery-intro": require("../../assets/videos/armed-robbery-intro.mp4"),
+
+  // Per-unit DEPLOY clips — one reusable video per dispatch button, played on
+  // the "deploying" beat. They all point at a bundled placeholder for now;
+  // paste a real hosted URL (Supabase/Dropbox `?dl=1`) per unit to upgrade.
+  // ⬇️ To change this clip later: replace the URL between the quotes with your
+  //    own Dropbox link (must end in `?dl=1`) or any hosted .mp4 URL, then save.
+  "deploy-firefighters":
+    "https://www.dropbox.com/scl/fi/5mfnflxlzq3j4tza5efij/Bomberos.mp4?rlkey=hd72du93a8f7ypy6unl89yxcp&dl=1",
+  "deploy-police": require("../../assets/videos/border-runners-intro.mp4"),
+  "deploy-ambulance": require("../../assets/videos/border-runners-intro.mp4"),
+  "deploy-animal_control": require("../../assets/videos/border-runners-intro.mp4"),
+  "deploy-border_patrol": require("../../assets/videos/border-runners-intro.mp4"),
+  "deploy-no_unit": require("../../assets/videos/border-runners-intro.mp4"),
+};
+
+/**
+ * Reusable deploy clip per dispatch unit. The mission player picks the clip by
+ * the unit the operator chose, so every "send fire dept" plays the same fire
+ * deploy video, every "send police" the police one, etc. Swap the URLs in
+ * VIDEOS above (keys "deploy-<unit>") to give each button its own footage.
+ */
+export const DEPLOY_VIDEOS: Record<string, string> = {
+  firefighters: "deploy-firefighters",
+  police: "deploy-police",
+  ambulance: "deploy-ambulance",
+  animal_control: "deploy-animal_control",
+  border_patrol: "deploy-border_patrol",
+  no_unit: "deploy-no_unit",
 };
 
 /** Resolve a CallScenario.video value to something expo-video can play. */
@@ -88,14 +119,9 @@ export const MUSIC_VOLUME: Record<MusicKey, number> = {
 
 // ── Cinematic stills (placeholders) ──────────────────────────────────────────
 // Full-screen "film" images used where a real video clip doesn't exist yet
-// (boot intro, rank-up, result). Small enough to bundle. Each is a stand-in:
-// swap it for a real video by adding a key to VIDEOS and pointing the moment at
-// that instead. A value may be a require() number (bundled) or a remote URL.
+// (boot intro, rank-up, result). A value may be a require() number (bundled) or
+// a remote URL.
 export const IMAGES: Record<string, number | string> = {
-  // Generated with Layer.ai (GPT Image 2). Placeholder served from the Layer
-  // workspace CDN. For production, download it from app.layer.ai and either:
-  //   • drop it in assets/images/cinematics/ and use require(...) (bundled), or
-  //   • host on Dropbox (?dl=1) / Supabase and paste that URL here.
   "dispatch-center":
     "https://media.app.layer.ai/workspaces/48383e6c-48d9-40cd-801b-2e20b2e8d7a4/files/af5f73dc-65d2-4de9-a817-dad7518bfbd7/cinematic_establishing_shot_of_a_911_emergency_dispatch_center_at-2026-06-18-233301.png",
   "rank-up":
@@ -110,12 +136,10 @@ export function resolveImage(
   const found = IMAGES[keyOrSource];
   if (typeof found === "number") return found;
   if (typeof found === "string" && found) return { uri: found };
-  return { uri: keyOrSource }; // assume it's already a URL
+  return { uri: keyOrSource };
 }
 
 // ── 3D models (bundled GLB or remote URL) ────────────────────────────────────
-// Register GLBs here by key — used by OfficerScene3D, Avatar3D, and mission
-// caller portraits. Streamoji-generated GLBs can be a remote URL or bundled.
 export const MODELS: Record<string, string | number> = {
   officer: require("../../assets/models/officer.glb"),
 };
@@ -129,4 +153,25 @@ export function resolveModel(
   if (typeof found === "number") return found;
   if (typeof found === "string" && found) return { uri: found };
   return { uri: keyOrSource };
+}
+
+// ── Avatar skins (2D, full-body, same character) ─────────────────────────────
+// One entry per skin id in src/game/skins.ts. Bundled PNGs in assets/skins/.
+export const SKIN_IMAGES: Record<string, number | string> = {
+  rookie: require("../../assets/skins/rookie.png"),
+  neon_pink: require("../../assets/skins/neon_pink.png"),
+  golden_hero: require("../../assets/skins/golden_hero.png"),
+};
+
+/**
+ * Resolve a skin id to a React Native image source, or null when no art has
+ * been registered yet (callers should render a placeholder on null).
+ */
+export function resolveSkin(
+  id: string
+): number | { uri: string } | null {
+  const found = SKIN_IMAGES[id];
+  if (typeof found === "number") return found;
+  if (typeof found === "string" && found) return { uri: found };
+  return null;
 }

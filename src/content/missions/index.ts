@@ -5,6 +5,11 @@ import armedRobbery from "./armed-robbery.json";
 import kitchenFire from "./kitchen-fire.json";
 import borderRunners from "./border-runners.json";
 
+// Converted from dispatcher-game.json — first 3 narratives, for testing.
+import casoCocina from "./caso_cocina.json";
+import casoPapel from "./caso_papel.json";
+import casoBitcoin from "./caso_bitcoin.json";
+
 /**
  * The mission registry. To add an interactive call:
  *   1. create ./<id>.json following the `mission@1` schema
@@ -16,16 +21,29 @@ import borderRunners from "./border-runners.json";
  * (src/lib/content), cloud missions are merged on top of these by id.
  */
 export const BUNDLED_MISSIONS: Mission[] = [
-  armedRobbery as unknown as Mission,
-  kitchenFire as unknown as Mission,
-  borderRunners as unknown as Mission,
+  // Only the 3 dispatcher narratives are served for now (demos disabled).
+  casoCocina as unknown as Mission, // "My Kitchen's on Fire"
+  casoPapel as unknown as Mission, // "I'm Out of Toilet Paper"
+  casoBitcoin as unknown as Mission, // "I Lost Everything in Bitcoin"
 ];
 
-/** The units the operator can dispatch (rendered as buttons in a mission). */
+// Demo missions kept available but out of rotation (re-add to the array to use).
+void armedRobbery;
+void kitchenFire;
+void borderRunners;
+
+/**
+ * The units the operator can dispatch (rendered as buttons in a mission).
+ * A mission can show a tailored subset via its `units` field; otherwise all of
+ * these appear. "NO UNIT" is the correct response to prank / non-emergencies.
+ */
 export const DISPATCH_OPTIONS: DispatchOption[] = [
   { id: "police", label: "POLICE", icon: "🚔" },
   { id: "firefighters", label: "FIRE DEPT", icon: "🚒" },
+  { id: "ambulance", label: "AMBULANCE", icon: "🚑" },
+  { id: "animal_control", label: "ANIMAL\nCONTROL", icon: "🐾" },
   { id: "border_patrol", label: "BORDER\nPATROL", icon: "🛂" },
+  { id: "no_unit", label: "NO UNIT", icon: "🚫" },
 ];
 
 export function getDispatchLabel(id: DispatchType): string {

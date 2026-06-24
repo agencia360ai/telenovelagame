@@ -15,6 +15,12 @@ import { useNarrativeState } from "../context/NarrativeStateContext";
 import { useEconomy } from "../context/EconomyContext";
 import { useUserIdentity } from "../context/UserIdentityContext";
 import { GemBadge } from "../components/GemBadge";
+import { RankBadge } from "../components/RankBadge";
+import { XPBar } from "../components/XPBar";
+import { useDispatchProgress } from "../context/DispatchProgressContext";
+import { useWardrobe } from "../context/WardrobeContext";
+import { getXPProgress } from "../game/ranks";
+import { resolveSkin } from "../game/assets";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 import { cardStyles } from "../theme/cardStyles";
@@ -33,6 +39,10 @@ export function HomeScreen({ navigation }: Props) {
   const progress = useStoryProgress();
   const narrative = useNarrativeState();
   const economy = useEconomy();
+  const dispatch = useDispatchProgress();
+  const { equippedId } = useWardrobe();
+  const xpInfo = getXPProgress(dispatch.xp, dispatch.rankIndex);
+  const sprite = resolveSkin(equippedId);
   const [hasSave, setHasSave] = useState(false);
 
   useEffect(() => {
@@ -104,6 +114,22 @@ export function HomeScreen({ navigation }: Props) {
         <View style={styles.heroSection}>
           <Text style={styles.appTitle}>{"Corazón en Roaming"}</Text>
           <Text style={styles.subtitle}>Una historia de amor y secretos</Text>
+        </View>
+
+        {/* Player avatar + rank + experience */}
+        <View style={styles.avatarBlock}>
+          {sprite && (
+            <Image source={sprite} style={styles.sprite} resizeMode="contain" />
+          )}
+          <RankBadge rankIndex={dispatch.rankIndex} size="large" />
+          <View style={styles.xpWrap}>
+            <XPBar
+              current={xpInfo.current}
+              needed={xpInfo.needed}
+              percent={xpInfo.percent}
+            />
+            <Text style={styles.xpText}>{dispatch.xp} XP</Text>
+          </View>
         </View>
 
         <View style={[cardStyles.cardElevated, styles.storyCard]}>
@@ -194,6 +220,25 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.md,
     color: colors.text.secondary,
     marginTop: sizes.spacing.sm,
+  },
+  avatarBlock: {
+    alignItems: "center",
+    gap: sizes.spacing.sm,
+    marginBottom: sizes.spacing.xl,
+  },
+  sprite: {
+    width: 190,
+    height: 270,
+  },
+  xpWrap: {
+    width: "75%",
+    alignItems: "center",
+    gap: 4,
+  },
+  xpText: {
+    color: colors.text.secondary,
+    fontSize: sizes.font.sm,
+    fontWeight: "800",
   },
   storyCard: {
     marginBottom: sizes.spacing.xl,

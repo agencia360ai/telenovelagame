@@ -1,0 +1,237 @@
+{
+  "schema": "mission@1",
+  "id": "caso_cocina",
+  "title": "My Kitchen's on Fire",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "989 Burb Street"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "caso_cocina.intro",
+  "assets": [
+    {
+      "key": "kitchen-on-fire",
+      "type": "video",
+      "role": "intro",
+      "caption": "My Kitchen's on Fire"
+    },
+    {
+      "key": "kitchen-on-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "caso_cocina.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Split screen: you at the console; on the other end, a kitchen vanishing into orange smoke."
+        }
+      ],
+      "next": "caso_cocina.voz1"
+    },
+    {
+      "id": "caso_cocina.voz1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My kitchen is on fire! 🔥"
+        }
+      ],
+      "next": "caso_cocina.d1"
+    },
+    {
+      "id": "caso_cocina.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "caso_cocina.d1_0",
+          "label": "Are you out of the house?",
+          "next": "caso_cocina.c_out"
+        },
+        {
+          "id": "caso_cocina.d1_1",
+          "label": "Can you use water?",
+          "next": "caso_cocina.c_water"
+        },
+        {
+          "id": "caso_cocina.d1_2",
+          "label": "Your voice sounds kinda sexy.",
+          "next": "caso_cocina.d1b",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "caso_cocina.d1b",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "WHAT?! This is an EMERGENCY!"
+        }
+      ],
+      "next": "caso_cocina.d1c"
+    },
+    {
+      "id": "caso_cocina.d1c",
+      "type": "decision",
+      "prompt": "Recover the call",
+      "choices": [
+        {
+          "id": "caso_cocina.d1c_0",
+          "label": "And emergencies are what we do 😎",
+          "next": "caso_cocina.c_out"
+        },
+        {
+          "id": "caso_cocina.d1c_1",
+          "label": "Sorry. Are you out of the house?",
+          "next": "caso_cocina.c_out"
+        }
+      ]
+    },
+    {
+      "id": "caso_cocina.c_water",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "No, it's way too hot!"
+        }
+      ],
+      "next": "caso_cocina.d2"
+    },
+    {
+      "id": "caso_cocina.c_out",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I can't get out, it's too hot!"
+        }
+      ],
+      "next": "caso_cocina.d2"
+    },
+    {
+      "id": "caso_cocina.d2",
+      "type": "decision",
+      "prompt": "Instruction",
+      "choices": [
+        {
+          "id": "caso_cocina.d2_0",
+          "label": "Get out of the house NOW.",
+          "next": "caso_cocina.c_help",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "caso_cocina.d2_1",
+          "label": "Move away from the fire.",
+          "next": "caso_cocina.c_help",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "caso_cocina.d2_2",
+          "label": "I'm kinda on fire too 🔥",
+          "next": "caso_cocina.c_help",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "caso_cocina.c_help",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I need someone, please!"
+        }
+      ],
+      "next": "caso_cocina.d3"
+    },
+    {
+      "id": "caso_cocina.d3",
+      "type": "decision",
+      "prompt": "Get location",
+      "choices": [
+        {
+          "id": "caso_cocina.d3_0",
+          "label": "Send me your location.",
+          "next": "caso_cocina.loc"
+        },
+        {
+          "id": "caso_cocina.d3_1",
+          "label": "Not just anybody? 😏",
+          "next": "caso_cocina.loc",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "caso_cocina.loc",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "989 Burb Street."
+        }
+      ],
+      "next": "caso_cocina.d4"
+    },
+    {
+      "id": "caso_cocina.d4",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Sirens. The truck rounds the corner before the roof gives. The city breathes a little easier. Citizen trust ticks up. Clean.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

@@ -28,5 +28,17 @@
   "cancel": "Cancel",
   "confirm": "Confirm",
   "premium_choice": "Premium choice",
-  "premium_unlock": "Unlock for {{cost}} 💎"
+  "premium_unlock": "Unlock for {{cost}} 💎",
+  "wardrobe_title": "Wardrobe",
+  "wardrobe_back": "Back",
+  "wardrobe_equipped": "Equipped",
+  "wardrobe_equip": "Equip",
+  "wardrobe_unlock_free": "Claim",
+  "wardrobe_unlock_gems": "Buy {{cost}}",
+  "wardrobe_need_rank": "Needs {{rank}}",
+  "wardrobe_need_gems": "Need gems ({{cost}})",
+  "wardrobe_tier_rank": "By rank",
+  "wardrobe_tier_premium": "Premium",
+  "wardrobe_tier_prestige": "Prestige",
+  "lobby_wardrobe": "Wardrobe"
 }

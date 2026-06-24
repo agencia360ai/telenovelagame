@@ -8,8 +8,17 @@
 
 // The emergency units the operator can dispatch. To add a new unit:
 //   1. add it to this union
-//   2. add it to DISPATCH_OPTIONS in src/content/calls/index.ts
-export type DispatchType = "police" | "firefighters" | "border_patrol";
+//   2. add it to DISPATCH_OPTIONS in src/content/calls/index.ts and
+//      src/content/missions/index.ts (+ the UNITS set in scripts/validate-missions.ts)
+// "no_unit" is the correct answer for prank / non-emergency calls: the skill is
+// recognizing that NO unit should be sent.
+export type DispatchType =
+  | "police"
+  | "firefighters"
+  | "border_patrol"
+  | "ambulance"
+  | "animal_control"
+  | "no_unit";
 
 export type DispatchOption = {
   id: DispatchType;

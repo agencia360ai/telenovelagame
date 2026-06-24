@@ -1,0 +1,161 @@
+{
+  "schema": "mission@1",
+  "id": "caso_papel",
+  "title": "I'm Out of Toilet Paper",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "prank",
+    "none"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "NON-EMERGENCY",
+    "location": "Unknown location"
+  },
+  "units": [
+    "no_unit",
+    "firefighters",
+    "police"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "caso_papel.intro",
+  "assets": [
+    {
+      "key": "armed-robbery-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "I'm Out of Toilet Paper"
+    },
+    {
+      "key": "armed-robbery",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-no_unit",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "caso_papel.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "An anguished voice, echoing off bathroom tile. The camera, if there were one, would rather not come in."
+        }
+      ],
+      "next": "caso_papel.voz1"
+    },
+    {
+      "id": "caso_papel.voz1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "HELP! I'm out of toilet paper!"
+        }
+      ],
+      "next": "caso_papel.d1"
+    },
+    {
+      "id": "caso_papel.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "caso_papel.d1_0",
+          "label": "You're calling an emergency line.",
+          "next": "caso_papel.d2"
+        },
+        {
+          "id": "caso_papel.d1_1",
+          "label": "Use a sock.",
+          "next": "caso_papel.d2b"
+        },
+        {
+          "id": "caso_papel.d1_2",
+          "label": "Sending a patrol car.",
+          "next": "caso_papel.d4"
+        }
+      ]
+    },
+    {
+      "id": "caso_papel.d2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I don't care."
+        }
+      ],
+      "next": "caso_papel.d3"
+    },
+    {
+      "id": "caso_papel.d2b",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm barefoot!"
+        }
+      ],
+      "next": "caso_papel.d3"
+    },
+    {
+      "id": "caso_papel.d3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Please, I pooped!"
+        }
+      ],
+      "next": "caso_papel.d3c"
+    },
+    {
+      "id": "caso_papel.d3c",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "caso_papel.d3c_0",
+          "label": "That's too much info 😬",
+          "next": "caso_papel.d4"
+        },
+        {
+          "id": "caso_papel.d3c_1",
+          "label": "Then your hand will do.",
+          "next": "caso_papel.d4"
+        }
+      ]
+    },
+    {
+      "id": "caso_papel.d4",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "no_unit",
+      "explanation": "Nicely handled. Good judgment pays, and the city cracks a smile.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-no_unit",
+        "role": "deploy"
+      }
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "schema": "mission@1",
+  "id": "call_house_fire",
+  "title": "My House Is on Fire",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "3259 Wescam Court"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 7,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_house_fire.intro",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "My House Is on Fire"
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_house_fire.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Split screen: a hallway filling with smoke. The caller sounds strangely calm."
+        }
+      ],
+      "next": "v1"
+    },
+    {
+      "id": "v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My house is on fire."
+        }
+      ],
+      "next": "d1"
+    },
+    {
+      "id": "d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "d1_0",
+          "label": "Are you safe?",
+          "next": "c_safe",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "d1_1",
+          "label": "Where did the fire start?",
+          "next": "c_start"
+        },
+        {
+          "id": "d1_2",
+          "label": "Let it burn!",
+          "next": "c_burn",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "c_safe",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Not really — I can't get out!"
+        }
+      ],
+      "next": "d2"
+    },
+    {
+      "id": "c_start",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My closet, I think. Maybe the bedroom."
+        }
+      ],
+      "next": "d2"
+    },
+    {
+      "id": "c_burn",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "...What?!"
+        }
+      ],
+      "next": "d2"
+    },
+    {
+      "id": "d2",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "d2_0",
+          "label": "Stay put. What's your location?",
+          "next": "loc",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "d2_1",
+          "label": "We'll trace this call.",
+          "next": "loc"
+        },
+        {
+          "id": "d2_2",
+          "label": "Is someone else there with you?",
+          "next": "loc"
+        }
+      ]
+    },
+    {
+      "id": "loc",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "3259 Wescam Court. Please hurry!"
+        }
+      ],
+      "next": "d3"
+    },
+    {
+      "id": "d3",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Engines roll. You stay on the line until they're out. The city breathes easier.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { ReaderScreen } from "../screens/ReaderScreen";
 import { ShopScreen } from "../screens/ShopScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
+import { WardrobeScreen } from "../screens/WardrobeScreen";
 import { ChapterEndScreen } from "../screens/ChapterEndScreen";
 import { colors } from "../theme/colors";
 
@@ -29,6 +30,7 @@ export type RootStackParamList = {
   };
   Shop: undefined;
   Settings: undefined;
+  Wardrobe: undefined;
   ChapterEnd: {
     type: "chapter_transition" | "continuara";
     nextChapterId?: string;
@@ -75,6 +77,7 @@ export function AppNavigator() {
         <Stack.Group screenOptions={{ presentation: "modal" }}>
           <Stack.Screen name="Shop" component={ShopScreen} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="Wardrobe" component={WardrobeScreen} />
         </Stack.Group>
         <Stack.Screen
           name="ChapterEnd"

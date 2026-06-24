@@ -1,0 +1,133 @@
+{
+  "schema": "mission@1",
+  "id": "call_i_m_trapped_in_the_fire",
+  "title": "I'm trapped in the fire!!!!!!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "22 Halford Street"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 7,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_i_m_trapped_in_the_fire.intro",
+  "assets": [
+    {
+      "key": "kitchen-fire-intro",
+      "type": "video",
+      "role": "intro",
+      "caption": "I'm trapped in the fire!!!!!!"
+    },
+    {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_i_m_trapped_in_the_fire.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Smoke under a door, a voice low to the floor, heat you can feel through the speaker."
+        }
+      ],
+      "next": "call_i_m_trapped_in_the_fire.v1"
+    },
+    {
+      "id": "call_i_m_trapped_in_the_fire.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm trapped in the fire!!! I can't get to the door!"
+        }
+      ],
+      "next": "call_i_m_trapped_in_the_fire.d1"
+    },
+    {
+      "id": "call_i_m_trapped_in_the_fire.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_i_m_trapped_in_the_fire.d1_0",
+          "label": "Stay low. Is there a window you can reach?",
+          "next": "call_i_m_trapped_in_the_fire.v2",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_i_m_trapped_in_the_fire.d1_1",
+          "label": "Okay — what's your location?",
+          "next": "call_i_m_trapped_in_the_fire.v2"
+        },
+        {
+          "id": "call_i_m_trapped_in_the_fire.d1_2",
+          "label": "Have you tried not being on fire?",
+          "next": "call_i_m_trapped_in_the_fire.v2",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_i_m_trapped_in_the_fire.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "There's a window — I'm by it now."
+        },
+        {
+          "speaker": "caller",
+          "text": "Second floor, 22 Halford Street."
+        }
+      ],
+      "next": "call_i_m_trapped_in_the_fire.d2"
+    },
+    {
+      "id": "call_i_m_trapped_in_the_fire.d2",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Ladder up, window out. They make it. You don't breathe until they do.",
+      "next": "_outcome"
+    },
+    {
+      "id": "_outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}
