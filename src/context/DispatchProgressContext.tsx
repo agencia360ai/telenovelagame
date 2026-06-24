@@ -10,9 +10,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CallResultDetails } from "../game/types";
 import {
   RANKS,
-  SHIFT_SIZE,
-  SHIFT_COMPLETE_BONUS,
-  PERFECT_SHIFT_BONUS,
   getRankForXP,
   getStreakMultiplier,
   getSpeedBonus,
@@ -28,14 +25,15 @@ export type DispatchProgress = {
   currentStreak: number;
   bestStreak: number;
   rankIndex: number;
-  shiftsCompleted: number;
-  perfectShifts: number;
-  shiftProgress: number;
+  weeksCompleted: number;
+  perfectWeeks: number;
   unlockedAchievements: string[];
   lastResult: CallResultDetails | null;
   dailyStreak: number;
   lastPlayDate: string;
   recordResult: (correct: boolean, baseReward: number, dispatchSeconds: number) => void;
+  /** Award an end-of-week bonus and bump week counters (calendar flow). */
+  recordWeekComplete: (perfect: boolean, bonusXP: number) => void;
   clearLastResult: () => void;
   reset: () => void;
 };
@@ -61,10 +59,8 @@ type State = {
   currentStreak: number;
   bestStreak: number;
   rankIndex: number;
-  shiftsCompleted: number;
-  perfectShifts: number;
-  shiftProgress: number;
-  shiftCorrect: number;
+  weeksCompleted: number;
+  perfectWeeks: number;
   fastestDispatch: number;
   unlockedAchievements: string[];
   lastResult: CallResultDetails | null;
@@ -80,10 +76,8 @@ const DEFAULTS: State = {
   currentStreak: 0,
   bestStreak: 0,
   rankIndex: 0,
-  shiftsCompleted: 0,
-  perfectShifts: 0,
-  shiftProgress: 0,
-  shiftCorrect: 0,
+  weeksCompleted: 0,
+  perfectWeeks: 0,
   fastestDispatch: 0,
   unlockedAchievements: [],
   lastResult: null,
@@ -96,6 +90,7 @@ const STORAGE_KEY = "dispatch_progress_v2";
 const DispatchProgressContext = createContext<DispatchProgress>({
   ...DEFAULTS,
   recordResult: () => {},
+  recordWeekComplete: () => {},
   clearLastResult: () => {},
   reset: () => {},
   dailyStreak: 0,
@@ -147,24 +142,23 @@ export function DispatchProgressProvider({
     if (!loaded.current) return;
     const {
       score, xp, callsHandled, correctCount, bestStreak,
-      rankIndex, shiftsCompleted, perfectShifts, shiftProgress,
-      shiftCorrect, fastestDispatch, unlockedAchievements,
+      rankIndex, weeksCompleted, perfectWeeks,
+      fastestDispatch, unlockedAchievements,
       dailyStreak, lastPlayDate,
     } = state;
     AsyncStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
         score, xp, callsHandled, correctCount, bestStreak,
-        rankIndex, shiftsCompleted, perfectShifts, shiftProgress,
-        shiftCorrect, fastestDispatch, unlockedAchievements,
+        rankIndex, weeksCompleted, perfectWeeks,
+        fastestDispatch, unlockedAchievements,
         dailyStreak, lastPlayDate,
       })
     ).catch(() => {});
   }, [
     state.score, state.xp, state.callsHandled, state.correctCount,
-    state.bestStreak, state.rankIndex, state.shiftsCompleted,
-    state.perfectShifts, state.shiftProgress, state.shiftCorrect,
-    state.fastestDispatch, state.unlockedAchievements,
+    state.bestStreak, state.rankIndex, state.weeksCompleted,
+    state.perfectWeeks, state.fastestDispatch, state.unlockedAchievements,
     state.dailyStreak, state.lastPlayDate,
   ]);
 
@@ -188,29 +182,9 @@ export function DispatchProgressProvider({
         const baseXP = correct ? baseReward : 0;
         const streakBonus = correct ? Math.round(baseReward * streakMult) - baseReward : 0;
 
-        let shiftProgress = prev.shiftProgress + 1;
-        let shiftCorrect = prev.shiftCorrect + (correct ? 1 : 0);
-        let shiftsCompleted = prev.shiftsCompleted;
-        let perfectShifts = prev.perfectShifts;
-        let shiftBonus = 0;
-        let perfectShiftBonus = 0;
-        let shiftComplete = false;
-        let shiftPerfect = false;
-
-        if (shiftProgress >= SHIFT_SIZE) {
-          shiftComplete = true;
-          shiftBonus = SHIFT_COMPLETE_BONUS;
-          shiftsCompleted += 1;
-          if (shiftCorrect === SHIFT_SIZE) {
-            shiftPerfect = true;
-            perfectShiftBonus = PERFECT_SHIFT_BONUS;
-            perfectShifts += 1;
-          }
-          shiftProgress = 0;
-          shiftCorrect = 0;
-        }
-
-        const totalXP = baseXP + streakBonus + speedBonusXP + shiftBonus + perfectShiftBonus;
+        // Day/week completion bonuses are awarded by the calendar flow
+        // (recordWeekComplete), not per call.
+        const totalXP = baseXP + streakBonus + speedBonusXP;
         const newXP = prev.xp + totalXP;
         const newScore = prev.score + totalXP;
         const oldRankIndex = prev.rankIndex;
@@ -222,8 +196,8 @@ export function DispatchProgressProvider({
           correctCount: newCorrectCount,
           bestStreak: newBestStreak,
           currentStreak: newStreak,
-          perfectShifts,
-          shiftsCompleted,
+          perfectWeeks: prev.perfectWeeks,
+          weeksCompleted: prev.weeksCompleted,
           rankIndex: newRankIndex,
           fastestDispatch: newFastest,
         };
@@ -239,16 +213,16 @@ export function DispatchProgressProvider({
           streakBonus,
           speedBonusXP,
           speedLabel,
-          shiftBonus,
-          perfectShiftBonus,
+          shiftBonus: 0,
+          perfectShiftBonus: 0,
           totalXP,
           newStreak,
           newAchievements,
           rankedUp,
           newRankName: RANKS[newRankIndex].name,
           newRankIcon: RANKS[newRankIndex].icon,
-          shiftComplete,
-          shiftPerfect,
+          shiftComplete: false,
+          shiftPerfect: false,
         };
 
         const today = todayStr();
@@ -265,10 +239,8 @@ export function DispatchProgressProvider({
           currentStreak: newStreak,
           bestStreak: newBestStreak,
           rankIndex: newRankIndex,
-          shiftsCompleted,
-          perfectShifts,
-          shiftProgress,
-          shiftCorrect,
+          weeksCompleted: prev.weeksCompleted,
+          perfectWeeks: prev.perfectWeeks,
           fastestDispatch: newFastest,
           unlockedAchievements: [
             ...prev.unlockedAchievements,
@@ -277,6 +249,43 @@ export function DispatchProgressProvider({
           lastResult,
           dailyStreak,
           lastPlayDate: today,
+        };
+      });
+    },
+    []
+  );
+
+  const recordWeekComplete = useCallback(
+    (perfect: boolean, bonusXP: number) => {
+      setState((prev) => {
+        const weeksCompleted = prev.weeksCompleted + 1;
+        const perfectWeeks = prev.perfectWeeks + (perfect ? 1 : 0);
+        const newXP = prev.xp + bonusXP;
+        const newScore = prev.score + bonusXP;
+        const newRankIndex = getRankForXP(newXP);
+
+        const newAchievements = checkNewAchievements(
+          {
+            callsHandled: prev.callsHandled,
+            correctCount: prev.correctCount,
+            bestStreak: prev.bestStreak,
+            currentStreak: prev.currentStreak,
+            perfectWeeks,
+            weeksCompleted,
+            rankIndex: newRankIndex,
+            fastestDispatch: prev.fastestDispatch,
+          },
+          prev.unlockedAchievements
+        );
+
+        return {
+          ...prev,
+          xp: newXP,
+          score: newScore,
+          rankIndex: newRankIndex,
+          weeksCompleted,
+          perfectWeeks,
+          unlockedAchievements: [...prev.unlockedAchievements, ...newAchievements],
         };
       });
     },
@@ -300,14 +309,14 @@ export function DispatchProgressProvider({
     currentStreak: state.currentStreak,
     bestStreak: state.bestStreak,
     rankIndex: state.rankIndex,
-    shiftsCompleted: state.shiftsCompleted,
-    perfectShifts: state.perfectShifts,
-    shiftProgress: state.shiftProgress,
+    weeksCompleted: state.weeksCompleted,
+    perfectWeeks: state.perfectWeeks,
     unlockedAchievements: state.unlockedAchievements,
     lastResult: state.lastResult,
     dailyStreak: state.dailyStreak,
     lastPlayDate: state.lastPlayDate,
     recordResult,
+    recordWeekComplete,
     clearLastResult,
     reset,
   };

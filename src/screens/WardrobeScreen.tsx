@@ -110,7 +110,7 @@ function SkinCard({
   const locked = status === "locked_rank" || status === "locked_gems";
 
   let cta = "";
-  let ctaColor = colors.dispatch.cyan;
+  let ctaColor: string = colors.dispatch.cyan;
   if (status === "equipped") {
     cta = t("wardrobe_equipped");
     ctaColor = colors.dispatch.cyan;

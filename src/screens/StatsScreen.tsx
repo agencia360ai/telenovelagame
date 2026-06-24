@@ -67,8 +67,8 @@ export function StatsScreen({ navigation }: Props) {
           <GridItem label="Correct" value={p.correctCount} />
           <GridItem label="Accuracy" value={`${accuracy}%`} />
           <GridItem label="Best Streak" value={p.bestStreak} />
-          <GridItem label="Shifts" value={p.shiftsCompleted} />
-          <GridItem label="Perfect" value={p.perfectShifts} />
+          <GridItem label="Weeks" value={p.weeksCompleted} />
+          <GridItem label="Perfect" value={p.perfectWeeks} />
         </View>
 
         {/* Rank ladder */}

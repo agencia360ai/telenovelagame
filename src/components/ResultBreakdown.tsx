@@ -85,22 +85,6 @@ export function ResultBreakdown({
             delay={300}
           />
         )}
-        {result.shiftBonus > 0 && (
-          <Row
-            label="Shift Complete"
-            value={`+${result.shiftBonus}`}
-            color={colors.dispatch.answer}
-            delay={400}
-          />
-        )}
-        {result.perfectShiftBonus > 0 && (
-          <Row
-            label="PERFECT SHIFT!"
-            value={`+${result.perfectShiftBonus}`}
-            color="#E879F9"
-            delay={500}
-          />
-        )}
         <View style={styles.divider} />
         <Row
           label="Total XP"

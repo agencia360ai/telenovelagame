@@ -5,6 +5,8 @@
   "version": "1.0.0",
   "locale_default": "en",
   "difficulty": 2,
+  "category": "game_plot",
+  "order": 1,
   "tags": ["crime", "weapons"],
   "caller": {
     "name": "Anonymous Caller",

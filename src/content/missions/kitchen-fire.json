@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "locale_default": "en",
   "difficulty": 1,
+  "category": "daily",
   "tags": ["fire", "rescue"],
   "caller": {
     "name": "Resident",

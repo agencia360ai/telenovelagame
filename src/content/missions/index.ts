@@ -1,4 +1,4 @@
-import { Mission } from "../../lib/missions/types";
+import { Mission, MissionCategory } from "../../lib/missions/types";
 import { DispatchOption, DispatchType } from "../../game/types";
 
 import armedRobbery from "./armed-robbery.json";
@@ -78,6 +78,16 @@ export function getMissionById(id: string): Mission {
 
 export function getMissionIndex(id: string): number {
   return Math.max(0, catalog.findIndex((m) => m.id === id));
+}
+
+/** Default bucket for a mission (missions without a category are "daily"). */
+export function getMissionCategory(m: Mission): MissionCategory {
+  return m.category ?? "daily";
+}
+
+/** All catalog missions in a given calendar bucket (used by the scheduler). */
+export function getMissionsByCategory(category: MissionCategory): Mission[] {
+  return catalog.filter((m) => getMissionCategory(m) === category);
 }
 
 // Remembers the previous pick so we can avoid back-to-back repeats.
