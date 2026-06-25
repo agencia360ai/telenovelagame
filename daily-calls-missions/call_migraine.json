@@ -1,0 +1,137 @@
+{
+  "schema": "mission@1",
+  "id": "call_migraine",
+  "title": "My Head's Exploding",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "real",
+    "medical"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "MEDICAL EMERGENCY",
+    "location": "12 Pine Rd"
+  },
+  "units": [
+    "ambulance",
+    "firefighters",
+    "police"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_migraine.b0",
+  "assets": [
+    {
+      "key": "deploy-ambulance",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_migraine.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A groan, like the world is too loud."
+        }
+      ],
+      "next": "call_migraine.b1"
+    },
+    {
+      "id": "call_migraine.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My head is about to explode! 🤯"
+        }
+      ],
+      "next": "call_migraine.b2"
+    },
+    {
+      "id": "call_migraine.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_migraine.b2_0",
+          "label": "Did you hit your head?",
+          "next": "call_migraine.b3"
+        },
+        {
+          "id": "call_migraine.b2_1",
+          "label": "Any other symptoms?",
+          "next": "call_migraine.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_migraine.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "HUGE migraine, man. I feel like throwing up."
+        }
+      ],
+      "next": "call_migraine.b4"
+    },
+    {
+      "id": "call_migraine.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_migraine.b4_0",
+          "label": "Stay put, help's coming.",
+          "next": "call_migraine.b5"
+        },
+        {
+          "id": "call_migraine.b4_1",
+          "label": "Just take an ibuprofen. 🙄",
+          "next": "call_migraine.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_migraine.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Can you actually send someone?! 12 Pine Rd."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "ambulance",
+      "explanation": "Ambulance en route. Aim for the toilet, just in case.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-ambulance",
+        "role": "deploy"
+      }
+    }
+  ]
+}

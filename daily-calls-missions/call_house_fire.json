@@ -1,0 +1,148 @@
+{
+  "schema": "mission@1",
+  "id": "call_house_fire",
+  "title": "My House Is on Fire",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "3259 Wescam Court"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_house_fire.b0",
+  "assets": [
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_house_fire.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Smoke pours through the line like it's trying to reach you too."
+        }
+      ],
+      "next": "call_house_fire.b1"
+    },
+    {
+      "id": "call_house_fire.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My house is on fire! 🔥"
+        }
+      ],
+      "next": "call_house_fire.b2"
+    },
+    {
+      "id": "call_house_fire.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_house_fire.b2_0",
+          "label": "Are you safe?",
+          "next": "call_house_fire.b3"
+        },
+        {
+          "id": "call_house_fire.b2_1",
+          "label": "Where did the fire start?",
+          "next": "call_house_fire.b3"
+        },
+        {
+          "id": "call_house_fire.b2_2",
+          "label": "Let it burn! 😏",
+          "next": "call_house_fire.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_house_fire.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I can't get out — it started in my room!"
+        }
+      ],
+      "next": "call_house_fire.b4"
+    },
+    {
+      "id": "call_house_fire.b4",
+      "type": "decision",
+      "prompt": "Instruction",
+      "choices": [
+        {
+          "id": "call_house_fire.b4_0",
+          "label": "Get out NOW. I'm sending help.",
+          "next": "call_house_fire.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_house_fire.b4_1",
+          "label": "Stay low and move to a window.",
+          "next": "call_house_fire.b5",
+          "effects": {
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_house_fire.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Please hurry! 3259 Wescam Court."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Trucks are on the way. You stay on the line until they arrive.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

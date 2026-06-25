@@ -1,0 +1,145 @@
+{
+  "schema": "mission@1",
+  "id": "call_door_force",
+  "title": "Someone's at My Door",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "real",
+    "crime"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "POLICE EMERGENCY",
+    "location": "Apartment 4B · Maple Court"
+  },
+  "units": [
+    "police",
+    "firefighters",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_door_force.b0",
+  "assets": [
+    {
+      "key": "deploy-police",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_door_force.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Knocking. Then pounding. Then a voice barely holding it together."
+        }
+      ],
+      "next": "call_door_force.b1"
+    },
+    {
+      "id": "call_door_force.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Someone's trying to force my door open!"
+        }
+      ],
+      "next": "call_door_force.b2"
+    },
+    {
+      "id": "call_door_force.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_door_force.b2_0",
+          "label": "Stay calm. Ask who it is.",
+          "next": "call_door_force.b3"
+        },
+        {
+          "id": "call_door_force.b2_1",
+          "label": "Would someone visit you now?",
+          "next": "call_door_force.b3"
+        },
+        {
+          "id": "call_door_force.b2_2",
+          "label": "Maybe it's Santa! Hohoho 🎅",
+          "next": "call_door_force.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_door_force.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "It's 2 a.m.! It's my weird neighbor — HELP!"
+        }
+      ],
+      "next": "call_door_force.b4"
+    },
+    {
+      "id": "call_door_force.b4",
+      "type": "decision",
+      "prompt": "Get location",
+      "choices": [
+        {
+          "id": "call_door_force.b4_0",
+          "label": "Sending a patrol. Address?",
+          "next": "call_door_force.b5"
+        },
+        {
+          "id": "call_door_force.b4_1",
+          "label": "Lock yourself in a room.",
+          "next": "call_door_force.b5",
+          "effects": {
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_door_force.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Apartment 4B, Maple Court. Please hurry!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Units en route. Keep the door blocked.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

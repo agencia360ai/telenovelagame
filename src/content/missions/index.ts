@@ -10,6 +10,18 @@ import casoCocina from "./caso_cocina.json";
 import casoPapel from "./caso_papel.json";
 import casoBitcoin from "./caso_bitcoin.json";
 
+// Daily calls (911 source, caso_cocina style) — new batch.
+import CallZombie from "./call_zombie.json";
+import CallDoorForce from "./call_door_force.json";
+import CallAteGlass from "./call_ate_glass.json";
+import CallGreenElves from "./call_green_elves.json";
+import CallMigraine from "./call_migraine.json";
+import CallVirtualKitten from "./call_virtual_kitten.json";
+import CallCatMissing from "./call_cat_missing.json";
+import CallStudentLoan from "./call_student_loan.json";
+import CallHeartAttack from "./call_heart_attack.json";
+import CallRiot from "./call_riot.json";
+
 /**
  * The mission registry. To add an interactive call:
  *   1. create ./<id>.json following the `mission@1` schema
@@ -25,6 +37,17 @@ export const BUNDLED_MISSIONS: Mission[] = [
   casoCocina as unknown as Mission, // "My Kitchen's on Fire"
   casoPapel as unknown as Mission, // "I'm Out of Toilet Paper"
   casoBitcoin as unknown as Mission, // "I Lost Everything in Bitcoin"
+  // Daily calls — new batch (mission@1, category defaults to "daily").
+  CallZombie as unknown as Mission,
+  CallDoorForce as unknown as Mission,
+  CallAteGlass as unknown as Mission,
+  CallGreenElves as unknown as Mission,
+  CallMigraine as unknown as Mission,
+  CallVirtualKitten as unknown as Mission,
+  CallCatMissing as unknown as Mission,
+  CallStudentLoan as unknown as Mission,
+  CallHeartAttack as unknown as Mission,
+  CallRiot as unknown as Mission,
 ];
 
 // Demo missions kept available but out of rotation (re-add to the array to use).

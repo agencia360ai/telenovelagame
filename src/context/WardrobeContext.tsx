@@ -1,13 +1,11 @@
 /**
- * WardrobeContext — owns which avatar skins the player has unlocked and which
- * one is equipped. Persists to AsyncStorage.
+ * WardrobeContext — owns the player's chosen GENDER and equipped avatar skin.
+ * Persists to AsyncStorage.
  *
- * Unlocking crosses the two economies the game already has:
- *   • rank  → read from DispatchProgressContext (rankIndex)
- *   • gems  → read/spent through EconomyContext
- *
- * Because of that, WardrobeProvider must live INSIDE both EconomyProvider and
- * DispatchProgressProvider in App.tsx.
+ * For now skins are gated ONLY by rank: the equipped skin follows the player's
+ * rank automatically (the "base" skin upgrades as you rank up), unless the
+ * player manually picks another unlocked skin of the same gender in the
+ * wardrobe. Gender is picked once on first launch and can be switched anytime.
  */
 import React, {
   createContext,
@@ -18,117 +16,123 @@ import React, {
   useCallback,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DEFAULT_SKIN_ID, getSkin } from "../game/skins";
-import { useEconomy } from "./EconomyContext";
+import {
+  Gender,
+  DEFAULT_SKIN_ID,
+  getSkin,
+  baseSkinForRank,
+} from "../game/skins";
 import { useDispatchProgress } from "./DispatchProgressContext";
 
-const STORAGE_KEY = "dispatch_wardrobe_v1";
-
-export type UnlockResult =
-  | { ok: true; reason: "unlocked" | "already" }
-  | { ok: false; reason: "not_found" | "rank" | "gems" };
+const STORAGE_KEY = "dispatch_wardrobe_v2";
 
 type Wardrobe = {
-  owned: string[];
+  /** false until persisted state has loaded (avoids routing flicker). */
+  ready: boolean;
+  /** null until the player has picked a gender (first launch). */
+  gender: Gender | null;
+  isChosen: boolean;
+  /** Pick / switch gender. Clears any manual skin override. */
+  chooseGender: (g: Gender) => void;
+  /** The skin currently shown (rank-base, or the manual pick if still valid). */
   equippedId: string;
-  isOwned: (id: string) => boolean;
-  /** Unlock a skin: checks rank, spends gems if required, adds to owned. */
-  unlock: (id: string) => UnlockResult;
-  /** Equip an owned skin. Returns false if not owned. */
+  /** Manually equip an unlocked skin of the current gender. */
   equip: (id: string) => boolean;
   reset: () => void;
 };
 
 const WardrobeContext = createContext<Wardrobe>({
-  owned: [DEFAULT_SKIN_ID],
+  ready: false,
+  gender: null,
+  isChosen: false,
+  chooseGender: () => {},
   equippedId: DEFAULT_SKIN_ID,
-  isOwned: () => false,
-  unlock: () => ({ ok: false, reason: "not_found" }),
   equip: () => false,
   reset: () => {},
 });
 
 export function WardrobeProvider({ children }: { children: React.ReactNode }) {
-  const { gems, spend } = useEconomy();
   const { rankIndex } = useDispatchProgress();
 
-  const [owned, setOwned] = useState<string[]>([DEFAULT_SKIN_ID]);
-  const [equippedId, setEquippedId] = useState<string>(DEFAULT_SKIN_ID);
+  const [gender, setGender] = useState<Gender | null>(null);
+  const [manualSkin, setManualSkin] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
   const loaded = useRef(false);
 
-  // Load persisted state once.
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
       .then((raw) => {
         if (raw) {
           try {
             const saved = JSON.parse(raw);
-            const savedOwned: string[] = Array.isArray(saved.owned)
-              ? saved.owned
-              : [DEFAULT_SKIN_ID];
-            // Always guarantee the default skin is owned.
-            const merged = savedOwned.includes(DEFAULT_SKIN_ID)
-              ? savedOwned
-              : [DEFAULT_SKIN_ID, ...savedOwned];
-            setOwned(merged);
-            if (
-              typeof saved.equippedId === "string" &&
-              merged.includes(saved.equippedId)
-            ) {
-              setEquippedId(saved.equippedId);
+            if (saved.gender === "female" || saved.gender === "male") {
+              setGender(saved.gender);
+            }
+            if (typeof saved.manualSkin === "string") {
+              setManualSkin(saved.manualSkin);
             }
           } catch {}
         }
       })
       .finally(() => {
         loaded.current = true;
+        setReady(true);
       });
   }, []);
 
-  // Persist on change.
   useEffect(() => {
     if (!loaded.current) return;
     AsyncStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ owned, equippedId })
+      JSON.stringify({ gender, manualSkin })
     ).catch(() => {});
-  }, [owned, equippedId]);
+  }, [gender, manualSkin]);
 
-  const isOwned = useCallback((id: string) => owned.includes(id), [owned]);
+  const effectiveGender: Gender = gender ?? "female";
 
-  const unlock = useCallback(
-    (id: string): UnlockResult => {
-      const skin = getSkin(id);
-      if (!skin) return { ok: false, reason: "not_found" };
-      if (owned.includes(id)) return { ok: true, reason: "already" };
-      if (rankIndex < skin.rankRequired) return { ok: false, reason: "rank" };
-      if (skin.gemCost > 0) {
-        const paid = spend(skin.gemCost);
-        if (!paid) return { ok: false, reason: "gems" };
-      }
-      setOwned((prev) => (prev.includes(id) ? prev : [...prev, id]));
-      return { ok: true, reason: "unlocked" };
-    },
-    [owned, rankIndex, spend]
-  );
+  // The base skin always follows the rank. A manual pick wins only while it's
+  // still valid (same gender + rank high enough).
+  let equippedId = baseSkinForRank(effectiveGender, rankIndex);
+  if (manualSkin) {
+    const s = getSkin(manualSkin);
+    if (s && s.gender === effectiveGender && rankIndex >= s.rankRequired) {
+      equippedId = manualSkin;
+    }
+  }
+
+  const chooseGender = useCallback((g: Gender) => {
+    setGender(g);
+    setManualSkin(null);
+  }, []);
 
   const equip = useCallback(
     (id: string): boolean => {
-      if (!owned.includes(id)) return false;
-      setEquippedId(id);
+      const s = getSkin(id);
+      if (!s || s.gender !== effectiveGender || rankIndex < s.rankRequired) {
+        return false;
+      }
+      setManualSkin(id);
       return true;
     },
-    [owned]
+    [effectiveGender, rankIndex]
   );
 
   const reset = useCallback(() => {
-    setOwned([DEFAULT_SKIN_ID]);
-    setEquippedId(DEFAULT_SKIN_ID);
+    setGender(null);
+    setManualSkin(null);
   }, []);
 
   return (
     <WardrobeContext.Provider
-      value={{ owned, equippedId, isOwned, unlock, equip, reset }}
+      value={{
+        ready,
+        gender,
+        isChosen: gender !== null,
+        chooseGender,
+        equippedId,
+        equip,
+        reset,
+      }}
     >
       {children}
     </WardrobeContext.Provider>

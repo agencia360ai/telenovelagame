@@ -1,0 +1,145 @@
+{
+  "schema": "mission@1",
+  "id": "call_toilet_paper",
+  "title": "Out of Toilet Paper",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "prank",
+    "weird"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "PRANK CALL",
+    "location": "Unknown · bathroom"
+  },
+  "units": [
+    "no_unit",
+    "police",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_toilet_paper.b0",
+  "assets": [
+    {
+      "key": "deploy-no_unit",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_toilet_paper.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A frantic voice, a bathroom, and absolutely no toilet paper."
+        }
+      ],
+      "next": "call_toilet_paper.b1"
+    },
+    {
+      "id": "call_toilet_paper.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "HELP! I ran out of toilet paper! 🧻"
+        }
+      ],
+      "next": "call_toilet_paper.b2"
+    },
+    {
+      "id": "call_toilet_paper.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_toilet_paper.b2_0",
+          "label": "You're calling an emergency line.",
+          "next": "call_toilet_paper.b3"
+        },
+        {
+          "id": "call_toilet_paper.b2_1",
+          "label": "Sorry, wrong number?",
+          "next": "call_toilet_paper.b3"
+        },
+        {
+          "id": "call_toilet_paper.b2_2",
+          "label": "Then your hand will do it!",
+          "next": "call_toilet_paper.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_toilet_paper.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Please, I pooped! Can you send some?"
+        }
+      ],
+      "next": "call_toilet_paper.b4"
+    },
+    {
+      "id": "call_toilet_paper.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_toilet_paper.b4_0",
+          "label": "Ma'am, this line is for emergencies.",
+          "next": "call_toilet_paper.b5"
+        },
+        {
+          "id": "call_toilet_paper.b4_1",
+          "label": "Sure. Any brand you prefer? 😏",
+          "next": "call_toilet_paper.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_toilet_paper.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "STOP BOTHERING and help me!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "no_unit",
+      "explanation": "You hang up. Somewhere, a hero improvises with a sock.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-no_unit",
+        "role": "deploy"
+      }
+    }
+  ]
+}

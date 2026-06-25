@@ -1,0 +1,137 @@
+{
+  "schema": "mission@1",
+  "id": "call_cat_missing",
+  "title": "My Cat Vanished",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "prank",
+    "animal"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "ANIMAL CONTROL",
+    "location": "5 Willow St"
+  },
+  "units": [
+    "animal_control",
+    "police",
+    "firefighters"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_cat_missing.b0",
+  "assets": [
+    {
+      "key": "deploy-animal_control",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_cat_missing.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A heartbroken caller. And a missing hamburger."
+        }
+      ],
+      "next": "call_cat_missing.b1"
+    },
+    {
+      "id": "call_cat_missing.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My cat just disappeared! 🐱"
+        }
+      ],
+      "next": "call_cat_missing.b2"
+    },
+    {
+      "id": "call_cat_missing.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_cat_missing.b2_0",
+          "label": "When did you last see him?",
+          "next": "call_cat_missing.b3"
+        },
+        {
+          "id": "call_cat_missing.b2_1",
+          "label": "Have you called around?",
+          "next": "call_cat_missing.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_cat_missing.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "At my Mom's. Also my hamburger is gone!"
+        }
+      ],
+      "next": "call_cat_missing.b4"
+    },
+    {
+      "id": "call_cat_missing.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_cat_missing.b4_0",
+          "label": "We can send someone to look.",
+          "next": "call_cat_missing.b5"
+        },
+        {
+          "id": "call_cat_missing.b4_1",
+          "label": "The cat ate the burger. Case closed. 😏",
+          "next": "call_cat_missing.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_cat_missing.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Please, just help me find him! 5 Willow St."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "animal_control",
+      "explanation": "Animal control swings by. Check your Mom's first.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-animal_control",
+        "role": "deploy"
+      }
+    }
+  ]
+}

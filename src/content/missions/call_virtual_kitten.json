@@ -1,0 +1,137 @@
+{
+  "schema": "mission@1",
+  "id": "call_virtual_kitten",
+  "title": "I Need Bitcoins",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "prank",
+    "weird"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "PRANK CALL",
+    "location": "Unknown"
+  },
+  "units": [
+    "no_unit",
+    "police",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_virtual_kitten.b0",
+  "assets": [
+    {
+      "key": "deploy-no_unit",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_virtual_kitten.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A very calm voice with very odd priorities."
+        }
+      ],
+      "next": "call_virtual_kitten.b1"
+    },
+    {
+      "id": "call_virtual_kitten.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I need bitcoins urgently! 🪙"
+        }
+      ],
+      "next": "call_virtual_kitten.b2"
+    },
+    {
+      "id": "call_virtual_kitten.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_virtual_kitten.b2_0",
+          "label": "Sir, this is 911.",
+          "next": "call_virtual_kitten.b3"
+        },
+        {
+          "id": "call_virtual_kitten.b2_1",
+          "label": "What for?",
+          "next": "call_virtual_kitten.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_virtual_kitten.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I want to buy a virtual kitten."
+        }
+      ],
+      "next": "call_virtual_kitten.b4"
+    },
+    {
+      "id": "call_virtual_kitten.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_virtual_kitten.b4_0",
+          "label": "You don't need bitcoins for that.",
+          "next": "call_virtual_kitten.b5"
+        },
+        {
+          "id": "call_virtual_kitten.b4_1",
+          "label": "What are you gonna name it? 😏",
+          "next": "call_virtual_kitten.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_virtual_kitten.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "George Cheddar Washington!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "no_unit",
+      "explanation": "Great choice. Now please free the line.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-no_unit",
+        "role": "deploy"
+      }
+    }
+  ]
+}
