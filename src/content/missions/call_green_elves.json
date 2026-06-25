@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "locale_default": "en",
   "difficulty": 2,
+  "category": "daily",
   "tags": [
     "mixed",
     "medical"
