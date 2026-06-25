@@ -141,6 +141,14 @@ export type Mission = {
     avatar?: string;
   };
 
+  /**
+   * Optional display names for extra speakers used in narrative missions
+   * (e.g. { mara: "Mara", grandma: "Grandma" }). The reserved speakers
+   * caller/operator/dispatch/narrator are handled by the screen; any other
+   * speaker falls back to the caller's name unless mapped here.
+   */
+  speakers?: Record<string, string>;
+
   units?: DispatchType[];
   reward: number;
   time_limit_seconds?: number;
