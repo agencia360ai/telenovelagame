@@ -504,7 +504,7 @@ function toMission1(chap, gameMeta){
   return m;
 }
 
-function m1_validate(chaps){
+function m1_validate(chaps, orderOf){
   const warns=[];
   const seen=new Set();
   chaps.forEach(c=>{
@@ -516,20 +516,40 @@ function m1_validate(chaps){
       if(!m1_detectDispatch(c))warns.push(`${c.id}: no se detectó un beat de dispatch`);
     }
   });
+  // order collisions within each sequential category (game_plot / weekend)
+  if(orderOf){
+    ["game_plot","weekend"].forEach(cat=>{
+      const seenOrder=new Map(); // order -> first chapter id
+      chaps.filter(c=>m1_kindToCategory(c.kind)===cat).forEach(c=>{
+        if(!orderOf.has(c))return;
+        const ord=orderOf.get(c);
+        if(seenOrder.has(ord))warns.push(`${cat}: order ${ord} duplicado en "${seenOrder.get(ord)}" y "${c.id}"`);
+        else seenOrder.set(ord,c.id);
+      });
+    });
+  }
   return warns;
 }
 
 function m1_collectChapters(){
   const plot=[], weekend=[], daily=(game.daily_calls.library||[]).slice();
-  if(game.game_plot.prologue)plot.push(game.game_plot.prologue);
-  (game.game_plot.weeks||[]).forEach(wk=>{ if(wk.plot_call)plot.push(wk.plot_call); if(wk.weekend)weekend.push(wk.weekend); });
-  return { plot, weekend, daily, all:plot.concat(weekend,daily) };
+  // order for plot/weekend is derived from their containing week (1-based),
+  // each category sequenced independently. Stored in a map keyed by chapter so
+  // the authoring model isn't mutated.
+  const orderOf=new Map();
+  if(game.game_plot.prologue)plot.push(game.game_plot.prologue); // prologue: no order (not sequenced)
+  (game.game_plot.weeks||[]).forEach((wk,i)=>{
+    const ord=(wk.week!=null)?wk.week:(i+1);
+    if(wk.plot_call){ orderOf.set(wk.plot_call,ord); plot.push(wk.plot_call); }
+    if(wk.weekend){ orderOf.set(wk.weekend,ord); weekend.push(wk.weekend); }
+  });
+  return { plot, weekend, daily, orderOf, all:plot.concat(weekend,daily) };
 }
 
 function m1_buildExport(){
-  const { plot, all }=m1_collectChapters();
+  const { plot, all, orderOf }=m1_collectChapters();
   return {
-    missions: all.map(c=>toMission1(c,game)),
+    missions: all.map(c=>{ const m=toMission1(c,game); if(orderOf.has(c))m.order=orderOf.get(c); return m; }),
     calendar: {
       game_plot_sequence: plot.filter(c=>c.kind!=="prologue").map(c=>({ missionId:c.id })),
       week_template_hint: game.config
@@ -546,7 +566,8 @@ document.getElementById("exp").onclick=()=>{
   // 2) runtime file (mission@1) for the game
   const out=m1_buildExport();
   download("dispatcher-missions.json", JSON.stringify(out,null,2), "application/json");
-  const warns=m1_validate(m1_collectChapters().all);
+  const cc=m1_collectChapters();
+  const warns=m1_validate(cc.all, cc.orderOf);
   if(warns.length)alert("Exportado con avisos (mission@1):\n- "+warns.join("\n- "));
 };
 document.getElementById("imp").onclick=()=>document.getElementById("impFile").click();

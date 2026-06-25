@@ -24,9 +24,12 @@ import {
   generateWeek,
   nextPlayableDay,
   resolveNextPlot,
+  resolveNextWeekend,
   shortDayLabel,
 } from "../lib/calendar/schedule";
 import { DEFAULT_WEEK_TEMPLATE } from "../content/calendar/weekTemplate";
+import { Mission } from "../lib/missions/types";
+import { sortByOrder } from "../content/calendar/gamePlot";
 import { getMissionsByCategory } from "../content/missions";
 import { useDispatchProgress } from "./DispatchProgressContext";
 
@@ -64,24 +67,41 @@ function buildPools(): MissionPools {
   };
 }
 
+/** game_plot missions sorted by `order` — the plot sequence. */
+function buildPlotList(): Mission[] {
+  return sortByOrder(getMissionsByCategory("game_plot"));
+}
+
+/** weekend missions sorted by `order` — the weekend sequence. */
+function buildWeekendList(): Mission[] {
+  return sortByOrder(getMissionsByCategory("weekend"));
+}
+
 /** Build a fresh, frozen week and position the player on its first playable day. */
 function buildWeek(
   week: number,
   plotIndex: number,
+  weekendIndex: number,
   rankIndex: number
 ): CalendarState {
-  const plotMissionId = resolveNextPlot(plotIndex, { rankIndex, week });
+  const plotMissionId = resolveNextPlot(buildPlotList(), plotIndex, {
+    rankIndex,
+    week,
+  });
+  const weekendMissionId = resolveNextWeekend(buildWeekendList(), weekendIndex);
   const schedule = generateWeek(
     week,
     DEFAULT_WEEK_TEMPLATE,
     buildPools(),
-    plotMissionId
+    plotMissionId,
+    weekendMissionId
   );
   return {
     week,
     dayIndex: firstPlayableDay(schedule),
     missionIndexInDay: 0,
     gamePlotIndex: plotIndex,
+    weekendIndex,
     schedule,
     completedThisWeek: 0,
     correctThisWeek: 0,
@@ -106,7 +126,7 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
   const rankRef = useRef(progress.rankIndex);
   rankRef.current = progress.rankIndex;
 
-  const [state, setState] = useState<CalendarState>(() => buildWeek(1, 0, 0));
+  const [state, setState] = useState<CalendarState>(() => buildWeek(1, 0, 0, 0));
   const loaded = useRef(false);
 
   // Load persisted calendar (or keep the freshly-generated week 1).
@@ -115,7 +135,14 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
       if (raw) {
         try {
           const saved = JSON.parse(raw);
-          if (isValidState(saved)) setState(saved);
+          if (isValidState(saved)) {
+            // Backfill fields added after this state may have been persisted.
+            if (typeof saved.weekendIndex !== "number") saved.weekendIndex = 0;
+            if (saved.schedule && saved.schedule.weekendMissionId === undefined) {
+              saved.schedule.weekendMissionId = null;
+            }
+            setState(saved);
+          }
         } catch {}
       }
       loaded.current = true;
@@ -154,6 +181,13 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
           ? prev.gamePlotIndex + 1
           : prev.gamePlotIndex;
 
+      // Advance the weekend pointer once this week's weekend call has been handled.
+      const weekendIndex =
+        prev.schedule.weekendMissionId &&
+        missionId === prev.schedule.weekendMissionId
+          ? prev.weekendIndex + 1
+          : prev.weekendIndex;
+
       if (missionIndexInDay >= day.missionIds.length) {
         missionIndexInDay = 0;
         dayIndex = nextPlayableDay(prev.schedule, prev.dayIndex + 1);
@@ -164,6 +198,7 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
         dayIndex,
         missionIndexInDay,
         gamePlotIndex,
+        weekendIndex,
         completedThisWeek: prev.completedThisWeek + 1,
         correctThisWeek: prev.correctThisWeek + (correct ? 1 : 0),
       };
@@ -171,12 +206,19 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const startNextWeek = useCallback(() => {
-    setState((prev) => buildWeek(prev.week + 1, prev.gamePlotIndex, rankRef.current));
+    setState((prev) =>
+      buildWeek(
+        prev.week + 1,
+        prev.gamePlotIndex,
+        prev.weekendIndex,
+        rankRef.current
+      )
+    );
   }, []);
 
   const reset = useCallback(() => {
     loaded.current = true;
-    setState(buildWeek(1, 0, rankRef.current));
+    setState(buildWeek(1, 0, 0, rankRef.current));
   }, []);
 
   const weekSummary: WeekSummary = {

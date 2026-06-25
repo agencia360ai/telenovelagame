@@ -27,6 +27,8 @@ export type WeekSchedule = {
   gamePlotDayId: string | null;
   /** The plot mission id placed this week (null if none was unlocked). */
   gamePlotMissionId: string | null;
+  /** The weekend mission id placed this week (null if none/exhausted). */
+  weekendMissionId: string | null;
 };
 
 /** Persisted calendar progress. */
@@ -39,6 +41,8 @@ export type CalendarState = {
   missionIndexInDay: number;
   /** How many plot entries have been consumed (sequence pointer). */
   gamePlotIndex: number;
+  /** How many weekend entries have been consumed (sequence pointer). */
+  weekendIndex: number;
   /** The frozen schedule for the current week. */
   schedule: WeekSchedule;
   /** Calls completed in the current week (for the summary screen). */

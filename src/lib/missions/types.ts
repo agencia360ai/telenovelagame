@@ -130,8 +130,13 @@ export type Mission = {
   tags?: string[];
   /** Calendar bucket (default "daily"). */
   category?: MissionCategory;
-  /** Ordering hint for "game_plot" missions (lower plays first). */
+  /** Serving order for sequential missions ("game_plot" and "weekend"). Lower plays first. */
   order?: number;
+  /**
+   * Optional gating for sequential missions (honored today only for "game_plot").
+   * If the condition isn't met that week, the entry is retried in later weeks.
+   */
+  unlock?: { minRank?: number; minWeek?: number };
 
   caller: {
     name: string;

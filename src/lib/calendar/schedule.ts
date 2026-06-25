@@ -2,9 +2,9 @@
  * Calendar scheduler — pure functions that build and walk a week.
  *
  * No React, no I/O: given the week template + the available mission pools, it
- * produces a concrete, frozen WeekSchedule. Selection is random where the design
- * calls for it (daily/weekend pools) and ordered for the plot call. Kept pure so
- * it's trivially testable and reproducible with a seeded RNG.
+ * produces a concrete, frozen WeekSchedule. Selection is random for the daily
+ * pool and ordered (by each mission's `order`) for the plot and weekend calls.
+ * Kept pure so it's trivially testable and reproducible with a seeded RNG.
  */
 import { Mission } from "../missions/types";
 import {
@@ -12,7 +12,6 @@ import {
   shortDayLabel,
 } from "../../content/calendar/weekTemplate";
 import {
-  GAME_PLOT_SEQUENCE,
   GamePlotContext,
   isPlotUnlocked,
 } from "../../content/calendar/gamePlot";
@@ -34,16 +33,28 @@ function pick<T>(arr: T[], rng: Rng): T | undefined {
 
 /**
  * The next plot mission id to serve, or null if the next entry is still locked
- * (or the sequence is exhausted). `plotIndex` is how many plot calls have been
- * consumed so far.
+ * (or the sequence is exhausted). `plotList` is the game_plot missions already
+ * sorted by `order`; `plotIndex` is how many plot calls have been consumed.
  */
 export function resolveNextPlot(
+  plotList: Mission[],
   plotIndex: number,
   ctx: GamePlotContext
 ): string | null {
-  const entry = GAME_PLOT_SEQUENCE[plotIndex];
-  if (!entry) return null;
-  return isPlotUnlocked(entry, ctx) ? entry.missionId : null;
+  const m = plotList[plotIndex];
+  if (!m) return null;
+  return isPlotUnlocked(m, ctx) ? m.id : null;
+}
+
+/**
+ * The next weekend mission id to serve, or null if the sequence is exhausted.
+ * `weekendList` is the weekend missions already sorted by `order`.
+ */
+export function resolveNextWeekend(
+  weekendList: Mission[],
+  weekendIndex: number
+): string | null {
+  return weekendList[weekendIndex]?.id ?? null;
 }
 
 /**
@@ -58,6 +69,7 @@ export function generateWeek(
   template: DayTemplate[],
   pools: MissionPools,
   plotMissionId: string | null,
+  weekendMissionId: string | null,
   rng: Rng = Math.random
 ): WeekSchedule {
   // Choose the plot day among eligible weekdays (only if we have a plot to place).
@@ -69,7 +81,6 @@ export function generateWeek(
   }
 
   const usedDaily = new Set<string>();
-  const usedWeekend = new Set<string>();
 
   const drawFrom = (pool: Mission[], used: Set<string>): string | undefined => {
     const fresh = pool.filter((m) => !used.has(m.id));
@@ -94,9 +105,9 @@ export function generateWeek(
       if (kind === "game_plot") {
         id = plotMissionId ?? undefined;
       } else if (kind === "weekend") {
-        // Fall back to the daily pool until weekend missions are authored.
-        id =
-          drawFrom(pools.weekend, usedWeekend) ?? drawFrom(pools.daily, usedDaily);
+        // Sequential by `order`. Fall back to the daily pool when no weekend
+        // mission is authored / the sequence is exhausted.
+        id = weekendMissionId ?? drawFrom(pools.daily, usedDaily);
       } else {
         id = drawFrom(pools.daily, usedDaily);
       }
@@ -106,7 +117,13 @@ export function generateWeek(
     return { dayId: day.id, label: day.label, missionIds };
   });
 
-  return { week, days, gamePlotDayId, gamePlotMissionId: plotMissionId };
+  return {
+    week,
+    days,
+    gamePlotDayId,
+    gamePlotMissionId: plotMissionId,
+    weekendMissionId,
+  };
 }
 
 /** Index of the first day that has missions (skips rest days). days.length if none. */

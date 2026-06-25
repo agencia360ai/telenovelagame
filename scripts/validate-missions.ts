@@ -120,6 +120,11 @@ const dir = path.join(__dirname, "../src/content/missions");
 const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
 
 let total = 0;
+// Cross-file: `order` must be unique within each sequential category.
+const orderSeen: Record<string, Map<number, string>> = {
+  game_plot: new Map(),
+  weekend: new Map(),
+};
 for (const file of files) {
   const raw = fs.readFileSync(path.join(dir, file), "utf-8");
   let json: any;
@@ -136,6 +141,18 @@ for (const file of files) {
     console.log(`✓ ${file} — ${json.beats?.length ?? 0} beats, ok`);
   } else {
     for (const e of errs) console.error(`✗ ${e.file} [${e.path}] ${e.message}`);
+  }
+
+  const cat = json.category;
+  if ((cat === "game_plot" || cat === "weekend") && typeof json.order === "number") {
+    const seen = orderSeen[cat];
+    const prev = seen.get(json.order);
+    if (prev) {
+      console.error(`✗ ${cat}: order ${json.order} duplicated in "${prev}" and "${json.id}"`);
+      total++;
+    } else {
+      seen.set(json.order, json.id);
+    }
   }
 }
 
