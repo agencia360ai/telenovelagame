@@ -414,6 +414,16 @@ function m1_explanation(chap,dispatch){
   });
   return texts.join(" ").trim();
 }
+function m1_speakers(chap, gameMeta){
+  // Display names for extra story speakers (mara/grandma/lily…). Reserved
+  // speakers (caller/operator/dispatch/narrator/voice) are handled by the game.
+  const reserved=new Set(["caller","operator","dispatch","narrator","voice"]);
+  const out={}; const chars=(gameMeta&&gameMeta.characters)||{};
+  (chap.beats||[]).forEach(b=>{ (b.lines||[]).forEach(l=>{
+    const s=l.speaker; if(s&&!reserved.has(s)) out[s]=(chars[s]&&chars[s].name)||s;
+  }); });
+  return out;
+}
 function m1_caller(chap){
   if(chap.kind==="daily_call"){
     const cat=(chap.tags&&chap.tags.category)||"misc";
@@ -445,6 +455,8 @@ function toMission1(chap, gameMeta){
   if(chap.week!=null)m.order=chap.week;
   const tagArr=[(chap.tags&&chap.tags.type),(chap.tags&&chap.tags.category)].filter(Boolean);
   if(tagArr.length)m.tags=tagArr;
+  const speakers=m1_speakers(chap,gameMeta);
+  if(Object.keys(speakers).length)m.speakers=speakers;
   const media=m1_firstMedia(chap);
   if(media){ m.assets.push({key:media.key,type:media.type||"image",role:"intro"}); m.assets.push({key:media.key,type:media.type||"image",role:"ambient"}); }
 

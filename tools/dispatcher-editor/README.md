@@ -56,9 +56,13 @@ muestra un `alert` listando los capítulos a revisar (igual exporta).
 4. Para la trama, copia `calendar.game_plot_sequence` a
    `src/content/calendar/gamePlot.ts` (`GAME_PLOT_SEQUENCE`).
 
-## Limitaciones conocidas (ver `ACTION-PLAN.md`)
-- Los capítulos **narrativos** (plot/weekend) son `mission@1` válidos, pero para ser **jugables**
-  de punta a punta requieren un ajuste en `MissionScreen` (manejar misiones sin `dispatch`) y un
-  mapa de nombres de speakers (mara/grandma/lily).
+## Estado del soporte en el juego
+- Las llamadas **daily** (con dispatch) y los capítulos **narrativos** (plot/weekend, sin
+  dispatch) ya son jugables: `MissionScreen` detecta las misiones sin `dispatch`, conserva las
+  líneas de `narrator` y cierra con una tarjeta **"SCENE COMPLETE"** que otorga XP y avanza el día.
+- El editor exporta un mapa `speakers` (de `characters`) y el juego muestra esos nombres
+  (mara/grandma/lily) en los diálogos.
+
+## Limitaciones conocidas
 - Las `assets[].key` se sintetizan por convención (`deploy-<unidad>` y la `key` del `media` de
   autoría); deben existir en `src/game/assets.ts` o caerán al fallback de video.

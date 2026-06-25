@@ -115,11 +115,20 @@ export function MissionScreen({ navigation, route }: Props) {
   const [correctUnit, setCorrectUnit] = useState<DispatchType>("police");
   const [explanation, setExplanation] = useState<string | undefined>(undefined);
   const [showRankUp, setShowRankUp] = useState(false);
+  // Narrative missions (game_plot / weekend) have no dispatch: they end on an
+  // `outcome` beat and are resolved as a "scene complete" instead of a dispatch.
+  const [isNarrative, setIsNarrative] = useState(false);
+  const narrativeDone = useRef(false);
   const dispatchStartTime = useRef<number>(0);
   // While true (right after a choice) the caller's reply auto-plays and the
   // next options appear after a short beat — instead of waiting on a tap.
   const autoMode = useRef(false);
   const isFirstMission = useRef(progress.callsHandled === 0).current;
+  // A mission with no dispatch beat is a narrative scene (game_plot / weekend);
+  // there we keep narrator lines (they ARE the story) and end with a scene card.
+  const isStoryMission = useRef(
+    !mission.beats.some((b) => b.type === "dispatch")
+  ).current;
 
   const beat = getBeat(mission, beatId);
 
@@ -196,6 +205,23 @@ export function MissionScreen({ navigation, route }: Props) {
   // switches us into the dispatch phase instead of showing lines.
   const loadBeat = useCallback(
     (b: MissionBeat, rt: MissionRuntime) => {
+      // Narrative ending: a mission that reaches an `outcome` beat during play
+      // (i.e. without a dispatch step) is a story scene — resolve it as complete.
+      if (b.type === "outcome") {
+        if (!narrativeDone.current) {
+          narrativeDone.current = true;
+          progress.recordResult(true, mission.reward, 0);
+          calendar.completeMission(mission.id, true);
+          setIsNarrative(true);
+          setTimeout(() => {
+            audio.playSfx("success");
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          }, 150);
+        }
+        setPhase("result");
+        scrollSoon();
+        return;
+      }
       if (b.type === "dispatch") {
         autoMode.current = false;
         setCorrectUnit(resolveCorrectUnit(b, rt));
@@ -207,7 +233,9 @@ export function MissionScreen({ navigation, route }: Props) {
         scrollSoon();
         return;
       }
-      const lines = resolveLines(b, rt).filter((l) => l.speaker !== "narrator");
+      const lines = resolveLines(b, rt).filter(
+        (l) => isStoryMission || l.speaker !== "narrator"
+      );
 
       // Auto mode (right after a choice): reveal the caller's reply in full,
       // then pause ~1s before the next options — no tap needed.
@@ -274,7 +302,7 @@ export function MissionScreen({ navigation, route }: Props) {
     if (phase !== "play" || !beat) return;
     if (showChoices) return; // waiting on a choice
     const lines = resolveLines(beat, runtime).filter(
-      (l) => l.speaker !== "narrator"
+      (l) => isStoryMission || l.speaker !== "narrator"
     );
     if (revealIndex < lines.length) {
       setDisplayedLines((prev) => [...prev, lines[revealIndex]]);
@@ -385,14 +413,13 @@ export function MissionScreen({ navigation, route }: Props) {
 
   const isDecisionPrompt = beat?.type === "decision" && showChoices;
 
-  const senderName = (speaker: string) =>
-    speaker === "operator"
-      ? "You (Dispatch)"
-      : speaker === "dispatch"
-      ? "Dispatch · Note"
-      : speaker === "narrator"
-      ? ""
-      : mission.caller.name;
+  const senderName = (speaker: string) => {
+    if (speaker === "operator") return "You (Dispatch)";
+    if (speaker === "dispatch") return "Dispatch · Note";
+    if (speaker === "narrator") return "";
+    if (speaker === "caller") return mission.caller.name;
+    return mission.speakers?.[speaker] ?? mission.caller.name;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -569,7 +596,17 @@ export function MissionScreen({ navigation, route }: Props) {
             </Animated.View>
           )}
 
-          {phase === "result" && progress.lastResult && (
+          {phase === "result" && isNarrative && (
+            <Animated.View entering={FadeInDown.duration(400)} style={styles.sceneBox}>
+              <Text style={styles.sceneIcon}>✓</Text>
+              <Text style={styles.sceneTitle}>SCENE COMPLETE</Text>
+              <Text style={styles.sceneSub}>
+                +{progress.lastResult?.totalXP ?? mission.reward} XP
+              </Text>
+            </Animated.View>
+          )}
+
+          {phase === "result" && !isNarrative && progress.lastResult && (
             <ResultBreakdown
               result={progress.lastResult}
               correctDispatch={correctUnit}
@@ -900,6 +937,19 @@ const styles = StyleSheet.create({
   dispatchIcon: { fontSize: 32 },
   dispatchLabel: { color: colors.dispatch.text, fontSize: 11, fontWeight: "900", letterSpacing: 1, textAlign: "center" },
   streakHint: { color: "#FF6B6B", fontSize: 12, fontWeight: "700" },
+  sceneBox: {
+    marginTop: 12,
+    borderRadius: 16,
+    padding: 20,
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "rgba(34, 197, 94, 0.12)",
+    borderWidth: 2,
+    borderColor: colors.dispatch.answer,
+  },
+  sceneIcon: { fontSize: 36, color: "#fff", fontWeight: "900" },
+  sceneTitle: { fontSize: 20, fontWeight: "900", color: "#fff", letterSpacing: 1 },
+  sceneSub: { fontSize: 15, fontWeight: "800", color: colors.dispatch.answer },
   bottomBar: { paddingVertical: sizes.spacing.md, alignItems: "center" },
   hintText: { color: colors.dispatch.textMuted, fontSize: sizes.font.sm, fontWeight: "700", letterSpacing: 1 },
   nextInlineBtn: {

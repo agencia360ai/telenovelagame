@@ -47,17 +47,17 @@ la UI).
 - Se restauró el **UTF‑8** correcto de la UI (·, ▲, ▼, →, ✕, ⠿, ▶) que el traspaso había roto;
   ningún cambio de layout/estilo.
 
-## Dependencias del proyecto (fuera del editor — para que plot/weekend sean *jugables*)
-Las narrativas convertidas son `mission@1` **válidas** (`npm run validate-missions`), pero para
-jugarse de punta a punta hace falta, en el proyecto:
-1. `src/screens/MissionScreen.tsx`: manejar misiones que terminan en `outcome` **sin** `dispatch`
-   previo (hoy hacen dead-end) → mostrar cierre y llamar `calendar.completeMission(id, true)`.
-2. `MissionScreen.senderName`: hoy mapea cualquier speaker ≠ caller/operator/narrator a
-   `caller.name`; para plot (mara/grandma/lily) habría que pasar un mapa de nombres.
-3. Poblar `GAME_PLOT_SEQUENCE` (`src/content/calendar/gamePlot.ts`) y el pool `weekend` con los
-   nuevos ids, y registrar las misiones en `src/content/missions/index.ts`.
-4. Las `assets[].key` sintetizadas (p. ej. `deploy-firefighters`, o la key del `media` de autoría)
-   deben existir en `src/game/assets.ts` o caerán al fallback de video.
+## Dependencias del proyecto
+1. ✅ **Hecho** — `src/screens/MissionScreen.tsx`: maneja misiones que terminan en `outcome`
+   **sin** `dispatch` (narrativas): conserva líneas de `narrator`, cierra con tarjeta
+   "SCENE COMPLETE", otorga XP y llama `calendar.completeMission(id, true)`.
+2. ✅ **Hecho** — `MissionScreen.senderName` usa el mapa opcional `Mission.speakers`
+   (`src/lib/missions/types.ts`); el editor exporta ese mapa desde `characters`.
+3. ⏳ **Pendiente (contenido)** — Poblar `GAME_PLOT_SEQUENCE`
+   (`src/content/calendar/gamePlot.ts`) y el pool `weekend` con los nuevos ids, y registrar las
+   misiones en `src/content/missions/index.ts`. Esto se hace al volcar el export del editor.
+4. ⏳ **Pendiente (assets)** — Las `assets[].key` sintetizadas (`deploy-<unidad>`, o la key del
+   `media` de autoría) deben existir en `src/game/assets.ts` o caerán al fallback de video.
 
 ## Verificación
 1. Abrir el editor → Importar `dispatcher-game.json` → **Exportar JSON** → bajan **2** archivos.
