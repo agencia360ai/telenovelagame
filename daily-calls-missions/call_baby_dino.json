@@ -1,0 +1,142 @@
+{
+  "schema": "mission@1",
+  "id": "call_baby_dino",
+  "title": "Baby Dinosaur",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "exotic",
+    "animal"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "ANIMAL CONTROL",
+    "location": "18th & Jurassic St"
+  },
+  "units": [
+    "animal_control",
+    "police",
+    "firefighters"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_baby_dino.b0",
+  "assets": [
+    {
+      "key": "deploy-animal_control",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_baby_dino.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Split screen: you at the console; the caller, somewhere in the woods."
+        }
+      ],
+      "next": "call_baby_dino.b1"
+    },
+    {
+      "id": "call_baby_dino.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I found a baby dinosaur! 🦕"
+        }
+      ],
+      "next": "call_baby_dino.b2"
+    },
+    {
+      "id": "call_baby_dino.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_baby_dino.b2_0",
+          "label": "Impossible, dinosaurs don't exist.",
+          "next": "call_baby_dino.b3"
+        },
+        {
+          "id": "call_baby_dino.b2_1",
+          "label": "OMG! What breed?",
+          "next": "call_baby_dino.b3"
+        },
+        {
+          "id": "call_baby_dino.b2_2",
+          "label": "I WANT IT! 😍",
+          "next": "call_baby_dino.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_baby_dino.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I think it's a baby T-Rex. Maybe?"
+        }
+      ],
+      "next": "call_baby_dino.b4"
+    },
+    {
+      "id": "call_baby_dino.b4",
+      "type": "decision",
+      "prompt": "Get details",
+      "choices": [
+        {
+          "id": "call_baby_dino.b4_0",
+          "label": "Are you hurt?",
+          "next": "call_baby_dino.b5"
+        },
+        {
+          "id": "call_baby_dino.b4_1",
+          "label": "Send your location, fast!",
+          "next": "call_baby_dino.b5"
+        }
+      ]
+    },
+    {
+      "id": "call_baby_dino.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm fine, it's just drooling. 18th, Jurassic St."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "animal_control",
+      "explanation": "Animal control rolls out. This report's getting framed.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-animal_control",
+        "role": "deploy"
+      }
+    }
+  ]
+}

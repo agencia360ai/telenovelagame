@@ -1,0 +1,137 @@
+{
+  "schema": "mission@1",
+  "id": "call_student_loan",
+  "title": "I Can't Pay My Debt",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "prank",
+    "misc"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "PRANK CALL",
+    "location": "Unknown"
+  },
+  "units": [
+    "no_unit",
+    "police",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_student_loan.b0",
+  "assets": [
+    {
+      "key": "deploy-no_unit",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_student_loan.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A panicked voice, drowning in numbers."
+        }
+      ],
+      "next": "call_student_loan.b1"
+    },
+    {
+      "id": "call_student_loan.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I can't pay my debt! 💸"
+        }
+      ],
+      "next": "call_student_loan.b2"
+    },
+    {
+      "id": "call_student_loan.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_student_loan.b2_0",
+          "label": "What debt?",
+          "next": "call_student_loan.b3"
+        },
+        {
+          "id": "call_student_loan.b2_1",
+          "label": "Why not get a job?",
+          "next": "call_student_loan.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_student_loan.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My student loan! They said I'm too young to work."
+        }
+      ],
+      "next": "call_student_loan.b4"
+    },
+    {
+      "id": "call_student_loan.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_student_loan.b4_0",
+          "label": "How old are you?",
+          "next": "call_student_loan.b5"
+        },
+        {
+          "id": "call_student_loan.b4_1",
+          "label": "Run away before it's too late! 😏",
+          "next": "call_student_loan.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_student_loan.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm 12! What do I do?!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "no_unit",
+      "explanation": "Go back to your toys, kiddo. And free the line.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-no_unit",
+        "role": "deploy"
+      }
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "schema": "mission@1",
+  "id": "call_riot",
+  "title": "There's a Riot Outside",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 3,
+  "tags": [
+    "real",
+    "crime"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "POLICE EMERGENCY",
+    "location": "Downtown"
+  },
+  "units": [
+    "police",
+    "firefighters",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_riot.b0",
+  "assets": [
+    {
+      "key": "deploy-police",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_riot.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Glass breaking. Screaming. A city tearing at itself."
+        }
+      ],
+      "next": "call_riot.b1"
+    },
+    {
+      "id": "call_riot.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "There's a riot happening outside! 😱"
+        }
+      ],
+      "next": "call_riot.b2"
+    },
+    {
+      "id": "call_riot.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_riot.b2_0",
+          "label": "How many people?",
+          "next": "call_riot.b3"
+        },
+        {
+          "id": "call_riot.b2_1",
+          "label": "Are you safe?",
+          "next": "call_riot.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_riot.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Over 100! Guns and knives everywhere!"
+        }
+      ],
+      "next": "call_riot.b4"
+    },
+    {
+      "id": "call_riot.b4",
+      "type": "decision",
+      "prompt": "Instruction",
+      "choices": [
+        {
+          "id": "call_riot.b4_0",
+          "label": "Hide and stay hidden.",
+          "next": "call_riot.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_riot.b4_1",
+          "label": "Run, get away from the crowd.",
+          "next": "call_riot.b5",
+          "effects": {
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_riot.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm hiding. There's nowhere to go!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Keep calm. Police are being dispatched now.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

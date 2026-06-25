@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DISPATCHER · Editor v3 (Plot + Daily Calls + Clips)</title>
+<style>
+  :root{--bg:#0f1320;--panel:#171c2e;--panel2:#1f2740;--line:#2c3658;--ink:#e8ecf6;--muted:#8b96b5;--accent:#e0564a;--accent2:#3d7bd6;--ok:#4caf7d;--choice:#caa14a;--plot:#b06bd6;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  body{display:flex;flex-direction:column;overflow:hidden}
+  header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header h1{font-size:14px;margin:0 8px 0 0;color:#fff}header h1 b{color:var(--accent)}
+  select,input,button,textarea{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+  button{cursor:pointer}button:hover{border-color:var(--accent2)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tab{padding:6px 12px;border-radius:7px;background:var(--panel2);border:1px solid var(--line)}
+  .tab.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  .mini{padding:3px 7px;font-size:11px}.danger{color:#ff8b80;border-color:#5a2a28}
+  .grow{flex:1}.saved{font-size:11px;color:var(--muted)}
+  main{flex:1;display:flex;min-height:0}
+  .col{overflow:auto;padding:10px}
+  #nav{width:280px;background:var(--panel);border-right:1px solid var(--line);flex-shrink:0}
+  #beats{width:250px;background:#141a2b;border-right:1px solid var(--line);flex-shrink:0}
+  #editor{flex:1;background:var(--bg)}
+  h2{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:10px 0 8px}
+  .wk{margin-bottom:4px}
+  .wk .wkhd{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 3px;display:flex;align-items:center;gap:6px}
+  .wkhd .ct{color:var(--choice)}
+  .item{position:relative;padding:7px 9px;border:1px solid var(--line);border-radius:7px;margin-bottom:5px;cursor:pointer;font-size:12px;background:var(--panel2)}
+  .item:hover{border-color:var(--accent2)}.item.sel{outline:2px solid var(--accent)}
+  .item.drag{opacity:.4}.item.over{border-color:var(--accent2);box-shadow:0 -2px 0 var(--accent2) inset}
+  .item .meta{font-size:10px;color:var(--muted);font-family:monospace;margin-top:2px}
+  .kind{font-size:9px;text-transform:uppercase;padding:1px 6px;border-radius:20px;margin-left:4px}
+  .kind.plot_call,.kind.prologue{background:var(--plot);color:#fff}.kind.weekend{background:var(--ok);color:#06210f}.kind.daily_call{background:var(--choice);color:#1a1206}
+  .badge{font-size:9px;text-transform:uppercase;padding:1px 6px;border-radius:20px;background:var(--accent2);color:#fff;margin-left:4px}
+  .badge.decision{background:var(--choice);color:#1a1206}.badge.chapter_end,.badge.cliffhanger{background:var(--ok);color:#06210f}
+  .rowbtns{display:flex;gap:4px;align-items:center;margin-top:5px}
+  .grip{cursor:grab;color:var(--muted);font-size:13px;padding:0 4px;user-select:none}
+  .ord{background:var(--panel);border:1px solid var(--line);border-radius:5px;color:var(--muted);font-size:12px;line-height:1;padding:2px 6px}
+  .ord:hover{color:#fff;border-color:var(--accent2)}
+  .wksel{font-size:10px;padding:2px 4px;background:var(--panel);border:1px solid var(--line);border-radius:5px;color:var(--choice)}
+  label{display:block;font-size:11px;color:var(--muted);margin:9px 0 3px}
+  input,select,textarea{width:100%}textarea{resize:vertical;min-height:46px;line-height:1.4}
+  .row{display:flex;gap:8px}.row>*{flex:1}
+  .card{border:1px solid var(--line);border-radius:8px;padding:9px;margin:7px 0;background:var(--panel)}
+  .line-row{display:flex;gap:6px;align-items:flex-start;margin:5px 0}
+  .line-row select{width:110px;flex:none}.line-row .expr{width:90px;flex:none}.line-row textarea{flex:1;min-height:34px}
+  .hint{font-size:10px;color:var(--muted)}
+  .eff{display:flex;gap:6px;margin:3px 0}.eff input{flex:1}
+  .sub{font-size:11px;color:var(--choice);font-weight:bold;margin:8px 0 4px}
+  .pill{font-size:10px;background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:2px 8px;color:var(--muted)}
+  .empty{color:var(--muted);font-size:13px;text-align:center;margin-top:40px}
+  details{margin:8px 0;border:1px solid var(--line);border-radius:8px;padding:6px 9px;background:var(--panel)}
+  summary{cursor:pointer;font-size:12px;color:var(--accent2)}
+  .chk{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}.chk input{width:auto}
+  .syn{font-size:11px;color:#aeb6cc;font-style:italic;margin-top:3px}
+</style>
+</head>
+<body>
+<header>
+  <h1>DISPATCHER · <b>Editor</b></h1>
+  <button class="tab on" id="tabPlot">Game Plot</button>
+  <button class="tab" id="tabDaily">Daily Calls</button>
+  <span class="pill" id="ctx"></span>
+  <div class="grow"></div>
+  <button id="imp">Importar</button>
+  <button id="loadBundled">Cargar 16 llamadas</button>
+  <input type="file" id="impFile" accept="application/json" style="display:none">
+  <button id="exp" class="primary">Exportar JSON</button>
+  <span class="saved" id="saved">—</span>
+</header>
+<main>
+  <div class="col" id="nav"></div>
+  <div class="col" id="beats"></div>
+  <div class="col" id="editor"><div class="empty">Selecciona un capítulo y un beat.</div></div>
+</main>
+
+<script>
+"use strict";
+const LS="dispatcher_editor_v1";
+const EXPRS=["neutral","happy","shock","sad","angry","flirt","guard","smile","serious","charm","smug","sweet"];
+const TYPES=["dialogue","decision","cliffhanger","chapter_end"];
+const UNITS=["none","fire","police","ambulance","animal_control"];
+const CTYPES=["prank","real","exotic","mixed"];
+const CATS=["fire","medical","crime","animal","vehicle","weird","misc"];
+const MAX_WEEK=12;
+
+function seed(){
+  return { id:"dispatcher", title:"DISPATCHER", version:"0.1.0", locale_default:"en",
+    characters:{narrator:{name:"Narrator",avatars:{}}, rookie:{name:"Rookie",avatars:{neutral:""}}},
+    initial_variables:{trust:0}, initial_flags:{}, starting_gems:10,
+    config:{months:3,weeks:12,daily_calls_per_day:3},
+    game_plot:{ prologue:null, weeks:[] },
+    daily_calls:{ serve_per_day:3, library:[] } };
+}
+const BUNDLED_GAME = {"id": "dispatcher", "title": "DISPATCHER", "version": "0.1.0", "locale_default": "en", "characters": {"narrator": {"name": "Narrator", "avatars": {}}, "rookie": {"name": "Operator", "avatars": {"neutral": ""}}, "caller": {"name": "Caller", "avatars": {"neutral": ""}}}, "initial_variables": {"trust": 0, "integrity": 0}, "initial_flags": {}, "starting_gems": 10, "config": {"months": 3, "weeks": 12, "daily_calls_per_day": 3}, "game_plot": {"prologue": null, "weeks": []}, "daily_calls": {"serve_per_day": 3, "library": [{"id": "caso_cocina", "title": "My Kitchen's on Fire", "kind": "daily_call", "week": 1, "start_beat": "caso_cocina.b0", "tags": {"week_min": 1, "difficulty": 1, "type": "real", "unit": "fire", "category": "fire"}, "beats": [{"id": "caso_cocina.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "Split screen: you at the console; on the other end, a kitchen vanishing into orange smoke."}], "next": "caso_cocina.b1"}, {"id": "caso_cocina.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "My kitchen is on fire! 🔥"}], "next": "caso_cocina.b2"}, {"id": "caso_cocina.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "caso_cocina.b2_0", "label": "Are you out of the house?", "gem_cost": 0, "next": "caso_cocina.b3"}, {"id": "caso_cocina.b2_1", "label": "Can you use water?", "gem_cost": 0, "next": "caso_cocina.b3"}, {"id": "caso_cocina.b2_2", "label": "Your voice sounds kinda sexy. 😏", "gem_cost": 0, "next": "caso_cocina.b3", "effects": {"trust": -1}}]}}, {"id": "caso_cocina.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I can't get out, it's too hot!"}], "next": "caso_cocina.b4"}, {"id": "caso_cocina.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Instruction", "choices": [{"id": "caso_cocina.b4_0", "label": "Get out of the house NOW.", "gem_cost": 0, "next": "caso_cocina.b5", "effects": {"integrity": 1}}, {"id": "caso_cocina.b4_1", "label": "Move away from the fire.", "gem_cost": 0, "next": "caso_cocina.b5", "effects": {"integrity": 1}}, {"id": "caso_cocina.b4_2", "label": "I'm kinda on fire too 🔥", "gem_cost": 0, "next": "caso_cocina.b5", "effects": {"trust": -1}}]}}, {"id": "caso_cocina.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I need someone, please! 989 Burb Street."}], "next": "caso_cocina.b6"}, {"id": "caso_cocina.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Sirens. The truck rounds the corner before the roof gives. Clean."}], "next": null}]}, {"id": "call_toilet_paper", "title": "Out of Toilet Paper", "kind": "daily_call", "week": 1, "start_beat": "call_toilet_paper.b0", "tags": {"week_min": 1, "difficulty": 1, "type": "prank", "unit": "none", "category": "weird"}, "beats": [{"id": "call_toilet_paper.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A frantic voice, a bathroom, and absolutely no toilet paper."}], "next": "call_toilet_paper.b1"}, {"id": "call_toilet_paper.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "HELP! I ran out of toilet paper! 🧻"}], "next": "call_toilet_paper.b2"}, {"id": "call_toilet_paper.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_toilet_paper.b2_0", "label": "You're calling an emergency line.", "gem_cost": 0, "next": "call_toilet_paper.b3"}, {"id": "call_toilet_paper.b2_1", "label": "Sorry, wrong number?", "gem_cost": 0, "next": "call_toilet_paper.b3"}, {"id": "call_toilet_paper.b2_2", "label": "Then your hand will do it!", "gem_cost": 0, "next": "call_toilet_paper.b3", "effects": {"trust": -1}}]}}, {"id": "call_toilet_paper.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Please, I pooped! Can you send some?"}], "next": "call_toilet_paper.b4"}, {"id": "call_toilet_paper.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Decide", "choices": [{"id": "call_toilet_paper.b4_0", "label": "Ma'am, this line is for emergencies.", "gem_cost": 0, "next": "call_toilet_paper.b5"}, {"id": "call_toilet_paper.b4_1", "label": "Sure. Any brand you prefer? 😏", "gem_cost": 0, "next": "call_toilet_paper.b5", "effects": {"trust": -1}}]}}, {"id": "call_toilet_paper.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "STOP BOTHERING and help me!"}], "next": "call_toilet_paper.b6"}, {"id": "call_toilet_paper.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "You hang up. Somewhere, a hero improvises with a sock."}], "next": null}]}, {"id": "call_bitcoin_bank", "title": "Lost It All on Bitcoin", "kind": "daily_call", "week": 1, "start_beat": "call_bitcoin_bank.b0", "tags": {"week_min": 1, "difficulty": 1, "type": "mixed", "unit": "police", "category": "crime"}, "beats": [{"id": "call_bitcoin_bank.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A trembling caller who just watched their savings evaporate."}], "next": "call_bitcoin_bank.b1"}, {"id": "call_bitcoin_bank.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I bought bitcoins and lost everything! 📉"}], "next": "call_bitcoin_bank.b2"}, {"id": "call_bitcoin_bank.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_bitcoin_bank.b2_0", "label": "Yikes. What are you going to do?", "gem_cost": 0, "next": "call_bitcoin_bank.b3"}, {"id": "call_bitcoin_bank.b2_1", "label": "And you're calling here because…?", "gem_cost": 0, "next": "call_bitcoin_bank.b3"}]}}, {"id": "call_bitcoin_bank.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I think I'll go rob a bank."}], "next": "call_bitcoin_bank.b4"}, {"id": "call_bitcoin_bank.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Handle it", "choices": [{"id": "call_bitcoin_bank.b4_0", "label": "I'll have to send the police.", "gem_cost": 0, "next": "call_bitcoin_bank.b5"}, {"id": "call_bitcoin_bank.b4_1", "label": "Can I join? I'm broke too. 😏", "gem_cost": 0, "next": "call_bitcoin_bank.b5", "effects": {"trust": -1}}]}}, {"id": "call_bitcoin_bank.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "...wait, are you serious? I'm at the downtown plaza."}], "next": "call_bitcoin_bank.b6"}, {"id": "call_bitcoin_bank.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Patrol rolls out before they reach the bank doors."}], "next": null}]}, {"id": "call_baby_dino", "title": "Baby Dinosaur", "kind": "daily_call", "week": 2, "start_beat": "call_baby_dino.b0", "tags": {"week_min": 2, "difficulty": 2, "type": "exotic", "unit": "animal_control", "category": "animal"}, "beats": [{"id": "call_baby_dino.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "Split screen: you at the console; the caller, somewhere in the woods."}], "next": "call_baby_dino.b1"}, {"id": "call_baby_dino.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I found a baby dinosaur! 🦕"}], "next": "call_baby_dino.b2"}, {"id": "call_baby_dino.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_baby_dino.b2_0", "label": "Impossible, dinosaurs don't exist.", "gem_cost": 0, "next": "call_baby_dino.b3"}, {"id": "call_baby_dino.b2_1", "label": "OMG! What breed?", "gem_cost": 0, "next": "call_baby_dino.b3"}, {"id": "call_baby_dino.b2_2", "label": "I WANT IT! 😍", "gem_cost": 0, "next": "call_baby_dino.b3", "effects": {"trust": -1}}]}}, {"id": "call_baby_dino.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I think it's a baby T-Rex. Maybe?"}], "next": "call_baby_dino.b4"}, {"id": "call_baby_dino.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Get details", "choices": [{"id": "call_baby_dino.b4_0", "label": "Are you hurt?", "gem_cost": 0, "next": "call_baby_dino.b5"}, {"id": "call_baby_dino.b4_1", "label": "Send your location, fast!", "gem_cost": 0, "next": "call_baby_dino.b5"}]}}, {"id": "call_baby_dino.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I'm fine, it's just drooling. 18th, Jurassic St."}], "next": "call_baby_dino.b6"}, {"id": "call_baby_dino.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Animal control rolls out. This report's getting framed."}], "next": null}]}, {"id": "call_house_fire", "title": "My House Is on Fire", "kind": "daily_call", "week": 1, "start_beat": "call_house_fire.b0", "tags": {"week_min": 1, "difficulty": 1, "type": "real", "unit": "fire", "category": "fire"}, "beats": [{"id": "call_house_fire.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "Smoke pours through the line like it's trying to reach you too."}], "next": "call_house_fire.b1"}, {"id": "call_house_fire.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "My house is on fire! 🔥"}], "next": "call_house_fire.b2"}, {"id": "call_house_fire.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_house_fire.b2_0", "label": "Are you safe?", "gem_cost": 0, "next": "call_house_fire.b3"}, {"id": "call_house_fire.b2_1", "label": "Where did the fire start?", "gem_cost": 0, "next": "call_house_fire.b3"}, {"id": "call_house_fire.b2_2", "label": "Let it burn! 😏", "gem_cost": 0, "next": "call_house_fire.b3", "effects": {"trust": -1}}]}}, {"id": "call_house_fire.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I can't get out — it started in my room!"}], "next": "call_house_fire.b4"}, {"id": "call_house_fire.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Instruction", "choices": [{"id": "call_house_fire.b4_0", "label": "Get out NOW. I'm sending help.", "gem_cost": 0, "next": "call_house_fire.b5", "effects": {"integrity": 1}}, {"id": "call_house_fire.b4_1", "label": "Stay low and move to a window.", "gem_cost": 0, "next": "call_house_fire.b5", "effects": {"integrity": 1}}]}}, {"id": "call_house_fire.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Please hurry! 3259 Wescam Court."}], "next": "call_house_fire.b6"}, {"id": "call_house_fire.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Trucks are on the way. You stay on the line until they arrive."}], "next": null}]}, {"id": "call_zombie", "title": "I Saw a Zombie", "kind": "daily_call", "week": 2, "start_beat": "call_zombie.b0", "tags": {"week_min": 2, "difficulty": 1, "type": "prank", "unit": "police", "category": "weird"}, "beats": [{"id": "call_zombie.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "2 a.m. A whisper. Something about the undead."}], "next": "call_zombie.b1"}, {"id": "call_zombie.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I think I saw a zombie! 🧟"}], "next": "call_zombie.b2"}, {"id": "call_zombie.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_zombie.b2_0", "label": "Zombies don't exist.", "gem_cost": 0, "next": "call_zombie.b3"}, {"id": "call_zombie.b2_1", "label": "For real?? What's it doing?", "gem_cost": 0, "next": "call_zombie.b3"}]}}, {"id": "call_zombie.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "It's in front of me, eating rotten flesh!"}], "next": "call_zombie.b4"}, {"id": "call_zombie.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Decide", "choices": [{"id": "call_zombie.b4_0", "label": "Don't move. Where are you?", "gem_cost": 0, "next": "call_zombie.b5"}, {"id": "call_zombie.b4_1", "label": "Only on Walking Dead, kiddo. 😏", "gem_cost": 0, "next": "call_zombie.b5", "effects": {"trust": -1}}]}}, {"id": "call_zombie.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Atlanta, Georgia. PLEASE hurry!"}], "next": "call_zombie.b6"}, {"id": "call_zombie.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Okay, this might be real. A patrol is sent."}], "next": null}]}, {"id": "call_door_force", "title": "Someone's at My Door", "kind": "daily_call", "week": 2, "start_beat": "call_door_force.b0", "tags": {"week_min": 2, "difficulty": 2, "type": "real", "unit": "police", "category": "crime"}, "beats": [{"id": "call_door_force.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "Knocking. Then pounding. Then a voice barely holding it together."}], "next": "call_door_force.b1"}, {"id": "call_door_force.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Someone's trying to force my door open!"}], "next": "call_door_force.b2"}, {"id": "call_door_force.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_door_force.b2_0", "label": "Stay calm. Ask who it is.", "gem_cost": 0, "next": "call_door_force.b3"}, {"id": "call_door_force.b2_1", "label": "Would someone visit you now?", "gem_cost": 0, "next": "call_door_force.b3"}, {"id": "call_door_force.b2_2", "label": "Maybe it's Santa! Hohoho 🎅", "gem_cost": 0, "next": "call_door_force.b3", "effects": {"trust": -1}}]}}, {"id": "call_door_force.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "It's 2 a.m.! It's my weird neighbor — HELP!"}], "next": "call_door_force.b4"}, {"id": "call_door_force.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Get location", "choices": [{"id": "call_door_force.b4_0", "label": "Sending a patrol. Address?", "gem_cost": 0, "next": "call_door_force.b5"}, {"id": "call_door_force.b4_1", "label": "Lock yourself in a room.", "gem_cost": 0, "next": "call_door_force.b5", "effects": {"integrity": 1}}]}}, {"id": "call_door_force.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Apartment 4B, Maple Court. Please hurry!"}], "next": "call_door_force.b6"}, {"id": "call_door_force.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Units en route. Keep the door blocked."}], "next": null}]}, {"id": "call_ate_glass", "title": "I Ate Glass", "kind": "daily_call", "week": 3, "start_beat": "call_ate_glass.b0", "tags": {"week_min": 3, "difficulty": 2, "type": "real", "unit": "ambulance", "category": "medical"}, "beats": [{"id": "call_ate_glass.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A wet cough rattles down the line."}], "next": "call_ate_glass.b1"}, {"id": "call_ate_glass.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "HELP! I'm coughing really bad! 😷"}], "next": "call_ate_glass.b2"}, {"id": "call_ate_glass.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_ate_glass.b2_0", "label": "What did you eat?", "gem_cost": 0, "next": "call_ate_glass.b3"}, {"id": "call_ate_glass.b2_1", "label": "Any other symptoms?", "gem_cost": 0, "next": "call_ate_glass.b3"}]}}, {"id": "call_ate_glass.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I... ate glass. It was a challenge!"}], "next": "call_ate_glass.b4"}, {"id": "call_ate_glass.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Decide", "choices": [{"id": "call_ate_glass.b4_0", "label": "Don't move. Help is coming.", "gem_cost": 0, "next": "call_ate_glass.b5"}, {"id": "call_ate_glass.b4_1", "label": "So, buried or cremated? 😏", "gem_cost": 0, "next": "call_ate_glass.b5", "effects": {"trust": -1}}]}}, {"id": "call_ate_glass.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Don't scare me! Just send help! 4 Maple Ave."}], "next": "call_ate_glass.b6"}, {"id": "call_ate_glass.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Ambulance dispatched. You talk them calm until it arrives."}], "next": null}]}, {"id": "call_green_elves", "title": "I See Green Elves", "kind": "daily_call", "week": 3, "start_beat": "call_green_elves.b0", "tags": {"week_min": 3, "difficulty": 2, "type": "mixed", "unit": "ambulance", "category": "medical"}, "beats": [{"id": "call_green_elves.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "The caller giggles, then gasps."}], "next": "call_green_elves.b1"}, {"id": "call_green_elves.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I'm seeing green elves! 🧝"}], "next": "call_green_elves.b2"}, {"id": "call_green_elves.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_green_elves.b2_0", "label": "Did you take something?", "gem_cost": 0, "next": "call_green_elves.b3"}, {"id": "call_green_elves.b2_1", "label": "Can you catch one? I want a pet. 😏", "gem_cost": 0, "next": "call_green_elves.b3", "effects": {"trust": -1}}]}}, {"id": "call_green_elves.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "It was a challenge! Now they won't leave!"}], "next": "call_green_elves.b4"}, {"id": "call_green_elves.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Get location", "choices": [{"id": "call_green_elves.b4_0", "label": "Where are you? Sending help.", "gem_cost": 0, "next": "call_green_elves.b5"}, {"id": "call_green_elves.b4_1", "label": "Try something less abrasive next time.", "gem_cost": 0, "next": "call_green_elves.b5"}]}}, {"id": "call_green_elves.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "7 Mushroom Lane. Hurry!"}], "next": "call_green_elves.b6"}, {"id": "call_green_elves.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Experts arrive to bring the caller back to earth."}], "next": null}]}, {"id": "call_migraine", "title": "My Head's Exploding", "kind": "daily_call", "week": 3, "start_beat": "call_migraine.b0", "tags": {"week_min": 3, "difficulty": 1, "type": "real", "unit": "ambulance", "category": "medical"}, "beats": [{"id": "call_migraine.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A groan, like the world is too loud."}], "next": "call_migraine.b1"}, {"id": "call_migraine.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "My head is about to explode! 🤯"}], "next": "call_migraine.b2"}, {"id": "call_migraine.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_migraine.b2_0", "label": "Did you hit your head?", "gem_cost": 0, "next": "call_migraine.b3"}, {"id": "call_migraine.b2_1", "label": "Any other symptoms?", "gem_cost": 0, "next": "call_migraine.b3"}]}}, {"id": "call_migraine.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "HUGE migraine, man. I feel like throwing up."}], "next": "call_migraine.b4"}, {"id": "call_migraine.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Decide", "choices": [{"id": "call_migraine.b4_0", "label": "Stay put, help's coming.", "gem_cost": 0, "next": "call_migraine.b5"}, {"id": "call_migraine.b4_1", "label": "Just take an ibuprofen. 🙄", "gem_cost": 0, "next": "call_migraine.b5", "effects": {"trust": -1}}]}}, {"id": "call_migraine.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Can you actually send someone?! 12 Pine Rd."}], "next": "call_migraine.b6"}, {"id": "call_migraine.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Ambulance en route. Aim for the toilet, just in case."}], "next": null}]}, {"id": "call_virtual_kitten", "title": "I Need Bitcoins", "kind": "daily_call", "week": 1, "start_beat": "call_virtual_kitten.b0", "tags": {"week_min": 1, "difficulty": 1, "type": "prank", "unit": "none", "category": "weird"}, "beats": [{"id": "call_virtual_kitten.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A very calm voice with very odd priorities."}], "next": "call_virtual_kitten.b1"}, {"id": "call_virtual_kitten.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I need bitcoins urgently! 🪙"}], "next": "call_virtual_kitten.b2"}, {"id": "call_virtual_kitten.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_virtual_kitten.b2_0", "label": "Sir, this is 911.", "gem_cost": 0, "next": "call_virtual_kitten.b3"}, {"id": "call_virtual_kitten.b2_1", "label": "What for?", "gem_cost": 0, "next": "call_virtual_kitten.b3"}]}}, {"id": "call_virtual_kitten.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I want to buy a virtual kitten."}], "next": "call_virtual_kitten.b4"}, {"id": "call_virtual_kitten.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Decide", "choices": [{"id": "call_virtual_kitten.b4_0", "label": "You don't need bitcoins for that.", "gem_cost": 0, "next": "call_virtual_kitten.b5"}, {"id": "call_virtual_kitten.b4_1", "label": "What are you gonna name it? 😏", "gem_cost": 0, "next": "call_virtual_kitten.b5", "effects": {"trust": -1}}]}}, {"id": "call_virtual_kitten.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "George Cheddar Washington!"}], "next": "call_virtual_kitten.b6"}, {"id": "call_virtual_kitten.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Great choice. Now please free the line."}], "next": null}]}, {"id": "call_elevator", "title": "Stuck in an Elevator", "kind": "daily_call", "week": 2, "start_beat": "call_elevator.b0", "tags": {"week_min": 2, "difficulty": 2, "type": "real", "unit": "fire", "category": "misc"}, "beats": [{"id": "call_elevator.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A metal box, a stuck button, and rising panic."}], "next": "call_elevator.b1"}, {"id": "call_elevator.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I'm stuck in an elevator! 🛗"}], "next": "call_elevator.b2"}, {"id": "call_elevator.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_elevator.b2_0", "label": "Did you press the alarm?", "gem_cost": 0, "next": "call_elevator.b3"}, {"id": "call_elevator.b2_1", "label": "Is anyone with you?", "gem_cost": 0, "next": "call_elevator.b3"}, {"id": "call_elevator.b2_2", "label": "Try jumping, works for me. 😏", "gem_cost": 0, "next": "call_elevator.b3", "effects": {"trust": -1}}]}}, {"id": "call_elevator.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I'm alone and it's not working! HELP!"}], "next": "call_elevator.b4"}, {"id": "call_elevator.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Get location", "choices": [{"id": "call_elevator.b4_0", "label": "Tracking you now. Don't move.", "gem_cost": 0, "next": "call_elevator.b5"}, {"id": "call_elevator.b4_1", "label": "Scream LOUDER. 😏", "gem_cost": 0, "next": "call_elevator.b5", "effects": {"trust": -1}}]}}, {"id": "call_elevator.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "It's real, please! Fart St, Virginia 76861."}], "next": "call_elevator.b6"}, {"id": "call_elevator.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Rescue is on the way. Breathe slowly."}], "next": null}]}, {"id": "call_cat_missing", "title": "My Cat Vanished", "kind": "daily_call", "week": 1, "start_beat": "call_cat_missing.b0", "tags": {"week_min": 1, "difficulty": 1, "type": "prank", "unit": "animal_control", "category": "animal"}, "beats": [{"id": "call_cat_missing.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A heartbroken caller. And a missing hamburger."}], "next": "call_cat_missing.b1"}, {"id": "call_cat_missing.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "My cat just disappeared! 🐱"}], "next": "call_cat_missing.b2"}, {"id": "call_cat_missing.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_cat_missing.b2_0", "label": "When did you last see him?", "gem_cost": 0, "next": "call_cat_missing.b3"}, {"id": "call_cat_missing.b2_1", "label": "Have you called around?", "gem_cost": 0, "next": "call_cat_missing.b3"}]}}, {"id": "call_cat_missing.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "At my Mom's. Also my hamburger is gone!"}], "next": "call_cat_missing.b4"}, {"id": "call_cat_missing.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Decide", "choices": [{"id": "call_cat_missing.b4_0", "label": "We can send someone to look.", "gem_cost": 0, "next": "call_cat_missing.b5"}, {"id": "call_cat_missing.b4_1", "label": "The cat ate the burger. Case closed. 😏", "gem_cost": 0, "next": "call_cat_missing.b5", "effects": {"trust": -1}}]}}, {"id": "call_cat_missing.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Please, just help me find him! 5 Willow St."}], "next": "call_cat_missing.b6"}, {"id": "call_cat_missing.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Animal control swings by. Check your Mom's first."}], "next": null}]}, {"id": "call_student_loan", "title": "I Can't Pay My Debt", "kind": "daily_call", "week": 2, "start_beat": "call_student_loan.b0", "tags": {"week_min": 2, "difficulty": 1, "type": "prank", "unit": "none", "category": "misc"}, "beats": [{"id": "call_student_loan.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "A panicked voice, drowning in numbers."}], "next": "call_student_loan.b1"}, {"id": "call_student_loan.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I can't pay my debt! 💸"}], "next": "call_student_loan.b2"}, {"id": "call_student_loan.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_student_loan.b2_0", "label": "What debt?", "gem_cost": 0, "next": "call_student_loan.b3"}, {"id": "call_student_loan.b2_1", "label": "Why not get a job?", "gem_cost": 0, "next": "call_student_loan.b3"}]}}, {"id": "call_student_loan.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "My student loan! They said I'm too young to work."}], "next": "call_student_loan.b4"}, {"id": "call_student_loan.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Decide", "choices": [{"id": "call_student_loan.b4_0", "label": "How old are you?", "gem_cost": 0, "next": "call_student_loan.b5"}, {"id": "call_student_loan.b4_1", "label": "Run away before it's too late! 😏", "gem_cost": 0, "next": "call_student_loan.b5", "effects": {"trust": -1}}]}}, {"id": "call_student_loan.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I'm 12! What do I do?!"}], "next": "call_student_loan.b6"}, {"id": "call_student_loan.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Go back to your toys, kiddo. And free the line."}], "next": null}]}, {"id": "call_heart_attack", "title": "I'm Having a Heart Attack", "kind": "daily_call", "week": 4, "start_beat": "call_heart_attack.b0", "tags": {"week_min": 4, "difficulty": 3, "type": "real", "unit": "ambulance", "category": "medical"}, "beats": [{"id": "call_heart_attack.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "Short, sharp breaths. This one's serious."}], "next": "call_heart_attack.b1"}, {"id": "call_heart_attack.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I'm having a heart attack! ❤️‍🩹"}], "next": "call_heart_attack.b2"}, {"id": "call_heart_attack.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_heart_attack.b2_0", "label": "What does it feel like?", "gem_cost": 0, "next": "call_heart_attack.b3"}, {"id": "call_heart_attack.b2_1", "label": "Any other symptoms?", "gem_cost": 0, "next": "call_heart_attack.b3"}, {"id": "call_heart_attack.b2_2", "label": "Is this a joke? 🙄", "gem_cost": 0, "next": "call_heart_attack.b3", "effects": {"trust": -1}}]}}, {"id": "call_heart_attack.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Shortness of breath. There's an army in my chest!"}], "next": "call_heart_attack.b4"}, {"id": "call_heart_attack.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Get location", "choices": [{"id": "call_heart_attack.b4_0", "label": "Stay put, I'm tracking you.", "gem_cost": 0, "next": "call_heart_attack.b5"}, {"id": "call_heart_attack.b4_1", "label": "Tylenol won't fix this — help's coming.", "gem_cost": 0, "next": "call_heart_attack.b5"}]}}, {"id": "call_heart_attack.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "3rd floor, by the chili dog stand. Hurry!"}], "next": "call_heart_attack.b6"}, {"id": "call_heart_attack.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Ambulance dispatched. Stay calm, you'll be okay."}], "next": null}]}, {"id": "call_riot", "title": "There's a Riot Outside", "kind": "daily_call", "week": 4, "start_beat": "call_riot.b0", "tags": {"week_min": 4, "difficulty": 3, "type": "real", "unit": "police", "category": "crime"}, "beats": [{"id": "call_riot.b0", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": [], "lines": [{"speaker": "narrator", "expr": "neutral", "text": "Glass breaking. Screaming. A city tearing at itself."}], "next": "call_riot.b1"}, {"id": "call_riot.b1", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "There's a riot happening outside! 😱"}], "next": "call_riot.b2"}, {"id": "call_riot.b2", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Respond", "choices": [{"id": "call_riot.b2_0", "label": "How many people?", "gem_cost": 0, "next": "call_riot.b3"}, {"id": "call_riot.b2_1", "label": "Are you safe?", "gem_cost": 0, "next": "call_riot.b3"}]}}, {"id": "call_riot.b3", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "Over 100! Guns and knives everywhere!"}], "next": "call_riot.b4"}, {"id": "call_riot.b4", "background": "bg_dispatch", "type": "decision", "characters_on_scene": [], "lines": [], "decision": {"prompt": "Instruction", "choices": [{"id": "call_riot.b4_0", "label": "Hide and stay hidden.", "gem_cost": 0, "next": "call_riot.b5", "effects": {"integrity": 1}}, {"id": "call_riot.b4_1", "label": "Run, get away from the crowd.", "gem_cost": 0, "next": "call_riot.b5", "effects": {"integrity": 1}}]}}, {"id": "call_riot.b5", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["caller"], "lines": [{"speaker": "caller", "expr": "neutral", "text": "I'm hiding. There's nowhere to go!"}], "next": "call_riot.b6"}, {"id": "call_riot.b6", "background": "bg_dispatch", "type": "dialogue", "characters_on_scene": ["rookie"], "lines": [{"speaker": "rookie", "expr": "neutral", "text": "Keep calm. Police are being dispatched now."}], "next": null}]}]}};
+let game = load() || seed();
+let tab="plot";          // "plot" | "daily"
+let selChap=null;        // reference to chapter object
+let selBeat=null;        // beat id
+
+function save(){ localStorage.setItem(LS, JSON.stringify(game)); document.getElementById("saved").textContent="Guardado "+new Date().toLocaleTimeString(); }
+function load(){ try{const r=localStorage.getItem(LS);return r?JSON.parse(r):null;}catch(e){return null;} }
+const esc=s=>(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function charIds(){ return Object.keys(game.characters); }
+function beatIds(){ return selChap?selChap.beats.map(b=>b.id):[]; }
+
+// ---- ordering helpers ----
+function arrMove(arr,from,to){ if(from<0||from>=arr.length||to<0||to>=arr.length||from===to)return; const [x]=arr.splice(from,1); arr.splice(to,0,x); }
+function callWeek(c){ return (c.week!=null)?c.week : ((c.tags&&c.tags.week_min)||1); }
+// stable sort of the flat pool by week so the file stays organized by week
+function sortLibraryByWeek(){ const lib=game.daily_calls.library||[]; lib.sort((a,b)=>callWeek(a)-callWeek(b)); }
+// reorder a call relative to its same-week neighbours (dir: -1 up, +1 down)
+function moveCallInWeek(c,dir){
+  const lib=game.daily_calls.library; const wk=callWeek(c);
+  const idxs=lib.map((x,i)=>[x,i]).filter(p=>callWeek(p[0])===wk);
+  const pos=idxs.findIndex(p=>p[0]===c); const tgt=pos+dir;
+  if(tgt<0||tgt>=idxs.length)return;
+  const gi=idxs[pos][1], gj=idxs[tgt][1];
+  const tmp=lib[gi]; lib[gi]=lib[gj]; lib[gj]=tmp;
+  render();
+}
+function setCallWeek(c,w){ c.week=+w; sortLibraryByWeek(); render(); }
+
+// generic HTML5 drag-and-drop reorder over a container of .item rows.
+// onDrop(fromIndex,toIndex) mutates the data; we re-render afterwards.
+function attachDnD(container, onDrop){
+  let dragFrom=-1;
+  [...container.children].forEach((el,i)=>{
+    if(!el.classList.contains("item"))return;
+    el.setAttribute("draggable","true");
+    el.dataset.idx=i;
+    el.addEventListener("dragstart",e=>{dragFrom=+el.dataset.idx;el.classList.add("drag");e.dataTransfer.effectAllowed="move";});
+    el.addEventListener("dragend",()=>{el.classList.remove("drag");[...container.children].forEach(c=>c.classList&&c.classList.remove("over"));});
+    el.addEventListener("dragover",e=>{e.preventDefault();if(+el.dataset.idx!==dragFrom)el.classList.add("over");});
+    el.addEventListener("dragleave",()=>el.classList.remove("over"));
+    el.addEventListener("drop",e=>{e.preventDefault();el.classList.remove("over");const to=+el.dataset.idx;if(dragFrom>=0&&to>=0&&dragFrom!==to){onDrop(dragFrom,to);render();}});
+  });
+}
+
+function setTab(t){ tab=t; selChap=null; selBeat=null;
+  document.getElementById("tabPlot").classList.toggle("on",t==="plot");
+  document.getElementById("tabDaily").classList.toggle("on",t==="daily");
+  render(); }
+document.getElementById("tabPlot").onclick=()=>setTab("plot");
+document.getElementById("tabDaily").onclick=()=>setTab("daily");
+
+function render(){ renderNav(); renderBeats(); renderEditor(); document.getElementById("ctx").textContent = tab==="plot"?"Arco principal · 2 beats/semana":"Pool de llamadas · arrastra o ▲▼ para ordenar"; save(); }
+
+function chapItem(ch, label){
+  const d=document.createElement("div"); d.className="item"+(ch===selChap?" sel":"");
+  d.innerHTML=`${esc(ch.title||ch.id)}<span class="kind ${ch.kind||""}">${(ch.kind||"").replace("_"," ")}</span>
+    <div class="meta">${esc(ch.id)} · ${ch.beats?ch.beats.length:0} beats</div>${ch.synopsis?`<div class="syn">${esc(ch.synopsis)}</div>`:""}`;
+  d.onclick=()=>{ selChap=ch; selBeat=ch.start_beat||(ch.beats[0]&&ch.beats[0].id)||null; render(); };
+  return d;
+}
+
+function renderNav(){
+  const el=document.getElementById("nav"); el.innerHTML="";
+  if(tab==="plot"){
+    el.innerHTML=`<h2>Game Plot</h2>`;
+    const gp=game.game_plot;
+    if(gp.prologue){ const w=document.createElement("div"); w.className="wk"; w.innerHTML=`<div class="wkhd">Prólogo</div>`; w.appendChild(chapItem(gp.prologue)); el.appendChild(w); }
+    (gp.weeks||[]).forEach(wk=>{
+      const w=document.createElement("div"); w.className="wk";
+      w.innerHTML=`<div class="wkhd">Semana ${wk.week}${wk.goal_trust!=null?` · meta confianza ${wk.goal_trust}`:""}</div>`;
+      if(wk.plot_call) w.appendChild(chapItem(wk.plot_call));
+      if(wk.weekend) w.appendChild(chapItem(wk.weekend));
+      el.appendChild(w);
+    });
+  } else {
+    const lib=game.daily_calls.library||[];
+    el.innerHTML=`<h2>Daily Calls · ${lib.length} en el pool</h2>`;
+    const weeks=[...new Set(lib.map(callWeek))].sort((a,b)=>a-b);
+    weeks.forEach(wk=>{
+      const calls=lib.filter(c=>callWeek(c)===wk);
+      const grp=document.createElement("div"); grp.className="wk";
+      grp.innerHTML=`<div class="wkhd">Semana ${wk} <span class="ct">· ${calls.length} llamada${calls.length!==1?"s":""}</span></div>`;
+      const listHost=document.createElement("div"); grp.appendChild(listHost);
+      calls.forEach((c)=>{
+        const d=document.createElement("div"); d.className="item"+(c===selChap?" sel":"");
+        const t=c.tags||{};
+        d.innerHTML=`<span class="grip" title="Arrastra para reordenar">⠿</span> ${esc(c.title||c.id)}
+          <span class="kind ${c.kind||"daily_call"}">${(c.kind||"daily call").replace("_"," ")}</span>
+          <div class="meta">${esc(c.id)} · ${c.beats?c.beats.length:0} beats</div>
+          <div style="font-size:10px;color:var(--choice);margin-top:2px">dif ${t.difficulty||1} · ${t.type||"?"} · ${t.unit||"none"}${t.category?(" · "+t.category):""}</div>
+          <div class="rowbtns">
+            <button class="ord up" title="Subir">▲</button>
+            <button class="ord down" title="Bajar">▼</button>
+            <select class="wksel" title="Mover a semana">${Array.from({length:MAX_WEEK},(_,k)=>k+1).map(n=>`<option value="${n}" ${n===wk?"selected":""}>S${n}</option>`).join("")}</select>
+          </div>`;
+        d.onclick=e=>{ if(e.target.closest(".ord")||e.target.closest(".wksel"))return; selChap=c; selBeat=c.start_beat||(c.beats[0]&&c.beats[0].id)||null; render(); };
+        d.querySelector(".up").onclick=e=>{e.stopPropagation();moveCallInWeek(c,-1);};
+        d.querySelector(".down").onclick=e=>{e.stopPropagation();moveCallInWeek(c,1);};
+        d.querySelector(".wksel").onchange=e=>{e.stopPropagation();setCallWeek(c,e.target.value);};
+        listHost.appendChild(d);
+      });
+      // drag within this week's list
+      attachDnD(listHost,(from,to)=>{
+        const lib=game.daily_calls.library; const idxs=lib.map((x,i)=>[x,i]).filter(p=>callWeek(p[0])===wk).map(p=>p[1]);
+        arrMove(lib, idxs[from], idxs[to]);
+      });
+      el.appendChild(grp);
+    });
+    const add=document.createElement("button"); add.className="mini"; add.textContent="+ Llamada"; add.style.marginTop="10px";
+    add.onclick=()=>{ const id="call_"+(lib.length+1); const ch={id,title:"Nueva llamada",kind:"daily_call",week:1,start_beat:id+".intro",tags:{week_min:1,difficulty:1,type:"real",unit:"none",category:"misc"},beats:[{id:id+".intro",background:"bg_dispatch",type:"dialogue",characters_on_scene:[],lines:[{speaker:"narrator",expr:"neutral",text:""}],next:null}]}; lib.push(ch); sortLibraryByWeek(); selChap=ch; selBeat=ch.start_beat; render(); };
+    el.appendChild(add);
+  }
+}
+
+function renderBeats(){
+  const el=document.getElementById("beats");
+  if(!selChap){ el.innerHTML=`<h2>Beats</h2><div class="empty" style="margin-top:20px">Elige un capítulo</div>`; return; }
+  el.innerHTML=`<h2>Beats · ${esc(selChap.title||selChap.id)}</h2>`;
+  // tags editor for daily calls
+  if(tab==="daily" && selChap.tags){
+    const t=selChap.tags;
+    const card=document.createElement("div"); card.className="card";
+    card.innerHTML=`<div class="sub">Tags del pool</div>
+      <div class="row"><div><label>semana (posición)</label><select id="t_wkpos">${Array.from({length:MAX_WEEK},(_,k)=>k+1).map(n=>`<option value="${n}" ${n===callWeek(selChap)?"selected":""}>Semana ${n}</option>`).join("")}</select></div>
+      <div><label>dificultad</label><input id="t_df" type="number" min="1" max="3" value="${t.difficulty||1}"></div></div>
+      <div class="row"><div><label>week_min</label><input id="t_wk" type="number" min="1" value="${t.week_min||1}"></div>
+      <div><label>tipo</label><select id="t_ty">${CTYPES.map(x=>`<option ${x===t.type?"selected":""}>${x}</option>`).join("")}</select></div></div>
+      <div class="row"><div><label>unidad</label><select id="t_un">${UNITS.map(x=>`<option ${x===t.unit?"selected":""}>${x}</option>`).join("")}</select></div>
+      <div><label>categoría</label><input id="t_cat" list="catlist" value="${esc(t.category||"")}"><datalist id="catlist">${CATS.map(x=>`<option value="${x}">`).join("")}</datalist></div></div>`;
+    el.appendChild(card);
+    card.querySelector("#t_wkpos").onchange=e=>{setCallWeek(selChap,e.target.value);};
+    card.querySelector("#t_wk").oninput=e=>{t.week_min=+e.target.value;renderNav();save();};
+    card.querySelector("#t_df").oninput=e=>{t.difficulty=+e.target.value;renderNav();save();};
+    card.querySelector("#t_ty").onchange=e=>{t.type=e.target.value;renderNav();save();};
+    card.querySelector("#t_un").onchange=e=>{t.unit=e.target.value;renderNav();save();};
+    card.querySelector("#t_cat").oninput=e=>{const v=e.target.value.trim();if(v)t.category=v;else delete t.category;renderNav();save();};
+  }
+  // Call-level clips (intro / ambient / deploy) — what the game actually shows.
+  if(tab==="daily"){
+    selChap.media = selChap.media || {};
+    const m=selChap.media;
+    const mc=document.createElement("div"); mc.className="card";
+    mc.innerHTML=`<div class="sub">Clips de la llamada</div>
+      <div class="hint">Pega una URL directa (Dropbox <code>?dl=1</code>, Supabase…) o una key registrada en el juego.</div>
+      <label>Intro · cutscene (video)</label><input id="m_in" placeholder="https://…mp4?dl=1" value="${esc(m.intro||"")}">
+      <label>Ambiente · fondo del chat (video)</label><input id="m_amb" placeholder="https://…mp4?dl=1" value="${esc(m.ambient||"")}">
+      <label>Deploy · al despachar (video)</label><input id="m_dep" placeholder="https://…mp4?dl=1" value="${esc(m.deploy||"")}">`;
+    el.appendChild(mc);
+    const setM=(k,v)=>{ v=(v||"").trim(); if(v)m[k]=v; else delete m[k]; if(!Object.keys(m).length)delete selChap.media; save(); };
+    mc.querySelector("#m_in").oninput=e=>setM("intro",e.target.value);
+    mc.querySelector("#m_amb").oninput=e=>setM("ambient",e.target.value);
+    mc.querySelector("#m_dep").oninput=e=>setM("deploy",e.target.value);
+  }
+  const listHost=document.createElement("div"); el.appendChild(listHost);
+  selChap.beats.forEach((b,bi)=>{
+    const isStart=selChap.start_beat===b.id;
+    const d=document.createElement("div"); d.className="item"+(b.id===selBeat?" sel":"");
+    const preview=(b.lines&&b.lines[0]&&b.lines[0].text)||(b.decision&&b.decision.prompt)||"";
+    d.innerHTML=`<div><span class="grip" title="Arrastra para reordenar">⠿</span> ${isStart?"▶ ":""}<span class="badge ${b.type}">${b.type}</span></div>
+      <div class="meta">${esc(b.id)}</div>
+      <div style="font-size:11px;margin-top:3px;color:#c7cee0">${esc(preview.slice(0,44))}</div>
+      <div class="rowbtns"><button class="ord up" title="Subir">▲</button><button class="ord down" title="Bajar">▼</button></div>`;
+    d.onclick=e=>{ if(e.target.closest(".ord"))return; selBeat=b.id; renderEditor(); [...listHost.querySelectorAll(".item")].forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); };
+    d.querySelector(".up").onclick=e=>{e.stopPropagation();arrMove(selChap.beats,bi,bi-1);render();};
+    d.querySelector(".down").onclick=e=>{e.stopPropagation();arrMove(selChap.beats,bi,bi+1);render();};
+    listHost.appendChild(d);
+  });
+  attachDnD(listHost,(from,to)=>arrMove(selChap.beats,from,to));
+  const add=document.createElement("button"); add.className="mini"; add.textContent="+ Beat"; add.style.marginTop="6px";
+  add.onclick=()=>{ const id=uniqueBeatId(); selChap.beats.push({id,background:(selChap.beats[0]&&selChap.beats[0].background)||"bg_dispatch",type:"dialogue",characters_on_scene:[],lines:[{speaker:charIds()[0]||"narrator",expr:"neutral",text:""}],next:null}); selBeat=id; render(); };
+  el.appendChild(add);
+}
+function uniqueBeatId(){ let i=1; const base=selChap.id+".n"; while(selChap.beats.find(b=>b.id===base+i))i++; return base+i; }
+
+function beatSelect(val){ return `<select data-bind="next"><option value="">(fin / null)</option>${beatIds().map(id=>`<option ${id===val?"selected":""}>${id}</option>`).join("")}</select>`; }
+function cnextSelect(val){ return `<select data-bind="cnext"><option value="">(fin)</option>${beatIds().map(id=>`<option ${id===val?"selected":""}>${id}</option>`).join("")}</select>`; }
+function speakerSelect(val){ return `<select class="spk">${charIds().map(id=>`<option value="${id}" ${id===val?"selected":""}>${esc(game.characters[id].name)} (${id})</option>`).join("")}</select>`; }
+function exprSelect(val){ return `<select class="expr">${EXPRS.map(e=>`<option ${e===val?"selected":""}>${e}</option>`).join("")}</select>`; }
+function beat(id){ return selChap.beats.find(b=>b.id===id); }
+
+function renderEditor(){
+  const ed=document.getElementById("editor");
+  if(!selChap){ ed.innerHTML=`<div class="empty">Selecciona un capítulo.</div>`; return; }
+  if(!selBeat||!beat(selBeat)){ ed.innerHTML=chapHeader()+`<div class="empty">Selecciona un beat.</div>`; bindChapHeader(); return; }
+  const b=beat(selBeat);
+  let h=chapHeader()+`<h2>Beat · ${esc(b.id)}</h2>
+    <div class="row"><div><label>ID</label><input id="b_id" value="${esc(b.id)}"></div>
+    <div><label>Tipo</label><select id="b_type">${TYPES.map(t=>`<option ${t===b.type?"selected":""}>${t}</option>`).join("")}</select></div></div>
+    <div class="row"><div><label>Background</label><input id="b_bg" value="${esc(b.background||"")}"></div>
+    <div><label>Media (opcional)</label><select id="b_mt"><option value="">(ninguno · usa background)</option><option value="image" ${b.media&&b.media.type==="image"?"selected":""}>image</option><option value="video" ${b.media&&b.media.type==="video"?"selected":""}>video</option></select></div></div>
+    <div id="mkrow">${b.media?`<label>Media key</label><input id="b_mk" value="${esc(b.media.key||"")}">`:""}</div>
+    <button class="mini" id="b_setstart" style="margin-top:6px">▶ Marcar como inicio</button>
+    <div class="sub" style="margin-top:12px">Líneas</div><div id="lines"></div><button class="mini" id="addLine">+ Línea</button>`;
+  if(b.type==="decision"){ h+=`<div class="sub">Decisión</div><label>Prompt</label><input id="d_prompt" value="${esc(b.decision&&b.decision.prompt||"")}"><div id="choices"></div><button class="mini" id="addChoice">+ Opción</button>`; }
+  else { h+=`<label style="margin-top:12px">Siguiente →</label>${beatSelect(b.next||"")}`; if(b.type==="chapter_end"||b.type==="cliffhanger"){ h+=`<label>Outcome</label><input id="b_out" value="${esc(b.outcome||"")}">`; } }
+  h+=`<details><summary>Efectos del beat</summary><div id="beatEff"></div><button class="mini" id="addBeatEff">+ Efecto</button></details>
+    <div style="margin-top:14px"><button class="mini danger" id="delBeat">Borrar beat</button></div>`;
+  ed.innerHTML=h; bindChapHeader();
+
+  ed.querySelector("#b_id").onchange=e=>renameBeat(b,e.target.value.trim());
+  ed.querySelector("#b_type").onchange=e=>{ b.type=e.target.value; if(b.type==="decision"&&!b.decision){b.decision={prompt:"What do you do?",choices:[]};delete b.next;} if(b.type!=="decision"&&b.decision){delete b.decision;if(b.next===undefined)b.next=null;} renderEditor(); };
+  ed.querySelector("#b_bg").oninput=e=>{b.background=e.target.value;save();};
+  ed.querySelector("#b_mt").onchange=e=>{ if(!e.target.value){delete b.media;} else {b.media=b.media||{key:""};b.media.type=e.target.value;} renderEditor(); };
+  const mk=ed.querySelector("#b_mk"); if(mk)mk.oninput=e=>{b.media.key=e.target.value;save();};
+  ed.querySelector("#b_setstart").onclick=()=>{selChap.start_beat=b.id;renderBeats();save();};
+  ed.querySelector("#delBeat").onclick=()=>{ if(confirm("¿Borrar beat?")){selChap.beats=selChap.beats.filter(x=>x.id!==b.id);selBeat=null;render();} };
+
+  renderLines(b);
+  ed.querySelector("#addLine").onclick=()=>{ b.lines=b.lines||[]; b.lines.push({speaker:charIds()[0]||"narrator",expr:"neutral",text:""}); renderLines(b); syncOnScene(b); save(); };
+  if(b.type==="decision"){ ed.querySelector("#d_prompt").oninput=e=>{b.decision.prompt=e.target.value;save();}; renderChoices(b);
+    ed.querySelector("#addChoice").onclick=()=>{b.decision.choices.push({id:b.id+"_"+b.decision.choices.length,label:"Nueva opción",gem_cost:0,next:null});renderChoices(b);save();}; }
+  else { const ns=ed.querySelector('[data-bind="next"]'); if(ns)ns.onchange=e=>{b.next=e.target.value||null;renderBeats();save();}; const bo=ed.querySelector("#b_out"); if(bo)bo.oninput=e=>{b.outcome=e.target.value;save();}; }
+  renderEff(ed.querySelector("#beatEff"), b); ed.querySelector("#addBeatEff").onclick=()=>{b.effects=b.effects||{};b.effects["var"]=1;renderEff(ed.querySelector("#beatEff"),b);save();};
+}
+
+function chapHeader(){
+  return `<h2>Capítulo</h2><div class="row"><div><label>Título</label><input id="c_title" value="${esc(selChap.title||"")}"></div>
+    <div style="flex:none;width:120px"><label>ID</label><input id="c_id" value="${esc(selChap.id)}"></div></div>
+    ${selChap.synopsis!==undefined?`<label>Sinopsis</label><textarea id="c_syn">${esc(selChap.synopsis||"")}</textarea>`:""}<hr style="border-color:var(--line);margin:12px 0">`;
+}
+function bindChapHeader(){
+  const t=document.getElementById("c_title"); if(t)t.oninput=e=>{selChap.title=e.target.value;renderNav();save();};
+  const s=document.getElementById("c_syn"); if(s)s.oninput=e=>{selChap.synopsis=e.target.value;renderNav();save();};
+  const id=document.getElementById("c_id"); if(id)id.onchange=e=>{selChap.id=e.target.value.trim();renderNav();save();};
+}
+
+function renderLines(b){
+  const wrap=document.getElementById("lines"); wrap.innerHTML="";
+  (b.lines||[]).forEach((ln,i)=>{
+    const row=document.createElement("div"); row.className="line-row";
+    row.innerHTML=`${speakerSelect(ln.speaker)}${exprSelect(ln.expr)}<textarea>${esc(ln.text||"")}</textarea><button class="mini danger">✕</button>`;
+    row.querySelector(".spk").onchange=e=>{ln.speaker=e.target.value;syncOnScene(b);save();};
+    row.querySelector(".expr").onchange=e=>{ln.expr=e.target.value;save();};
+    row.querySelector("textarea").oninput=e=>{ln.text=e.target.value;save();renderBeats();};
+    row.querySelector("button").onclick=()=>{b.lines.splice(i,1);renderLines(b);syncOnScene(b);save();};
+    wrap.appendChild(row);
+  });
+}
+function syncOnScene(b){ const s=[]; (b.lines||[]).forEach(l=>{if(l.speaker!=="narrator"&&!s.includes(l.speaker))s.push(l.speaker);}); b.characters_on_scene=s; }
+
+function renderChoices(b){
+  const wrap=document.getElementById("choices"); wrap.innerHTML="";
+  b.decision.choices.forEach((c,i)=>{
+    const card=document.createElement("div"); card.className="card";
+    card.innerHTML=`<div class="row"><b style="color:var(--choice);font-size:11px">Opción ${i+1}</b>
+      <div style="flex:none;display:flex;gap:4px"><button class="ord cup" title="Subir">▲</button><button class="ord cdown" title="Bajar">▼</button><button class="mini danger cdel">✕</button></div></div>
+      <label>Texto</label><input class="c_label" value="${esc(c.label||"")}">
+      <div class="row"><div><label>Lleva a →</label>${cnextSelect(c.next||"")}</div><div style="flex:none;width:80px"><label>Gemas</label><input class="c_gem" type="number" min="0" value="${c.gem_cost||0}"></div></div>
+      <label class="chk"><input type="checkbox" class="c_prem" ${c.premium?"checked":""}> premium</label>
+      <div class="sub">Efectos</div><div class="c_eff"></div><button class="mini c_addeff">+ Efecto</button>`;
+    card.querySelector(".c_label").oninput=e=>{c.label=e.target.value;save();};
+    card.querySelector('[data-bind="cnext"]').onchange=e=>{c.next=e.target.value||null;save();};
+    card.querySelector(".c_gem").oninput=e=>{c.gem_cost=+e.target.value;save();};
+    card.querySelector(".c_prem").onchange=e=>{if(e.target.checked)c.premium=true;else delete c.premium;save();};
+    card.querySelector(".cup").onclick=()=>{arrMove(b.decision.choices,i,i-1);renderChoices(b);save();};
+    card.querySelector(".cdown").onclick=()=>{arrMove(b.decision.choices,i,i+1);renderChoices(b);save();};
+    card.querySelector(".cdel").onclick=()=>{b.decision.choices.splice(i,1);renderChoices(b);save();};
+    renderEff(card.querySelector(".c_eff"),c);
+    card.querySelector(".c_addeff").onclick=()=>{c.effects=c.effects||{};c.effects["var"]=1;renderEff(card.querySelector(".c_eff"),c);save();};
+    wrap.appendChild(card);
+  });
+}
+function renderEff(host,obj){
+  host.innerHTML=""; const eff=obj.effects||{};
+  Object.entries(eff).forEach(([k,v])=>{
+    const row=document.createElement("div"); row.className="eff";
+    row.innerHTML=`<input class="ek" value="${esc(k)}" placeholder="variable"><input class="ev" type="number" value="${v}" style="width:70px;flex:none"><button class="mini danger" style="flex:none">✕</button>`;
+    const ek=row.querySelector(".ek"),ev=row.querySelector(".ev");
+    ek.onchange=()=>{const nv=eff[k];delete eff[k];eff[ek.value]=nv;obj.effects=eff;save();};
+    ev.oninput=()=>{eff[ek.value||k]=+ev.value;obj.effects=eff;save();};
+    row.querySelector("button").onclick=()=>{delete eff[ek.value||k];if(Object.keys(eff).length===0)delete obj.effects;renderEff(host,obj);save();};
+    host.appendChild(row);
+  });
+}
+function renameBeat(b,nid){
+  if(!nid||nid===b.id)return;
+  if(selChap.beats.find(x=>x.id===nid)){alert("ID duplicado.");renderEditor();return;}
+  const old=b.id;
+  selChap.beats.forEach(x=>{if(x.next===old)x.next=nid;(x.decision&&x.decision.choices||[]).forEach(c=>{if(c.next===old)c.next=nid;});});
+  if(selChap.start_beat===old)selChap.start_beat=nid;
+  b.id=nid;selBeat=nid;render();
+}
+
+// export / import
+function download(name,content,type){const b=new Blob([content],{type});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
+document.getElementById("exp").onclick=()=>{ sortLibraryByWeek(); download("dispatcher-game.json", JSON.stringify(game,null,2), "application/json"); };
+document.getElementById("imp").onclick=()=>document.getElementById("impFile").click();
+document.getElementById("impFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{ let parsed=JSON.parse(r.result);
+    if(Array.isArray(parsed)) parsed={daily_calls:{serve_per_day:3,library:parsed}};
+    game=parsed;
+    if(!game.game_plot)game.game_plot={prologue:null,weeks:[]}; if(!game.daily_calls)game.daily_calls={serve_per_day:3,library:[]};
+    const hasDaily=(game.daily_calls.library||[]).length>0;
+    setTab(hasDaily?"daily":"plot"); alert("Importado: "+(game.daily_calls.library||[]).length+" daily calls."); }catch(err){alert("JSON inválido: "+err.message);}};
+  r.readAsText(f);};
+
+document.getElementById("loadBundled").onclick=()=>{ if(confirm("Esto reemplaza el contenido actual del editor con las 16 daily calls de ejemplo. ¿Continuar?")){ game=JSON.parse(JSON.stringify(BUNDLED_GAME)); setTab("daily"); } };
+render();
+</script>
+</body>
+</html>

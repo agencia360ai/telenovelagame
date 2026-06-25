@@ -1,0 +1,142 @@
+{
+  "schema": "mission@1",
+  "id": "call_heart_attack",
+  "title": "I'm Having a Heart Attack",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 3,
+  "tags": [
+    "real",
+    "medical"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "MEDICAL EMERGENCY",
+    "location": "3rd floor · Chili Dog Stand"
+  },
+  "units": [
+    "ambulance",
+    "firefighters",
+    "police"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_heart_attack.b0",
+  "assets": [
+    {
+      "key": "deploy-ambulance",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_heart_attack.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Short, sharp breaths. This one's serious."
+        }
+      ],
+      "next": "call_heart_attack.b1"
+    },
+    {
+      "id": "call_heart_attack.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm having a heart attack! ❤️‍🩹"
+        }
+      ],
+      "next": "call_heart_attack.b2"
+    },
+    {
+      "id": "call_heart_attack.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_heart_attack.b2_0",
+          "label": "What does it feel like?",
+          "next": "call_heart_attack.b3"
+        },
+        {
+          "id": "call_heart_attack.b2_1",
+          "label": "Any other symptoms?",
+          "next": "call_heart_attack.b3"
+        },
+        {
+          "id": "call_heart_attack.b2_2",
+          "label": "Is this a joke? 🙄",
+          "next": "call_heart_attack.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_heart_attack.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Shortness of breath. There's an army in my chest!"
+        }
+      ],
+      "next": "call_heart_attack.b4"
+    },
+    {
+      "id": "call_heart_attack.b4",
+      "type": "decision",
+      "prompt": "Get location",
+      "choices": [
+        {
+          "id": "call_heart_attack.b4_0",
+          "label": "Stay put, I'm tracking you.",
+          "next": "call_heart_attack.b5"
+        },
+        {
+          "id": "call_heart_attack.b4_1",
+          "label": "Tylenol won't fix this — help's coming.",
+          "next": "call_heart_attack.b5"
+        }
+      ]
+    },
+    {
+      "id": "call_heart_attack.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "3rd floor, by the chili dog stand. Hurry!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "ambulance",
+      "explanation": "Ambulance dispatched. Stay calm, you'll be okay.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-ambulance",
+        "role": "deploy"
+      }
+    }
+  ]
+}

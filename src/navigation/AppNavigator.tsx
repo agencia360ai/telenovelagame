@@ -12,14 +12,18 @@ import { ReaderScreen } from "../screens/ReaderScreen";
 import { ShopScreen } from "../screens/ShopScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { WardrobeScreen } from "../screens/WardrobeScreen";
+import { GenderSelectScreen } from "../screens/GenderSelectScreen";
 import { ChapterEndScreen } from "../screens/ChapterEndScreen";
+import { WeekCompleteScreen } from "../screens/WeekCompleteScreen";
 import { colors } from "../theme/colors";
 
 export type RootStackParamList = {
   Boot: undefined;
+  GenderSelect: undefined;
   DispatchLobby: undefined;
   Call: { callId: string };
   Mission: { missionId: string };
+  WeekComplete: undefined;
   Stats: undefined;
   Paywall: undefined;
   Home: undefined;
@@ -51,6 +55,7 @@ export function AppNavigator() {
         }}
       >
         <Stack.Screen name="Boot" component={BootScreen} />
+        <Stack.Screen name="GenderSelect" component={GenderSelectScreen} />
         <Stack.Screen name="DispatchLobby" component={DispatchLobbyScreen} />
         <Stack.Screen
           name="Call"
@@ -60,6 +65,11 @@ export function AppNavigator() {
         <Stack.Screen
           name="Mission"
           component={MissionScreen}
+          options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="WeekComplete"
+          component={WeekCompleteScreen}
           options={{ gestureEnabled: false }}
         />
         <Stack.Screen name="Stats" component={StatsScreen} />

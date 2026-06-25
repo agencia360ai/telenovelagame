@@ -10,6 +10,7 @@ import { StoryProgressProvider } from "./src/context/StoryProgressContext";
 import { NarrativeStateProvider } from "./src/context/NarrativeStateContext";
 import { SubscriptionProvider } from "./src/context/SubscriptionContext";
 import { DispatchProgressProvider } from "./src/context/DispatchProgressContext";
+import { CalendarProvider } from "./src/context/CalendarContext";
 import { WardrobeProvider } from "./src/context/WardrobeContext";
 import { PaywallProvider } from "./src/context/PaywallContext";
 import { AppNavigator } from "./src/navigation/AppNavigator";
@@ -47,13 +48,15 @@ export default function App() {
                 >
                   <SubscriptionProvider>
                     <DispatchProgressProvider>
-                      <WardrobeProvider>
-                        <PaywallProvider>
-                          <StatusBar style="light" />
-                          <AudioBridge />
-                          <AppNavigator />
-                        </PaywallProvider>
-                      </WardrobeProvider>
+                      <CalendarProvider>
+                        <WardrobeProvider>
+                          <PaywallProvider>
+                            <StatusBar style="light" />
+                            <AudioBridge />
+                            <AppNavigator />
+                          </PaywallProvider>
+                        </WardrobeProvider>
+                      </CalendarProvider>
                     </DispatchProgressProvider>
                   </SubscriptionProvider>
                 </NarrativeStateProvider>

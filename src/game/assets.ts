@@ -158,10 +158,15 @@ export function resolveModel(
 // ── Avatar skins (2D, full-body, same character) ─────────────────────────────
 // One entry per skin id in src/game/skins.ts. Bundled PNGs in assets/skins/.
 export const SKIN_IMAGES: Record<string, number | string> = {
-  rookie: require("../../assets/skins/rookie.png"),
-  neon_pink: require("../../assets/skins/neon_pink.png"),
-  golden_hero: require("../../assets/skins/golden_hero.png"),
-};
+  // Female (3 looks, by rank): patrol → sergeant → dress.
+  f_basic: require("../../assets/skins/f_basic.png"),
+  f_sgt: require("../../assets/skins/f_sgt.png"),
+  f_officer: require("../../assets/skins/f_officer.png"),
+  // Male (3 looks, by rank).
+  m_basic: require("../../assets/skins/m_basic.png"),
+  m_sgt: require("../../assets/skins/m_sgt.png"),
+  m_officer: require("../../assets/skins/m_officer.png"),
+}
 
 /**
  * Resolve a skin id to a React Native image source, or null when no art has

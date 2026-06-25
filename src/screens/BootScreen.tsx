@@ -12,6 +12,7 @@ import Animated, {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useUserIdentity } from "../context/UserIdentityContext";
+import { useWardrobe } from "../context/WardrobeContext";
 import { CinematicImage } from "../components/CinematicImage";
 import { IMAGES } from "../game/assets";
 import { colors } from "../theme/colors";
@@ -25,6 +26,7 @@ const INTRO_IMAGE_KEY = "dispatch-center";
 
 export function BootScreen({ navigation }: Props) {
   const { userId, loading } = useUserIdentity();
+  const { ready: wardrobeReady, isChosen } = useWardrobe();
   const [showIntro, setShowIntro] = useState(false);
 
   const badgeOpacity = useSharedValue(0);
@@ -51,20 +53,23 @@ export function BootScreen({ navigation }: Props) {
   }, []);
 
   useEffect(() => {
-    if (!loading && userId) {
-      analytics.init();
-      analytics.track("app_open");
-      const timer = setTimeout(() => {
-        // Play the cinematic intro if we have one; otherwise go straight in.
-        if (IMAGES[INTRO_IMAGE_KEY]) {
-          setShowIntro(true);
-        } else {
-          navigation.replace("DispatchLobby");
-        }
-      }, 1600);
-      return () => clearTimeout(timer);
-    }
-  }, [loading, userId, navigation]);
+    if (loading || !userId || !wardrobeReady) return;
+    analytics.init();
+    analytics.track("app_open");
+    const timer = setTimeout(() => {
+      // First launch: pick a gender before anything else.
+      if (!isChosen) {
+        navigation.replace("GenderSelect");
+        return;
+      }
+      if (IMAGES[INTRO_IMAGE_KEY]) {
+        setShowIntro(true);
+      } else {
+        navigation.replace("DispatchLobby");
+      }
+    }, 1600);
+    return () => clearTimeout(timer);
+  }, [loading, userId, wardrobeReady, isChosen, navigation]);
 
   const badgeStyle = useAnimatedStyle(() => ({
     opacity: badgeOpacity.value,

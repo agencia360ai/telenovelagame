@@ -1,0 +1,2439 @@
+{
+  "id": "dispatcher",
+  "title": "DISPATCHER",
+  "version": "0.1.0",
+  "locale_default": "en",
+  "characters": {
+    "narrator": {
+      "name": "Narrator",
+      "avatars": {}
+    },
+    "rookie": {
+      "name": "Operator",
+      "avatars": {
+        "neutral": ""
+      }
+    },
+    "caller": {
+      "name": "Caller",
+      "avatars": {
+        "neutral": ""
+      }
+    }
+  },
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0
+  },
+  "initial_flags": {},
+  "starting_gems": 10,
+  "config": {
+    "months": 3,
+    "weeks": 12,
+    "daily_calls_per_day": 3
+  },
+  "game_plot": {
+    "prologue": null,
+    "weeks": []
+  },
+  "daily_calls": {
+    "serve_per_day": 3,
+    "library": [
+      {
+        "id": "caso_cocina",
+        "title": "My Kitchen's on Fire",
+        "kind": "daily_call",
+        "week": 1,
+        "start_beat": "caso_cocina.b0",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "beats": [
+          {
+            "id": "caso_cocina.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Split screen: you at the console; on the other end, a kitchen vanishing into orange smoke."
+              }
+            ],
+            "next": "caso_cocina.b1"
+          },
+          {
+            "id": "caso_cocina.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "My kitchen is on fire! 🔥"
+              }
+            ],
+            "next": "caso_cocina.b2"
+          },
+          {
+            "id": "caso_cocina.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_cocina.b2_0",
+                  "label": "Are you out of the house?",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.b3"
+                },
+                {
+                  "id": "caso_cocina.b2_1",
+                  "label": "Can you use water?",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.b3"
+                },
+                {
+                  "id": "caso_cocina.b2_2",
+                  "label": "Your voice sounds kinda sexy. 😏",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_cocina.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I can't get out, it's too hot!"
+              }
+            ],
+            "next": "caso_cocina.b4"
+          },
+          {
+            "id": "caso_cocina.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Instruction",
+              "choices": [
+                {
+                  "id": "caso_cocina.b4_0",
+                  "label": "Get out of the house NOW.",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.b5",
+                  "effects": {
+                    "integrity": 1
+                  }
+                },
+                {
+                  "id": "caso_cocina.b4_1",
+                  "label": "Move away from the fire.",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.b5",
+                  "effects": {
+                    "integrity": 1
+                  }
+                },
+                {
+                  "id": "caso_cocina.b4_2",
+                  "label": "I'm kinda on fire too 🔥",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_cocina.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I need someone, please! 989 Burb Street."
+              }
+            ],
+            "next": "caso_cocina.b6"
+          },
+          {
+            "id": "caso_cocina.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Sirens. The truck rounds the corner before the roof gives. Clean."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_toilet_paper",
+        "title": "Out of Toilet Paper",
+        "kind": "daily_call",
+        "week": 1,
+        "start_beat": "call_toilet_paper.b0",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "weird"
+        },
+        "beats": [
+          {
+            "id": "call_toilet_paper.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A frantic voice, a bathroom, and absolutely no toilet paper."
+              }
+            ],
+            "next": "call_toilet_paper.b1"
+          },
+          {
+            "id": "call_toilet_paper.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "HELP! I ran out of toilet paper! 🧻"
+              }
+            ],
+            "next": "call_toilet_paper.b2"
+          },
+          {
+            "id": "call_toilet_paper.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_toilet_paper.b2_0",
+                  "label": "You're calling an emergency line.",
+                  "gem_cost": 0,
+                  "next": "call_toilet_paper.b3"
+                },
+                {
+                  "id": "call_toilet_paper.b2_1",
+                  "label": "Sorry, wrong number?",
+                  "gem_cost": 0,
+                  "next": "call_toilet_paper.b3"
+                },
+                {
+                  "id": "call_toilet_paper.b2_2",
+                  "label": "Then your hand will do it!",
+                  "gem_cost": 0,
+                  "next": "call_toilet_paper.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_toilet_paper.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Please, I pooped! Can you send some?"
+              }
+            ],
+            "next": "call_toilet_paper.b4"
+          },
+          {
+            "id": "call_toilet_paper.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "call_toilet_paper.b4_0",
+                  "label": "Ma'am, this line is for emergencies.",
+                  "gem_cost": 0,
+                  "next": "call_toilet_paper.b5"
+                },
+                {
+                  "id": "call_toilet_paper.b4_1",
+                  "label": "Sure. Any brand you prefer? 😏",
+                  "gem_cost": 0,
+                  "next": "call_toilet_paper.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_toilet_paper.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "STOP BOTHERING and help me!"
+              }
+            ],
+            "next": "call_toilet_paper.b6"
+          },
+          {
+            "id": "call_toilet_paper.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "You hang up. Somewhere, a hero improvises with a sock."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_bitcoin_bank",
+        "title": "Lost It All on Bitcoin",
+        "kind": "daily_call",
+        "week": 1,
+        "start_beat": "call_bitcoin_bank.b0",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "mixed",
+          "unit": "police",
+          "category": "crime"
+        },
+        "beats": [
+          {
+            "id": "call_bitcoin_bank.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A trembling caller who just watched their savings evaporate."
+              }
+            ],
+            "next": "call_bitcoin_bank.b1"
+          },
+          {
+            "id": "call_bitcoin_bank.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I bought bitcoins and lost everything! 📉"
+              }
+            ],
+            "next": "call_bitcoin_bank.b2"
+          },
+          {
+            "id": "call_bitcoin_bank.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_bitcoin_bank.b2_0",
+                  "label": "Yikes. What are you going to do?",
+                  "gem_cost": 0,
+                  "next": "call_bitcoin_bank.b3"
+                },
+                {
+                  "id": "call_bitcoin_bank.b2_1",
+                  "label": "And you're calling here because…?",
+                  "gem_cost": 0,
+                  "next": "call_bitcoin_bank.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_bitcoin_bank.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I think I'll go rob a bank."
+              }
+            ],
+            "next": "call_bitcoin_bank.b4"
+          },
+          {
+            "id": "call_bitcoin_bank.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Handle it",
+              "choices": [
+                {
+                  "id": "call_bitcoin_bank.b4_0",
+                  "label": "I'll have to send the police.",
+                  "gem_cost": 0,
+                  "next": "call_bitcoin_bank.b5"
+                },
+                {
+                  "id": "call_bitcoin_bank.b4_1",
+                  "label": "Can I join? I'm broke too. 😏",
+                  "gem_cost": 0,
+                  "next": "call_bitcoin_bank.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_bitcoin_bank.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "...wait, are you serious? I'm at the downtown plaza."
+              }
+            ],
+            "next": "call_bitcoin_bank.b6"
+          },
+          {
+            "id": "call_bitcoin_bank.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Patrol rolls out before they reach the bank doors."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_baby_dino",
+        "title": "Baby Dinosaur",
+        "kind": "daily_call",
+        "week": 2,
+        "start_beat": "call_baby_dino.b0",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "beats": [
+          {
+            "id": "call_baby_dino.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Split screen: you at the console; the caller, somewhere in the woods."
+              }
+            ],
+            "next": "call_baby_dino.b1"
+          },
+          {
+            "id": "call_baby_dino.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I found a baby dinosaur! 🦕"
+              }
+            ],
+            "next": "call_baby_dino.b2"
+          },
+          {
+            "id": "call_baby_dino.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_baby_dino.b2_0",
+                  "label": "Impossible, dinosaurs don't exist.",
+                  "gem_cost": 0,
+                  "next": "call_baby_dino.b3"
+                },
+                {
+                  "id": "call_baby_dino.b2_1",
+                  "label": "OMG! What breed?",
+                  "gem_cost": 0,
+                  "next": "call_baby_dino.b3"
+                },
+                {
+                  "id": "call_baby_dino.b2_2",
+                  "label": "I WANT IT! 😍",
+                  "gem_cost": 0,
+                  "next": "call_baby_dino.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_baby_dino.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I think it's a baby T-Rex. Maybe?"
+              }
+            ],
+            "next": "call_baby_dino.b4"
+          },
+          {
+            "id": "call_baby_dino.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Get details",
+              "choices": [
+                {
+                  "id": "call_baby_dino.b4_0",
+                  "label": "Are you hurt?",
+                  "gem_cost": 0,
+                  "next": "call_baby_dino.b5"
+                },
+                {
+                  "id": "call_baby_dino.b4_1",
+                  "label": "Send your location, fast!",
+                  "gem_cost": 0,
+                  "next": "call_baby_dino.b5"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_baby_dino.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I'm fine, it's just drooling. 18th, Jurassic St."
+              }
+            ],
+            "next": "call_baby_dino.b6"
+          },
+          {
+            "id": "call_baby_dino.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Animal control rolls out. This report's getting framed."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_house_fire",
+        "title": "My House Is on Fire",
+        "kind": "daily_call",
+        "week": 1,
+        "start_beat": "call_house_fire.b0",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "beats": [
+          {
+            "id": "call_house_fire.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Smoke pours through the line like it's trying to reach you too."
+              }
+            ],
+            "next": "call_house_fire.b1"
+          },
+          {
+            "id": "call_house_fire.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "My house is on fire! 🔥"
+              }
+            ],
+            "next": "call_house_fire.b2"
+          },
+          {
+            "id": "call_house_fire.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_house_fire.b2_0",
+                  "label": "Are you safe?",
+                  "gem_cost": 0,
+                  "next": "call_house_fire.b3"
+                },
+                {
+                  "id": "call_house_fire.b2_1",
+                  "label": "Where did the fire start?",
+                  "gem_cost": 0,
+                  "next": "call_house_fire.b3"
+                },
+                {
+                  "id": "call_house_fire.b2_2",
+                  "label": "Let it burn! 😏",
+                  "gem_cost": 0,
+                  "next": "call_house_fire.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_house_fire.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I can't get out — it started in my room!"
+              }
+            ],
+            "next": "call_house_fire.b4"
+          },
+          {
+            "id": "call_house_fire.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Instruction",
+              "choices": [
+                {
+                  "id": "call_house_fire.b4_0",
+                  "label": "Get out NOW. I'm sending help.",
+                  "gem_cost": 0,
+                  "next": "call_house_fire.b5",
+                  "effects": {
+                    "integrity": 1
+                  }
+                },
+                {
+                  "id": "call_house_fire.b4_1",
+                  "label": "Stay low and move to a window.",
+                  "gem_cost": 0,
+                  "next": "call_house_fire.b5",
+                  "effects": {
+                    "integrity": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_house_fire.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Please hurry! 3259 Wescam Court."
+              }
+            ],
+            "next": "call_house_fire.b6"
+          },
+          {
+            "id": "call_house_fire.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Trucks are on the way. You stay on the line until they arrive."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_zombie",
+        "title": "I Saw a Zombie",
+        "kind": "daily_call",
+        "week": 2,
+        "start_beat": "call_zombie.b0",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "police",
+          "category": "weird"
+        },
+        "beats": [
+          {
+            "id": "call_zombie.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "2 a.m. A whisper. Something about the undead."
+              }
+            ],
+            "next": "call_zombie.b1"
+          },
+          {
+            "id": "call_zombie.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I think I saw a zombie! 🧟"
+              }
+            ],
+            "next": "call_zombie.b2"
+          },
+          {
+            "id": "call_zombie.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_zombie.b2_0",
+                  "label": "Zombies don't exist.",
+                  "gem_cost": 0,
+                  "next": "call_zombie.b3"
+                },
+                {
+                  "id": "call_zombie.b2_1",
+                  "label": "For real?? What's it doing?",
+                  "gem_cost": 0,
+                  "next": "call_zombie.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_zombie.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "It's in front of me, eating rotten flesh!"
+              }
+            ],
+            "next": "call_zombie.b4"
+          },
+          {
+            "id": "call_zombie.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "call_zombie.b4_0",
+                  "label": "Don't move. Where are you?",
+                  "gem_cost": 0,
+                  "next": "call_zombie.b5"
+                },
+                {
+                  "id": "call_zombie.b4_1",
+                  "label": "Only on Walking Dead, kiddo. 😏",
+                  "gem_cost": 0,
+                  "next": "call_zombie.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_zombie.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Atlanta, Georgia. PLEASE hurry!"
+              }
+            ],
+            "next": "call_zombie.b6"
+          },
+          {
+            "id": "call_zombie.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Okay, this might be real. A patrol is sent."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_door_force",
+        "title": "Someone's at My Door",
+        "kind": "daily_call",
+        "week": 2,
+        "start_beat": "call_door_force.b0",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "beats": [
+          {
+            "id": "call_door_force.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Knocking. Then pounding. Then a voice barely holding it together."
+              }
+            ],
+            "next": "call_door_force.b1"
+          },
+          {
+            "id": "call_door_force.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Someone's trying to force my door open!"
+              }
+            ],
+            "next": "call_door_force.b2"
+          },
+          {
+            "id": "call_door_force.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_door_force.b2_0",
+                  "label": "Stay calm. Ask who it is.",
+                  "gem_cost": 0,
+                  "next": "call_door_force.b3"
+                },
+                {
+                  "id": "call_door_force.b2_1",
+                  "label": "Would someone visit you now?",
+                  "gem_cost": 0,
+                  "next": "call_door_force.b3"
+                },
+                {
+                  "id": "call_door_force.b2_2",
+                  "label": "Maybe it's Santa! Hohoho 🎅",
+                  "gem_cost": 0,
+                  "next": "call_door_force.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_door_force.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "It's 2 a.m.! It's my weird neighbor — HELP!"
+              }
+            ],
+            "next": "call_door_force.b4"
+          },
+          {
+            "id": "call_door_force.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Get location",
+              "choices": [
+                {
+                  "id": "call_door_force.b4_0",
+                  "label": "Sending a patrol. Address?",
+                  "gem_cost": 0,
+                  "next": "call_door_force.b5"
+                },
+                {
+                  "id": "call_door_force.b4_1",
+                  "label": "Lock yourself in a room.",
+                  "gem_cost": 0,
+                  "next": "call_door_force.b5",
+                  "effects": {
+                    "integrity": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_door_force.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Apartment 4B, Maple Court. Please hurry!"
+              }
+            ],
+            "next": "call_door_force.b6"
+          },
+          {
+            "id": "call_door_force.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Units en route. Keep the door blocked."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_ate_glass",
+        "title": "I Ate Glass",
+        "kind": "daily_call",
+        "week": 3,
+        "start_beat": "call_ate_glass.b0",
+        "tags": {
+          "week_min": 3,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "beats": [
+          {
+            "id": "call_ate_glass.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A wet cough rattles down the line."
+              }
+            ],
+            "next": "call_ate_glass.b1"
+          },
+          {
+            "id": "call_ate_glass.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "HELP! I'm coughing really bad! 😷"
+              }
+            ],
+            "next": "call_ate_glass.b2"
+          },
+          {
+            "id": "call_ate_glass.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_ate_glass.b2_0",
+                  "label": "What did you eat?",
+                  "gem_cost": 0,
+                  "next": "call_ate_glass.b3"
+                },
+                {
+                  "id": "call_ate_glass.b2_1",
+                  "label": "Any other symptoms?",
+                  "gem_cost": 0,
+                  "next": "call_ate_glass.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_ate_glass.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I... ate glass. It was a challenge!"
+              }
+            ],
+            "next": "call_ate_glass.b4"
+          },
+          {
+            "id": "call_ate_glass.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "call_ate_glass.b4_0",
+                  "label": "Don't move. Help is coming.",
+                  "gem_cost": 0,
+                  "next": "call_ate_glass.b5"
+                },
+                {
+                  "id": "call_ate_glass.b4_1",
+                  "label": "So, buried or cremated? 😏",
+                  "gem_cost": 0,
+                  "next": "call_ate_glass.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_ate_glass.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Don't scare me! Just send help! 4 Maple Ave."
+              }
+            ],
+            "next": "call_ate_glass.b6"
+          },
+          {
+            "id": "call_ate_glass.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Ambulance dispatched. You talk them calm until it arrives."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_green_elves",
+        "title": "I See Green Elves",
+        "kind": "daily_call",
+        "week": 3,
+        "start_beat": "call_green_elves.b0",
+        "tags": {
+          "week_min": 3,
+          "difficulty": 2,
+          "type": "mixed",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "beats": [
+          {
+            "id": "call_green_elves.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "The caller giggles, then gasps."
+              }
+            ],
+            "next": "call_green_elves.b1"
+          },
+          {
+            "id": "call_green_elves.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I'm seeing green elves! 🧝"
+              }
+            ],
+            "next": "call_green_elves.b2"
+          },
+          {
+            "id": "call_green_elves.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_green_elves.b2_0",
+                  "label": "Did you take something?",
+                  "gem_cost": 0,
+                  "next": "call_green_elves.b3"
+                },
+                {
+                  "id": "call_green_elves.b2_1",
+                  "label": "Can you catch one? I want a pet. 😏",
+                  "gem_cost": 0,
+                  "next": "call_green_elves.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_green_elves.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "It was a challenge! Now they won't leave!"
+              }
+            ],
+            "next": "call_green_elves.b4"
+          },
+          {
+            "id": "call_green_elves.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Get location",
+              "choices": [
+                {
+                  "id": "call_green_elves.b4_0",
+                  "label": "Where are you? Sending help.",
+                  "gem_cost": 0,
+                  "next": "call_green_elves.b5"
+                },
+                {
+                  "id": "call_green_elves.b4_1",
+                  "label": "Try something less abrasive next time.",
+                  "gem_cost": 0,
+                  "next": "call_green_elves.b5"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_green_elves.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "7 Mushroom Lane. Hurry!"
+              }
+            ],
+            "next": "call_green_elves.b6"
+          },
+          {
+            "id": "call_green_elves.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Experts arrive to bring the caller back to earth."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_migraine",
+        "title": "My Head's Exploding",
+        "kind": "daily_call",
+        "week": 3,
+        "start_beat": "call_migraine.b0",
+        "tags": {
+          "week_min": 3,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "beats": [
+          {
+            "id": "call_migraine.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A groan, like the world is too loud."
+              }
+            ],
+            "next": "call_migraine.b1"
+          },
+          {
+            "id": "call_migraine.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "My head is about to explode! 🤯"
+              }
+            ],
+            "next": "call_migraine.b2"
+          },
+          {
+            "id": "call_migraine.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_migraine.b2_0",
+                  "label": "Did you hit your head?",
+                  "gem_cost": 0,
+                  "next": "call_migraine.b3"
+                },
+                {
+                  "id": "call_migraine.b2_1",
+                  "label": "Any other symptoms?",
+                  "gem_cost": 0,
+                  "next": "call_migraine.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_migraine.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "HUGE migraine, man. I feel like throwing up."
+              }
+            ],
+            "next": "call_migraine.b4"
+          },
+          {
+            "id": "call_migraine.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "call_migraine.b4_0",
+                  "label": "Stay put, help's coming.",
+                  "gem_cost": 0,
+                  "next": "call_migraine.b5"
+                },
+                {
+                  "id": "call_migraine.b4_1",
+                  "label": "Just take an ibuprofen. 🙄",
+                  "gem_cost": 0,
+                  "next": "call_migraine.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_migraine.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Can you actually send someone?! 12 Pine Rd."
+              }
+            ],
+            "next": "call_migraine.b6"
+          },
+          {
+            "id": "call_migraine.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Ambulance en route. Aim for the toilet, just in case."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_virtual_kitten",
+        "title": "I Need Bitcoins",
+        "kind": "daily_call",
+        "week": 1,
+        "start_beat": "call_virtual_kitten.b0",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "weird"
+        },
+        "beats": [
+          {
+            "id": "call_virtual_kitten.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A very calm voice with very odd priorities."
+              }
+            ],
+            "next": "call_virtual_kitten.b1"
+          },
+          {
+            "id": "call_virtual_kitten.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I need bitcoins urgently! 🪙"
+              }
+            ],
+            "next": "call_virtual_kitten.b2"
+          },
+          {
+            "id": "call_virtual_kitten.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_virtual_kitten.b2_0",
+                  "label": "Sir, this is 911.",
+                  "gem_cost": 0,
+                  "next": "call_virtual_kitten.b3"
+                },
+                {
+                  "id": "call_virtual_kitten.b2_1",
+                  "label": "What for?",
+                  "gem_cost": 0,
+                  "next": "call_virtual_kitten.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_virtual_kitten.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I want to buy a virtual kitten."
+              }
+            ],
+            "next": "call_virtual_kitten.b4"
+          },
+          {
+            "id": "call_virtual_kitten.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "call_virtual_kitten.b4_0",
+                  "label": "You don't need bitcoins for that.",
+                  "gem_cost": 0,
+                  "next": "call_virtual_kitten.b5"
+                },
+                {
+                  "id": "call_virtual_kitten.b4_1",
+                  "label": "What are you gonna name it? 😏",
+                  "gem_cost": 0,
+                  "next": "call_virtual_kitten.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_virtual_kitten.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "George Cheddar Washington!"
+              }
+            ],
+            "next": "call_virtual_kitten.b6"
+          },
+          {
+            "id": "call_virtual_kitten.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Great choice. Now please free the line."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_elevator",
+        "title": "Stuck in an Elevator",
+        "kind": "daily_call",
+        "week": 2,
+        "start_beat": "call_elevator.b0",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "fire",
+          "category": "misc"
+        },
+        "beats": [
+          {
+            "id": "call_elevator.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A metal box, a stuck button, and rising panic."
+              }
+            ],
+            "next": "call_elevator.b1"
+          },
+          {
+            "id": "call_elevator.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I'm stuck in an elevator! 🛗"
+              }
+            ],
+            "next": "call_elevator.b2"
+          },
+          {
+            "id": "call_elevator.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_elevator.b2_0",
+                  "label": "Did you press the alarm?",
+                  "gem_cost": 0,
+                  "next": "call_elevator.b3"
+                },
+                {
+                  "id": "call_elevator.b2_1",
+                  "label": "Is anyone with you?",
+                  "gem_cost": 0,
+                  "next": "call_elevator.b3"
+                },
+                {
+                  "id": "call_elevator.b2_2",
+                  "label": "Try jumping, works for me. 😏",
+                  "gem_cost": 0,
+                  "next": "call_elevator.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_elevator.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I'm alone and it's not working! HELP!"
+              }
+            ],
+            "next": "call_elevator.b4"
+          },
+          {
+            "id": "call_elevator.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Get location",
+              "choices": [
+                {
+                  "id": "call_elevator.b4_0",
+                  "label": "Tracking you now. Don't move.",
+                  "gem_cost": 0,
+                  "next": "call_elevator.b5"
+                },
+                {
+                  "id": "call_elevator.b4_1",
+                  "label": "Scream LOUDER. 😏",
+                  "gem_cost": 0,
+                  "next": "call_elevator.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_elevator.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "It's real, please! Fart St, Virginia 76861."
+              }
+            ],
+            "next": "call_elevator.b6"
+          },
+          {
+            "id": "call_elevator.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Rescue is on the way. Breathe slowly."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_cat_missing",
+        "title": "My Cat Vanished",
+        "kind": "daily_call",
+        "week": 1,
+        "start_beat": "call_cat_missing.b0",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "beats": [
+          {
+            "id": "call_cat_missing.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A heartbroken caller. And a missing hamburger."
+              }
+            ],
+            "next": "call_cat_missing.b1"
+          },
+          {
+            "id": "call_cat_missing.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "My cat just disappeared! 🐱"
+              }
+            ],
+            "next": "call_cat_missing.b2"
+          },
+          {
+            "id": "call_cat_missing.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_cat_missing.b2_0",
+                  "label": "When did you last see him?",
+                  "gem_cost": 0,
+                  "next": "call_cat_missing.b3"
+                },
+                {
+                  "id": "call_cat_missing.b2_1",
+                  "label": "Have you called around?",
+                  "gem_cost": 0,
+                  "next": "call_cat_missing.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_cat_missing.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "At my Mom's. Also my hamburger is gone!"
+              }
+            ],
+            "next": "call_cat_missing.b4"
+          },
+          {
+            "id": "call_cat_missing.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "call_cat_missing.b4_0",
+                  "label": "We can send someone to look.",
+                  "gem_cost": 0,
+                  "next": "call_cat_missing.b5"
+                },
+                {
+                  "id": "call_cat_missing.b4_1",
+                  "label": "The cat ate the burger. Case closed. 😏",
+                  "gem_cost": 0,
+                  "next": "call_cat_missing.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_cat_missing.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Please, just help me find him! 5 Willow St."
+              }
+            ],
+            "next": "call_cat_missing.b6"
+          },
+          {
+            "id": "call_cat_missing.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Animal control swings by. Check your Mom's first."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_student_loan",
+        "title": "I Can't Pay My Debt",
+        "kind": "daily_call",
+        "week": 2,
+        "start_beat": "call_student_loan.b0",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "beats": [
+          {
+            "id": "call_student_loan.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A panicked voice, drowning in numbers."
+              }
+            ],
+            "next": "call_student_loan.b1"
+          },
+          {
+            "id": "call_student_loan.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I can't pay my debt! 💸"
+              }
+            ],
+            "next": "call_student_loan.b2"
+          },
+          {
+            "id": "call_student_loan.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_student_loan.b2_0",
+                  "label": "What debt?",
+                  "gem_cost": 0,
+                  "next": "call_student_loan.b3"
+                },
+                {
+                  "id": "call_student_loan.b2_1",
+                  "label": "Why not get a job?",
+                  "gem_cost": 0,
+                  "next": "call_student_loan.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_student_loan.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "My student loan! They said I'm too young to work."
+              }
+            ],
+            "next": "call_student_loan.b4"
+          },
+          {
+            "id": "call_student_loan.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "call_student_loan.b4_0",
+                  "label": "How old are you?",
+                  "gem_cost": 0,
+                  "next": "call_student_loan.b5"
+                },
+                {
+                  "id": "call_student_loan.b4_1",
+                  "label": "Run away before it's too late! 😏",
+                  "gem_cost": 0,
+                  "next": "call_student_loan.b5",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_student_loan.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I'm 12! What do I do?!"
+              }
+            ],
+            "next": "call_student_loan.b6"
+          },
+          {
+            "id": "call_student_loan.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Go back to your toys, kiddo. And free the line."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_heart_attack",
+        "title": "I'm Having a Heart Attack",
+        "kind": "daily_call",
+        "week": 4,
+        "start_beat": "call_heart_attack.b0",
+        "tags": {
+          "week_min": 4,
+          "difficulty": 3,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "beats": [
+          {
+            "id": "call_heart_attack.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Short, sharp breaths. This one's serious."
+              }
+            ],
+            "next": "call_heart_attack.b1"
+          },
+          {
+            "id": "call_heart_attack.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I'm having a heart attack! ❤️‍🩹"
+              }
+            ],
+            "next": "call_heart_attack.b2"
+          },
+          {
+            "id": "call_heart_attack.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_heart_attack.b2_0",
+                  "label": "What does it feel like?",
+                  "gem_cost": 0,
+                  "next": "call_heart_attack.b3"
+                },
+                {
+                  "id": "call_heart_attack.b2_1",
+                  "label": "Any other symptoms?",
+                  "gem_cost": 0,
+                  "next": "call_heart_attack.b3"
+                },
+                {
+                  "id": "call_heart_attack.b2_2",
+                  "label": "Is this a joke? 🙄",
+                  "gem_cost": 0,
+                  "next": "call_heart_attack.b3",
+                  "effects": {
+                    "trust": -1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_heart_attack.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Shortness of breath. There's an army in my chest!"
+              }
+            ],
+            "next": "call_heart_attack.b4"
+          },
+          {
+            "id": "call_heart_attack.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Get location",
+              "choices": [
+                {
+                  "id": "call_heart_attack.b4_0",
+                  "label": "Stay put, I'm tracking you.",
+                  "gem_cost": 0,
+                  "next": "call_heart_attack.b5"
+                },
+                {
+                  "id": "call_heart_attack.b4_1",
+                  "label": "Tylenol won't fix this — help's coming.",
+                  "gem_cost": 0,
+                  "next": "call_heart_attack.b5"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_heart_attack.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "3rd floor, by the chili dog stand. Hurry!"
+              }
+            ],
+            "next": "call_heart_attack.b6"
+          },
+          {
+            "id": "call_heart_attack.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Ambulance dispatched. Stay calm, you'll be okay."
+              }
+            ],
+            "next": null
+          }
+        ]
+      },
+      {
+        "id": "call_riot",
+        "title": "There's a Riot Outside",
+        "kind": "daily_call",
+        "week": 4,
+        "start_beat": "call_riot.b0",
+        "tags": {
+          "week_min": 4,
+          "difficulty": 3,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "beats": [
+          {
+            "id": "call_riot.b0",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Glass breaking. Screaming. A city tearing at itself."
+              }
+            ],
+            "next": "call_riot.b1"
+          },
+          {
+            "id": "call_riot.b1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "There's a riot happening outside! 😱"
+              }
+            ],
+            "next": "call_riot.b2"
+          },
+          {
+            "id": "call_riot.b2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_riot.b2_0",
+                  "label": "How many people?",
+                  "gem_cost": 0,
+                  "next": "call_riot.b3"
+                },
+                {
+                  "id": "call_riot.b2_1",
+                  "label": "Are you safe?",
+                  "gem_cost": 0,
+                  "next": "call_riot.b3"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_riot.b3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "Over 100! Guns and knives everywhere!"
+              }
+            ],
+            "next": "call_riot.b4"
+          },
+          {
+            "id": "call_riot.b4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Instruction",
+              "choices": [
+                {
+                  "id": "call_riot.b4_0",
+                  "label": "Hide and stay hidden.",
+                  "gem_cost": 0,
+                  "next": "call_riot.b5",
+                  "effects": {
+                    "integrity": 1
+                  }
+                },
+                {
+                  "id": "call_riot.b4_1",
+                  "label": "Run, get away from the crowd.",
+                  "gem_cost": 0,
+                  "next": "call_riot.b5",
+                  "effects": {
+                    "integrity": 1
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_riot.b5",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "caller"
+            ],
+            "lines": [
+              {
+                "speaker": "caller",
+                "expr": "neutral",
+                "text": "I'm hiding. There's nowhere to go!"
+              }
+            ],
+            "next": "call_riot.b6"
+          },
+          {
+            "id": "call_riot.b6",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "rookie"
+            ],
+            "lines": [
+              {
+                "speaker": "rookie",
+                "expr": "neutral",
+                "text": "Keep calm. Police are being dispatched now."
+              }
+            ],
+            "next": null
+          }
+        ]
+      }
+    ]
+  }
+}

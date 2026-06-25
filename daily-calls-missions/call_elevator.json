@@ -1,0 +1,145 @@
+{
+  "schema": "mission@1",
+  "id": "call_elevator",
+  "title": "Stuck in an Elevator",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "real",
+    "misc"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "FIRE EMERGENCY",
+    "location": "Fart St, Virginia 76861"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_elevator.b0",
+  "assets": [
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_elevator.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A metal box, a stuck button, and rising panic."
+        }
+      ],
+      "next": "call_elevator.b1"
+    },
+    {
+      "id": "call_elevator.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm stuck in an elevator! 🛗"
+        }
+      ],
+      "next": "call_elevator.b2"
+    },
+    {
+      "id": "call_elevator.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_elevator.b2_0",
+          "label": "Did you press the alarm?",
+          "next": "call_elevator.b3"
+        },
+        {
+          "id": "call_elevator.b2_1",
+          "label": "Is anyone with you?",
+          "next": "call_elevator.b3"
+        },
+        {
+          "id": "call_elevator.b2_2",
+          "label": "Try jumping, works for me. 😏",
+          "next": "call_elevator.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_elevator.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm alone and it's not working! HELP!"
+        }
+      ],
+      "next": "call_elevator.b4"
+    },
+    {
+      "id": "call_elevator.b4",
+      "type": "decision",
+      "prompt": "Get location",
+      "choices": [
+        {
+          "id": "call_elevator.b4_0",
+          "label": "Tracking you now. Don't move.",
+          "next": "call_elevator.b5"
+        },
+        {
+          "id": "call_elevator.b4_1",
+          "label": "Scream LOUDER. 😏",
+          "next": "call_elevator.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_elevator.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "It's real, please! Fart St, Virginia 76861."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Rescue is on the way. Breathe slowly.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

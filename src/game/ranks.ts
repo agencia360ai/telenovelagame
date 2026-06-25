@@ -15,9 +15,13 @@ export const RANKS: Rank[] = [
   { id: "director", name: "Director", minXP: 2000, icon: "🏆" },
 ];
 
-export const SHIFT_SIZE = 5;
-export const SHIFT_COMPLETE_BONUS = 15;
-export const PERFECT_SHIFT_BONUS = 25;
+// End-of-day / end-of-week bonuses (the in-game calendar replaced the old
+// per-shift bonus). Awarded by the CalendarContext / WeekComplete flow.
+export const DAY_COMPLETE_BONUS = 10;
+export const WEEK_COMPLETE_BONUS = 30;
+export const PERFECT_WEEK_BONUS = 50;
+export const WEEK_COMPLETE_GEMS = 5;
+export const PERFECT_WEEK_GEMS = 10;
 
 export function getRankForXP(xp: number): number {
   for (let i = RANKS.length - 1; i >= 0; i--) {

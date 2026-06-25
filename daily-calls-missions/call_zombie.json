@@ -1,0 +1,137 @@
+{
+  "schema": "mission@1",
+  "id": "call_zombie",
+  "title": "I Saw a Zombie",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "prank",
+    "weird"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "POLICE EMERGENCY",
+    "location": "Atlanta, Georgia"
+  },
+  "units": [
+    "police",
+    "firefighters",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_zombie.b0",
+  "assets": [
+    {
+      "key": "deploy-police",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_zombie.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "2 a.m. A whisper. Something about the undead."
+        }
+      ],
+      "next": "call_zombie.b1"
+    },
+    {
+      "id": "call_zombie.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I think I saw a zombie! 🧟"
+        }
+      ],
+      "next": "call_zombie.b2"
+    },
+    {
+      "id": "call_zombie.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_zombie.b2_0",
+          "label": "Zombies don't exist.",
+          "next": "call_zombie.b3"
+        },
+        {
+          "id": "call_zombie.b2_1",
+          "label": "For real?? What's it doing?",
+          "next": "call_zombie.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_zombie.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "It's in front of me, eating rotten flesh!"
+        }
+      ],
+      "next": "call_zombie.b4"
+    },
+    {
+      "id": "call_zombie.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_zombie.b4_0",
+          "label": "Don't move. Where are you?",
+          "next": "call_zombie.b5"
+        },
+        {
+          "id": "call_zombie.b4_1",
+          "label": "Only on Walking Dead, kiddo. 😏",
+          "next": "call_zombie.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_zombie.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Atlanta, Georgia. PLEASE hurry!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Okay, this might be real. A patrol is sent.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

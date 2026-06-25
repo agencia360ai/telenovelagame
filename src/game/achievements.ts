@@ -13,8 +13,8 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: "streak_3", name: "On a Roll", description: "3 correct in a row", icon: "🔥" },
   { id: "streak_5", name: "Hot Streak", description: "5 correct in a row", icon: "💥" },
   { id: "streak_10", name: "Unstoppable", description: "10 correct in a row", icon: "⚡" },
-  { id: "perfect_shift", name: "Perfect Shift", description: "Ace an entire shift", icon: "💎" },
-  { id: "shifts_5", name: "Double Shift", description: "Complete 5 shifts", icon: "🌙" },
+  { id: "perfect_week", name: "Perfect Week", description: "Ace an entire week", icon: "💎" },
+  { id: "weeks_5", name: "Five Weeks Strong", description: "Complete 5 weeks", icon: "🌙" },
   { id: "accuracy_90", name: "Sharp Eye", description: "90%+ accuracy (min 10 calls)", icon: "🎯" },
   { id: "speed_demon", name: "Speed Demon", description: "Dispatch in under 3 seconds", icon: "⏱️" },
   { id: "rank_commander", name: "Command Rank", description: "Reach Commander", icon: "🏅" },
@@ -25,8 +25,8 @@ type CheckableStats = {
   correctCount: number;
   bestStreak: number;
   currentStreak: number;
-  perfectShifts: number;
-  shiftsCompleted: number;
+  perfectWeeks: number;
+  weeksCompleted: number;
   rankIndex: number;
   fastestDispatch: number;
 };
@@ -39,8 +39,8 @@ const CHECKS: Record<string, (s: CheckableStats) => boolean> = {
   streak_3: (s) => s.bestStreak >= 3,
   streak_5: (s) => s.bestStreak >= 5,
   streak_10: (s) => s.bestStreak >= 10,
-  perfect_shift: (s) => s.perfectShifts >= 1,
-  shifts_5: (s) => s.shiftsCompleted >= 5,
+  perfect_week: (s) => s.perfectWeeks >= 1,
+  weeks_5: (s) => s.weeksCompleted >= 5,
   accuracy_90: (s) =>
     s.callsHandled >= 10 && s.correctCount / s.callsHandled >= 0.9,
   speed_demon: (s) => s.fastestDispatch > 0 && s.fastestDispatch <= 3,

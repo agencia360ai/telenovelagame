@@ -1,0 +1,137 @@
+{
+  "schema": "mission@1",
+  "id": "call_ate_glass",
+  "title": "I Ate Glass",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "tags": [
+    "real",
+    "medical"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "MEDICAL EMERGENCY",
+    "location": "4 Maple Ave"
+  },
+  "units": [
+    "ambulance",
+    "firefighters",
+    "police"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_ate_glass.b0",
+  "assets": [
+    {
+      "key": "deploy-ambulance",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_ate_glass.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A wet cough rattles down the line."
+        }
+      ],
+      "next": "call_ate_glass.b1"
+    },
+    {
+      "id": "call_ate_glass.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "HELP! I'm coughing really bad! 😷"
+        }
+      ],
+      "next": "call_ate_glass.b2"
+    },
+    {
+      "id": "call_ate_glass.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_ate_glass.b2_0",
+          "label": "What did you eat?",
+          "next": "call_ate_glass.b3"
+        },
+        {
+          "id": "call_ate_glass.b2_1",
+          "label": "Any other symptoms?",
+          "next": "call_ate_glass.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_ate_glass.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I... ate glass. It was a challenge!"
+        }
+      ],
+      "next": "call_ate_glass.b4"
+    },
+    {
+      "id": "call_ate_glass.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_ate_glass.b4_0",
+          "label": "Don't move. Help is coming.",
+          "next": "call_ate_glass.b5"
+        },
+        {
+          "id": "call_ate_glass.b4_1",
+          "label": "So, buried or cremated? 😏",
+          "next": "call_ate_glass.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_ate_glass.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Don't scare me! Just send help! 4 Maple Ave."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "ambulance",
+      "explanation": "Ambulance dispatched. You talk them calm until it arrives.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-ambulance",
+        "role": "deploy"
+      }
+    }
+  ]
+}

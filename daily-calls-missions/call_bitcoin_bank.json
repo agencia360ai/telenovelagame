@@ -1,0 +1,137 @@
+{
+  "schema": "mission@1",
+  "id": "call_bitcoin_bank",
+  "title": "Lost It All on Bitcoin",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "tags": [
+    "mixed",
+    "crime"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "POLICE EMERGENCY",
+    "location": "Downtown Plaza"
+  },
+  "units": [
+    "police",
+    "firefighters",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_bitcoin_bank.b0",
+  "assets": [
+    {
+      "key": "deploy-police",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_bitcoin_bank.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A trembling caller who just watched their savings evaporate."
+        }
+      ],
+      "next": "call_bitcoin_bank.b1"
+    },
+    {
+      "id": "call_bitcoin_bank.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I bought bitcoins and lost everything! 📉"
+        }
+      ],
+      "next": "call_bitcoin_bank.b2"
+    },
+    {
+      "id": "call_bitcoin_bank.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_bitcoin_bank.b2_0",
+          "label": "Yikes. What are you going to do?",
+          "next": "call_bitcoin_bank.b3"
+        },
+        {
+          "id": "call_bitcoin_bank.b2_1",
+          "label": "And you're calling here because…?",
+          "next": "call_bitcoin_bank.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_bitcoin_bank.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I think I'll go rob a bank."
+        }
+      ],
+      "next": "call_bitcoin_bank.b4"
+    },
+    {
+      "id": "call_bitcoin_bank.b4",
+      "type": "decision",
+      "prompt": "Handle it",
+      "choices": [
+        {
+          "id": "call_bitcoin_bank.b4_0",
+          "label": "I'll have to send the police.",
+          "next": "call_bitcoin_bank.b5"
+        },
+        {
+          "id": "call_bitcoin_bank.b4_1",
+          "label": "Can I join? I'm broke too. 😏",
+          "next": "call_bitcoin_bank.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_bitcoin_bank.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "...wait, are you serious? I'm at the downtown plaza."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Patrol rolls out before they reach the bank doors.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}
