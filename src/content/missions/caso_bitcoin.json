@@ -30,12 +30,6 @@
   "start": "caso_bitcoin.intro",
   "assets": [
     {
-      "key": "armed-robbery-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "I Lost Everything in Bitcoin"
-    },
-    {
       "key": "armed-robbery",
       "type": "video",
       "role": "ambient"

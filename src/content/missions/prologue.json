@@ -1,0 +1,107 @@
+{
+  "schema": "mission@1",
+  "id": "prologue",
+  "title": "First Shift",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "intro",
+  "caller": {
+    "name": "Dispatch",
+    "type": "INTRO",
+    "location": "Dispatch floor"
+  },
+  "reward": 0,
+  "initial_variables": {
+    "integrity": 0,
+    "mara_trust": 0,
+    "don": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "speakers": {
+    "mara": "Martha"
+  },
+  "start": "prologue.intro",
+  "beats": [
+    {
+      "id": "prologue.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Night one. The dispatch floor hums like a held breath — a wall of screens, a hundred blinking lines, and the quiet certainty that somewhere out there, someone is about to need you."
+        }
+      ],
+      "next": "prologue.mara1"
+    },
+    {
+      "id": "prologue.mara1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "You must be the rookie. Martha. Take the console next to mine — I'll keep you whole."
+        }
+      ],
+      "next": "prologue.mara2"
+    },
+    {
+      "id": "prologue.mara2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "One rule before the lines light up: not every voice on this frequency wants saving. Part of the job is learning the difference."
+        }
+      ],
+      "next": "prologue.d1"
+    },
+    {
+      "id": "prologue.d1",
+      "type": "decision",
+      "prompt": "First thing you say to your mentor",
+      "choices": [
+        {
+          "id": "prologue.d1_0",
+          "label": "I'm here to help all of them.",
+          "next": "prologue.fin",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "prologue.d1_1",
+          "label": "Teach me the difference, then.",
+          "next": "prologue.fin",
+          "effects": {
+            "mara_trust": 1
+          }
+        },
+        {
+          "id": "prologue.d1_2",
+          "label": "Whatever pays, right?",
+          "next": "prologue.fin",
+          "effects": {
+            "don": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "prologue.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Martha smiles like she already knows which kind of dispatcher you'll be. The first line lights up."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

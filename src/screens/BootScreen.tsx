@@ -9,25 +9,28 @@ import Animated, {
   withSequence,
   Easing,
 } from "react-native-reanimated";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useUserIdentity } from "../context/UserIdentityContext";
-import { useWardrobe } from "../context/WardrobeContext";
-import { CinematicImage } from "../components/CinematicImage";
-import { IMAGES } from "../game/assets";
+import { CutscenePlayer } from "../components/CutscenePlayer";
+import { VIDEOS } from "../game/assets";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 import { analytics } from "../lib/analytics";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Boot">;
 
-// Optional cinematic establishing shot shown once after the splash.
-const INTRO_IMAGE_KEY = "dispatch-center";
+// Opening clip shown at launch, before the prologue (first run only).
+const INTRO_CLIP_KEY = "intro-clip";
+// Persisted flag: the one-off prologue has been played (set by MissionScreen).
+const INTRO_SEEN_KEY = "dispatch_intro_seen_v1";
 
 export function BootScreen({ navigation }: Props) {
   const { userId, loading } = useUserIdentity();
-  const { ready: wardrobeReady, isChosen } = useWardrobe();
   const [showIntro, setShowIntro] = useState(false);
+  // null until we've read whether the prologue was already seen.
+  const [introSeen, setIntroSeen] = useState<boolean | null>(null);
 
   const badgeOpacity = useSharedValue(0);
   const badgeScale = useSharedValue(0.8);
@@ -52,24 +55,36 @@ export function BootScreen({ navigation }: Props) {
     loaderOpacity.value = withDelay(900, withTiming(1, { duration: 400 }));
   }, []);
 
+  // Read once whether the prologue has already been played.
   useEffect(() => {
-    if (loading || !userId || !wardrobeReady) return;
+    AsyncStorage.getItem(INTRO_SEEN_KEY)
+      .then((v) => setIntroSeen(v === "1"))
+      .catch(() => setIntroSeen(false));
+  }, []);
+
+  // First run: opening clip → prologue (the clip's onComplete routes there).
+  const afterIntroClip = () =>
+    navigation.replace("Mission", { missionId: "prologue", intro: true });
+
+  useEffect(() => {
+    if (loading || !userId || introSeen === null) return;
     analytics.init();
     analytics.track("app_open");
     const timer = setTimeout(() => {
-      // First launch: pick a gender before anything else.
-      if (!isChosen) {
-        navigation.replace("GenderSelect");
-        return;
-      }
-      if (IMAGES[INTRO_IMAGE_KEY]) {
+      if (introSeen) {
+        // Seen the prologue before: skip the clip + dialogue, go straight to
+        // the "NIGHT SHIFT" shot, then the menu.
+        navigation.replace("IntroCinematic");
+      } else if (VIDEOS[INTRO_CLIP_KEY]) {
+        // First run: open on the intro clip, then the prologue.
         setShowIntro(true);
       } else {
-        navigation.replace("DispatchLobby");
+        afterIntroClip();
       }
     }, 1600);
     return () => clearTimeout(timer);
-  }, [loading, userId, wardrobeReady, isChosen, navigation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, userId, introSeen, navigation]);
 
   const badgeStyle = useAnimatedStyle(() => ({
     opacity: badgeOpacity.value,
@@ -85,12 +100,10 @@ export function BootScreen({ navigation }: Props) {
 
   if (showIntro) {
     return (
-      <CinematicImage
-        source={IMAGES[INTRO_IMAGE_KEY]}
-        tag="DISPATCH CENTER · LIVE"
-        title="NIGHT SHIFT"
-        caption="The city is calling. Every second counts, operator."
-        onComplete={() => navigation.replace("DispatchLobby")}
+      <CutscenePlayer
+        source={INTRO_CLIP_KEY}
+        tag="DISPATCH FEED"
+        onComplete={afterIntroClip}
       />
     );
   }

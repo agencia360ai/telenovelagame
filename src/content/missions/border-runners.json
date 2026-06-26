@@ -6,7 +6,10 @@
   "locale_default": "en",
   "difficulty": 1,
   "category": "daily",
-  "tags": ["border", "patrol"],
+  "tags": [
+    "border",
+    "patrol"
+  ],
   "caller": {
     "name": "Ranch Owner",
     "type": "SUSPICIOUS ACTIVITY",
@@ -14,39 +17,53 @@
   },
   "reward": 6,
   "time_limit_seconds": 15,
-  "initial_variables": { "intel": 0, "score_bonus": 0 },
-  "initial_flags": { "medical_needed": false },
+  "initial_variables": {
+    "intel": 0,
+    "score_bonus": 0
+  },
+  "initial_flags": {
+    "medical_needed": false
+  },
   "start": "b1",
   "assets": [
-    {
-      "key": "border-runners-intro",
-      "type": "video",
-      "role": "intro",
-      "required": true,
-      "caption": "County Road 12 — movement reported along the south fence",
-      "spec": { "aspect": "9:16", "max_seconds": 10, "max_mb": 5, "codec": "h264", "loop": false }
-    },
     {
       "key": "border-runners",
       "type": "video",
       "role": "ambient",
-      "spec": { "aspect": "9:16", "loop": true, "muted": true }
+      "spec": {
+        "aspect": "9:16",
+        "loop": true,
+        "muted": true
+      }
     },
     {
       "key": "border-runners-intro",
       "type": "video",
       "role": "deploy",
-      "spec": { "aspect": "9:16", "loop": true, "muted": true }
+      "spec": {
+        "aspect": "9:16",
+        "loop": true,
+        "muted": true
+      }
     }
   ],
   "beats": [
     {
       "id": "b1",
       "type": "dialogue",
-      "media": { "key": "border-runners", "role": "ambient" },
+      "media": {
+        "key": "border-runners",
+        "role": "ambient"
+      },
       "lines": [
-        { "speaker": "caller", "text": "There's a group cutting across my land near the south fence. Six, maybe seven people, moving fast." },
-        { "speaker": "operator", "text": "Thank you for calling. Stay inside and keep your distance. Can you see them clearly?" }
+        {
+          "speaker": "caller",
+          "text": "There's a group cutting across my land near the south fence. Six, maybe seven people, moving fast."
+        },
+        {
+          "speaker": "operator",
+          "text": "Thank you for calling. Stay inside and keep your distance. Can you see them clearly?"
+        }
       ],
       "next": "d1"
     },
@@ -58,20 +75,27 @@
         {
           "id": "d1_assess",
           "label": "Are they armed, or does anyone look hurt?",
-          "effects": { "intel": 1, "score_bonus": 1 },
+          "effects": {
+            "intel": 1,
+            "score_bonus": 1
+          },
           "feedback": "Good situational read before you commit a unit.",
           "next": "b2"
         },
         {
           "id": "d1_direction",
           "label": "Which direction are they heading?",
-          "effects": { "intel": 1 },
+          "effects": {
+            "intel": 1
+          },
           "next": "b2"
         },
         {
           "id": "d1_confront",
           "label": "Go out and tell them to stop.",
-          "effects": { "score_bonus": -1 },
+          "effects": {
+            "score_bonus": -1
+          },
           "feedback": "Never send a civilian to confront a group — keep them safe.",
           "next": "b2"
         }
@@ -80,18 +104,32 @@
     {
       "id": "b2",
       "type": "dialogue",
-      "media": { "key": "border-runners", "role": "ambient" },
+      "media": {
+        "key": "border-runners",
+        "role": "ambient"
+      },
       "variants": [
         {
-          "when": { "choice": "d1_assess" },
+          "when": {
+            "choice": "d1_assess"
+          },
           "lines": [
-            { "speaker": "caller", "text": "No weapons that I can see… but one of them is limping, the others are helping him along." },
-            { "speaker": "operator", "text": "Understood — possible injury. I'll flag it for the responding unit." }
+            {
+              "speaker": "caller",
+              "text": "No weapons that I can see… but one of them is limping, the others are helping him along."
+            },
+            {
+              "speaker": "operator",
+              "text": "Understood — possible injury. I'll flag it for the responding unit."
+            }
           ]
         }
       ],
       "lines": [
-        { "speaker": "caller", "text": "They're heading for the dry creek bed toward the highway." }
+        {
+          "speaker": "caller",
+          "text": "They're heading for the dry creek bed toward the highway."
+        }
       ],
       "next": "dispatch"
     },
@@ -106,7 +144,10 @@
     {
       "id": "outcome",
       "type": "outcome",
-      "deploy_media": { "key": "border-runners-intro", "role": "deploy" }
+      "deploy_media": {
+        "key": "border-runners-intro",
+        "role": "deploy"
+      }
     }
   ]
 }

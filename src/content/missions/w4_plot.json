@@ -1,0 +1,143 @@
+{
+  "schema": "mission@1",
+  "id": "w4_plot",
+  "title": "Week 4 — The Envelope",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "game_plot",
+  "order": 40,
+  "caller": {
+    "name": "Dispatch",
+    "type": "STORY",
+    "location": "Your console"
+  },
+  "reward": 15,
+  "initial_variables": {
+    "integrity": 0,
+    "mara_trust": 0,
+    "don": 0,
+    "loose_thread": 0,
+    "case_file": 0,
+    "pawn": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "speakers": {
+    "mara": "Martha"
+  },
+  "start": "w4_plot.intro",
+  "beats": [
+    {
+      "id": "w4_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "End of shift. There's an envelope tucked under your keyboard. Cash, and a note: 'For the dispatcher who knows when to look away. — a grateful friend.'"
+        }
+      ],
+      "next": "w4_plot.d1"
+    },
+    {
+      "id": "w4_plot.d1",
+      "type": "decision",
+      "prompt": "An envelope of cash. Nobody saw it arrive.",
+      "choices": [
+        {
+          "id": "w4_plot.d1_0",
+          "label": "Log it as evidence. Tampering, bribery.",
+          "next": "w4_plot.fin_log",
+          "effects": {
+            "integrity": 1,
+            "case_file": 2,
+            "money": 0
+          }
+        },
+        {
+          "id": "w4_plot.d1_1",
+          "label": "Pocket it. Just this once.",
+          "next": "w4_plot.fin_take",
+          "effects": {
+            "money": 400,
+            "don": 2,
+            "pawn": 1
+          }
+        },
+        {
+          "id": "w4_plot.d1_2",
+          "label": "Show it to Martha.",
+          "next": "w4_plot.c_mara",
+          "effects": {
+            "mara_trust": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w4_plot.c_mara",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "Oh, that. The city takes care of people who don't make waves. Keep it or don't — but if you turn it in, you're telling them you're a wave. Think about which is safer."
+        }
+      ],
+      "next": "w4_plot.d2"
+    },
+    {
+      "id": "w4_plot.d2",
+      "type": "decision",
+      "prompt": "Martha just told you who the envelope is from — without saying it",
+      "choices": [
+        {
+          "id": "w4_plot.d2_0",
+          "label": "Turn it in anyway.",
+          "next": "w4_plot.fin_log",
+          "effects": {
+            "integrity": 2,
+            "case_file": 2,
+            "mara_trust": -2
+          }
+        },
+        {
+          "id": "w4_plot.d2_1",
+          "label": "Keep it. Be safe.",
+          "next": "w4_plot.fin_take",
+          "effects": {
+            "money": 400,
+            "don": 2,
+            "pawn": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "w4_plot.fin_log",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You bag it, photograph it, log it. Your hands shake. Now there's paper that says someone paid you to look away — and you said no."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w4_plot.fin_take",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The cash goes in your jacket. Warm, heavy, easy. You just learned the price of looking away. So did they."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

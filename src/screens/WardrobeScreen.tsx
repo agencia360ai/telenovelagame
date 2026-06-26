@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
-import { useI18n } from "../context/I18nContext";
 import { useWardrobe } from "../context/WardrobeContext";
+import { useEconomy } from "../context/EconomyContext";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import {
   skinsForGender,
@@ -20,17 +20,39 @@ import { sizes } from "../theme/sizes";
 type Props = NativeStackScreenProps<RootStackParamList, "Wardrobe">;
 
 export function WardrobeScreen({ navigation }: Props) {
-  const { t } = useI18n();
-  const { gender, chooseGender, equippedId, equip } = useWardrobe();
+  const { gender, chooseGender, equippedId, equip, owned, addOwned } =
+    useWardrobe();
+  const { gems, spend } = useEconomy();
   const { rankIndex } = useDispatchProgress();
 
-  const activeGender: Gender = gender ?? "female";
-  const ctx = { rankIndex, gems: 0, owned: [] as string[] };
+  const activeGender: Gender = gender ?? "male";
+  const ctx = { rankIndex, gems, owned };
   const skins = skinsForGender(activeGender);
 
   const handlePress = (skin: Skin) => {
     const status = getSkinStatus(skin, ctx, equippedId);
-    if (status === "owned") equip(skin.id); // rank met → wear it
+    if (status === "owned") {
+      equip(skin.id); // already unlocked → wear it
+    } else if (status === "unlockable") {
+      // Premium skin the player can afford: confirm, spend gems, own + equip.
+      Alert.alert(skin.name, `Buy for 💎 ${skin.gemCost}?`, [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Buy",
+          onPress: () => {
+            if (spend(skin.gemCost)) {
+              addOwned(skin.id);
+              equip(skin.id);
+            }
+          },
+        },
+      ]);
+    } else if (status === "locked_gems") {
+      Alert.alert(
+        skin.name,
+        `You need 💎 ${skin.gemCost} (you have 💎 ${gems}).`
+      );
+    }
     // equipped / locked_rank → no-op
   };
 
@@ -54,10 +76,12 @@ export function WardrobeScreen({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Text style={styles.backText}>← {t("wardrobe_back")}</Text>
+          <Text style={styles.backText}>← Back</Text>
         </Pressable>
-        <Text style={styles.title}>{t("wardrobe_title")}</Text>
-        <View style={styles.backBtn} />
+        <Text style={styles.title}>Wardrobe</Text>
+        <View style={[styles.backBtn, styles.gemChip]}>
+          <Text style={styles.gemChipText}>💎 {gems}</Text>
+        </View>
       </View>
 
       <ScrollView
@@ -66,8 +90,8 @@ export function WardrobeScreen({ navigation }: Props) {
       >
         {/* Gender switch */}
         <View style={styles.genderRow}>
-          <GenderTab g="female" label="Chica" />
-          <GenderTab g="male" label="Chico" />
+          <GenderTab g="male" label="Male" />
+          <GenderTab g="female" label="Female" />
         </View>
 
         {/* Equipped preview */}
@@ -76,7 +100,7 @@ export function WardrobeScreen({ navigation }: Props) {
           <Text style={styles.previewName}>
             {skins.find((s) => s.id === equippedId)?.name ?? ""}
           </Text>
-          <Text style={styles.previewTag}>{t("wardrobe_equipped")}</Text>
+          <Text style={styles.previewTag}>Equipped</Text>
         </View>
 
         <View style={styles.grid}>
@@ -86,7 +110,6 @@ export function WardrobeScreen({ navigation }: Props) {
               skin={skin}
               status={getSkinStatus(skin, ctx, equippedId)}
               onPress={() => handlePress(skin)}
-              t={t}
             />
           ))}
         </View>
@@ -99,34 +122,36 @@ function SkinCard({
   skin,
   status,
   onPress,
-  t,
 }: {
   skin: Skin;
   status: ReturnType<typeof getSkinStatus>;
   onPress: () => void;
-  t: (key: string, vars?: Record<string, string | number>) => string;
 }) {
-  const locked = status === "locked_rank";
+  const lockedRank = status === "locked_rank";
 
   let cta = "";
   let ctaColor: string = colors.dispatch.cyan;
   if (status === "equipped") {
-    cta = t("wardrobe_equipped");
+    cta = "Equipped";
     ctaColor = colors.dispatch.cyan;
   } else if (status === "owned") {
-    cta = t("wardrobe_equip");
+    cta = "Equip";
     ctaColor = colors.ui.success;
+  } else if (status === "unlockable") {
+    cta = `💎 ${skin.gemCost}`;
+    ctaColor = colors.dispatch.amber;
+  } else if (status === "locked_gems") {
+    cta = `💎 ${skin.gemCost}`;
+    ctaColor = colors.dispatch.textMuted;
   } else {
-    cta = t("wardrobe_need_rank", {
-      rank: RANKS[skin.rankRequired]?.name ?? "",
-    });
+    cta = `Reach ${RANKS[skin.rankRequired]?.name ?? ""}`;
     ctaColor = colors.dispatch.textMuted;
   }
 
   return (
     <Pressable
       onPress={onPress}
-      disabled={locked || status === "equipped"}
+      disabled={lockedRank || status === "equipped"}
       style={[
         styles.card,
         status === "equipped" && styles.cardEquipped,
@@ -140,7 +165,7 @@ function SkinCard({
         skinId={skin.id}
         size={72}
         shape="portrait"
-        locked={locked}
+        locked={lockedRank}
         selected={status === "equipped"}
       />
       <Text style={styles.cardName} numberOfLines={1}>
@@ -167,6 +192,12 @@ const styles = StyleSheet.create({
     color: colors.dispatch.cyan,
     fontSize: sizes.font.sm,
     fontWeight: "800",
+  },
+  gemChip: { alignItems: "flex-end" },
+  gemChipText: {
+    color: colors.dispatch.amber,
+    fontSize: sizes.font.sm,
+    fontWeight: "900",
   },
   title: {
     color: colors.dispatch.cyan,

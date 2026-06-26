@@ -31,12 +31,6 @@
   "start": "call_i_m_stuck_in_an_elevator.intro",
   "assets": [
     {
-      "key": "kitchen-fire-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "I'm stuck in an elevator!"
-    },
-    {
       "key": "kitchen-fire",
       "type": "video",
       "role": "ambient"

@@ -30,12 +30,6 @@
   "start": "caso_papel.intro",
   "assets": [
     {
-      "key": "armed-robbery-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "I'm Out of Toilet Paper"
-    },
-    {
       "key": "armed-robbery",
       "type": "video",
       "role": "ambient"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Alert,
   DevSettings,
 } from "react-native";
+import { useVideoPlayer, VideoView } from "expo-video";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
@@ -30,7 +31,7 @@ import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { useCalendar } from "../context/CalendarContext";
 import { useWardrobe } from "../context/WardrobeContext";
 import { usePaywall } from "../context/PaywallContext";
-import { resolveSkin } from "../game/assets";
+import { resolveSkin, resolveVideo } from "../game/assets";
 import { getXPProgress, RANKS } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
@@ -69,6 +70,28 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   };
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
+
+  // Lobby viewport clip: a calm desk loop while idle, swapping to the ringing
+  // clip when a call comes in. One looping player; we just swap its source.
+  const lobbyPlayer = useVideoPlayer(resolveVideo("lobby-idle"), (p) => {
+    p.loop = true;
+    p.muted = true;
+    p.play();
+  });
+  const lobbyClip = useRef<"idle" | "ringing">("idle");
+  useEffect(() => {
+    const want = phase === "ringing" ? "ringing" : "idle";
+    if (lobbyClip.current === want) return;
+    lobbyClip.current = want;
+    try {
+      lobbyPlayer.replace(
+        resolveVideo(want === "ringing" ? "lobby-ringing" : "lobby-idle")
+      );
+      lobbyPlayer.loop = true;
+      lobbyPlayer.muted = true;
+      lobbyPlayer.play();
+    } catch {}
+  }, [phase]);
 
   const pulse = useSharedValue(1);
   const glow = useSharedValue(0.4);
@@ -211,20 +234,28 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         </Pressable>
       )}
 
-      {/* Officer viewport: equipped 2D skin if it has art, else the 3D scene */}
+      {/* Lobby viewport: looping desk clip (idle) / ringing clip when a call is
+          incoming. The operator's avatar sits small in the top-right corner. */}
       <View style={styles.viewport}>
-        {showSkin ? (
-          <Pressable
-            style={styles.skinViewport}
-            onPress={() => navigation.navigate("Wardrobe" as any)}
-            onLongPress={resetProgress}
-            delayLongPress={700}
-          >
-            <SkinAvatar skinId={equippedId} size={200} shape="portrait" />
-          </Pressable>
-        ) : (
-          <OfficerScene3D />
-        )}
+        <VideoView
+          player={lobbyPlayer}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          nativeControls={false}
+        />
+        {/* Small avatar (tap → wardrobe, long-press → dev reset) */}
+        <Pressable
+          style={styles.miniAvatar}
+          onPress={() => navigation.navigate("Wardrobe" as any)}
+          onLongPress={resetProgress}
+          delayLongPress={700}
+        >
+          {showSkin ? (
+            <SkinAvatar skinId={equippedId} size={60} shape="portrait" />
+          ) : (
+            <OfficerScene3D />
+          )}
+        </Pressable>
         <View style={styles.viewportLabel}>
           <Text style={styles.viewportLabelText}>UNIT 911 · LIVE</Text>
         </View>
@@ -475,9 +506,23 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     letterSpacing: 1,
   },
-  streakTag: {
+  miniAvatar: {
     position: "absolute",
     top: 10,
+    right: 10,
+    width: 64,
+    height: 64,
+    borderRadius: sizes.radius.md,
+    overflow: "hidden",
+    backgroundColor: colors.dispatch.panel,
+    borderWidth: 1,
+    borderColor: colors.dispatch.border,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  streakTag: {
+    position: "absolute",
+    bottom: 10,
     right: 10,
     backgroundColor: "rgba(239, 68, 68, 0.15)",
     borderRadius: sizes.radius.sm,

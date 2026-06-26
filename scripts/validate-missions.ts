@@ -17,6 +17,8 @@ const UNITS = new Set([
   "border_patrol",
   "ambulance",
   "animal_control",
+  "zombie_unit",
+  "dino_control",
   "no_unit",
 ]);
 const SPEAKERS = new Set(["caller", "operator", "dispatch", "narrator"]);
@@ -33,8 +35,8 @@ function validateMission(file: string, m: any): Err[] {
   }
   if (typeof m.reward !== "number") add("root", "missing numeric reward");
   if (![1, 2, 3].includes(m.difficulty)) add("root", "difficulty must be 1, 2 or 3");
-  if (m.category !== undefined && !["daily", "game_plot", "weekend"].includes(m.category)) {
-    add("root", `bad category: ${m.category} (expected daily | game_plot | weekend)`);
+  if (m.category !== undefined && !["daily", "game_plot", "weekend", "intro"].includes(m.category)) {
+    add("root", `bad category: ${m.category} (expected daily | game_plot | weekend | intro)`);
   }
 
   const assetKeys = new Set<string>((m.assets ?? []).map((a: any) => a.key));
@@ -65,12 +67,16 @@ function validateMission(file: string, m: any): Err[] {
     requireMedia(`beat:${beat.id}`, beat.media);
     requireMedia(`beat:${beat.id}`, beat.deploy_media);
 
+    // Reserved speakers plus any extra speaker declared in the mission's
+    // `speakers` map (e.g. { mara: "Martha" } for narrative missions). The
+    // runtime resolves these names via Mission.speakers (see MissionScreen).
+    const mappedSpeakers = new Set<string>(Object.keys(m.speakers ?? {}));
     const allLines = [
       ...(beat.lines ?? []),
       ...((beat.variants ?? []).flatMap((v: any) => v.lines ?? [])),
     ];
     for (const line of allLines) {
-      if (!SPEAKERS.has(line.speaker)) {
+      if (!SPEAKERS.has(line.speaker) && !mappedSpeakers.has(line.speaker)) {
         add(`beat:${beat.id}`, `unknown speaker: ${line.speaker}`);
       }
     }

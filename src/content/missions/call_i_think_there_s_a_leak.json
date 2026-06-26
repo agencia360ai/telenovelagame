@@ -31,12 +31,6 @@
   "start": "call_i_think_there_s_a_leak.intro",
   "assets": [
     {
-      "key": "kitchen-fire-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "I think there's a leak!"
-    },
-    {
       "key": "kitchen-fire",
       "type": "video",
       "role": "ambient"

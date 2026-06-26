@@ -2,6 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { BootScreen } from "../screens/BootScreen";
+import { IntroCinematicScreen } from "../screens/IntroCinematicScreen";
 import { DispatchLobbyScreen } from "../screens/DispatchLobbyScreen";
 import { CallScreen } from "../screens/CallScreen";
 import { MissionScreen } from "../screens/MissionScreen";
@@ -12,17 +13,21 @@ import { ReaderScreen } from "../screens/ReaderScreen";
 import { ShopScreen } from "../screens/ShopScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { WardrobeScreen } from "../screens/WardrobeScreen";
-import { GenderSelectScreen } from "../screens/GenderSelectScreen";
 import { ChapterEndScreen } from "../screens/ChapterEndScreen";
 import { WeekCompleteScreen } from "../screens/WeekCompleteScreen";
 import { colors } from "../theme/colors";
 
 export type RootStackParamList = {
   Boot: undefined;
+  // Gender selection is no longer in the boot flow (gender defaults and can be
+  // changed in the Wardrobe). The route type is kept so the screen still
+  // type-checks and can be re-added later if desired.
   GenderSelect: undefined;
+  // Full-screen "NIGHT SHIFT" shot shown after the prologue, before the menu.
+  IntroCinematic: undefined;
   DispatchLobby: undefined;
   Call: { callId: string };
-  Mission: { missionId: string };
+  Mission: { missionId: string; intro?: boolean };
   WeekComplete: undefined;
   Stats: undefined;
   Paywall: undefined;
@@ -55,7 +60,7 @@ export function AppNavigator() {
         }}
       >
         <Stack.Screen name="Boot" component={BootScreen} />
-        <Stack.Screen name="GenderSelect" component={GenderSelectScreen} />
+        <Stack.Screen name="IntroCinematic" component={IntroCinematicScreen} />
         <Stack.Screen name="DispatchLobby" component={DispatchLobbyScreen} />
         <Stack.Screen
           name="Call"

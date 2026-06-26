@@ -10,6 +10,7 @@ import {
   Alert,
 } from "react-native";
 import * as Haptics from "expo-haptics";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, {
   FadeInDown,
   FadeIn,
@@ -65,8 +66,11 @@ const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
 // Default deploy clip used as the fallback when a unit has no tailored video.
 const DEPLOY_KEY = "border-runners-intro";
 
+// Persisted flag: the one-off prologue/intro has been played (see BootScreen).
+const INTRO_SEEN_KEY = "dispatch_intro_seen_v1";
+
 export function MissionScreen({ navigation, route }: Props) {
-  const { missionId } = route.params;
+  const { missionId, intro: isIntro = false } = route.params;
   const mission = getMissionById(missionId);
   const progress = useDispatchProgress();
   const calendar = useCalendar();
@@ -95,7 +99,14 @@ export function MissionScreen({ navigation, route }: Props) {
     mission.assets.find((a) => a.role === "deploy")?.key;
   const deploySource = deployKey ? resolveVideo(deployKey) : null;
   const timeLimit = mission.time_limit_seconds ?? 15;
-  const units = mission.units ?? DISPATCH_OPTIONS.map((o) => o.id);
+  // Default option set excludes special units (e.g. zombie_unit) — those only
+  // show on calls that explicitly list them in their `units` field.
+  const SPECIAL_UNITS = ["zombie_unit", "dino_control"];
+  const units =
+    mission.units ??
+    DISPATCH_OPTIONS.filter((o) => !SPECIAL_UNITS.includes(o.id)).map(
+      (o) => o.id
+    );
   const unitOptions = DISPATCH_OPTIONS.filter((o) => units.includes(o.id));
 
   const [phase, setPhase] = useState<Phase>(introAsset ? "intro" : "play");
@@ -141,7 +152,7 @@ export function MissionScreen({ navigation, route }: Props) {
     p.play();
   });
   const deployPlayer = useVideoPlayer(deploySource, (p) => {
-    p.loop = true;
+    p.loop = false;
     p.muted = true;
   });
 
@@ -165,27 +176,36 @@ export function MissionScreen({ navigation, route }: Props) {
       return;
     }
     if (deployStage === "clip") {
-      // Stage 1: play the unit's deploy clip full-screen for a fixed beat, then
-      // hand off to the radar closer. (Loops in case the clip is shorter.)
+      // Stage 1: play the unit's deploy clip full-screen ALL THE WAY THROUGH
+      // (no loop), then hand off to the radar closer when it ends. A generous
+      // safety cap prevents a stalled stream from trapping the player here.
+      let done = false;
+      const toRadar = () => {
+        if (done) return;
+        done = true;
+        setDeployStage("radar");
+      };
+      let sub: { remove: () => void } | undefined;
       try {
-        deployPlayer.loop = true;
+        deployPlayer.loop = false;
         deployPlayer.muted = false;
         try {
           deployPlayer.currentTime = 0;
         } catch {}
         deployPlayer.play();
+        sub = deployPlayer.addListener("playToEnd", toRadar);
       } catch {}
-      const t = setTimeout(() => setDeployStage("radar"), 3500);
-      return () => clearTimeout(t);
+      const t = setTimeout(toRadar, 20000);
+      return () => {
+        clearTimeout(t);
+        sub?.remove();
+      };
     } else {
-      // Stage 2: the clip loops softly (muted) behind the radar closer.
+      // Stage 2: the clip holds on its last frame (muted, no loop) behind the
+      // radar closer — it already played in full during stage 1.
       try {
-        deployPlayer.loop = true;
+        deployPlayer.loop = false;
         deployPlayer.muted = true;
-        try {
-          deployPlayer.currentTime = 0;
-        } catch {}
-        deployPlayer.play();
       } catch {}
     }
   }, [phase, deployStage]);
@@ -210,8 +230,14 @@ export function MissionScreen({ navigation, route }: Props) {
       if (b.type === "outcome") {
         if (!narrativeDone.current) {
           narrativeDone.current = true;
-          progress.recordResult(true, mission.reward, 0);
-          calendar.completeMission(mission.id, true);
+          if (isIntro) {
+            // One-off intro (prologue): don't touch progress or the calendar —
+            // just remember it's been seen so it won't replay on next launch.
+            AsyncStorage.setItem(INTRO_SEEN_KEY, "1").catch(() => {});
+          } else {
+            progress.recordResult(true, mission.reward, 0);
+            calendar.completeMission(mission.id, true);
+          }
           setIsNarrative(true);
           setTimeout(() => {
             audio.playSfx("success");
@@ -226,57 +252,40 @@ export function MissionScreen({ navigation, route }: Props) {
         autoMode.current = false;
         setCorrectUnit(resolveCorrectUnit(b, rt));
         setExplanation(b.explanation);
-        dispatchStartTime.current = Date.now();
-        setDispatchTimer(timeLimit);
-        setPhase("dispatch");
-        // Scroll the dispatch buttons into view (the chat above can be long).
-        scrollSoon();
+        // Beat of silence: let the caller's last line land for ~1s before the
+        // dispatch options (and the countdown) appear.
+        setTimeout(() => {
+          dispatchStartTime.current = Date.now();
+          setDispatchTimer(timeLimit);
+          setPhase("dispatch");
+          // Scroll the dispatch buttons into view (the chat above can be long).
+          scrollSoon();
+        }, 1000);
         return;
       }
       const lines = resolveLines(b, rt).filter(
         (l) => isStoryMission || l.speaker !== "narrator"
       );
 
-      // Auto mode (right after a choice): reveal the caller's reply in full,
-      // then pause ~1s before the next options — no tap needed.
-      if (autoMode.current) {
-        if (lines.length > 0) {
-          setDisplayedLines((prev) => [...prev, ...lines]);
-          setRevealIndex(lines.length);
-        } else {
-          setRevealIndex(0);
-        }
-        setShowChoices(false);
-        if (b.type === "decision") {
-          autoMode.current = false;
-          setTimeout(() => {
-            setShowChoices(true);
-            scrollSoon();
-          }, 1000);
-        } else if (b.next) {
-          goToBeat(b.next);
-        } else {
-          autoMode.current = false;
-        }
-        scrollSoon();
-        return;
-      }
-
-      // Normal tap mode: reveal the FIRST line; the rest appear one per tap.
-      // Narrator lines are skipped so the call reads as a caller/operator chat.
+      // Dialogue auto-plays — no tap-to-continue. Reveal this beat's line(s),
+      // then advance on a timer so the chat reads at a natural pace. The player
+      // only taps for the things that matter: decision choices and dispatch.
       if (lines.length > 0) {
-        setDisplayedLines((prev) => [...prev, lines[0]]);
-        setRevealIndex(1);
-        setShowChoices(false);
+        setDisplayedLines((prev) => [...prev, ...lines]);
+        setRevealIndex(lines.length);
       } else {
         setRevealIndex(0);
-        if (b.type === "decision") {
-          // No lines on this beat → show options right away.
+      }
+      setShowChoices(false);
+      if (b.type === "decision") {
+        // Let the line land, then surface the choices.
+        setTimeout(() => {
           setShowChoices(true);
-        } else if (b.next) {
-          // Narrator-only / empty beat → skip straight ahead.
-          goToBeat(b.next);
-        }
+          scrollSoon();
+        }, lines.length > 0 ? 1000 : 300);
+      } else if (b.next) {
+        // Hold ~1s before the next message so the chat doesn't dump at once.
+        setTimeout(() => goToBeat(b.next), 1000);
       }
       scrollSoon();
     },
@@ -294,28 +303,6 @@ export function MissionScreen({ navigation, route }: Props) {
     if (!nextId) return;
     setShowChoices(false);
     setBeatId(nextId);
-  };
-
-  // Tap anywhere in the call area to reveal the next line; once a beat's lines
-  // are all shown, the next tap advances the conversation (no Continue button).
-  const handleTap = () => {
-    if (phase !== "play" || !beat) return;
-    if (showChoices) return; // waiting on a choice
-    const lines = resolveLines(beat, runtime).filter(
-      (l) => isStoryMission || l.speaker !== "narrator"
-    );
-    if (revealIndex < lines.length) {
-      setDisplayedLines((prev) => [...prev, lines[revealIndex]]);
-      setRevealIndex((i) => i + 1);
-      audio.playSfx("tap");
-      Haptics.selectionAsync();
-      scrollSoon();
-    } else if (beat.type === "decision") {
-      setShowChoices(true);
-      scrollSoon();
-    } else {
-      goToBeat(beat.next);
-    }
   };
 
   const handleChoice = (choice: MissionChoice) => {
@@ -340,17 +327,28 @@ export function MissionScreen({ navigation, route }: Props) {
     setRuntime(nextRuntime);
     setShowChoices(false);
 
-    // Echo what the operator chose (plus any feedback note), then auto-play the
-    // caller's reply and reveal the next options after a ~1s beat.
+    // Echo what the operator chose, then (after ~1s) any feedback note, then
+    // auto-play the caller's reply — spacing each message so the back-and-forth
+    // reads at a natural, human pace instead of appearing all at once.
     setDisplayedLines((prev) => [
       ...prev,
       { speaker: "operator", text: choice.label },
-      ...(choice.feedback
-        ? [{ speaker: "dispatch", text: choice.feedback as string }]
-        : []),
     ]);
+    scrollSoon();
     autoMode.current = true;
-    goToBeat(choice.next);
+    const proceed = () => goToBeat(choice.next);
+    if (choice.feedback) {
+      setTimeout(() => {
+        setDisplayedLines((prev) => [
+          ...prev,
+          { speaker: "dispatch", text: choice.feedback as string },
+        ]);
+        scrollSoon();
+        setTimeout(proceed, 1000);
+      }, 1000);
+    } else {
+      setTimeout(proceed, 1000);
+    }
   };
 
   const handleDispatch = (choice: DispatchType) => {
@@ -364,6 +362,22 @@ export function MissionScreen({ navigation, route }: Props) {
     setChosenDispatch(choice);
     progress.recordResult(correct, reward, elapsed);
     calendar.completeMission(mission.id, correct);
+
+    // "No dispatch needed": nothing rolls out, so skip the deploy clip AND the
+    // radar closer — go straight to the result card.
+    if (choice === "no_unit") {
+      setPhase("result");
+      scrollSoon();
+      setTimeout(() => {
+        audio.playSfx(correct ? "success" : "fail");
+        Haptics.notificationAsync(
+          correct
+            ? Haptics.NotificationFeedbackType.Success
+            : Haptics.NotificationFeedbackType.Error
+        );
+      }, 200);
+      return;
+    }
 
     // Swap in the reusable deploy clip for the chosen unit ONLY when it differs
     // from the one already loaded — otherwise replacing with the same source
@@ -408,7 +422,8 @@ export function MissionScreen({ navigation, route }: Props) {
       setShowRankUp(true);
       return;
     }
-    navigation.replace("DispatchLobby");
+    // After the prologue (intro), play the "NIGHT SHIFT" shot before the menu.
+    navigation.replace(isIntro ? "IntroCinematic" : "DispatchLobby");
   };
 
   const isDecisionPrompt = beat?.type === "decision" && showChoices;
@@ -484,12 +499,17 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
       </View>
 
-      <Pressable style={styles.chatArea} onPress={handleTap}>
+      <View style={styles.chatArea}>
         <ScrollView
           ref={scrollRef}
           style={styles.chatScroll}
           contentContainerStyle={styles.chatContent}
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator
+          // Auto-scroll once the new bubble has actually laid out — smoother than
+          // a fixed timeout, which fires before the content has grown.
+          onContentSizeChange={() =>
+            scrollRef.current?.scrollToEnd({ animated: true })
+          }
         >
           {phase === "play" && displayedLines.length === 0 && !showChoices && (
             <Animated.View entering={FadeIn} style={styles.introWrap}>
@@ -497,12 +517,12 @@ export function MissionScreen({ navigation, route }: Props) {
                 <View style={styles.tutorialCard}>
                   <Text style={styles.tutorialTitle}>👋 WELCOME, OPERATOR</Text>
                   <Text style={styles.tutorialBody}>
-                    Work the call: listen, make the right calls, then dispatch
-                    the correct unit. Tap anywhere to continue.
+                    The call plays out on its own — read it, make the right
+                    calls at each choice, then dispatch the correct unit.
                   </Text>
                 </View>
               )}
-              <Text style={styles.introText}>Tap to take the call…</Text>
+              <Text style={styles.introText}>Connecting the call…</Text>
             </Animated.View>
           )}
 
@@ -512,7 +532,7 @@ export function MissionScreen({ navigation, route }: Props) {
             const isNote = line.speaker === "dispatch";
             return (
               <Animated.View
-                key={`${beatId}-${idx}`}
+                key={idx}
                 entering={FadeInDown.duration(240)}
                 style={[
                   styles.bubble,
@@ -599,9 +619,13 @@ export function MissionScreen({ navigation, route }: Props) {
           {phase === "result" && isNarrative && (
             <Animated.View entering={FadeInDown.duration(400)} style={styles.sceneBox}>
               <Text style={styles.sceneIcon}>✓</Text>
-              <Text style={styles.sceneTitle}>SCENE COMPLETE</Text>
+              <Text style={styles.sceneTitle}>
+                {isIntro ? "WELCOME TO THE FLOOR" : "CASE COMPLETED"}
+              </Text>
               <Text style={styles.sceneSub}>
-                +{progress.lastResult?.totalXP ?? mission.reward} XP
+                {isIntro
+                  ? "Your shift begins."
+                  : `+${progress.lastResult?.totalXP ?? mission.reward} XP`}
               </Text>
             </Animated.View>
           )}
@@ -615,18 +639,14 @@ export function MissionScreen({ navigation, route }: Props) {
             />
           )}
         </ScrollView>
-      </Pressable>
-
-      {phase === "play" && !showChoices && (
-        <View style={styles.bottomBar}>
-          <Text style={styles.hintText}>TAP TO CONTINUE ▸</Text>
-        </View>
-      )}
+      </View>
 
       {phase === "result" && (
         <View style={styles.bottomBar}>
           <Pressable style={styles.nextCallBtn} onPress={handleNextMission}>
-            <Text style={styles.nextCallText}>NEXT CALL ▸</Text>
+            <Text style={styles.nextCallText}>
+              {isIntro ? "ENTER DISPATCH ▸" : "NEXT CALL ▸"}
+            </Text>
           </Pressable>
         </View>
       )}

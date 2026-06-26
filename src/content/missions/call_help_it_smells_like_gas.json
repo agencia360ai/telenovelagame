@@ -31,13 +31,7 @@
   "start": "call_help_it_smells_like_gas.intro",
   "assets": [
     {
-      "key": "kitchen-fire-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "HELP, IT SMELLS LIKE GAS!"
-    },
-    {
-      "key": "kitchen-fire",
+      "key": "call-gas",
       "type": "video",
       "role": "ambient"
     },

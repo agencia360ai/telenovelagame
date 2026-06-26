@@ -31,12 +31,6 @@
   "start": "call_a_man_fell_from_a_2nd_floor.intro",
   "assets": [
     {
-      "key": "kitchen-fire-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "A man fell from a 2nd floor!"
-    },
-    {
       "key": "kitchen-fire",
       "type": "video",
       "role": "ambient"

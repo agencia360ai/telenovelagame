@@ -15,10 +15,10 @@
     "location": "Unknown location"
   },
   "units": [
+    "dino_control",
     "animal_control",
-    "firefighters",
     "police",
-    "ambulance"
+    "no_unit"
   ],
   "reward": 7,
   "time_limit_seconds": 15,
@@ -31,18 +31,12 @@
   "start": "caso_trex.intro",
   "assets": [
     {
-      "key": "border-runners-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "I Found a Baby Dinosaur"
-    },
-    {
       "key": "border-runners",
       "type": "video",
       "role": "ambient"
     },
     {
-      "key": "deploy-animal_control",
+      "key": "deploy-dino_control",
       "type": "video",
       "role": "deploy"
     }
@@ -185,15 +179,15 @@
       "id": "caso_trex.d4",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
-      "correct": "animal_control",
-      "explanation": "Right unit for a weird one. That's how it's done.",
+      "correct": "dino_control",
+      "explanation": "You send Dino Control. The jeep rolls out — only unit trained for a baby T-Rex.",
       "next": "_outcome"
     },
     {
       "id": "_outcome",
       "type": "outcome",
       "deploy_media": {
-        "key": "deploy-animal_control",
+        "key": "deploy-dino_control",
         "role": "deploy"
       }
     }

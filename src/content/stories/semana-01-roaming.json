@@ -1,0 +1,1789 @@
+{
+  "id": "dispatcher",
+  "title": "DISPATCHER",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "start_chapter": "briefing",
+  "characters": {
+    "narrator": {
+      "name": "Narrator",
+      "avatars": {}
+    },
+    "rookie": {
+      "name": "Rookie",
+      "avatars": {
+        "neutral": "portraits/rookie/neutral.webp"
+      }
+    },
+    "voice": {
+      "name": "Caller",
+      "avatars": {
+        "neutral": "portraits/voice/neutral.webp"
+      }
+    },
+    "grandma": {
+      "name": "Grandma",
+      "avatars": {
+        "neutral": "portraits/grandma/neutral.webp"
+      }
+    }
+  },
+  "initial_variables": {
+    "briefing_seen": 0,
+    "case_file": 0,
+    "don": 0,
+    "grandma_bond": 0,
+    "integrity": 0,
+    "is_rookie": 0,
+    "loose_thread": 0,
+    "money": 0,
+    "pawn": 0,
+    "trust": 0
+  },
+  "initial_flags": {},
+  "starting_gems": 10,
+  "chapters": [
+    {
+      "id": "briefing",
+      "title": "First Day",
+      "order": 1,
+      "start_beat": "briefing.b0",
+      "beats": [
+        {
+          "id": "briefing.b0",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "video",
+            "key": "videos/intro.mp4"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Day one. You shoulder open the dispatch-center door — coffee in one hand, nerves in the other."
+            }
+          ],
+          "next": "briefing.b1"
+        },
+        {
+          "id": "briefing.b1",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "You've never taken a real call, just the academy sim. This place is louder, messier, and very, very caffeinated."
+            }
+          ],
+          "next": "briefing.b2"
+        },
+        {
+          "id": "briefing.b2",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "A corkboard crammed with schedules, sticky notes, and a couple of faded 'Have you seen me?' flyers nobody's taken down."
+            }
+          ],
+          "next": "briefing.b3"
+        },
+        {
+          "id": "briefing.b3",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "React",
+            "choices": [
+              {
+                "id": "briefing.b3_0",
+                "label": "Okay. How hard can it be?",
+                "gem_cost": 0,
+                "next": "briefing.b4"
+              },
+              {
+                "id": "briefing.b3_1",
+                "label": "Just don't crash on day one.",
+                "gem_cost": 0,
+                "next": "briefing.b4"
+              }
+            ]
+          }
+        },
+        {
+          "id": "briefing.b4",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Truth is, the city's a little jaded. People call 911 half-expecting no one to show. Your job: change their minds, one call at a time."
+            }
+          ],
+          "next": "briefing.b5"
+        },
+        {
+          "id": "briefing.b5",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Top of your console, a little bar: citizen trust. Right now it's barely a sliver."
+            }
+          ],
+          "next": "briefing.b6"
+        },
+        {
+          "id": "briefing.b6",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "React",
+            "choices": [
+              {
+                "id": "briefing.b6_0",
+                "label": "Then let's fill it.",
+                "gem_cost": 0,
+                "effects": {
+                  "integrity": 1
+                },
+                "next": "briefing.fin_ready"
+              },
+              {
+                "id": "briefing.b6_1",
+                "label": "No pressure, right?",
+                "gem_cost": 0,
+                "next": "briefing.fin_nervous"
+              }
+            ]
+          }
+        },
+        {
+          "id": "briefing.fin_ready",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "You slip the headset on for the first time. The 'incoming call' light blinks. Here we go."
+            }
+          ],
+          "next": null,
+          "outcome": "briefing_done",
+          "effects": {
+            "briefing_seen": 1,
+            "is_rookie": 1
+          }
+        },
+        {
+          "id": "briefing.fin_nervous",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Nobody starts an expert. Headset on. The 'incoming call' light blinks."
+            }
+          ],
+          "next": null,
+          "outcome": "briefing_done",
+          "effects": {
+            "briefing_seen": 1,
+            "is_rookie": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "dia_primer_turno",
+      "title": "After the Shift",
+      "order": 2,
+      "start_beat": "dia_primer_turno.n0",
+      "beats": [
+        {
+          "id": "dia_primer_turno.n0",
+          "background": "bg_home",
+          "media": {
+            "type": "image",
+            "key": "scenes/dia_primer_turno/establish.webp"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Gray morning. Your first shift's over. You climb the stairs of an old building that smells like reheated coffee."
+            }
+          ],
+          "next": "dia_primer_turno.n1"
+        },
+        {
+          "id": "dia_primer_turno.n1",
+          "background": "bg_home",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "grandma"
+          ],
+          "lines": [
+            {
+              "speaker": "grandma",
+              "expr": "neutral",
+              "text": "First full day. Did you eat anything in that place?"
+            }
+          ],
+          "next": "dia_primer_turno.n2"
+        },
+        {
+          "id": "dia_primer_turno.n2",
+          "background": "bg_home",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Answer",
+            "choices": [
+              {
+                "id": "dia_primer_turno.n2_0",
+                "label": "There's a machine that dispenses coffee and regret.",
+                "gem_cost": 0,
+                "next": "dia_primer_turno.n3"
+              },
+              {
+                "id": "dia_primer_turno.n2_1",
+                "label": "It was a lot, grandma.",
+                "gem_cost": 0,
+                "next": "dia_primer_turno.n3b"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dia_primer_turno.n3",
+          "background": "bg_home",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "grandma"
+          ],
+          "lines": [
+            {
+              "speaker": "grandma",
+              "expr": "neutral",
+              "text": "Sit. I'll heat something up."
+            }
+          ],
+          "next": "dia_primer_turno.n4"
+        },
+        {
+          "id": "dia_primer_turno.n3b",
+          "background": "bg_home",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "grandma"
+          ],
+          "lines": [
+            {
+              "speaker": "grandma",
+              "expr": "neutral",
+              "text": "I can tell. You carry it in your shoulders. Sit, I'll heat something up."
+            }
+          ],
+          "next": "dia_primer_turno.n4"
+        },
+        {
+          "id": "dia_primer_turno.n4",
+          "background": "bg_home",
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "She serves you without another question. Outside the city wakes up; in here, for a minute, nothing's wrong."
+            }
+          ],
+          "next": "dia_primer_turno.n5"
+        },
+        {
+          "id": "dia_primer_turno.n5",
+          "background": "bg_home",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Answer",
+            "choices": [
+              {
+                "id": "dia_primer_turno.n5_0",
+                "label": "Thanks for waiting up.",
+                "gem_cost": 0,
+                "effects": {
+                  "grandma_bond": 1
+                },
+                "next": "dia_primer_turno.fin_calm"
+              },
+              {
+                "id": "dia_primer_turno.n5_1",
+                "label": "Did you sleep at all?",
+                "gem_cost": 0,
+                "next": "dia_primer_turno.fin_care"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dia_primer_turno.fin_calm",
+          "background": "bg_home",
+          "type": "chapter_end",
+          "characters_on_scene": [
+            "grandma"
+          ],
+          "lines": [
+            {
+              "speaker": "grandma",
+              "expr": "neutral",
+              "text": "Always, kiddo. Now eat."
+            }
+          ],
+          "next": null,
+          "outcome": "day_settled"
+        },
+        {
+          "id": "dia_primer_turno.fin_care",
+          "background": "bg_home",
+          "type": "chapter_end",
+          "characters_on_scene": [
+            "grandma"
+          ],
+          "lines": [
+            {
+              "speaker": "grandma",
+              "expr": "neutral",
+              "text": "I sleep when you get home in one piece. Eat."
+            }
+          ],
+          "next": null,
+          "outcome": "day_settled"
+        }
+      ]
+    },
+    {
+      "id": "mision_hilo",
+      "title": "A Loose Thread",
+      "order": 3,
+      "start_beat": "mision_hilo.m0",
+      "beats": [
+        {
+          "id": "mision_hilo.m0",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/mision_hilo/establish.webp"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Mid-shift. A call lights up. On the line, a worried voice — not panicked, just... off."
+            }
+          ],
+          "next": "mision_hilo.m1"
+        },
+        {
+          "id": "mision_hilo.m1",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "Hi, sorry. My brother never came home last night. That's not like him. And there was this van parked outside for hours."
+            }
+          ],
+          "next": "mision_hilo.m2"
+        },
+        {
+          "id": "mision_hilo.m2",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "mision_hilo.m2_0",
+                "label": "Okay, step by step. When did you last hear from him?",
+                "gem_cost": 0,
+                "effects": {
+                  "integrity": 1
+                },
+                "next": "mision_hilo.m3"
+              },
+              {
+                "id": "mision_hilo.m2_1",
+                "label": "Can you give me your address?",
+                "gem_cost": 0,
+                "next": "mision_hilo.m3"
+              },
+              {
+                "id": "mision_hilo.m2_2",
+                "label": "Try not to worry yet. Tell me about the van.",
+                "gem_cost": 0,
+                "next": "mision_hilo.m3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mision_hilo.m3",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "She describes it: dark, no back windows, plates starting with a J. Probably nothing. Probably."
+            }
+          ],
+          "next": "mision_hilo.m4"
+        },
+        {
+          "id": "mision_hilo.m4",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "It's probably silly. He's a grown man. I just... had a bad feeling. Please don't make a big deal of it."
+            }
+          ],
+          "next": "mision_hilo.m5"
+        },
+        {
+          "id": "mision_hilo.m5",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Decide",
+            "choices": [
+              {
+                "id": "mision_hilo.m5_0",
+                "label": "I'll send a patrol to take a quiet look around.",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": 1,
+                  "case_file": 1,
+                  "integrity": 1
+                },
+                "next": "mision_hilo.m6"
+              },
+              {
+                "id": "mision_hilo.m5_1",
+                "label": "Let me log it and flag that plate, just in case.",
+                "gem_cost": 0,
+                "effects": {
+                  "case_file": 1
+                },
+                "next": "mision_hilo.m6"
+              },
+              {
+                "id": "mision_hilo.m5_2",
+                "label": "I'm sure he'll turn up. Call back if not.",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": -1
+                },
+                "next": "mision_hilo.fin_brush"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mision_hilo.m6",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "You log the plate and send a unit to circle the block. A small thing. You almost forget it... almost."
+            }
+          ],
+          "next": "mision_hilo.m7"
+        },
+        {
+          "id": "mision_hilo.m7",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "mision_hilo.m7_0",
+                "label": "I'll stay on the line while they check.",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": 1
+                },
+                "next": "mision_hilo.fin_ok"
+              },
+              {
+                "id": "mision_hilo.m7_1",
+                "label": "Call me back the second he shows up.",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": 1
+                },
+                "next": "mision_hilo.fin_ok"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mision_hilo.fin_ok",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/mision_hilo/payoff.webp"
+          },
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "The brother turns up by morning — shaken, vague about where he'd been. Loose end tied... mostly. Something about that van sticks with you."
+            }
+          ],
+          "next": null,
+          "outcome": "thread_noted",
+          "effects": {
+            "loose_thread": 1
+          }
+        },
+        {
+          "id": "mision_hilo.fin_brush",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "You move on to the next call. Hours later, a note lands: the brother's still not home. You jot the plate down anyway."
+            }
+          ],
+          "next": null,
+          "outcome": "thread_missed",
+          "effects": {
+            "loose_thread": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "caso_cocina",
+      "title": "My Kitchen's on Fire",
+      "order": 4,
+      "start_beat": "caso_cocina.intro",
+      "beats": [
+        {
+          "id": "caso_cocina.intro",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/caso_cocina/establish.webp"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Split screen: you at the console; on the other end, a kitchen vanishing into orange smoke."
+            }
+          ],
+          "next": "caso_cocina.voz1"
+        },
+        {
+          "id": "caso_cocina.voz1",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "My kitchen is on fire! 🔥"
+            }
+          ],
+          "next": "caso_cocina.d1"
+        },
+        {
+          "id": "caso_cocina.d1",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_cocina.d1_0",
+                "label": "Are you out of the house?",
+                "gem_cost": 0,
+                "next": "caso_cocina.c_out"
+              },
+              {
+                "id": "caso_cocina.d1_1",
+                "label": "Can you use water?",
+                "gem_cost": 0,
+                "next": "caso_cocina.c_water"
+              },
+              {
+                "id": "caso_cocina.d1_2",
+                "label": "Your voice sounds kinda sexy.",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": -1
+                },
+                "next": "caso_cocina.d1b"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_cocina.d1b",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "WHAT?! This is an EMERGENCY!"
+            }
+          ],
+          "next": "caso_cocina.d1c"
+        },
+        {
+          "id": "caso_cocina.d1c",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Recover the call",
+            "choices": [
+              {
+                "id": "caso_cocina.d1c_0",
+                "label": "And emergencies are what we do 😎",
+                "gem_cost": 0,
+                "next": "caso_cocina.c_out"
+              },
+              {
+                "id": "caso_cocina.d1c_1",
+                "label": "Sorry. Are you out of the house?",
+                "gem_cost": 0,
+                "next": "caso_cocina.c_out"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_cocina.c_water",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "No, it's way too hot!"
+            }
+          ],
+          "next": "caso_cocina.d2"
+        },
+        {
+          "id": "caso_cocina.c_out",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I can't get out, it's too hot!"
+            }
+          ],
+          "next": "caso_cocina.d2"
+        },
+        {
+          "id": "caso_cocina.d2",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Instruction",
+            "choices": [
+              {
+                "id": "caso_cocina.d2_0",
+                "label": "Get out of the house NOW.",
+                "gem_cost": 0,
+                "effects": {
+                  "integrity": 1
+                },
+                "next": "caso_cocina.c_help"
+              },
+              {
+                "id": "caso_cocina.d2_1",
+                "label": "Move away from the fire.",
+                "gem_cost": 0,
+                "effects": {
+                  "integrity": 1
+                },
+                "next": "caso_cocina.c_help"
+              },
+              {
+                "id": "caso_cocina.d2_2",
+                "label": "I'm kinda on fire too 🔥",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": -1
+                },
+                "next": "caso_cocina.c_help"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_cocina.c_help",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I need someone, please!"
+            }
+          ],
+          "next": "caso_cocina.d3"
+        },
+        {
+          "id": "caso_cocina.d3",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Get location",
+            "choices": [
+              {
+                "id": "caso_cocina.d3_0",
+                "label": "Send me your location.",
+                "gem_cost": 0,
+                "next": "caso_cocina.loc"
+              },
+              {
+                "id": "caso_cocina.d3_1",
+                "label": "Not just anybody? 😏",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": -1
+                },
+                "next": "caso_cocina.loc"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_cocina.loc",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "989 Burb Street."
+            }
+          ],
+          "next": "caso_cocina.d4"
+        },
+        {
+          "id": "caso_cocina.d4",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Dispatch",
+            "choices": [
+              {
+                "id": "caso_cocina.d4_0",
+                "label": "Sending firefighters NOW.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1,
+                  "case_file": 1,
+                  "integrity": 1
+                },
+                "next": "caso_cocina.fin_ok"
+              },
+              {
+                "id": "caso_cocina.d4_1",
+                "label": "Kidding — sending help now!",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1
+                },
+                "next": "caso_cocina.fin_ok"
+              },
+              {
+                "id": "caso_cocina.d4_2",
+                "label": "Sending a patrol car.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": -120,
+                  "trust": -1
+                },
+                "next": "caso_cocina.fin_bad"
+              },
+              {
+                "id": "caso_cocina.d4_3",
+                "label": "Ignore the call.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": -200,
+                  "trust": -2
+                },
+                "next": "caso_cocina.fin_ignore"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_cocina.fin_ok",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/caso_cocina/rescue.webp"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Sirens. The truck rounds the corner before the roof gives. The city breathes a little easier."
+            }
+          ],
+          "next": "caso_cocina.fin_ok2"
+        },
+        {
+          "id": "caso_cocina.fin_ok2",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Citizen trust ticks up. Clean."
+            }
+          ],
+          "next": null,
+          "outcome": "good_dispatch"
+        },
+        {
+          "id": "caso_cocina.fin_bad",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "A patrol car at a house fire. The city notices, and not in a good way."
+            }
+          ],
+          "next": null,
+          "outcome": "bad_dispatch"
+        },
+        {
+          "id": "caso_cocina.fin_ignore",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "You let it burn. The city will feel that one."
+            }
+          ],
+          "next": null,
+          "outcome": "ignored_emergency"
+        }
+      ]
+    },
+    {
+      "id": "caso_papel",
+      "title": "I'm Out of Toilet Paper",
+      "order": 5,
+      "start_beat": "caso_papel.intro",
+      "beats": [
+        {
+          "id": "caso_papel.intro",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/caso_papel/establish.webp"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "An anguished voice, echoing off bathroom tile. The camera, if there were one, would rather not come in."
+            }
+          ],
+          "next": "caso_papel.voz1"
+        },
+        {
+          "id": "caso_papel.voz1",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "HELP! I'm out of toilet paper!"
+            }
+          ],
+          "next": "caso_papel.d1"
+        },
+        {
+          "id": "caso_papel.d1",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_papel.d1_0",
+                "label": "You're calling an emergency line.",
+                "gem_cost": 0,
+                "next": "caso_papel.d2"
+              },
+              {
+                "id": "caso_papel.d1_1",
+                "label": "Use a sock.",
+                "gem_cost": 0,
+                "next": "caso_papel.d2b"
+              },
+              {
+                "id": "caso_papel.d1_2",
+                "label": "Sending a patrol car.",
+                "gem_cost": 0,
+                "next": "caso_papel.fin_unit"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_papel.d2",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I don't care."
+            }
+          ],
+          "next": "caso_papel.d3"
+        },
+        {
+          "id": "caso_papel.d2b",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I'm barefoot!"
+            }
+          ],
+          "next": "caso_papel.d3"
+        },
+        {
+          "id": "caso_papel.d3",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "Please, I pooped!"
+            }
+          ],
+          "next": "caso_papel.d3c"
+        },
+        {
+          "id": "caso_papel.d3c",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_papel.d3c_0",
+                "label": "That's too much info 😬",
+                "gem_cost": 0,
+                "next": "caso_papel.d4"
+              },
+              {
+                "id": "caso_papel.d3c_1",
+                "label": "Then your hand will do.",
+                "gem_cost": 0,
+                "next": "caso_papel.d4"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_papel.d4",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "So are you sending toilet paper?"
+            }
+          ],
+          "decision": {
+            "prompt": "What do you do?",
+            "choices": [
+              {
+                "id": "caso_papel.d4_0",
+                "label": "Sure. Any brand you prefer?",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1,
+                  "integrity": 1
+                },
+                "next": "caso_papel.fin_filtered"
+              },
+              {
+                "id": "caso_papel.d4_1",
+                "label": "Yeah, I'll wipe for you too.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1
+                },
+                "next": "caso_papel.fin_gag"
+              },
+              {
+                "id": "caso_papel.d4_2",
+                "label": "Stop tying up the line.",
+                "gem_cost": 0,
+                "next": "caso_papel.fin_cut"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_papel.fin_filtered",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Nicely handled. Good judgment pays, and the city cracks a smile."
+            }
+          ],
+          "next": null,
+          "outcome": "prank_filtered"
+        },
+        {
+          "id": "caso_papel.fin_gag",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "A little too cheeky — but you filtered it. Counts."
+            }
+          ],
+          "next": null,
+          "outcome": "prank_filtered"
+        },
+        {
+          "id": "caso_papel.fin_cut",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Call dropped. No pay, no problem."
+            }
+          ],
+          "next": null,
+          "outcome": "prank_cut"
+        },
+        {
+          "id": "caso_papel.fin_unit",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "A unit for toilet paper — tied up all afternoon, with the city watching."
+            }
+          ],
+          "next": null,
+          "outcome": "unit_wasted",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "caso_bitcoin",
+      "title": "I Lost Everything in Bitcoin",
+      "order": 6,
+      "start_beat": "caso_bitcoin.intro",
+      "beats": [
+        {
+          "id": "caso_bitcoin.intro",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/caso_bitcoin/establish.webp"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "A man in front of a screen of red, plunging charts. He dials a number he shouldn't."
+            }
+          ],
+          "next": "caso_bitcoin.voz1"
+        },
+        {
+          "id": "caso_bitcoin.voz1",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I bought bitcoin and lost everything."
+            }
+          ],
+          "next": "caso_bitcoin.d1"
+        },
+        {
+          "id": "caso_bitcoin.d1",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_bitcoin.d1_0",
+                "label": "And you're calling here because…?",
+                "gem_cost": 0,
+                "next": "caso_bitcoin.d2"
+              },
+              {
+                "id": "caso_bitcoin.d1_1",
+                "label": "Yikes. What are you gonna do?",
+                "gem_cost": 0,
+                "next": "caso_bitcoin.d2"
+              },
+              {
+                "id": "caso_bitcoin.d1_2",
+                "label": "Hey, chin up, it'll be okay.",
+                "gem_cost": 0,
+                "next": "caso_bitcoin.fin_cheer"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_bitcoin.d2",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I think I'll rob a bank."
+            }
+          ],
+          "next": "caso_bitcoin.d3"
+        },
+        {
+          "id": "caso_bitcoin.d3",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Decide",
+            "choices": [
+              {
+                "id": "caso_bitcoin.d3_0",
+                "label": "I'm going to have to send the police.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1,
+                  "case_file": 1,
+                  "integrity": 1
+                },
+                "next": "caso_bitcoin.fin_police"
+              },
+              {
+                "id": "caso_bitcoin.d3_1",
+                "label": "Can I come? I'm broke too.",
+                "gem_cost": 0,
+                "next": "caso_bitcoin.d3b"
+              },
+              {
+                "id": "caso_bitcoin.d3_2",
+                "label": "You should call a therapist.",
+                "gem_cost": 0,
+                "next": "caso_bitcoin.d_ther"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_bitcoin.d3b",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "80% for me, 20% for you?"
+            }
+          ],
+          "next": "caso_bitcoin.d3c"
+        },
+        {
+          "id": "caso_bitcoin.d3c",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Decide",
+            "choices": [
+              {
+                "id": "caso_bitcoin.d3c_0",
+                "label": "Deal.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 150,
+                  "don": 1,
+                  "trust": -2
+                },
+                "next": "caso_bitcoin.fin_deal"
+              },
+              {
+                "id": "caso_bitcoin.d3c_1",
+                "label": "Nah, not worth it.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1,
+                  "case_file": 1
+                },
+                "next": "caso_bitcoin.fin_police"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_bitcoin.d_ther",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I need therapy to get over this."
+            }
+          ],
+          "next": "caso_bitcoin.d_ther2"
+        },
+        {
+          "id": "caso_bitcoin.d_ther2",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_bitcoin.d_ther2_0",
+                "label": "Tell me how you feel.",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": 1,
+                  "integrity": 1
+                },
+                "next": "caso_bitcoin.fin_therapy"
+              },
+              {
+                "id": "caso_bitcoin.d_ther2_1",
+                "label": "Call a real therapist.",
+                "gem_cost": 0,
+                "next": "caso_bitcoin.fin_therapy"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_bitcoin.fin_police",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Patrol on the way. Good call."
+            }
+          ],
+          "next": null,
+          "outcome": "good_dispatch"
+        },
+        {
+          "id": "caso_bitcoin.fin_deal",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "An 80/20 split with a suspect, straight from the console. The city does not forgive that one."
+            }
+          ],
+          "next": null,
+          "outcome": "don_temptation"
+        },
+        {
+          "id": "caso_bitcoin.fin_therapy",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "You talked him down without spending a unit. That counts too."
+            }
+          ],
+          "next": null,
+          "outcome": "talked_down"
+        },
+        {
+          "id": "caso_bitcoin.fin_cheer",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "You talked him down fast. Nice."
+            }
+          ],
+          "next": null,
+          "outcome": "talked_down"
+        }
+      ]
+    },
+    {
+      "id": "caso_trex",
+      "title": "I Found a Baby Dinosaur",
+      "order": 7,
+      "start_beat": "caso_trex.intro",
+      "beats": [
+        {
+          "id": "caso_trex.intro",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/caso_trex/establish.webp"
+          },
+          "type": "dialogue",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "A dim alley. Something small shuffles between the trash cans. The caller is not breathing easy."
+            }
+          ],
+          "next": "caso_trex.voz1"
+        },
+        {
+          "id": "caso_trex.voz1",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "I found a baby dinosaur!"
+            }
+          ],
+          "next": "caso_trex.d1"
+        },
+        {
+          "id": "caso_trex.d1",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_trex.d1_0",
+                "label": "Impossible. Dinosaurs don't exist.",
+                "gem_cost": 0,
+                "next": "caso_trex.d1b"
+              },
+              {
+                "id": "caso_trex.d1_1",
+                "label": "Are you hurt?",
+                "gem_cost": 0,
+                "next": "caso_trex.d2"
+              },
+              {
+                "id": "caso_trex.d1_2",
+                "label": "OMG, what breed?",
+                "gem_cost": 0,
+                "next": "caso_trex.d2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_trex.d1b",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "That's what I thought too. Until now."
+            }
+          ],
+          "next": "caso_trex.d1c"
+        },
+        {
+          "id": "caso_trex.d1c",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_trex.d1c_0",
+                "label": "Let's say I believe you… what breed?",
+                "gem_cost": 0,
+                "next": "caso_trex.d2"
+              },
+              {
+                "id": "caso_trex.d1c_1",
+                "label": "Are YOU hurt?",
+                "gem_cost": 0,
+                "next": "caso_trex.d2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_trex.d2",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "No, it's a baby! I think it's a T-REX. Maybe?"
+            }
+          ],
+          "next": "caso_trex.d3"
+        },
+        {
+          "id": "caso_trex.d3",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Respond",
+            "choices": [
+              {
+                "id": "caso_trex.d3_0",
+                "label": "Send me your location, fast!",
+                "gem_cost": 0,
+                "next": "caso_trex.loc"
+              },
+              {
+                "id": "caso_trex.d3_1",
+                "label": "I WANT IT!",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": -1
+                },
+                "next": "caso_trex.loc"
+              },
+              {
+                "id": "caso_trex.d3_2",
+                "label": "Shoot that thing.",
+                "gem_cost": 0,
+                "effects": {
+                  "trust": -1
+                },
+                "next": "caso_trex.loc_patrol"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_trex.loc",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "18th, Jurassic St."
+            }
+          ],
+          "next": "caso_trex.d4"
+        },
+        {
+          "id": "caso_trex.loc_patrol",
+          "background": "bg_dispatch",
+          "type": "dialogue",
+          "characters_on_scene": [
+            "voice"
+          ],
+          "lines": [
+            {
+              "speaker": "voice",
+              "expr": "neutral",
+              "text": "18th, Jurassic St."
+            }
+          ],
+          "next": "caso_trex.d4"
+        },
+        {
+          "id": "caso_trex.d4",
+          "background": "bg_dispatch",
+          "type": "decision",
+          "characters_on_scene": [],
+          "lines": [],
+          "decision": {
+            "prompt": "Dispatch",
+            "choices": [
+              {
+                "id": "caso_trex.d4_0",
+                "label": "Sending a special unit (animal control).",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1,
+                  "case_file": 1,
+                  "integrity": 1
+                },
+                "next": "caso_trex.fin_ok"
+              },
+              {
+                "id": "caso_trex.d4_1",
+                "label": "Wait there for help.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": 200,
+                  "trust": 1
+                },
+                "next": "caso_trex.fin_ok"
+              },
+              {
+                "id": "caso_trex.d4_2",
+                "label": "Sending a patrol car NOW.",
+                "gem_cost": 0,
+                "effects": {
+                  "money": -120,
+                  "trust": -1
+                },
+                "next": "caso_trex.fin_patrol"
+              }
+            ]
+          }
+        },
+        {
+          "id": "caso_trex.fin_ok",
+          "background": "bg_dispatch",
+          "media": {
+            "type": "image",
+            "key": "scenes/caso_trex/reveal.webp"
+          },
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "Right unit for a weird one. That's how it's done."
+            }
+          ],
+          "next": null,
+          "outcome": "good_dispatch"
+        },
+        {
+          "id": "caso_trex.fin_patrol",
+          "background": "bg_dispatch",
+          "type": "chapter_end",
+          "characters_on_scene": [],
+          "lines": [
+            {
+              "speaker": "narrator",
+              "expr": "neutral",
+              "text": "A patrol car versus a T-Rex? They'll bill you for that."
+            }
+          ],
+          "next": null,
+          "outcome": "bad_dispatch"
+        }
+      ]
+    }
+  ]
+}

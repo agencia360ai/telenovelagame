@@ -1,0 +1,148 @@
+{
+  "schema": "mission@1",
+  "id": "w1_plot",
+  "title": "Week 1 — The Call That Drops",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "order": 10,
+  "caller": {
+    "name": "Caller",
+    "type": "STORY CALL",
+    "location": "Calder Street"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "integrity": 0,
+    "mara_trust": 0,
+    "don": 0,
+    "loose_thread": 0,
+    "case_file": 0,
+    "pawn": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "speakers": {
+    "mara": "Martha"
+  },
+  "start": "w1_plot.intro",
+  "beats": [
+    {
+      "id": "w1_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A young woman's voice, low and fast, like she's not supposed to be on the phone."
+        }
+      ],
+      "next": "w1_plot.v1"
+    },
+    {
+      "id": "w1_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Please — I'm at, it's the house on Calder, the blue one with the—"
+        }
+      ],
+      "next": "w1_plot.v1b"
+    },
+    {
+      "id": "w1_plot.v1b",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The line goes dead. Not hung up. Taken away."
+        }
+      ],
+      "next": "w1_plot.mara"
+    },
+    {
+      "id": "w1_plot.mara",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "Dropped call. We get a dozen a night off that block — kids daring each other. Mark it closed, rookie."
+        }
+      ],
+      "next": "w1_plot.d1"
+    },
+    {
+      "id": "w1_plot.d1",
+      "type": "decision",
+      "prompt": "The line just died. What do you do?",
+      "choices": [
+        {
+          "id": "w1_plot.d1_0",
+          "label": "Keep the address. Quietly.",
+          "next": "w1_plot.fin_thread",
+          "effects": {
+            "loose_thread": 1,
+            "integrity": 1
+          }
+        },
+        {
+          "id": "w1_plot.d1_1",
+          "label": "Call the number back.",
+          "next": "w1_plot.fin_callback",
+          "effects": {
+            "integrity": 1,
+            "case_file": 1,
+            "mara_trust": -1
+          }
+        },
+        {
+          "id": "w1_plot.d1_2",
+          "label": "Martha knows the block. Mark it closed.",
+          "next": "w1_plot.fin_closed",
+          "effects": {
+            "mara_trust": 1,
+            "pawn": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w1_plot.fin_thread",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You write the address on a sticky note. Calder Street, blue house. Probably nothing. You keep it anyway."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w1_plot.fin_callback",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Straight to a dead tone — the line's been pulled. But the call's logged now, with a timestamp Martha can't quietly erase."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w1_plot.fin_closed",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Closed: prank, juvenile. Martha nods, pleased. Somewhere a blue house on Calder goes quiet again."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

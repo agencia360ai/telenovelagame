@@ -31,12 +31,6 @@
   "start": "call_i_m_trapped_in_the_fire.intro",
   "assets": [
     {
-      "key": "kitchen-fire-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "I'm trapped in the fire!!!!!!"
-    },
-    {
       "key": "kitchen-fire",
       "type": "video",
       "role": "ambient"

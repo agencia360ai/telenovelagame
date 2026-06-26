@@ -116,9 +116,11 @@ export type MissionBeat = {
  * - "daily"     → drawn at random from the daily pool on a normal weekday.
  * - "game_plot" → ordered story call, served on the week's plot day (see gamePlot.ts).
  * - "weekend"   → drawn from the weekend pool on weekend days.
+ * - "intro"     → one-off scene played outside the calendar (e.g. the prologue,
+ *                 shown once at first launch). Never served by the scheduler.
  * Defaults to "daily" when omitted (keeps older content valid).
  */
-export type MissionCategory = "daily" | "game_plot" | "weekend";
+export type MissionCategory = "daily" | "game_plot" | "weekend" | "intro";
 
 export type Mission = {
   schema: "mission@1";
