@@ -17,8 +17,9 @@
   },
   "units": [
     "police",
-    "firefighters",
-    "ambulance"
+    "ambulance",
+    "zombie_unit",
+    "no_unit"
   ],
   "reward": 5,
   "time_limit_seconds": 15,
@@ -31,7 +32,12 @@
   "start": "call_zombie.b0",
   "assets": [
     {
-      "key": "deploy-police",
+      "key": "call-zombie",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-zombie_unit",
       "type": "video",
       "role": "deploy"
     }
@@ -122,15 +128,15 @@
       "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
-      "correct": "police",
-      "explanation": "Okay, this might be real. A patrol is sent.",
+      "correct": "zombie_unit",
+      "explanation": "You actually send the Zombie Containment Unit. Atlanta can sleep again.",
       "next": "outcome"
     },
     {
       "id": "outcome",
       "type": "outcome",
       "deploy_media": {
-        "key": "deploy-police",
+        "key": "deploy-zombie_unit",
         "role": "deploy"
       }
     }

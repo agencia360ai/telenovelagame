@@ -1,0 +1,174 @@
+{
+  "schema": "mission@1",
+  "id": "w3_plot",
+  "title": "Week 3 — The House on Calder",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "game_plot",
+  "order": 30,
+  "caller": {
+    "name": "Caller",
+    "type": "STORY CALL",
+    "location": "Calder Street"
+  },
+  "reward": 14,
+  "initial_variables": {
+    "integrity": 0,
+    "mara_trust": 0,
+    "don": 0,
+    "loose_thread": 0,
+    "case_file": 0,
+    "pawn": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "speakers": {
+    "mara": "Martha"
+  },
+  "start": "w3_plot.intro",
+  "beats": [
+    {
+      "id": "w3_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A neighbor's whisper, hand cupped around the receiver."
+        }
+      ],
+      "next": "w3_plot.v1"
+    },
+    {
+      "id": "w3_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "The house on Calder. Curtains always shut. Vans at 3am. Girls I never see twice. I'm scared to give my name."
+        }
+      ],
+      "next": "w3_plot.d1"
+    },
+    {
+      "id": "w3_plot.d1",
+      "type": "decision",
+      "prompt": "A real tip. Your authority to dispatch.",
+      "choices": [
+        {
+          "id": "w3_plot.d1_0",
+          "label": "Send a welfare check now, on my authority.",
+          "next": "w3_plot.c_dispatch",
+          "effects": {
+            "integrity": 1,
+            "case_file": 1
+          }
+        },
+        {
+          "id": "w3_plot.d1_1",
+          "label": "Take a full statement first.",
+          "next": "w3_plot.c_statement",
+          "effects": {
+            "case_file": 1,
+            "loose_thread": 1
+          }
+        },
+        {
+          "id": "w3_plot.d1_2",
+          "label": "Loop Martha in before I move.",
+          "next": "w3_plot.c_mara",
+          "effects": {
+            "mara_trust": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w3_plot.c_statement",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You get it all down — times, plates, descriptions. A spine of a case forms on your screen."
+        }
+      ],
+      "next": "w3_plot.d2"
+    },
+    {
+      "id": "w3_plot.c_dispatch",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The car's already rolling. You'll write it up after."
+        }
+      ],
+      "next": "w3_plot.fin_dispatch"
+    },
+    {
+      "id": "w3_plot.c_mara",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "Anonymous tip, no crime in progress, shy caller? That's a noise complaint, hon. Send a car and you'll spook a landlord, not save anyone. Let me file it soft."
+        }
+      ],
+      "next": "w3_plot.d2"
+    },
+    {
+      "id": "w3_plot.d2",
+      "type": "decision",
+      "prompt": "Final move on the tip",
+      "choices": [
+        {
+          "id": "w3_plot.d2_0",
+          "label": "Dispatch anyway.",
+          "next": "w3_plot.fin_dispatch",
+          "effects": {
+            "integrity": 1,
+            "case_file": 1,
+            "mara_trust": -1
+          }
+        },
+        {
+          "id": "w3_plot.d2_1",
+          "label": "File it soft, like Martha says.",
+          "next": "w3_plot.fin_soft",
+          "effects": {
+            "mara_trust": 1,
+            "pawn": 1,
+            "don": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w3_plot.fin_dispatch",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The unit reports a nervous man who won't open up and a house that's 'just movers.' No arrest. But it's the first official knock on that door — and the ring felt it."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w3_plot.fin_soft",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Filed soft. Buried in the noise tickets. You tell yourself Martha knows the city better than you. The pawn doesn't always see the board."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

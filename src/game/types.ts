@@ -18,6 +18,8 @@ export type DispatchType =
   | "border_patrol"
   | "ambulance"
   | "animal_control"
+  | "zombie_unit"
+  | "dino_control"
   | "no_unit";
 
 export type DispatchOption = {

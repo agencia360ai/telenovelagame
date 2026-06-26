@@ -1,0 +1,100 @@
+{
+  "schema": "mission@1",
+  "id": "w1_weekend_coffee",
+  "title": "Coffee With Martha",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "weekend",
+  "order": 0,
+  "caller": {
+    "name": "Martha",
+    "type": "OFF DUTY",
+    "location": "Corner cafe"
+  },
+  "reward": 8,
+  "initial_variables": {
+    "integrity": 0,
+    "mara_trust": 0,
+    "don": 0,
+    "loose_thread": 0,
+    "case_file": 0,
+    "pawn": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "speakers": {
+    "mara": "Martha"
+  },
+  "start": "w1_weekend.intro",
+  "beats": [
+    {
+      "id": "w1_weekend.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Martha texts: 'Coffee? You look like the job's already eating you.'"
+        }
+      ],
+      "next": "w1_weekend.m1"
+    },
+    {
+      "id": "w1_weekend.m1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "I mean it about keeping you whole. I burned out two rookies before you. I'm not doing it again."
+        }
+      ],
+      "next": "w1_weekend.d1"
+    },
+    {
+      "id": "w1_weekend.d1",
+      "type": "decision",
+      "prompt": "Martha, off the clock, being genuinely kind",
+      "choices": [
+        {
+          "id": "w1_weekend.d1_0",
+          "label": "Let her in. She's good company.",
+          "next": "w1_weekend.fin",
+          "effects": {
+            "mara_trust": 2
+          }
+        },
+        {
+          "id": "w1_weekend.d1_1",
+          "label": "Keep it professional.",
+          "next": "w1_weekend.fin",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "w1_weekend.d1_2",
+          "label": "Ask why she really chose this job.",
+          "next": "w1_weekend.fin",
+          "effects": {
+            "loose_thread": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w1_weekend.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "She laughs at your jokes, pays for your coffee, and for one evening the city feels survivable. You almost forget the sticky note."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

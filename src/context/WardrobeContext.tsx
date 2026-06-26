@@ -36,8 +36,12 @@ type Wardrobe = {
   chooseGender: (g: Gender) => void;
   /** The skin currently shown (rank-base, or the manual pick if still valid). */
   equippedId: string;
-  /** Manually equip an unlocked skin of the current gender. */
+  /** Manually equip an unlocked/owned skin of the current gender. */
   equip: (id: string) => boolean;
+  /** Premium skin ids the player has bought with gems. */
+  owned: string[];
+  /** Record a premium skin as bought (call after spending gems). */
+  addOwned: (id: string) => void;
   reset: () => void;
 };
 
@@ -48,6 +52,8 @@ const WardrobeContext = createContext<Wardrobe>({
   chooseGender: () => {},
   equippedId: DEFAULT_SKIN_ID,
   equip: () => false,
+  owned: [],
+  addOwned: () => {},
   reset: () => {},
 });
 
@@ -56,6 +62,7 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
 
   const [gender, setGender] = useState<Gender | null>(null);
   const [manualSkin, setManualSkin] = useState<string | null>(null);
+  const [owned, setOwned] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
   const loaded = useRef(false);
 
@@ -71,6 +78,9 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
             if (typeof saved.manualSkin === "string") {
               setManualSkin(saved.manualSkin);
             }
+            if (Array.isArray(saved.owned)) {
+              setOwned(saved.owned.filter((x: unknown) => typeof x === "string"));
+            }
           } catch {}
         }
       })
@@ -84,20 +94,25 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
     if (!loaded.current) return;
     AsyncStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ gender, manualSkin })
+      JSON.stringify({ gender, manualSkin, owned })
     ).catch(() => {});
-  }, [gender, manualSkin]);
+  }, [gender, manualSkin, owned]);
 
-  const effectiveGender: Gender = gender ?? "female";
+  const effectiveGender: Gender = gender ?? "male";
+
+  // Is a skin available to wear? Rank skins need the rank; premium skins must
+  // have been bought (in `owned`).
+  const isUnlocked = (s: ReturnType<typeof getSkin>): boolean => {
+    if (!s || s.gender !== effectiveGender) return false;
+    return s.tier === "rank" ? rankIndex >= s.rankRequired : owned.includes(s.id);
+  };
 
   // The base skin always follows the rank. A manual pick wins only while it's
-  // still valid (same gender + rank high enough).
+  // still valid (same gender + still unlocked).
   let equippedId = baseSkinForRank(effectiveGender, rankIndex);
   if (manualSkin) {
     const s = getSkin(manualSkin);
-    if (s && s.gender === effectiveGender && rankIndex >= s.rankRequired) {
-      equippedId = manualSkin;
-    }
+    if (isUnlocked(s)) equippedId = manualSkin;
   }
 
   const chooseGender = useCallback((g: Gender) => {
@@ -108,18 +123,21 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
   const equip = useCallback(
     (id: string): boolean => {
       const s = getSkin(id);
-      if (!s || s.gender !== effectiveGender || rankIndex < s.rankRequired) {
-        return false;
-      }
+      if (!isUnlocked(s)) return false;
       setManualSkin(id);
       return true;
     },
-    [effectiveGender, rankIndex]
+    [effectiveGender, rankIndex, owned]
   );
+
+  const addOwned = useCallback((id: string) => {
+    setOwned((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  }, []);
 
   const reset = useCallback(() => {
     setGender(null);
     setManualSkin(null);
+    setOwned([]);
   }, []);
 
   return (
@@ -131,6 +149,8 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
         chooseGender,
         equippedId,
         equip,
+        owned,
+        addOwned,
         reset,
       }}
     >

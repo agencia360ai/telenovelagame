@@ -31,6 +31,29 @@ export const VIDEOS: Record<string, string | number> = {
   // Scene video for the "My Kitchen's on Fire" call (caso_cocina).
   "kitchen-on-fire":
     "https://www.dropbox.com/scl/fi/jevsjs3f94pz7aylcojsv/Kitchen-is-on-Fire.mp4?rlkey=gcccxx54we2kmh5t6k41elbz9&dl=1",
+  // Scene video for the "I Saw a Zombie" call (call_zombie).
+  "call-zombie":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Zombie.mp4",
+  // Scene video for the "Help, it smells like gas!" call.
+  "call-gas":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Gas.mp4",
+  // Scene video for the "I Can't Pay My Debt" call.
+  "call-debt":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/prankch.mp4",
+  // Scene video for the "I Need Bitcoins" call.
+  "call-bitcoin-need":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/ManPhone.mp4",
+  // Scene video for the "My cat is stuck on a tall tree" call.
+  "call-cat-tree":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Gato.mp4",
+  // Scene video for the "I'm Having a Heart Attack" call.
+  "call-heart-attack":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Presion.mp4",
+  // Lobby viewport clips: idle desk vs. an incoming call ringing.
+  "lobby-idle":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Lobby.mp4",
+  "lobby-ringing":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LobbyCall.mp4",
 
   // Full-screen intro cutscenes (telenovela establishing shots). Compressed to
   // 720p (~0.5–2.7 MB each) and BUNDLED so they play instantly with no buffering
@@ -40,16 +63,27 @@ export const VIDEOS: Record<string, string | number> = {
   "kitchen-fire-intro": require("../../assets/videos/kitchen-fire-intro.mp4"),
   "armed-robbery-intro": require("../../assets/videos/armed-robbery-intro.mp4"),
 
+  // Opening clip — the first thing shown at app launch, before the prologue.
+  "intro-clip":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroPan.mp4",
+
   // Per-unit DEPLOY clips — one reusable video per dispatch button, played on
-  // the "deploying" beat. They all point at a bundled placeholder for now;
-  // paste a real hosted URL (Supabase/Dropbox `?dl=1`) per unit to upgrade.
-  // ⬇️ To change this clip later: replace the URL between the quotes with your
-  //    own Dropbox link (must end in `?dl=1`) or any hosted .mp4 URL, then save.
+  // the "deploying" beat. fire/police/ambulance stream from Supabase Storage
+  // (public bucket "911 Clips"); the rest still use a bundled placeholder.
+  // ⬇️ To change a clip: replace the URL between the quotes with any hosted
+  //    .mp4 URL (Supabase public URL or Dropbox link ending in `?dl=1`).
   "deploy-firefighters":
-    "https://www.dropbox.com/scl/fi/5mfnflxlzq3j4tza5efij/Bomberos.mp4?rlkey=hd72du93a8f7ypy6unl89yxcp&dl=1",
-  "deploy-police": require("../../assets/videos/border-runners-intro.mp4"),
-  "deploy-ambulance": require("../../assets/videos/border-runners-intro.mp4"),
-  "deploy-animal_control": require("../../assets/videos/border-runners-intro.mp4"),
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Bomberos.mp4",
+  "deploy-police":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Police.mp4",
+  "deploy-ambulance":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Ambulancia.mp4",
+  "deploy-animal_control":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Animal%20Control.mp4",
+  "deploy-zombie_unit":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/ZombieUnit.mp4",
+  "deploy-dino_control":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Jeep.mov",
   "deploy-border_patrol": require("../../assets/videos/border-runners-intro.mp4"),
   "deploy-no_unit": require("../../assets/videos/border-runners-intro.mp4"),
 };
@@ -65,6 +99,8 @@ export const DEPLOY_VIDEOS: Record<string, string> = {
   police: "deploy-police",
   ambulance: "deploy-ambulance",
   animal_control: "deploy-animal_control",
+  zombie_unit: "deploy-zombie_unit",
+  dino_control: "deploy-dino_control",
   border_patrol: "deploy-border_patrol",
   no_unit: "deploy-no_unit",
 };
@@ -166,6 +202,11 @@ export const SKIN_IMAGES: Record<string, number | string> = {
   m_basic: require("../../assets/skins/m_basic.png"),
   m_sgt: require("../../assets/skins/m_sgt.png"),
   m_officer: require("../../assets/skins/m_officer.png"),
+  // Premium skins (bought with gems) — both genders.
+  f_sport: require("../../assets/skins/f_Sport.png"),
+  m_sport: require("../../assets/skins/m_Sport.png"),
+  f_santa: require("../../assets/skins/f_Santa.png"),
+  m_santa: require("../../assets/skins/m_Santa.png"),
 }
 
 /**

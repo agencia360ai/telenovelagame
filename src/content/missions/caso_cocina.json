@@ -32,12 +32,6 @@
     {
       "key": "kitchen-on-fire",
       "type": "video",
-      "role": "intro",
-      "caption": "My Kitchen's on Fire"
-    },
-    {
-      "key": "kitchen-on-fire",
-      "type": "video",
       "role": "ambient"
     },
     {

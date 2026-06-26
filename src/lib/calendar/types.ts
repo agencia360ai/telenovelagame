@@ -49,4 +49,7 @@ export type CalendarState = {
   completedThisWeek: number;
   /** Correct calls in the current week. */
   correctThisWeek: number;
+  /** Daily call ids already served (across weeks) so they don't repeat until
+   *  the whole pool has been seen, then the cycle restarts. */
+  servedDaily: string[];
 };

@@ -15,9 +15,9 @@
     "location": "Unknown location"
   },
   "units": [
+    "animal_control",
     "firefighters",
     "police",
-    "ambulance",
     "no_unit"
   ],
   "reward": 5,
@@ -31,18 +31,12 @@
   "start": "call_my_cat_is_stuck_on_a_tall_tree.intro",
   "assets": [
     {
-      "key": "kitchen-fire-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "My cat is stuck on a tall tree"
-    },
-    {
-      "key": "kitchen-fire",
+      "key": "call-cat-tree",
       "type": "video",
       "role": "ambient"
     },
     {
-      "key": "deploy-firefighters",
+      "key": "deploy-animal_control",
       "type": "video",
       "role": "deploy"
     }
@@ -117,15 +111,15 @@
       "id": "call_my_cat_is_stuck_on_a_tall_tree.d2",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
-      "correct": "firefighters",
-      "explanation": "Firefighters humor you, and the cat. Down it comes, unimpressed. The internet loves it.",
+      "correct": "animal_control",
+      "explanation": "Animal Control handles it — they coax the cat down, calm and quick.",
       "next": "_outcome"
     },
     {
       "id": "_outcome",
       "type": "outcome",
       "deploy_media": {
-        "key": "deploy-firefighters",
+        "key": "deploy-animal_control",
         "role": "deploy"
       }
     }

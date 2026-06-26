@@ -1,0 +1,6240 @@
+{
+  "id": "dispatcher",
+  "title": "DISPATCHER",
+  "version": "0.2.0",
+  "locale_default": "en",
+  "characters": {
+    "narrator": {
+      "name": "Narrator",
+      "avatars": {}
+    },
+    "rookie": {
+      "name": "Rookie",
+      "avatars": {
+        "neutral": "portraits/rookie/neutral.webp"
+      }
+    },
+    "voice": {
+      "name": "Caller",
+      "avatars": {
+        "neutral": "portraits/voice/neutral.webp"
+      }
+    },
+    "grandma": {
+      "name": "Grandma",
+      "avatars": {
+        "neutral": "portraits/grandma/neutral.webp"
+      }
+    }
+  },
+  "initial_variables": {
+    "briefing_seen": 0,
+    "case_file": 0,
+    "don": 0,
+    "grandma_bond": 0,
+    "integrity": 0,
+    "is_rookie": 0,
+    "loose_thread": 0,
+    "money": 0,
+    "pawn": 0,
+    "trust": 0
+  },
+  "initial_flags": {},
+  "starting_gems": 10,
+  "config": {
+    "months": 3,
+    "weeks": 12,
+    "days_per_week": 6,
+    "daily_calls_per_day": 3,
+    "difficulty_ramps_with_week": true,
+    "note": "game_plot = authored arc (2 beats/week: a plot_call + a weekend life beat). daily_calls = tagged pool served per day."
+  },
+  "game_plot": {
+    "prologue": {
+      "id": "prologue",
+      "title": "",
+      "week": 1,
+      "kind": "prologue",
+      "synopsis": "",
+      "start_beat": null,
+      "beats": []
+    },
+    "weeks": [
+      {
+        "week": 1,
+        "goal_trust": 3,
+        "plot_call": {
+          "id": "w1_plot",
+          "title": "",
+          "week": 1,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w1_weekend",
+          "title": "",
+          "week": 1,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 2,
+        "goal_trust": 6,
+        "plot_call": {
+          "id": "w2_plot",
+          "title": "",
+          "week": 2,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w2_weekend",
+          "title": "",
+          "week": 2,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 3,
+        "goal_trust": 9,
+        "plot_call": {
+          "id": "w3_plot",
+          "title": "",
+          "week": 3,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w3_weekend",
+          "title": "",
+          "week": 3,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 4,
+        "goal_trust": 12,
+        "plot_call": {
+          "id": "w4_plot",
+          "title": "",
+          "week": 4,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w4_weekend",
+          "title": "",
+          "week": 4,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 5,
+        "goal_trust": 15,
+        "plot_call": {
+          "id": "w5_plot",
+          "title": "",
+          "week": 5,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w5_weekend",
+          "title": "",
+          "week": 5,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 6,
+        "goal_trust": 18,
+        "plot_call": {
+          "id": "w6_plot",
+          "title": "",
+          "week": 6,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w6_weekend",
+          "title": "",
+          "week": 6,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 7,
+        "goal_trust": 21,
+        "plot_call": {
+          "id": "w7_plot",
+          "title": "",
+          "week": 7,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w7_weekend",
+          "title": "",
+          "week": 7,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 8,
+        "goal_trust": 24,
+        "plot_call": {
+          "id": "w8_plot",
+          "title": "",
+          "week": 8,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w8_weekend",
+          "title": "",
+          "week": 8,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 9,
+        "goal_trust": 27,
+        "plot_call": {
+          "id": "w9_plot",
+          "title": "",
+          "week": 9,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w9_weekend",
+          "title": "",
+          "week": 9,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 10,
+        "goal_trust": 30,
+        "plot_call": {
+          "id": "w10_plot",
+          "title": "",
+          "week": 10,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w10_weekend",
+          "title": "",
+          "week": 10,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 11,
+        "goal_trust": 33,
+        "plot_call": {
+          "id": "w11_plot",
+          "title": "",
+          "week": 11,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w11_weekend",
+          "title": "",
+          "week": 11,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      },
+      {
+        "week": 12,
+        "goal_trust": 36,
+        "plot_call": {
+          "id": "w12_plot",
+          "title": "",
+          "week": 12,
+          "kind": "plot_call",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        },
+        "weekend": {
+          "id": "w12_weekend",
+          "title": "",
+          "week": 12,
+          "kind": "weekend",
+          "synopsis": "",
+          "start_beat": null,
+          "beats": []
+        }
+      }
+    ]
+  },
+  "daily_calls": {
+    "serve_per_day": 3,
+    "tag_legend": {
+      "week_min": "earliest week this call can appear",
+      "difficulty": "1 easy / 2 medium / 3 hard",
+      "type": "prank | real | exotic | mixed",
+      "unit": "correct unit: fire | police | ambulance | animal_control | none"
+    },
+    "library": [
+      {
+        "id": "caso_cocina",
+        "title": "My Kitchen's on Fire",
+        "order": 4,
+        "start_beat": "caso_cocina.intro",
+        "beats": [
+          {
+            "id": "caso_cocina.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/caso_cocina/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Split screen: you at the console; on the other end, a kitchen vanishing into orange smoke."
+              }
+            ],
+            "next": "caso_cocina.voz1"
+          },
+          {
+            "id": "caso_cocina.voz1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My kitchen is on fire! 🔥"
+              }
+            ],
+            "next": "caso_cocina.d1"
+          },
+          {
+            "id": "caso_cocina.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_cocina.d1_0",
+                  "label": "Are you out of the house?",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.c_out"
+                },
+                {
+                  "id": "caso_cocina.d1_1",
+                  "label": "Can you use water?",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.c_water"
+                },
+                {
+                  "id": "caso_cocina.d1_2",
+                  "label": "Your voice sounds kinda sexy.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "caso_cocina.d1b"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_cocina.d1b",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "WHAT?! This is an EMERGENCY!"
+              }
+            ],
+            "next": "caso_cocina.d1c"
+          },
+          {
+            "id": "caso_cocina.d1c",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Recover the call",
+              "choices": [
+                {
+                  "id": "caso_cocina.d1c_0",
+                  "label": "And emergencies are what we do 😎",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.c_out"
+                },
+                {
+                  "id": "caso_cocina.d1c_1",
+                  "label": "Sorry. Are you out of the house?",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.c_out"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_cocina.c_water",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "No, it's way too hot!"
+              }
+            ],
+            "next": "caso_cocina.d2"
+          },
+          {
+            "id": "caso_cocina.c_out",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I can't get out, it's too hot!"
+              }
+            ],
+            "next": "caso_cocina.d2"
+          },
+          {
+            "id": "caso_cocina.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Instruction",
+              "choices": [
+                {
+                  "id": "caso_cocina.d2_0",
+                  "label": "Get out of the house NOW.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "caso_cocina.c_help"
+                },
+                {
+                  "id": "caso_cocina.d2_1",
+                  "label": "Move away from the fire.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "caso_cocina.c_help"
+                },
+                {
+                  "id": "caso_cocina.d2_2",
+                  "label": "I'm kinda on fire too 🔥",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "caso_cocina.c_help"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_cocina.c_help",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I need someone, please!"
+              }
+            ],
+            "next": "caso_cocina.d3"
+          },
+          {
+            "id": "caso_cocina.d3",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Get location",
+              "choices": [
+                {
+                  "id": "caso_cocina.d3_0",
+                  "label": "Send me your location.",
+                  "gem_cost": 0,
+                  "next": "caso_cocina.loc"
+                },
+                {
+                  "id": "caso_cocina.d3_1",
+                  "label": "Not just anybody? 😏",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "caso_cocina.loc"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_cocina.loc",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "989 Burb Street."
+              }
+            ],
+            "next": "caso_cocina.d4"
+          },
+          {
+            "id": "caso_cocina.d4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "caso_cocina.d4_0",
+                  "label": "Sending firefighters NOW.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "caso_cocina.fin_ok"
+                },
+                {
+                  "id": "caso_cocina.d4_1",
+                  "label": "Kidding — sending help now!",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1
+                  },
+                  "next": "caso_cocina.fin_ok"
+                },
+                {
+                  "id": "caso_cocina.d4_2",
+                  "label": "Sending a patrol car.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "caso_cocina.fin_bad"
+                },
+                {
+                  "id": "caso_cocina.d4_3",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "caso_cocina.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_cocina.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/caso_cocina/rescue.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Sirens. The truck rounds the corner before the roof gives. The city breathes a little easier."
+              }
+            ],
+            "next": "caso_cocina.fin_ok2"
+          },
+          {
+            "id": "caso_cocina.fin_ok2",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Citizen trust ticks up. Clean."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "caso_cocina.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A patrol car at a house fire. The city notices, and not in a good way."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "caso_cocina.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it burn. The city will feel that one."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ],
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire"
+        }
+      },
+      {
+        "id": "caso_papel",
+        "title": "I'm Out of Toilet Paper",
+        "order": 5,
+        "start_beat": "caso_papel.intro",
+        "beats": [
+          {
+            "id": "caso_papel.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/caso_papel/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "An anguished voice, echoing off bathroom tile. The camera, if there were one, would rather not come in."
+              }
+            ],
+            "next": "caso_papel.voz1"
+          },
+          {
+            "id": "caso_papel.voz1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "HELP! I'm out of toilet paper!"
+              }
+            ],
+            "next": "caso_papel.d1"
+          },
+          {
+            "id": "caso_papel.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_papel.d1_0",
+                  "label": "You're calling an emergency line.",
+                  "gem_cost": 0,
+                  "next": "caso_papel.d2"
+                },
+                {
+                  "id": "caso_papel.d1_1",
+                  "label": "Use a sock.",
+                  "gem_cost": 0,
+                  "next": "caso_papel.d2b"
+                },
+                {
+                  "id": "caso_papel.d1_2",
+                  "label": "Sending a patrol car.",
+                  "gem_cost": 0,
+                  "next": "caso_papel.fin_unit"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_papel.d2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I don't care."
+              }
+            ],
+            "next": "caso_papel.d3"
+          },
+          {
+            "id": "caso_papel.d2b",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm barefoot!"
+              }
+            ],
+            "next": "caso_papel.d3"
+          },
+          {
+            "id": "caso_papel.d3",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Please, I pooped!"
+              }
+            ],
+            "next": "caso_papel.d3c"
+          },
+          {
+            "id": "caso_papel.d3c",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_papel.d3c_0",
+                  "label": "That's too much info 😬",
+                  "gem_cost": 0,
+                  "next": "caso_papel.d4"
+                },
+                {
+                  "id": "caso_papel.d3c_1",
+                  "label": "Then your hand will do.",
+                  "gem_cost": 0,
+                  "next": "caso_papel.d4"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_papel.d4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "So are you sending toilet paper?"
+              }
+            ],
+            "decision": {
+              "prompt": "What do you do?",
+              "choices": [
+                {
+                  "id": "caso_papel.d4_0",
+                  "label": "Sure. Any brand you prefer?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "integrity": 1
+                  },
+                  "next": "caso_papel.fin_filtered"
+                },
+                {
+                  "id": "caso_papel.d4_1",
+                  "label": "Yeah, I'll wipe for you too.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1
+                  },
+                  "next": "caso_papel.fin_gag"
+                },
+                {
+                  "id": "caso_papel.d4_2",
+                  "label": "Stop tying up the line.",
+                  "gem_cost": 0,
+                  "next": "caso_papel.fin_cut"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_papel.fin_filtered",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Nicely handled. Good judgment pays, and the city cracks a smile."
+              }
+            ],
+            "next": null,
+            "outcome": "prank_filtered"
+          },
+          {
+            "id": "caso_papel.fin_gag",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A little too cheeky — but you filtered it. Counts."
+              }
+            ],
+            "next": null,
+            "outcome": "prank_filtered"
+          },
+          {
+            "id": "caso_papel.fin_cut",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Call dropped. No pay, no problem."
+              }
+            ],
+            "next": null,
+            "outcome": "prank_cut"
+          },
+          {
+            "id": "caso_papel.fin_unit",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A unit for toilet paper — tied up all afternoon, with the city watching."
+              }
+            ],
+            "next": null,
+            "outcome": "unit_wasted",
+            "effects": {
+              "trust": -1
+            }
+          }
+        ],
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none"
+        }
+      },
+      {
+        "id": "caso_bitcoin",
+        "title": "I Lost Everything in Bitcoin",
+        "order": 6,
+        "start_beat": "caso_bitcoin.intro",
+        "beats": [
+          {
+            "id": "caso_bitcoin.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/caso_bitcoin/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A man in front of a screen of red, plunging charts. He dials a number he shouldn't."
+              }
+            ],
+            "next": "caso_bitcoin.voz1"
+          },
+          {
+            "id": "caso_bitcoin.voz1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I bought bitcoin and lost everything."
+              }
+            ],
+            "next": "caso_bitcoin.d1"
+          },
+          {
+            "id": "caso_bitcoin.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_bitcoin.d1_0",
+                  "label": "And you're calling here because…?",
+                  "gem_cost": 0,
+                  "next": "caso_bitcoin.d2"
+                },
+                {
+                  "id": "caso_bitcoin.d1_1",
+                  "label": "Yikes. What are you gonna do?",
+                  "gem_cost": 0,
+                  "next": "caso_bitcoin.d2"
+                },
+                {
+                  "id": "caso_bitcoin.d1_2",
+                  "label": "Hey, chin up, it'll be okay.",
+                  "gem_cost": 0,
+                  "next": "caso_bitcoin.fin_cheer"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_bitcoin.d2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I think I'll rob a bank."
+              }
+            ],
+            "next": "caso_bitcoin.d3"
+          },
+          {
+            "id": "caso_bitcoin.d3",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "caso_bitcoin.d3_0",
+                  "label": "I'm going to have to send the police.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "caso_bitcoin.fin_police"
+                },
+                {
+                  "id": "caso_bitcoin.d3_1",
+                  "label": "Can I come? I'm broke too.",
+                  "gem_cost": 0,
+                  "next": "caso_bitcoin.d3b"
+                },
+                {
+                  "id": "caso_bitcoin.d3_2",
+                  "label": "You should call a therapist.",
+                  "gem_cost": 0,
+                  "next": "caso_bitcoin.d_ther"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_bitcoin.d3b",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "80% for me, 20% for you?"
+              }
+            ],
+            "next": "caso_bitcoin.d3c"
+          },
+          {
+            "id": "caso_bitcoin.d3c",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "caso_bitcoin.d3c_0",
+                  "label": "Deal.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 150,
+                    "don": 1,
+                    "trust": -2
+                  },
+                  "next": "caso_bitcoin.fin_deal"
+                },
+                {
+                  "id": "caso_bitcoin.d3c_1",
+                  "label": "Nah, not worth it.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1
+                  },
+                  "next": "caso_bitcoin.fin_police"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_bitcoin.d_ther",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I need therapy to get over this."
+              }
+            ],
+            "next": "caso_bitcoin.d_ther2"
+          },
+          {
+            "id": "caso_bitcoin.d_ther2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_bitcoin.d_ther2_0",
+                  "label": "Tell me how you feel.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": 1,
+                    "integrity": 1
+                  },
+                  "next": "caso_bitcoin.fin_therapy"
+                },
+                {
+                  "id": "caso_bitcoin.d_ther2_1",
+                  "label": "Call a real therapist.",
+                  "gem_cost": 0,
+                  "next": "caso_bitcoin.fin_therapy"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_bitcoin.fin_police",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Patrol on the way. Good call."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "caso_bitcoin.fin_deal",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "An 80/20 split with a suspect, straight from the console. The city does not forgive that one."
+              }
+            ],
+            "next": null,
+            "outcome": "don_temptation"
+          },
+          {
+            "id": "caso_bitcoin.fin_therapy",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You talked him down without spending a unit. That counts too."
+              }
+            ],
+            "next": null,
+            "outcome": "talked_down"
+          },
+          {
+            "id": "caso_bitcoin.fin_cheer",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You talked him down fast. Nice."
+              }
+            ],
+            "next": null,
+            "outcome": "talked_down"
+          }
+        ],
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "mixed",
+          "unit": "police"
+        }
+      },
+      {
+        "id": "caso_trex",
+        "title": "I Found a Baby Dinosaur",
+        "order": 7,
+        "start_beat": "caso_trex.intro",
+        "beats": [
+          {
+            "id": "caso_trex.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/caso_trex/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A dim alley. Something small shuffles between the trash cans. The caller is not breathing easy."
+              }
+            ],
+            "next": "caso_trex.voz1"
+          },
+          {
+            "id": "caso_trex.voz1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I found a baby dinosaur!"
+              }
+            ],
+            "next": "caso_trex.d1"
+          },
+          {
+            "id": "caso_trex.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_trex.d1_0",
+                  "label": "Impossible. Dinosaurs don't exist.",
+                  "gem_cost": 0,
+                  "next": "caso_trex.d1b"
+                },
+                {
+                  "id": "caso_trex.d1_1",
+                  "label": "Are you hurt?",
+                  "gem_cost": 0,
+                  "next": "caso_trex.d2"
+                },
+                {
+                  "id": "caso_trex.d1_2",
+                  "label": "OMG, what breed?",
+                  "gem_cost": 0,
+                  "next": "caso_trex.d2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_trex.d1b",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "That's what I thought too. Until now."
+              }
+            ],
+            "next": "caso_trex.d1c"
+          },
+          {
+            "id": "caso_trex.d1c",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_trex.d1c_0",
+                  "label": "Let's say I believe you… what breed?",
+                  "gem_cost": 0,
+                  "next": "caso_trex.d2"
+                },
+                {
+                  "id": "caso_trex.d1c_1",
+                  "label": "Are YOU hurt?",
+                  "gem_cost": 0,
+                  "next": "caso_trex.d2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_trex.d2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "No, it's a baby! I think it's a T-REX. Maybe?"
+              }
+            ],
+            "next": "caso_trex.d3"
+          },
+          {
+            "id": "caso_trex.d3",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "caso_trex.d3_0",
+                  "label": "Send me your location, fast!",
+                  "gem_cost": 0,
+                  "next": "caso_trex.loc"
+                },
+                {
+                  "id": "caso_trex.d3_1",
+                  "label": "I WANT IT!",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "caso_trex.loc"
+                },
+                {
+                  "id": "caso_trex.d3_2",
+                  "label": "Shoot that thing.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "caso_trex.loc_patrol"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_trex.loc",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "18th, Jurassic St."
+              }
+            ],
+            "next": "caso_trex.d4"
+          },
+          {
+            "id": "caso_trex.loc_patrol",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "18th, Jurassic St."
+              }
+            ],
+            "next": "caso_trex.d4"
+          },
+          {
+            "id": "caso_trex.d4",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "caso_trex.d4_0",
+                  "label": "Sending a special unit (animal control).",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "caso_trex.fin_ok"
+                },
+                {
+                  "id": "caso_trex.d4_1",
+                  "label": "Wait there for help.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1
+                  },
+                  "next": "caso_trex.fin_ok"
+                },
+                {
+                  "id": "caso_trex.d4_2",
+                  "label": "Sending a patrol car NOW.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "caso_trex.fin_patrol"
+                }
+              ]
+            }
+          },
+          {
+            "id": "caso_trex.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/caso_trex/reveal.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Right unit for a weird one. That's how it's done."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "caso_trex.fin_patrol",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A patrol car versus a T-Rex? They'll bill you for that."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          }
+        ],
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control"
+        }
+      },
+      {
+        "id": "call_house_fire",
+        "title": "My House Is on Fire",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "fire"
+        },
+        "start_beat": "call_house_fire.intro",
+        "beats": [
+          {
+            "id": "call_house_fire.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_house_fire/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Split screen: a hallway filling with smoke. The caller sounds strangely calm."
+              }
+            ],
+            "next": "v1"
+          },
+          {
+            "id": "v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My house is on fire."
+              }
+            ],
+            "next": "d1"
+          },
+          {
+            "id": "d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "d1_0",
+                  "label": "Are you safe?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "c_safe"
+                },
+                {
+                  "id": "d1_1",
+                  "label": "Where did the fire start?",
+                  "gem_cost": 0,
+                  "next": "c_start"
+                },
+                {
+                  "id": "d1_2",
+                  "label": "Let it burn!",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "c_burn"
+                }
+              ]
+            }
+          },
+          {
+            "id": "c_safe",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Not really — I can't get out!"
+              }
+            ],
+            "next": "d2"
+          },
+          {
+            "id": "c_start",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My closet, I think. Maybe the bedroom."
+              }
+            ],
+            "next": "d2"
+          },
+          {
+            "id": "c_burn",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "...What?!"
+              }
+            ],
+            "next": "d2"
+          },
+          {
+            "id": "d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Decide",
+              "choices": [
+                {
+                  "id": "d2_0",
+                  "label": "Stay put. What's your location?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "loc"
+                },
+                {
+                  "id": "d2_1",
+                  "label": "We'll trace this call.",
+                  "gem_cost": 0,
+                  "next": "loc"
+                },
+                {
+                  "id": "d2_2",
+                  "label": "Is someone else there with you?",
+                  "gem_cost": 0,
+                  "next": "loc"
+                }
+              ]
+            }
+          },
+          {
+            "id": "loc",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "3259 Wescam Court. Please hurry!"
+              }
+            ],
+            "next": "d3"
+          },
+          {
+            "id": "d3",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "d3_0",
+                  "label": "Get out now — sending help!",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "fin_ok"
+                },
+                {
+                  "id": "d3_1",
+                  "label": "Too far. Let it burn.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "fin_burn"
+                },
+                {
+                  "id": "d3_2",
+                  "label": "What's the magic word?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "fin_magic"
+                }
+              ]
+            }
+          },
+          {
+            "id": "fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_house_fire/rescue.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Engines roll. You stay on the line until they're out. The city breathes easier."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "fin_burn",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You hang up. That one's going to leave a mark — on the city's trust, and on you."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          },
+          {
+            "id": "fin_magic",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "...'Please'? PLEASE?! *click*"
+              }
+            ],
+            "next": null,
+            "outcome": "prank_cut"
+          }
+        ]
+      },
+      {
+        "id": "call_my_kitchen_is_on_fire",
+        "title": "My kitchen is on fire",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_my_kitchen_is_on_fire.intro",
+        "beats": [
+          {
+            "id": "call_my_kitchen_is_on_fire.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My kitchen is on fire"
+              }
+            ],
+            "next": "call_my_kitchen_is_on_fire.todo"
+          },
+          {
+            "id": "call_my_kitchen_is_on_fire.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_i_need_somebody",
+        "title": "Help! I need somebody",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_i_need_somebody.intro",
+        "beats": [
+          {
+            "id": "call_help_i_need_somebody.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help! I need somebody"
+              }
+            ],
+            "next": "call_help_i_need_somebody.todo"
+          },
+          {
+            "id": "call_help_i_need_somebody.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_i_ran_out_of_toilet_paper",
+        "title": "HELP! I ran out of toilet paper",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_i_ran_out_of_toilet_paper.intro",
+        "beats": [
+          {
+            "id": "call_help_i_ran_out_of_toilet_paper.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "HELP! I ran out of toilet paper"
+              }
+            ],
+            "next": "call_help_i_ran_out_of_toilet_paper.todo"
+          },
+          {
+            "id": "call_help_i_ran_out_of_toilet_paper.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_think_i_ll_rob_a_bank",
+        "title": "I think I'll rob a bank",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "start_beat": "call_i_think_i_ll_rob_a_bank.intro",
+        "beats": [
+          {
+            "id": "call_i_think_i_ll_rob_a_bank.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I think I'll rob a bank"
+              }
+            ],
+            "next": "call_i_think_i_ll_rob_a_bank.todo"
+          },
+          {
+            "id": "call_i_think_i_ll_rob_a_bank.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_found_a_baby_dinousaur",
+        "title": "I found a baby dinousaur!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_found_a_baby_dinousaur.intro",
+        "beats": [
+          {
+            "id": "call_i_found_a_baby_dinousaur.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I found a baby dinousaur!"
+              }
+            ],
+            "next": "call_i_found_a_baby_dinousaur.todo"
+          },
+          {
+            "id": "call_i_found_a_baby_dinousaur.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_think_i_might_have_seen_a_zomb",
+        "title": "I think I might have seen a zombie!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "none",
+          "category": "weird"
+        },
+        "start_beat": "call_i_think_i_might_have_seen_a_zomb.intro",
+        "beats": [
+          {
+            "id": "call_i_think_i_might_have_seen_a_zomb.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I think I might have seen a zombie!"
+              }
+            ],
+            "next": "call_i_think_i_might_have_seen_a_zomb.todo"
+          },
+          {
+            "id": "call_i_think_i_might_have_seen_a_zomb.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_someone_is_trying_to_force_my_do",
+        "title": "Someone is trying to force my door!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "start_beat": "call_someone_is_trying_to_force_my_do.intro",
+        "beats": [
+          {
+            "id": "call_someone_is_trying_to_force_my_do.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Someone is trying to force my door!"
+              }
+            ],
+            "next": "call_someone_is_trying_to_force_my_do.todo"
+          },
+          {
+            "id": "call_someone_is_trying_to_force_my_do.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_i_m_coughing_really_bad",
+        "title": "HELP! I'm coughing really bad",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_i_m_coughing_really_bad.intro",
+        "beats": [
+          {
+            "id": "call_help_i_m_coughing_really_bad.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "HELP! I'm coughing really bad"
+              }
+            ],
+            "next": "call_help_i_m_coughing_really_bad.todo"
+          },
+          {
+            "id": "call_help_i_m_coughing_really_bad.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_head_is_about_to_explode",
+        "title": "My head is about to explode",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_my_head_is_about_to_explode.intro",
+        "beats": [
+          {
+            "id": "call_my_head_is_about_to_explode.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My head is about to explode"
+              }
+            ],
+            "next": "call_my_head_is_about_to_explode.todo"
+          },
+          {
+            "id": "call_my_head_is_about_to_explode.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_can_t_please_help_me",
+        "title": "I can't please help me",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_can_t_please_help_me.intro",
+        "beats": [
+          {
+            "id": "call_i_can_t_please_help_me.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I can't please help me"
+              }
+            ],
+            "next": "call_i_can_t_please_help_me.todo"
+          },
+          {
+            "id": "call_i_can_t_please_help_me.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_stuck_in_an_elevator",
+        "title": "I'm stuck in an elevator!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_i_m_stuck_in_an_elevator.intro",
+        "beats": [
+          {
+            "id": "call_i_m_stuck_in_an_elevator.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_i_m_stuck_in_an_elevator/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A dim elevator car, stalled between floors, one bar of signal."
+              }
+            ],
+            "next": "call_i_m_stuck_in_an_elevator.v1"
+          },
+          {
+            "id": "call_i_m_stuck_in_an_elevator.v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "shock",
+                "text": "I'm stuck in an elevator! It just stopped!"
+              }
+            ],
+            "next": "call_i_m_stuck_in_an_elevator.d1"
+          },
+          {
+            "id": "call_i_m_stuck_in_an_elevator.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_i_m_stuck_in_an_elevator.d1_0",
+                  "label": "Stay calm. Are you alone in there?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "call_i_m_stuck_in_an_elevator.v2"
+                },
+                {
+                  "id": "call_i_m_stuck_in_an_elevator.d1_1",
+                  "label": "Okay — what's your location?",
+                  "gem_cost": 0,
+                  "next": "call_i_m_stuck_in_an_elevator.v2"
+                },
+                {
+                  "id": "call_i_m_stuck_in_an_elevator.d1_2",
+                  "label": "Try the trapdoor like in movies.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "call_i_m_stuck_in_an_elevator.v2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_i_m_stuck_in_an_elevator.v2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Yeah, alone. It's getting stuffy."
+              },
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Tower B, Westgate Apartments. Between 4 and 5."
+              }
+            ],
+            "next": "call_i_m_stuck_in_an_elevator.d2"
+          },
+          {
+            "id": "call_i_m_stuck_in_an_elevator.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "call_i_m_stuck_in_an_elevator.d2_0",
+                  "label": "Send firefighters.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "call_i_m_stuck_in_an_elevator.fin_ok"
+                },
+                {
+                  "id": "call_i_m_stuck_in_an_elevator.d2_1",
+                  "label": "Send a patrol car.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "call_i_m_stuck_in_an_elevator.fin_bad"
+                },
+                {
+                  "id": "call_i_m_stuck_in_an_elevator.d2_2",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "call_i_m_stuck_in_an_elevator.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_i_m_stuck_in_an_elevator.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_i_m_stuck_in_an_elevator/resolve.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Rescue pries the doors. You stayed on the line the whole way. The city notices that."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "call_i_m_stuck_in_an_elevator.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A patrol car can't open an elevator. They wait, sweating, and they talk."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "call_i_m_stuck_in_an_elevator.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it go. Somewhere out there, that one's going to cost you — and the city."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ]
+      },
+      {
+        "id": "call_help",
+        "title": "HELP!!!!!!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help.intro",
+        "beats": [
+          {
+            "id": "call_help.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "HELP!!!!!!"
+              }
+            ],
+            "next": "call_help.todo"
+          },
+          {
+            "id": "call_help.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_cat_just_dissapeared",
+        "title": "My cat just dissapeared!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "start_beat": "call_my_cat_just_dissapeared.intro",
+        "beats": [
+          {
+            "id": "call_my_cat_just_dissapeared.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My cat just dissapeared!"
+              }
+            ],
+            "next": "call_my_cat_just_dissapeared.todo"
+          },
+          {
+            "id": "call_my_cat_just_dissapeared.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_cat_is_gone_help",
+        "title": "My cat is gone! Help",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "start_beat": "call_my_cat_is_gone_help.intro",
+        "beats": [
+          {
+            "id": "call_my_cat_is_gone_help.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My cat is gone! Help"
+              }
+            ],
+            "next": "call_my_cat_is_gone_help.todo"
+          },
+          {
+            "id": "call_my_cat_is_gone_help.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_cat_is_missing",
+        "title": "My cat is missing",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "start_beat": "call_my_cat_is_missing.intro",
+        "beats": [
+          {
+            "id": "call_my_cat_is_missing.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My cat is missing"
+              }
+            ],
+            "next": "call_my_cat_is_missing.todo"
+          },
+          {
+            "id": "call_my_cat_is_missing.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_is_coming",
+        "title": "Help is coming!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_is_coming.intro",
+        "beats": [
+          {
+            "id": "call_help_is_coming.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help is coming!"
+              }
+            ],
+            "next": "call_help_is_coming.todo"
+          },
+          {
+            "id": "call_help_is_coming.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_fighting_the_yellow_goblin_a",
+        "title": "I'm fighting the Yellow goblin and need your help!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_m_fighting_the_yellow_goblin_a.intro",
+        "beats": [
+          {
+            "id": "call_i_m_fighting_the_yellow_goblin_a.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm fighting the Yellow goblin and need your help!"
+              }
+            ],
+            "next": "call_i_m_fighting_the_yellow_goblin_a.todo"
+          },
+          {
+            "id": "call_i_m_fighting_the_yellow_goblin_a.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_huge_spider_in_my_room",
+        "title": "There's a HUGE spider in my room!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "start_beat": "call_there_s_a_huge_spider_in_my_room.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_huge_spider_in_my_room.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a HUGE spider in my room!"
+              }
+            ],
+            "next": "call_there_s_a_huge_spider_in_my_room.todo"
+          },
+          {
+            "id": "call_there_s_a_huge_spider_in_my_room.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_weird_smell_in_this_el",
+        "title": "There's a weird smell in this elevator!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_there_s_a_weird_smell_in_this_el.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_weird_smell_in_this_el.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a weird smell in this elevator!"
+              }
+            ],
+            "next": "call_there_s_a_weird_smell_in_this_el.todo"
+          },
+          {
+            "id": "call_there_s_a_weird_smell_in_this_el.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_gonna_die_in_here",
+        "title": "I'm gonna die in here",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_m_gonna_die_in_here.intro",
+        "beats": [
+          {
+            "id": "call_i_m_gonna_die_in_here.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm gonna die in here"
+              }
+            ],
+            "next": "call_i_m_gonna_die_in_here.todo"
+          },
+          {
+            "id": "call_i_m_gonna_die_in_here.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_have_intel_about_an_upcoming_t",
+        "title": "I have intel about an upcoming terror attack",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "start_beat": "call_i_have_intel_about_an_upcoming_t.intro",
+        "beats": [
+          {
+            "id": "call_i_have_intel_about_an_upcoming_t.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I have intel about an upcoming terror attack"
+              }
+            ],
+            "next": "call_i_have_intel_about_an_upcoming_t.todo"
+          },
+          {
+            "id": "call_i_have_intel_about_an_upcoming_t.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_nothing_here_please_help",
+        "title": "There's nothing here PLEASE HELP ME",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_there_s_nothing_here_please_help.intro",
+        "beats": [
+          {
+            "id": "call_there_s_nothing_here_please_help.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's nothing here PLEASE HELP ME"
+              }
+            ],
+            "next": "call_there_s_nothing_here_please_help.todo"
+          },
+          {
+            "id": "call_there_s_nothing_here_please_help.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_head_s_bleeding",
+        "title": "My head's bleeding",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_my_head_s_bleeding.intro",
+        "beats": [
+          {
+            "id": "call_my_head_s_bleeding.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My head's bleeding"
+              }
+            ],
+            "next": "call_my_head_s_bleeding.todo"
+          },
+          {
+            "id": "call_my_head_s_bleeding.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_gonna_die_in_my_sleep",
+        "title": "I'm gonna die in my sleep!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_m_gonna_die_in_my_sleep.intro",
+        "beats": [
+          {
+            "id": "call_i_m_gonna_die_in_my_sleep.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm gonna die in my sleep!"
+              }
+            ],
+            "next": "call_i_m_gonna_die_in_my_sleep.todo"
+          },
+          {
+            "id": "call_i_m_gonna_die_in_my_sleep.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_a_man_fell_from_a_2nd_floor",
+        "title": "A man fell from a 2nd floor!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_a_man_fell_from_a_2nd_floor.intro",
+        "beats": [
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_a_man_fell_from_a_2nd_floor/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A small crowd, a man on the pavement, a phone shaking in someone's hand."
+              }
+            ],
+            "next": "call_a_man_fell_from_a_2nd_floor.v1"
+          },
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "shock",
+                "text": "A man fell from a 2nd floor! He's not moving much!"
+              }
+            ],
+            "next": "call_a_man_fell_from_a_2nd_floor.d1"
+          },
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_a_man_fell_from_a_2nd_floor.d1_0",
+                  "label": "Is he breathing? Don't move him.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "call_a_man_fell_from_a_2nd_floor.v2"
+                },
+                {
+                  "id": "call_a_man_fell_from_a_2nd_floor.d1_1",
+                  "label": "Okay — what's your location?",
+                  "gem_cost": 0,
+                  "next": "call_a_man_fell_from_a_2nd_floor.v2"
+                },
+                {
+                  "id": "call_a_man_fell_from_a_2nd_floor.d1_2",
+                  "label": "Walk it off, champ.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "call_a_man_fell_from_a_2nd_floor.v2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.v2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "He's breathing but groaning. We didn't touch him."
+              },
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "We're at 14 Almond Court, by the bakery."
+              }
+            ],
+            "next": "call_a_man_fell_from_a_2nd_floor.d2"
+          },
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "call_a_man_fell_from_a_2nd_floor.d2_0",
+                  "label": "Send an ambulance.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "call_a_man_fell_from_a_2nd_floor.fin_ok"
+                },
+                {
+                  "id": "call_a_man_fell_from_a_2nd_floor.d2_1",
+                  "label": "Send a patrol car.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "call_a_man_fell_from_a_2nd_floor.fin_bad"
+                },
+                {
+                  "id": "call_a_man_fell_from_a_2nd_floor.d2_2",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "call_a_man_fell_from_a_2nd_floor.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_a_man_fell_from_a_2nd_floor/resolve.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Paramedics get there fast. He'll keep his spine and his bad luck. The city exhales."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A patrol car can't carry a stretcher. He waits, and word gets around."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "call_a_man_fell_from_a_2nd_floor.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it go. Somewhere out there, that one's going to cost you — and the city."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ]
+      },
+      {
+        "id": "call_help_me_with_those_creatures",
+        "title": "Help me with those creatures",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_me_with_those_creatures.intro",
+        "beats": [
+          {
+            "id": "call_help_me_with_those_creatures.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help me with those creatures"
+              }
+            ],
+            "next": "call_help_me_with_those_creatures.todo"
+          },
+          {
+            "id": "call_help_me_with_those_creatures.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_water_ran_out",
+        "title": "My water ran out",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_my_water_ran_out.intro",
+        "beats": [
+          {
+            "id": "call_my_water_ran_out.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My water ran out"
+              }
+            ],
+            "next": "call_my_water_ran_out.todo"
+          },
+          {
+            "id": "call_my_water_ran_out.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_it_smells_like_gas",
+        "title": "HELP, IT SMELLS LIKE GAS!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_help_it_smells_like_gas.intro",
+        "beats": [
+          {
+            "id": "call_help_it_smells_like_gas.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_help_it_smells_like_gas/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A kitchen, a hiss you can almost hear through the line, a very nervous caller."
+              }
+            ],
+            "next": "call_help_it_smells_like_gas.v1"
+          },
+          {
+            "id": "call_help_it_smells_like_gas.v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "shock",
+                "text": "HELP, it smells like gas in here!"
+              }
+            ],
+            "next": "call_help_it_smells_like_gas.d1"
+          },
+          {
+            "id": "call_help_it_smells_like_gas.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_help_it_smells_like_gas.d1_0",
+                  "label": "Don't flip any switches. Get outside now.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "call_help_it_smells_like_gas.v2"
+                },
+                {
+                  "id": "call_help_it_smells_like_gas.d1_1",
+                  "label": "Okay — what's your location?",
+                  "gem_cost": 0,
+                  "next": "call_help_it_smells_like_gas.v2"
+                },
+                {
+                  "id": "call_help_it_smells_like_gas.d1_2",
+                  "label": "Light a match, see what happens.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "call_help_it_smells_like_gas.v2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_help_it_smells_like_gas.v2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Okay, okay, I'm going out. The whole hallway reeks."
+              },
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Apartment 3B, 88 Renner Street."
+              }
+            ],
+            "next": "call_help_it_smells_like_gas.d2"
+          },
+          {
+            "id": "call_help_it_smells_like_gas.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "call_help_it_smells_like_gas.d2_0",
+                  "label": "Send firefighters.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "call_help_it_smells_like_gas.fin_ok"
+                },
+                {
+                  "id": "call_help_it_smells_like_gas.d2_1",
+                  "label": "Send an ambulance.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "call_help_it_smells_like_gas.fin_bad"
+                },
+                {
+                  "id": "call_help_it_smells_like_gas.d2_2",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "call_help_it_smells_like_gas.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_help_it_smells_like_gas.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_help_it_smells_like_gas/resolve.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Crew shuts the main and airs it out before a spark finds it. Quietly heroic."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "call_help_it_smells_like_gas.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "An ambulance can't cap a gas line. The smell spreads, and so does the story."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "call_help_it_smells_like_gas.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it go. Somewhere out there, that one's going to cost you — and the city."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ]
+      },
+      {
+        "id": "call_help_will_be_there_in_seconds",
+        "title": "Help will be there in seconds",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_will_be_there_in_seconds.intro",
+        "beats": [
+          {
+            "id": "call_help_will_be_there_in_seconds.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help will be there in seconds"
+              }
+            ],
+            "next": "call_help_will_be_there_in_seconds.todo"
+          },
+          {
+            "id": "call_help_will_be_there_in_seconds.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_not_kidding_you_should_help",
+        "title": "I'm not kidding, you should help!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_m_not_kidding_you_should_help.intro",
+        "beats": [
+          {
+            "id": "call_i_m_not_kidding_you_should_help.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm not kidding, you should help!"
+              }
+            ],
+            "next": "call_i_m_not_kidding_you_should_help.todo"
+          },
+          {
+            "id": "call_i_m_not_kidding_you_should_help.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_zombie_breakdown",
+        "title": "There's a zombie breakdown!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "none",
+          "category": "weird"
+        },
+        "start_beat": "call_there_s_a_zombie_breakdown.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_zombie_breakdown.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a zombie breakdown!"
+              }
+            ],
+            "next": "call_there_s_a_zombie_breakdown.todo"
+          },
+          {
+            "id": "call_there_s_a_zombie_breakdown.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_multiple_car_crash_in_",
+        "title": "There's a multiple car crash in the highway!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "vehicle"
+        },
+        "start_beat": "call_there_s_a_multiple_car_crash_in_.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_multiple_car_crash_in_.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a multiple car crash in the highway!"
+              }
+            ],
+            "next": "call_there_s_a_multiple_car_crash_in_.todo"
+          },
+          {
+            "id": "call_there_s_a_multiple_car_crash_in_.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_and_doritos_coming",
+        "title": "Help and Doritos coming!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_and_doritos_coming.intro",
+        "beats": [
+          {
+            "id": "call_help_and_doritos_coming.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help and Doritos coming!"
+              }
+            ],
+            "next": "call_help_and_doritos_coming.todo"
+          },
+          {
+            "id": "call_help_and_doritos_coming.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_coming",
+        "title": "HELP COMING!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_coming.intro",
+        "beats": [
+          {
+            "id": "call_help_coming.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "HELP COMING!"
+              }
+            ],
+            "next": "call_help_coming.todo"
+          },
+          {
+            "id": "call_help_coming.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_think_my_friend_s_dead",
+        "title": "I think my friend's dead",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_think_my_friend_s_dead.intro",
+        "beats": [
+          {
+            "id": "call_i_think_my_friend_s_dead.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I think my friend's dead"
+              }
+            ],
+            "next": "call_i_think_my_friend_s_dead.todo"
+          },
+          {
+            "id": "call_i_think_my_friend_s_dead.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_yourself_metalman",
+        "title": "Help yourself Metalman!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_yourself_metalman.intro",
+        "beats": [
+          {
+            "id": "call_help_yourself_metalman.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help yourself Metalman!"
+              }
+            ],
+            "next": "call_help_yourself_metalman.todo"
+          },
+          {
+            "id": "call_help_yourself_metalman.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_friend_hkd9887_is_hurt_i_need",
+        "title": "My friend HKD9887 is hurt...I need help!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_my_friend_hkd9887_is_hurt_i_need.intro",
+        "beats": [
+          {
+            "id": "call_my_friend_hkd9887_is_hurt_i_need.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My friend HKD9887 is hurt...I need help!"
+              }
+            ],
+            "next": "call_my_friend_hkd9887_is_hurt_i_need.todo"
+          },
+          {
+            "id": "call_my_friend_hkd9887_is_hurt_i_need.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_friend_hkd9887_was_shot_by_a_",
+        "title": "My friend HKD9887  was shot by a human!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_my_friend_hkd9887_was_shot_by_a_.intro",
+        "beats": [
+          {
+            "id": "call_my_friend_hkd9887_was_shot_by_a_.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My friend HKD9887  was shot by a human!"
+              }
+            ],
+            "next": "call_my_friend_hkd9887_was_shot_by_a_.todo"
+          },
+          {
+            "id": "call_my_friend_hkd9887_was_shot_by_a_.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_is_no_time_please_help",
+        "title": "There is no TIME! Please help!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_there_is_no_time_please_help.intro",
+        "beats": [
+          {
+            "id": "call_there_is_no_time_please_help.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There is no TIME! Please help!"
+              }
+            ],
+            "next": "call_there_is_no_time_please_help.todo"
+          },
+          {
+            "id": "call_there_is_no_time_please_help.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_need_help_her_spirit_s_hauntin",
+        "title": "I need help, her spirit's haunting me!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_need_help_her_spirit_s_hauntin.intro",
+        "beats": [
+          {
+            "id": "call_i_need_help_her_spirit_s_hauntin.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I need help, her spirit's haunting me!"
+              }
+            ],
+            "next": "call_i_need_help_her_spirit_s_hauntin.todo"
+          },
+          {
+            "id": "call_i_need_help_her_spirit_s_hauntin.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_stranger_in_my_house",
+        "title": "THERE'S A STRANGER IN MY HOUSE!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "start_beat": "call_there_s_a_stranger_in_my_house.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_stranger_in_my_house.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "THERE'S A STRANGER IN MY HOUSE!"
+              }
+            ],
+            "next": "call_there_s_a_stranger_in_my_house.todo"
+          },
+          {
+            "id": "call_there_s_a_stranger_in_my_house.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_an_alien_in_my_backyard",
+        "title": "There's an alien in my backyard!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "none",
+          "category": "weird"
+        },
+        "start_beat": "call_there_s_an_alien_in_my_backyard.intro",
+        "beats": [
+          {
+            "id": "call_there_s_an_alien_in_my_backyard.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's an alien in my backyard!"
+              }
+            ],
+            "next": "call_there_s_an_alien_in_my_backyard.todo"
+          },
+          {
+            "id": "call_there_s_an_alien_in_my_backyard.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_me_please",
+        "title": "help me please",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_me_please.intro",
+        "beats": [
+          {
+            "id": "call_help_me_please.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "help me please"
+              }
+            ],
+            "next": "call_help_me_please.todo"
+          },
+          {
+            "id": "call_help_me_please.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_hear_weird_sounds_next_door",
+        "title": "I hear weird sounds next door",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "start_beat": "call_i_hear_weird_sounds_next_door.intro",
+        "beats": [
+          {
+            "id": "call_i_hear_weird_sounds_next_door.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I hear weird sounds next door"
+              }
+            ],
+            "next": "call_i_hear_weird_sounds_next_door.todo"
+          },
+          {
+            "id": "call_i_hear_weird_sounds_next_door.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_not_sure_please_help_me",
+        "title": "I'm not sure please help me",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_m_not_sure_please_help_me.intro",
+        "beats": [
+          {
+            "id": "call_i_m_not_sure_please_help_me.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm not sure please help me"
+              }
+            ],
+            "next": "call_i_m_not_sure_please_help_me.todo"
+          },
+          {
+            "id": "call_i_m_not_sure_please_help_me.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_saw_a_man_and_shot_him",
+        "title": "I saw a man and shot him",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_i_saw_a_man_and_shot_him.intro",
+        "beats": [
+          {
+            "id": "call_i_saw_a_man_and_shot_him.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I saw a man and shot him"
+              }
+            ],
+            "next": "call_i_saw_a_man_and_shot_him.todo"
+          },
+          {
+            "id": "call_i_saw_a_man_and_shot_him.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_is_about_to_arrive",
+        "title": "Help is about to arrive!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_is_about_to_arrive.intro",
+        "beats": [
+          {
+            "id": "call_help_is_about_to_arrive.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help is about to arrive!"
+              }
+            ],
+            "next": "call_help_is_about_to_arrive.todo"
+          },
+          {
+            "id": "call_help_is_about_to_arrive.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_need_a_tow_truck",
+        "title": "I need a tow truck!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "vehicle"
+        },
+        "start_beat": "call_i_need_a_tow_truck.intro",
+        "beats": [
+          {
+            "id": "call_i_need_a_tow_truck.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I need a tow truck!"
+              }
+            ],
+            "next": "call_i_need_a_tow_truck.todo"
+          },
+          {
+            "id": "call_i_need_a_tow_truck.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_gas_station_just_a_mil",
+        "title": "There's a gas station just a mile away",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_there_s_a_gas_station_just_a_mil.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_gas_station_just_a_mil.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a gas station just a mile away"
+              }
+            ],
+            "next": "call_there_s_a_gas_station_just_a_mil.todo"
+          },
+          {
+            "id": "call_there_s_a_gas_station_just_a_mil.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_heart_s_broken",
+        "title": "My heart's broken!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_my_heart_s_broken.intro",
+        "beats": [
+          {
+            "id": "call_my_heart_s_broken.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My heart's broken!"
+              }
+            ],
+            "next": "call_my_heart_s_broken.todo"
+          },
+          {
+            "id": "call_my_heart_s_broken.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_fire_in_my_bathroom",
+        "title": "There's a fire in my bathroom!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_there_s_a_fire_in_my_bathroom.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_there_s_a_fire_in_my_bathroom/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A scented candle, a towel, and a very bad decision, now spreading."
+              }
+            ],
+            "next": "call_there_s_a_fire_in_my_bathroom.v1"
+          },
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "shock",
+                "text": "There's a fire in my bathroom! It's climbing the towels!"
+              }
+            ],
+            "next": "call_there_s_a_fire_in_my_bathroom.d1"
+          },
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_there_s_a_fire_in_my_bathroom.d1_0",
+                  "label": "Close the door and get out. Don't fight it.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "call_there_s_a_fire_in_my_bathroom.v2"
+                },
+                {
+                  "id": "call_there_s_a_fire_in_my_bathroom.d1_1",
+                  "label": "Okay — what's your location?",
+                  "gem_cost": 0,
+                  "next": "call_there_s_a_fire_in_my_bathroom.v2"
+                },
+                {
+                  "id": "call_there_s_a_fire_in_my_bathroom.d1_2",
+                  "label": "Shower it out.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "call_there_s_a_fire_in_my_bathroom.v2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.v2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Door's closed, I'm in the hall."
+              },
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Flat 7, 19 Sienna Road."
+              }
+            ],
+            "next": "call_there_s_a_fire_in_my_bathroom.d2"
+          },
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "call_there_s_a_fire_in_my_bathroom.d2_0",
+                  "label": "Send firefighters.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "call_there_s_a_fire_in_my_bathroom.fin_ok"
+                },
+                {
+                  "id": "call_there_s_a_fire_in_my_bathroom.d2_1",
+                  "label": "Send a patrol car.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "call_there_s_a_fire_in_my_bathroom.fin_bad"
+                },
+                {
+                  "id": "call_there_s_a_fire_in_my_bathroom.d2_2",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "call_there_s_a_fire_in_my_bathroom.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_there_s_a_fire_in_my_bathroom/resolve.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "One room lost, a building saved. Clean work. Trust ticks up."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "A patrol car can't put out a fire. It grows, and the city hears about it."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "call_there_s_a_fire_in_my_bathroom.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it go. Somewhere out there, that one's going to cost you — and the city."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ]
+      },
+      {
+        "id": "call_help_will_arrive_soon",
+        "title": "Help will arrive soon!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_will_arrive_soon.intro",
+        "beats": [
+          {
+            "id": "call_help_will_arrive_soon.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help will arrive soon!"
+              }
+            ],
+            "next": "call_help_will_arrive_soon.todo"
+          },
+          {
+            "id": "call_help_will_arrive_soon.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_cat_is_stuck_on_a_tall_tree",
+        "title": "My cat is stuck on a tall tree",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "fire",
+          "category": "animal"
+        },
+        "start_beat": "call_my_cat_is_stuck_on_a_tall_tree.intro",
+        "beats": [
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_my_cat_is_stuck_on_a_tall_tree/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "An old oak, a tiny furious silhouette near the top, a worried owner below."
+              }
+            ],
+            "next": "call_my_cat_is_stuck_on_a_tall_tree.v1"
+          },
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "shock",
+                "text": "My cat is stuck on a tall tree and won't come down!"
+              }
+            ],
+            "next": "call_my_cat_is_stuck_on_a_tall_tree.d1"
+          },
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_my_cat_is_stuck_on_a_tall_tree.d1_0",
+                  "label": "Is the cat hurt, or just stubborn?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "call_my_cat_is_stuck_on_a_tall_tree.v2"
+                },
+                {
+                  "id": "call_my_cat_is_stuck_on_a_tall_tree.d1_1",
+                  "label": "Okay — what's your location?",
+                  "gem_cost": 0,
+                  "next": "call_my_cat_is_stuck_on_a_tall_tree.v2"
+                },
+                {
+                  "id": "call_my_cat_is_stuck_on_a_tall_tree.d1_2",
+                  "label": "Let it live up there. New life.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "call_my_cat_is_stuck_on_a_tall_tree.v2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.v2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Just stubborn. And judging me, honestly."
+              },
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Corner of Maple and 3rd, the big tree."
+              }
+            ],
+            "next": "call_my_cat_is_stuck_on_a_tall_tree.d2"
+          },
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "call_my_cat_is_stuck_on_a_tall_tree.d2_0",
+                  "label": "Send firefighters.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "call_my_cat_is_stuck_on_a_tall_tree.fin_ok"
+                },
+                {
+                  "id": "call_my_cat_is_stuck_on_a_tall_tree.d2_1",
+                  "label": "Send an ambulance.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "call_my_cat_is_stuck_on_a_tall_tree.fin_bad"
+                },
+                {
+                  "id": "call_my_cat_is_stuck_on_a_tall_tree.d2_2",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "call_my_cat_is_stuck_on_a_tall_tree.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_my_cat_is_stuck_on_a_tall_tree/resolve.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Firefighters humor you, and the cat. Down it comes, unimpressed. The internet loves it."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "An ambulance for a cat? The crew's confused and the city's amused — at you."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "call_my_cat_is_stuck_on_a_tall_tree.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it go. Somewhere out there, that one's going to cost you — and the city."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ]
+      },
+      {
+        "id": "call_my_cat_loves_me",
+        "title": "My cat loves me",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "start_beat": "call_my_cat_loves_me.intro",
+        "beats": [
+          {
+            "id": "call_my_cat_loves_me.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My cat loves me"
+              }
+            ],
+            "next": "call_my_cat_loves_me.todo"
+          },
+          {
+            "id": "call_my_cat_loves_me.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_joking_we_help_cats_but_not_",
+        "title": "I'm joking. We help cats, but not you!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_m_joking_we_help_cats_but_not_.intro",
+        "beats": [
+          {
+            "id": "call_i_m_joking_we_help_cats_but_not_.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm joking. We help cats, but not you!"
+              }
+            ],
+            "next": "call_i_m_joking_we_help_cats_but_not_.todo"
+          },
+          {
+            "id": "call_i_m_joking_we_help_cats_but_not_.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_can_t_help_it_i_need_the_docto",
+        "title": "I can't help it. I need the doctors",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_can_t_help_it_i_need_the_docto.intro",
+        "beats": [
+          {
+            "id": "call_i_can_t_help_it_i_need_the_docto.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I can't help it. I need the doctors"
+              }
+            ],
+            "next": "call_i_can_t_help_it_i_need_the_docto.todo"
+          },
+          {
+            "id": "call_i_can_t_help_it_i_need_the_docto.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_not_and_i_need_help_urgently",
+        "title": "I'm not. And I need help urgently",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_i_m_not_and_i_need_help_urgently.intro",
+        "beats": [
+          {
+            "id": "call_i_m_not_and_i_need_help_urgently.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I'm not. And I need help urgently"
+              }
+            ],
+            "next": "call_i_m_not_and_i_need_help_urgently.todo"
+          },
+          {
+            "id": "call_i_m_not_and_i_need_help_urgently.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_will_be_right_with_you",
+        "title": "Help will be right with you",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_will_be_right_with_you.intro",
+        "beats": [
+          {
+            "id": "call_help_will_be_right_with_you.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help will be right with you"
+              }
+            ],
+            "next": "call_help_will_be_right_with_you.todo"
+          },
+          {
+            "id": "call_help_will_be_right_with_you.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_huge_dog_fight",
+        "title": "There's a huge dog fight!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "start_beat": "call_there_s_a_huge_dog_fight.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_huge_dog_fight.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a huge dog fight!"
+              }
+            ],
+            "next": "call_there_s_a_huge_dog_fight.todo"
+          },
+          {
+            "id": "call_there_s_a_huge_dog_fight.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_train_is_hanging_of_the_bridg",
+        "title": "My train is hanging of the bridge!!! Please help!!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_my_train_is_hanging_of_the_bridg.intro",
+        "beats": [
+          {
+            "id": "call_my_train_is_hanging_of_the_bridg.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My train is hanging of the bridge!!! Please help!!"
+              }
+            ],
+            "next": "call_my_train_is_hanging_of_the_bridg.todo"
+          },
+          {
+            "id": "call_my_train_is_hanging_of_the_bridg.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_me_came_back_from_war_and_g",
+        "title": "Help me. Came back from war and got lost",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_me_came_back_from_war_and_g.intro",
+        "beats": [
+          {
+            "id": "call_help_me_came_back_from_war_and_g.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help me. Came back from war and got lost"
+              }
+            ],
+            "next": "call_help_me_came_back_from_war_and_g.todo"
+          },
+          {
+            "id": "call_help_me_came_back_from_war_and_g.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_my_dead_dog_is_talking_to_me",
+        "title": "My dead dog is talking to me!!!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "animal_control",
+          "category": "animal"
+        },
+        "start_beat": "call_my_dead_dog_is_talking_to_me.intro",
+        "beats": [
+          {
+            "id": "call_my_dead_dog_is_talking_to_me.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "My dead dog is talking to me!!!"
+              }
+            ],
+            "next": "call_my_dead_dog_is_talking_to_me.todo"
+          },
+          {
+            "id": "call_my_dead_dog_is_talking_to_me.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_need_help_my_car_wont_start",
+        "title": "I need help.  My car wont start!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "vehicle"
+        },
+        "start_beat": "call_i_need_help_my_car_wont_start.intro",
+        "beats": [
+          {
+            "id": "call_i_need_help_my_car_wont_start.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I need help.  My car wont start!"
+              }
+            ],
+            "next": "call_i_need_help_my_car_wont_start.todo"
+          },
+          {
+            "id": "call_i_need_help_my_car_wont_start.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_a_gang_fight_in_my_hood",
+        "title": "There's a gang fight in my hood!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "police",
+          "category": "crime"
+        },
+        "start_beat": "call_there_s_a_gang_fight_in_my_hood.intro",
+        "beats": [
+          {
+            "id": "call_there_s_a_gang_fight_in_my_hood.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a gang fight in my hood!"
+              }
+            ],
+            "next": "call_there_s_a_gang_fight_in_my_hood.todo"
+          },
+          {
+            "id": "call_there_s_a_gang_fight_in_my_hood.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_think_i_just_spotted_a_ufo",
+        "title": "I think i just spotted a UFO!!!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 2,
+          "difficulty": 2,
+          "type": "exotic",
+          "unit": "none",
+          "category": "weird"
+        },
+        "start_beat": "call_i_think_i_just_spotted_a_ufo.intro",
+        "beats": [
+          {
+            "id": "call_i_think_i_just_spotted_a_ufo.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I think i just spotted a UFO!!!"
+              }
+            ],
+            "next": "call_i_think_i_just_spotted_a_ufo.todo"
+          },
+          {
+            "id": "call_i_think_i_just_spotted_a_ufo.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_there_s_also_a_lot_of_blood",
+        "title": "There's also a lot of blood...",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_there_s_also_a_lot_of_blood.intro",
+        "beats": [
+          {
+            "id": "call_there_s_also_a_lot_of_blood.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's also a lot of blood..."
+              }
+            ],
+            "next": "call_there_s_also_a_lot_of_blood.todo"
+          },
+          {
+            "id": "call_there_s_also_a_lot_of_blood.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_have_an_open_wound",
+        "title": "I have an open wound!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_i_have_an_open_wound.intro",
+        "beats": [
+          {
+            "id": "call_i_have_an_open_wound.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "I have an open wound!"
+              }
+            ],
+            "next": "call_i_have_an_open_wound.todo"
+          },
+          {
+            "id": "call_i_have_an_open_wound.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_will_be_there_soon",
+        "title": "Help will be there soon!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_will_be_there_soon.intro",
+        "beats": [
+          {
+            "id": "call_help_will_be_there_soon.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help will be there soon!"
+              }
+            ],
+            "next": "call_help_will_be_there_soon.todo"
+          },
+          {
+            "id": "call_help_will_be_there_soon.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_someone_broke_into_my_house",
+        "title": "Someone broke into my house!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "real",
+          "unit": "ambulance",
+          "category": "medical"
+        },
+        "start_beat": "call_someone_broke_into_my_house.intro",
+        "beats": [
+          {
+            "id": "call_someone_broke_into_my_house.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Someone broke into my house!"
+              }
+            ],
+            "next": "call_someone_broke_into_my_house.todo"
+          },
+          {
+            "id": "call_someone_broke_into_my_house.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_help_there_was_a_huge_explosion",
+        "title": "Help! There was a huge explosion!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_there_was_a_huge_explosion.intro",
+        "beats": [
+          {
+            "id": "call_help_there_was_a_huge_explosion.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Help! There was a huge explosion!"
+              }
+            ],
+            "next": "call_help_there_was_a_huge_explosion.todo"
+          },
+          {
+            "id": "call_help_there_was_a_huge_explosion.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      },
+      {
+        "id": "call_i_m_trapped_in_the_fire",
+        "title": "I'm trapped in the fire!!!!!!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_i_m_trapped_in_the_fire.intro",
+        "beats": [
+          {
+            "id": "call_i_m_trapped_in_the_fire.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_i_m_trapped_in_the_fire/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Smoke under a door, a voice low to the floor, heat you can feel through the speaker."
+              }
+            ],
+            "next": "call_i_m_trapped_in_the_fire.v1"
+          },
+          {
+            "id": "call_i_m_trapped_in_the_fire.v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "shock",
+                "text": "I'm trapped in the fire!!! I can't get to the door!"
+              }
+            ],
+            "next": "call_i_m_trapped_in_the_fire.d1"
+          },
+          {
+            "id": "call_i_m_trapped_in_the_fire.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_i_m_trapped_in_the_fire.d1_0",
+                  "label": "Stay low. Is there a window you can reach?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "call_i_m_trapped_in_the_fire.v2"
+                },
+                {
+                  "id": "call_i_m_trapped_in_the_fire.d1_1",
+                  "label": "Okay — what's your location?",
+                  "gem_cost": 0,
+                  "next": "call_i_m_trapped_in_the_fire.v2"
+                },
+                {
+                  "id": "call_i_m_trapped_in_the_fire.d1_2",
+                  "label": "Have you tried not being on fire?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "call_i_m_trapped_in_the_fire.v2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_i_m_trapped_in_the_fire.v2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "There's a window — I'm by it now."
+              },
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Second floor, 22 Halford Street."
+              }
+            ],
+            "next": "call_i_m_trapped_in_the_fire.d2"
+          },
+          {
+            "id": "call_i_m_trapped_in_the_fire.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "call_i_m_trapped_in_the_fire.d2_0",
+                  "label": "Send firefighters.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "call_i_m_trapped_in_the_fire.fin_ok"
+                },
+                {
+                  "id": "call_i_m_trapped_in_the_fire.d2_1",
+                  "label": "Send a patrol car.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "call_i_m_trapped_in_the_fire.fin_bad"
+                },
+                {
+                  "id": "call_i_m_trapped_in_the_fire.d2_2",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "call_i_m_trapped_in_the_fire.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_i_m_trapped_in_the_fire.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_i_m_trapped_in_the_fire/resolve.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Ladder up, window out. They make it. You don't breathe until they do."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "call_i_m_trapped_in_the_fire.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Wrong unit to a structure fire. Seconds matter, and the city keeps score."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "call_i_m_trapped_in_the_fire.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it go. Somewhere out there, that one's going to cost you — and the city."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ]
+      },
+      {
+        "id": "call_i_think_there_s_a_leak",
+        "title": "I think there's a leak!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 2,
+          "type": "real",
+          "unit": "fire",
+          "category": "fire"
+        },
+        "start_beat": "call_i_think_there_s_a_leak.intro",
+        "beats": [
+          {
+            "id": "call_i_think_there_s_a_leak.intro",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_i_think_there_s_a_leak/establish.webp"
+            },
+            "type": "dialogue",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Water — or worse — pooling under a sink, and a caller who can't tell which."
+              }
+            ],
+            "next": "call_i_think_there_s_a_leak.v1"
+          },
+          {
+            "id": "call_i_think_there_s_a_leak.v1",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "shock",
+                "text": "I think there's a leak! Something's dripping and it stinks."
+              }
+            ],
+            "next": "call_i_think_there_s_a_leak.d1"
+          },
+          {
+            "id": "call_i_think_there_s_a_leak.d1",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Respond",
+              "choices": [
+                {
+                  "id": "call_i_think_there_s_a_leak.d1_0",
+                  "label": "Does it smell sweet or like rotten eggs?",
+                  "gem_cost": 0,
+                  "effects": {
+                    "integrity": 1
+                  },
+                  "next": "call_i_think_there_s_a_leak.v2"
+                },
+                {
+                  "id": "call_i_think_there_s_a_leak.d1_1",
+                  "label": "Okay — what's your location?",
+                  "gem_cost": 0,
+                  "next": "call_i_think_there_s_a_leak.v2"
+                },
+                {
+                  "id": "call_i_think_there_s_a_leak.d1_2",
+                  "label": "Taste it to check.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "trust": -1
+                  },
+                  "next": "call_i_think_there_s_a_leak.v2"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_i_think_there_s_a_leak.v2",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "Rotten eggs, definitely. And hissing."
+              },
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "It's 5 Cobble Lane, the corner unit."
+              }
+            ],
+            "next": "call_i_think_there_s_a_leak.d2"
+          },
+          {
+            "id": "call_i_think_there_s_a_leak.d2",
+            "background": "bg_dispatch",
+            "type": "decision",
+            "characters_on_scene": [],
+            "lines": [],
+            "decision": {
+              "prompt": "Dispatch",
+              "choices": [
+                {
+                  "id": "call_i_think_there_s_a_leak.d2_0",
+                  "label": "Send firefighters.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": 200,
+                    "trust": 1,
+                    "case_file": 1,
+                    "integrity": 1
+                  },
+                  "next": "call_i_think_there_s_a_leak.fin_ok"
+                },
+                {
+                  "id": "call_i_think_there_s_a_leak.d2_1",
+                  "label": "Send an ambulance.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -120,
+                    "trust": -1
+                  },
+                  "next": "call_i_think_there_s_a_leak.fin_bad"
+                },
+                {
+                  "id": "call_i_think_there_s_a_leak.d2_2",
+                  "label": "Ignore the call.",
+                  "gem_cost": 0,
+                  "effects": {
+                    "money": -200,
+                    "trust": -2
+                  },
+                  "next": "call_i_think_there_s_a_leak.fin_ignore"
+                }
+              ]
+            }
+          },
+          {
+            "id": "call_i_think_there_s_a_leak.fin_ok",
+            "background": "bg_dispatch",
+            "media": {
+              "type": "image",
+              "key": "scenes/call_i_think_there_s_a_leak/resolve.webp"
+            },
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Gas leak, caught early. Crew seals it. No boom, just relief."
+              }
+            ],
+            "next": null,
+            "outcome": "good_dispatch"
+          },
+          {
+            "id": "call_i_think_there_s_a_leak.fin_bad",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "Wrong unit, ticking clock. The block holds its breath — and remembers."
+              }
+            ],
+            "next": null,
+            "outcome": "bad_dispatch"
+          },
+          {
+            "id": "call_i_think_there_s_a_leak.fin_ignore",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "You let it go. Somewhere out there, that one's going to cost you — and the city."
+              }
+            ],
+            "next": null,
+            "outcome": "ignored_emergency"
+          }
+        ]
+      },
+      {
+        "id": "call_help_my_boss_is_having_a_baby",
+        "title": "HELP! My boss is having a baby!",
+        "kind": "daily_call",
+        "tags": {
+          "week_min": 1,
+          "difficulty": 1,
+          "type": "prank",
+          "unit": "none",
+          "category": "misc"
+        },
+        "start_beat": "call_help_my_boss_is_having_a_baby.intro",
+        "beats": [
+          {
+            "id": "call_help_my_boss_is_having_a_baby.intro",
+            "background": "bg_dispatch",
+            "type": "dialogue",
+            "characters_on_scene": [
+              "voice"
+            ],
+            "lines": [
+              {
+                "speaker": "voice",
+                "expr": "neutral",
+                "text": "HELP! My boss is having a baby!"
+              }
+            ],
+            "next": "call_help_my_boss_is_having_a_baby.todo"
+          },
+          {
+            "id": "call_help_my_boss_is_having_a_baby.todo",
+            "background": "bg_dispatch",
+            "type": "chapter_end",
+            "characters_on_scene": [],
+            "lines": [
+              {
+                "speaker": "narrator",
+                "expr": "neutral",
+                "text": "(Stub: author the branch here using the line bank.)"
+              }
+            ],
+            "next": null,
+            "outcome": "todo"
+          }
+        ]
+      }
+    ],
+    "source_ref": "daily-calls-source.json",
+    "source_note": "Original 911 strings live in daily-calls-source.json as a line bank. Author new calls from it in batches (this house-fire call is an example)."
+  }
+}

@@ -5,14 +5,17 @@ export type Rank = {
   icon: string;
 };
 
+// Promotions are paced to ~one in-game week of cases each. A week pays roughly
+// 100–130 XP (≈6 calls at 5–7 base + speed/streak bonuses + the 30 week-complete
+// bonus), so the gaps below start at ~one week and ramp up gently after that.
 export const RANKS: Rank[] = [
   { id: "trainee", name: "Trainee", minXP: 0, icon: "📋" },
-  { id: "dispatcher", name: "Dispatcher", minXP: 50, icon: "📞" },
-  { id: "senior", name: "Sr. Dispatcher", minXP: 150, icon: "🎧" },
-  { id: "supervisor", name: "Supervisor", minXP: 350, icon: "⭐" },
-  { id: "commander", name: "Commander", minXP: 700, icon: "🏅" },
-  { id: "chief", name: "Chief Operator", minXP: 1200, icon: "🎖️" },
-  { id: "director", name: "Director", minXP: 2000, icon: "🏆" },
+  { id: "dispatcher", name: "Dispatcher", minXP: 120, icon: "📞" },
+  { id: "senior", name: "Sr. Dispatcher", minXP: 260, icon: "🎧" },
+  { id: "supervisor", name: "Supervisor", minXP: 430, icon: "⭐" },
+  { id: "commander", name: "Commander", minXP: 640, icon: "🏅" },
+  { id: "chief", name: "Chief Operator", minXP: 900, icon: "🎖️" },
+  { id: "director", name: "Director", minXP: 1220, icon: "🏆" },
 ];
 
 // End-of-day / end-of-week bonuses (the in-game calendar replaced the old

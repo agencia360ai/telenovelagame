@@ -70,17 +70,25 @@ export function generateWeek(
   pools: MissionPools,
   plotMissionId: string | null,
   weekendMissionId: string | null,
-  rng: Rng = Math.random
+  rng: Rng = Math.random,
+  /** Daily ids already served in earlier weeks — avoided until the pool runs out. */
+  usedDailyInit: string[] = []
 ): WeekSchedule {
-  // Choose the plot day among eligible weekdays (only if we have a plot to place).
+  // Choose the plot day among eligible weekdays (only if we have a plot to
+  // place). Never the FIRST eligible day, so the week always opens on a daily
+  // call and the story isn't the very first case of the week.
   let gamePlotDayId: string | null = null;
   if (plotMissionId) {
     const eligible = template.filter((d) => d.gamePlotEligible);
-    const chosen = pick(eligible, rng);
+    const pickable = eligible.length > 1 ? eligible.slice(1) : eligible;
+    const chosen = pick(pickable, rng);
     gamePlotDayId = chosen?.id ?? null;
   }
 
-  const usedDaily = new Set<string>();
+  // Seed with the dailies already served in earlier weeks so the week avoids
+  // repeats across the whole run (not just within the week). When every daily
+  // has been seen, `drawFrom` falls back to the full pool (cycle restarts).
+  const usedDaily = new Set<string>(usedDailyInit);
 
   const drawFrom = (pool: Mission[], used: Set<string>): string | undefined => {
     const fresh = pool.filter((m) => !used.has(m.id));

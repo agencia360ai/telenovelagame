@@ -82,8 +82,10 @@ function buildWeek(
   week: number,
   plotIndex: number,
   weekendIndex: number,
-  rankIndex: number
+  rankIndex: number,
+  servedDaily: string[] = []
 ): CalendarState {
+  const pools = buildPools();
   const plotMissionId = resolveNextPlot(buildPlotList(), plotIndex, {
     rankIndex,
     week,
@@ -92,10 +94,20 @@ function buildWeek(
   const schedule = generateWeek(
     week,
     DEFAULT_WEEK_TEMPLATE,
-    buildPools(),
+    pools,
     plotMissionId,
-    weekendMissionId
+    weekendMissionId,
+    Math.random,
+    servedDaily
   );
+  // Track which dailies have now been served; once the whole pool has been seen,
+  // restart the cycle (keep just this week's so we don't immediately repeat).
+  const dailyIds = new Set(pools.daily.map((m) => m.id));
+  const usedThisWeek = schedule.days
+    .flatMap((d) => d.missionIds)
+    .filter((id) => dailyIds.has(id));
+  let nextServed = Array.from(new Set([...servedDaily, ...usedThisWeek]));
+  if (nextServed.length >= pools.daily.length) nextServed = usedThisWeek;
   return {
     week,
     dayIndex: firstPlayableDay(schedule),
@@ -105,6 +117,7 @@ function buildWeek(
     schedule,
     completedThisWeek: 0,
     correctThisWeek: 0,
+    servedDaily: nextServed,
   };
 }
 
@@ -141,6 +154,7 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
             if (saved.schedule && saved.schedule.weekendMissionId === undefined) {
               saved.schedule.weekendMissionId = null;
             }
+            if (!Array.isArray(saved.servedDaily)) saved.servedDaily = [];
             setState(saved);
           }
         } catch {}
@@ -211,7 +225,8 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
         prev.week + 1,
         prev.gamePlotIndex,
         prev.weekendIndex,
-        rankRef.current
+        rankRef.current,
+        prev.servedDaily
       )
     );
   }, []);

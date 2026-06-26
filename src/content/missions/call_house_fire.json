@@ -31,12 +31,6 @@
   "start": "call_house_fire.intro",
   "assets": [
     {
-      "key": "kitchen-fire-intro",
-      "type": "video",
-      "role": "intro",
-      "caption": "My House Is on Fire"
-    },
-    {
       "key": "kitchen-fire",
       "type": "video",
       "role": "ambient"
