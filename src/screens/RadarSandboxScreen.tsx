@@ -22,7 +22,7 @@ import { colors } from "../theme/colors";
 
 // ── Test config ──────────────────────────────────────────────────────────────
 const NUM_AMBIENT_UNITS = 6; // how many units appear
-const UNIT_SPEED = 1800; // ms per normalized distance unit (lower = faster)
+const UNIT_SPEED = 9000; // ms per normalized distance unit (higher = slower)
 const TEST_LOOP = true; // units never stop while testing
 // ─────────────────────────────────────────────────────────────────────────────
 

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
+  withSequence,
   cancelAnimation,
   runOnJS,
   Easing,
@@ -20,7 +21,7 @@ type Props = {
   /** Canvas size in px; normalized 0..1 graph coords are scaled by this. */
   size: number;
   icon: string;
-  /** ms per normalized distance unit (1.0 = full canvas width). */
+  /** ms per normalized distance unit (1.0 = full canvas width). Higher = slower. */
   speed: number;
   /** Keep moving forever (pick a new destination on arrival). */
   loop: boolean;
@@ -30,17 +31,15 @@ const DOT = 26;
 
 /**
  * A single unit that walks the street graph in straight, segment-by-segment
- * lines. Each segment is a linear `withTiming` whose duration is proportional
- * to its length, so visual speed stays roughly constant. Because every position
- * is a linear blend of two adjacent nodes, the unit can never cut across a block.
+ * lines. The whole route is animated as one `withSequence` per axis, with both
+ * axes sharing the same per-segment duration, so they advance in lockstep and
+ * the unit stays exactly on each (axis-aligned) street segment — no diagonals
+ * and no teleports between segments.
  */
 export function AmbientUnit({ size, icon, speed, loop }: Props) {
   const tx = useSharedValue(0);
   const ty = useSharedValue(0);
-
-  // Mutable route state lives in a ref (driven from JS, not the UI thread).
-  const route = useRef<string[]>([]);
-  const segIndex = useRef(0);
+  const opacity = useSharedValue(0); // avoid a one-frame flash at the (0,0) corner
 
   useEffect(() => {
     // Spawn instantly on a random node, then head somewhere else.
@@ -48,7 +47,8 @@ export function AmbientUnit({ size, icon, speed, loop }: Props) {
     const startNode = nodes[start];
     tx.value = startNode.x * size;
     ty.value = startNode.y * size;
-    planNewRoute(start);
+    opacity.value = 1;
+    startRouteFrom(start);
 
     return () => {
       cancelAnimation(tx);
@@ -57,50 +57,50 @@ export function AmbientUnit({ size, icon, speed, loop }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function planNewRoute(from: string) {
+  function startRouteFrom(from: string) {
     const to = randomDifferentNodeId(from);
     const path = shortestPath(from, to);
-    // Fall back to a fresh start if the graph ever returns nothing.
-    route.current = path.length >= 2 ? path : [from, randomDifferentNodeId(from)];
-    segIndex.current = 0;
-    moveToNextNode();
-  }
-
-  function moveToNextNode() {
-    const next = route.current[segIndex.current + 1];
-    if (next == null) {
-      // Reached the destination.
-      if (loop) {
-        planNewRoute(route.current[route.current.length - 1]);
-      }
+    if (path.length < 2) {
+      // Shouldn't happen on a connected graph; just try again from here.
+      if (loop) startRouteFrom(from);
       return;
     }
 
-    const fromNode = nodes[route.current[segIndex.current]];
-    const toNode = nodes[next];
-    const duration = Math.max(150, dist(fromNode, toNode) * speed);
+    // One timed step per segment. tx and ty steps share the same duration, so
+    // both axes finish each segment together. Each segment is purely horizontal
+    // or vertical (grid edges), so the moving axis interpolates while the other
+    // holds — the path is always L-shaped, never diagonal.
+    const xSteps = [];
+    const ySteps = [];
+    const lastId = path[path.length - 1];
+    for (let i = 1; i < path.length; i++) {
+      const a = nodes[path[i - 1]];
+      const b = nodes[path[i]];
+      const duration = Math.max(150, dist(a, b) * speed);
+      const isLast = i === path.length - 1;
+      xSteps.push(withTiming(b.x * size, { duration, easing: Easing.linear }));
+      ySteps.push(
+        withTiming(
+          b.y * size,
+          { duration, easing: Easing.linear },
+          isLast
+            ? (finished) => {
+                "worklet";
+                if (finished && loop) {
+                  runOnJS(startRouteFrom)(lastId);
+                }
+              }
+            : undefined
+        )
+      );
+    }
 
-    tx.value = withTiming(toNode.x * size, {
-      duration,
-      easing: Easing.linear,
-    });
-    ty.value = withTiming(
-      toNode.y * size,
-      { duration, easing: Easing.linear },
-      (finished) => {
-        if (finished) {
-          runOnJS(advanceSegment)();
-        }
-      }
-    );
-  }
-
-  function advanceSegment() {
-    segIndex.current += 1;
-    moveToNextNode();
+    tx.value = withSequence(...xSteps);
+    ty.value = withSequence(...ySteps);
   }
 
   const style = useAnimatedStyle(() => ({
+    opacity: opacity.value,
     transform: [
       { translateX: tx.value - DOT / 2 },
       { translateY: ty.value - DOT / 2 },
