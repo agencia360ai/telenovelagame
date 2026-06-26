@@ -191,7 +191,12 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         >
           <RankBadge rankIndex={progress.rankIndex} />
         </Pressable>
-        <Text style={styles.title}>DISPATCH CENTER</Text>
+        <Text
+          style={styles.title}
+          onLongPress={() => navigation.navigate("RadarSandbox" as any)}
+        >
+          DISPATCH CENTER
+        </Text>
         <Pressable
           style={styles.scoreChip}
           onPress={() => navigation.navigate("Stats" as any)}
