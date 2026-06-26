@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Pressable, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import Animated, { FadeIn, FadeInDown, ZoomIn } from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";

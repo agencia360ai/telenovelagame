@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useI18n } from "../context/I18nContext";
@@ -99,7 +100,7 @@ export function HomeScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
           <Text style={styles.headerIcon}>{"⚙️"}</Text>
@@ -182,7 +183,7 @@ export function HomeScreen({ navigation }: Props) {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: sizes.spacing.lg,
-    paddingTop: sizes.spacing.xxl + sizes.spacing.md,
+    paddingTop: sizes.spacing.md,
     paddingBottom: sizes.spacing.md,
   },
   headerIcon: {
