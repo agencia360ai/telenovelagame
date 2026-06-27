@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
@@ -6,16 +6,32 @@ import Animated, {
   withTiming,
   withRepeat,
   withSequence,
-  withDelay,
   Easing,
   FadeIn,
 } from "react-native-reanimated";
 import { colors } from "../theme/colors";
+import { RadarStreets } from "./RadarStreets";
+import { AmbientUnit } from "./AmbientUnit";
+import { MapPin } from "./MapPin";
+import { getUnlockedUnits } from "../content/missions";
+import { nodes } from "../game/streetGraph";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const RADAR_SIZE = Math.min(SCREEN_WIDTH - 64, 300);
 const CENTER = RADAR_SIZE / 2;
 const RINGS = [0.25, 0.5, 0.75, 1];
+
+// ── Map simulation sizing (easy to tweak) ────────────────────────────────────
+const SIM_UNIT_DOT = 16; // ambient ("simulation") unit dot diameter
+const SIM_UNIT_ICON = 9; // ambient unit emoji size
+const SIM_PIN_SIZE = 16; // ambient destination pin bubble diameter
+const HERO_UNIT_DOT = 32; // selected unit — keeps the prominent radar look
+const HERO_UNIT_ICON = 16;
+const DISPATCH_SPEED = 2200; // ms per normalized distance (≈2–3.5s per trip)
+const SPEED_VARIANCE = 0.25; // ambient units vary their speed ±25%
+// ─────────────────────────────────────────────────────────────────────────────
+
+const SIM_PIN_H = SIM_PIN_SIZE + Math.round(SIM_PIN_SIZE * 0.45);
 
 type Props = {
   location: string;
@@ -25,14 +41,27 @@ type Props = {
   onComplete: () => void;
 };
 
-function callCoords(id: string): { x: number; y: number } {
+function hashStr(s: string): number {
   let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = ((hash << 5) - hash + id.charCodeAt(i)) | 0;
+  for (let i = 0; i < s.length; i++) {
+    hash = ((hash << 5) - hash + s.charCodeAt(i)) | 0;
   }
-  const x = ((hash & 0xff) / 255) * 0.5 + 0.25;
-  const y = (((hash >> 8) & 0xff) / 255) * 0.5 + 0.25;
-  return { x, y };
+  return Math.abs(hash);
+}
+
+function shuffle<T>(arr: T[], seed: number): T[] {
+  // Deterministic-ish shuffle so a given call keeps a stable layout.
+  const a = [...arr];
+  let s = seed || 1;
+  const rnd = () => {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 export function DispatchRadar({
@@ -42,18 +71,84 @@ export function DispatchRadar({
   callId,
   onComplete,
 }: Props) {
-  const coords = useRef(callCoords(callId)).current;
-  const targetX = coords.x * RADAR_SIZE;
-  const targetY = coords.y * RADAR_SIZE;
-  const dx = targetX - CENTER;
-  const dy = targetY - CENTER;
-
-  const unitTX = useSharedValue(0);
-  const unitTY = useSharedValue(0);
-  const blipScale = useSharedValue(1);
   const scanY = useSharedValue(0);
+  const blipScale = useSharedValue(1);
   const arrivedOpacity = useSharedValue(0);
-  const trailOpacity = useSharedValue(0);
+  const doneRef = useRef(false);
+
+  // Allocate unique street nodes: the selected unit's start + objective, plus a
+  // start and a destination pin for one ambient unit of every unlocked type.
+  // The objective is deterministic from callId so a call keeps a stable spot.
+  const layout = useMemo(() => {
+    const seed = hashStr(callId);
+    const R = RADAR_SIZE / 2;
+    const ids = Object.keys(nodes);
+    const px = (id: string) => ({
+      x: nodes[id].x * RADAR_SIZE,
+      y: nodes[id].y * RADAR_SIZE,
+    });
+    const within = (x: number, y: number, m: number) =>
+      Math.hypot(x - CENTER, y - CENTER) <= R - m;
+    const pinFits = (id: string) => {
+      const p = px(id);
+      const top = p.y - SIM_PIN_H;
+      return (
+        within(p.x - SIM_PIN_SIZE / 2, top, 2) &&
+        within(p.x + SIM_PIN_SIZE / 2, top, 2) &&
+        within(p.x, p.y, 2)
+      );
+    };
+    const insideIds = ids.filter((id) => {
+      const p = px(id);
+      return within(p.x, p.y, HERO_UNIT_DOT / 2 + 2);
+    });
+    const pinIds = ids.filter(pinFits);
+
+    const used = new Set<string>();
+    const take = (pool: string[]): string => {
+      for (const id of shuffle(pool, seed + used.size)) {
+        if (!used.has(id)) {
+          used.add(id);
+          return id;
+        }
+      }
+      return pool[0];
+    };
+
+    // Hero objective: deterministic node inside the circle.
+    const heroTargetPool = insideIds.length ? insideIds : ids;
+    const heroTarget = heroTargetPool[seed % heroTargetPool.length];
+    used.add(heroTarget);
+    const heroStart = take(insideIds);
+
+    const sims = getUnlockedUnits().map((u) => {
+      const factor = 1 + (Math.random() * 2 - 1) * SPEED_VARIANCE; // 0.75..1.25
+      return {
+        id: u.id,
+        icon: u.icon,
+        speed: DISPATCH_SPEED / factor,
+        startId: take(insideIds),
+        destId: take(pinIds),
+      };
+    });
+
+    return { heroTarget, heroStart, sims };
+  }, [callId]);
+
+  const heroNode = nodes[layout.heroTarget];
+  const heroX = heroNode.x * RADAR_SIZE;
+  const heroY = heroNode.y * RADAR_SIZE;
+
+  const finish = () => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    onComplete();
+  };
+
+  const handleHeroArrive = () => {
+    arrivedOpacity.value = withTiming(1, { duration: 300 });
+    setTimeout(finish, 1000);
+  };
 
   useEffect(() => {
     blipScale.value = withRepeat(
@@ -64,54 +159,26 @@ export function DispatchRadar({
       -1,
       false
     );
-
     scanY.value = withRepeat(
       withTiming(RADAR_SIZE, { duration: 2200, easing: Easing.linear }),
       -1,
       false
     );
 
-    trailOpacity.value = withDelay(
-      300,
-      withTiming(0.6, { duration: 200 })
-    );
-
-    unitTX.value = withDelay(
-      500,
-      withTiming(dx, { duration: 1200, easing: Easing.inOut(Easing.cubic) })
-    );
-    unitTY.value = withDelay(
-      500,
-      withTiming(dy, { duration: 1200, easing: Easing.inOut(Easing.cubic) })
-    );
-
-    arrivedOpacity.value = withDelay(1800, withTiming(1, { duration: 300 }));
-
-    const timer = setTimeout(onComplete, 2400);
-    return () => clearTimeout(timer);
+    // Safety: always advance the flow even if the arrival callback never fires.
+    const safety = setTimeout(finish, 9000);
+    return () => clearTimeout(safety);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const unitStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: unitTX.value },
-      { translateY: unitTY.value },
-    ],
-  }));
-
-  const blipAnimStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: blipScale.value }],
-  }));
 
   const scanStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: scanY.value }],
   }));
-
+  const blipAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: blipScale.value }],
+  }));
   const arrivedStyle = useAnimatedStyle(() => ({
     opacity: arrivedOpacity.value,
-  }));
-
-  const trailStyle = useAnimatedStyle(() => ({
-    opacity: trailOpacity.value,
   }));
 
   return (
@@ -154,49 +221,62 @@ export function DispatchRadar({
             style={[styles.scanLine, { width: RADAR_SIZE }, scanStyle]}
           />
 
-          <Animated.View
-            style={[
-              styles.trail,
-              {
-                left: CENTER,
-                top: CENTER,
-                width: Math.sqrt(dx * dx + dy * dy),
-                transform: [
-                  { rotate: `${Math.atan2(dy, dx)}rad` },
-                ],
-              },
-              trailStyle,
-            ]}
-          />
+          <RadarStreets size={RADAR_SIZE} />
 
+          {/* Ambient simulation pins (small) */}
+          {layout.sims.map((u) =>
+            u.destId ? (
+              <MapPin
+                key={`pin-${u.id}`}
+                x={nodes[u.destId].x * RADAR_SIZE}
+                y={nodes[u.destId].y * RADAR_SIZE}
+                icon={u.icon}
+                size={SIM_PIN_SIZE}
+                color="rgba(34, 211, 238, 0.7)"
+              />
+            ) : null
+          )}
+
+          {/* Ambient simulation units (small + dimmed) */}
+          {layout.sims.map((u) => (
+            <AmbientUnit
+              key={`sim-${u.id}`}
+              size={RADAR_SIZE}
+              icon={u.icon}
+              speed={u.speed}
+              startId={u.startId}
+              targetId={u.destId}
+              dotSize={SIM_UNIT_DOT}
+              iconSize={SIM_UNIT_ICON}
+              dim
+            />
+          ))}
+
+          {/* Selected unit objective — the prominent amber blip (unchanged look) */}
           <Animated.View
             style={[
               styles.blip,
-              { left: targetX - 8, top: targetY - 8 },
+              { left: heroX - 8, top: heroY - 8 },
               blipAnimStyle,
             ]}
           />
 
-          <View
-            style={[styles.centerDot, { left: CENTER - 3, top: CENTER - 3 }]}
+          {/* Selected unit — prominent, but travels along the streets too */}
+          <AmbientUnit
+            size={RADAR_SIZE}
+            icon={unitIcon}
+            speed={DISPATCH_SPEED}
+            startId={layout.heroStart}
+            targetId={layout.heroTarget}
+            dotSize={HERO_UNIT_DOT}
+            iconSize={HERO_UNIT_ICON}
+            onArrive={handleHeroArrive}
           />
-
-          <Animated.View
-            style={[
-              styles.unitDot,
-              { left: CENTER - 16, top: CENTER - 16 },
-              unitStyle,
-            ]}
-          >
-            <Text style={styles.unitDotEmoji}>{unitIcon}</Text>
-          </Animated.View>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.locationLabel}>
-          TO: {location.toUpperCase()}
-        </Text>
+        <Text style={styles.locationLabel}>TO: {location.toUpperCase()}</Text>
         <Animated.Text style={[styles.arrivedText, arrivedStyle]}>
           UNIT ON SCENE
         </Animated.Text>
@@ -272,12 +352,6 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: "rgba(34, 211, 238, 0.15)",
   },
-  trail: {
-    position: "absolute",
-    height: 1,
-    backgroundColor: colors.dispatch.cyan,
-    transformOrigin: "left center",
-  },
   blip: {
     position: "absolute",
     width: 16,
@@ -286,27 +360,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(245, 158, 11, 0.4)",
     borderWidth: 2,
     borderColor: colors.dispatch.amber,
-  },
-  centerDot: {
-    position: "absolute",
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.dispatch.cyan,
-  },
-  unitDot: {
-    position: "absolute",
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "rgba(34, 211, 238, 0.2)",
-    borderWidth: 1,
-    borderColor: colors.dispatch.cyan,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  unitDotEmoji: {
-    fontSize: 16,
   },
   footer: {
     alignItems: "center",

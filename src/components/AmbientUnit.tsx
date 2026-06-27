@@ -32,12 +32,17 @@ type Props = {
   targetId?: string;
   /** Keep wandering forever (only used when there is no fixed target). */
   loop?: boolean;
+  /** Diameter of the unit dot in px (default 26). */
+  dotSize?: number;
+  /** Emoji font size in px (default 14). */
+  iconSize?: number;
+  /** Dim the unit so a foreground/"hero" unit stands out (ambient units). */
+  dim?: boolean;
   /** Small constant px offset so units sharing a node/destination don't overlap. */
   offset?: { x: number; y: number };
+  /** Called (on the JS thread) once the unit reaches its fixed target. */
+  onArrive?: () => void;
 };
-
-const DOT = 26;
-const RING = 30;
 
 /**
  * A single unit that walks the street graph in straight, segment-by-segment
@@ -55,7 +60,11 @@ export function AmbientUnit({
   startId,
   targetId,
   loop,
+  dotSize = 26,
+  iconSize = 14,
+  dim = false,
   offset,
+  onArrive,
 }: Props) {
   const tx = useSharedValue(0);
   const ty = useSharedValue(0);
@@ -68,6 +77,8 @@ export function AmbientUnit({
 
   const offX = offset?.x ?? 0;
   const offY = offset?.y ?? 0;
+  const ringSize = dotSize + 6;
+  const restOpacity = dim ? 0.5 : 1;
 
   useEffect(() => {
     // Spawn instantly on the given node, else a node away from the target.
@@ -77,7 +88,7 @@ export function AmbientUnit({
     const startNode = nodes[start];
     tx.value = startNode.x * size;
     ty.value = startNode.y * size;
-    opacity.value = 1;
+    opacity.value = restOpacity;
     startRouteFrom(start);
 
     return () => {
@@ -151,13 +162,14 @@ export function AmbientUnit({
       false
     );
     glow.value = withTiming(1, { duration: 500 });
+    onArrive?.();
   }
 
   const style = useAnimatedStyle(() => ({
     opacity: opacity.value,
     transform: [
-      { translateX: tx.value - DOT / 2 + offX },
-      { translateY: ty.value - DOT / 2 + offY },
+      { translateX: tx.value - dotSize / 2 + offX },
+      { translateY: ty.value - dotSize / 2 + offY },
     ],
   }));
 
@@ -172,10 +184,28 @@ export function AmbientUnit({
   }));
 
   return (
-    <Animated.View style={[styles.wrap, style]}>
-      <Animated.View style={[styles.ring, ringStyle]} />
-      <Animated.View style={[styles.unit, unitInnerStyle]}>
-        <Text style={styles.icon}>{icon}</Text>
+    <Animated.View
+      style={[styles.wrap, { width: dotSize, height: dotSize }, style]}
+    >
+      <Animated.View
+        style={[
+          styles.ring,
+          {
+            width: ringSize,
+            height: ringSize,
+            borderRadius: ringSize / 2,
+          },
+          ringStyle,
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.unit,
+          { width: dotSize, height: dotSize, borderRadius: dotSize / 2 },
+          unitInnerStyle,
+        ]}
+      >
+        <Text style={{ fontSize: iconSize }}>{icon}</Text>
       </Animated.View>
     </Animated.View>
   );
@@ -186,30 +216,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     top: 0,
-    width: DOT,
-    height: DOT,
     alignItems: "center",
     justifyContent: "center",
   },
   ring: {
     position: "absolute",
-    width: RING,
-    height: RING,
-    borderRadius: RING / 2,
     borderWidth: 2,
     borderColor: colors.dispatch.cyan,
   },
   unit: {
-    width: DOT,
-    height: DOT,
-    borderRadius: DOT / 2,
     backgroundColor: "rgba(34, 211, 238, 0.18)",
     borderWidth: 1,
     borderColor: "rgba(34, 211, 238, 0.6)",
     justifyContent: "center",
     alignItems: "center",
-  },
-  icon: {
-    fontSize: 14,
   },
 });
