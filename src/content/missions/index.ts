@@ -113,6 +113,22 @@ export const DISPATCH_OPTIONS: DispatchOption[] = [
   { id: "no_unit", label: "NO UNIT", icon: "🚫" },
 ];
 
+/** Special units that only appear on calls that opt in via their `units` list. */
+export const SPECIAL_UNITS: DispatchType[] = ["zombie_unit", "dino_control"];
+
+/**
+ * Units the player can deploy by default. There is no per-unit purchase/unlock
+ * system yet (the shop/wardrobe only unlocks officer skins), so "unlocked" means
+ * the standard units: everything except the opt-in SPECIAL_UNITS and the
+ * non-vehicle "no_unit". This is the single source of truth — extend it once a
+ * real unit-ownership system exists.
+ */
+export function getUnlockedUnits(): DispatchOption[] {
+  return DISPATCH_OPTIONS.filter(
+    (o) => !SPECIAL_UNITS.includes(o.id) && o.id !== "no_unit"
+  );
+}
+
 export function getDispatchLabel(id: DispatchType): string {
   return (
     DISPATCH_OPTIONS.find((o) => o.id === id)?.label.replace("\n", " ") ?? id

@@ -18,21 +18,31 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { RadarStreets } from "../components/RadarStreets";
 import { AmbientUnit } from "../components/AmbientUnit";
+import { getUnlockedUnits } from "../content/missions";
+import { nodes } from "../game/streetGraph";
 import { colors } from "../theme/colors";
 
 // ── Test config ──────────────────────────────────────────────────────────────
-const NUM_AMBIENT_UNITS = 6; // how many units appear
 const UNIT_SPEED = 9000; // ms per normalized distance unit (higher = slower)
-const TEST_LOOP = true; // units never stop while testing
+const SPEED_VARIANCE = 0.25; // each unit's speed varies by ±25%
 // ─────────────────────────────────────────────────────────────────────────────
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const RADAR_SIZE = Math.min(SCREEN_WIDTH - 48, 340);
 const CENTER = RADAR_SIZE / 2;
 const RINGS = [0.25, 0.5, 0.75, 1];
-const UNIT_ICONS = ["🚔", "🚑", "🚒"];
+const UNIT_CLEARANCE = 16; // px a spawning unit must stay inside the radar edge
 
 type Props = NativeStackScreenProps<RootStackParamList, "RadarSandbox">;
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export function RadarSandboxScreen({ navigation }: Props) {
   const scanY = useSharedValue(0);
@@ -49,14 +59,57 @@ export function RadarSandboxScreen({ navigation }: Props) {
     transform: [{ translateY: scanY.value }],
   }));
 
-  // Stable icon assignment per unit across re-renders.
-  const unitIcons = useMemo(
-    () =>
-      Array.from({ length: NUM_AMBIENT_UNITS }).map(
-        () => UNIT_ICONS[Math.floor(Math.random() * UNIT_ICONS.length)]
-      ),
-    []
-  );
+  // One unit per unlocked type. Each gets its OWN unique start node and its OWN
+  // unique destination node (pin) — no two pins and no two spawn points overlap.
+  // Destination nodes are restricted to those where the pin fits fully inside the
+  // radar circle; start nodes just need to sit inside it. Memoized so re-renders
+  // don't reshuffle anything.
+  const units = useMemo(() => {
+    const unlocked = getUnlockedUnits();
+    const N = unlocked.length;
+    const R = RADAR_SIZE / 2;
+    const ids = Object.keys(nodes);
+    const px = (id: string) => ({
+      x: nodes[id].x * RADAR_SIZE,
+      y: nodes[id].y * RADAR_SIZE,
+    });
+    const within = (x: number, y: number, margin: number) =>
+      Math.hypot(x - CENTER, y - CENTER) <= R - margin;
+    const pinFits = (id: string) => {
+      const p = px(id);
+      const top = p.y - PIN_H;
+      return (
+        within(p.x - PIN_W / 2, top, 2) &&
+        within(p.x + PIN_W / 2, top, 2) &&
+        within(p.x, p.y, 2)
+      );
+    };
+
+    const destPool = shuffle(ids.filter(pinFits));
+    const dests = destPool.slice(0, N);
+    const destSet = new Set(dests);
+    const startPool = shuffle(
+      ids.filter((id) => {
+        if (destSet.has(id)) return false;
+        const p = px(id);
+        return within(p.x, p.y, UNIT_CLEARANCE);
+      })
+    );
+    const starts = startPool.slice(0, N);
+
+    return unlocked.map((u, i) => {
+      const factor = 1 + (Math.random() * 2 - 1) * SPEED_VARIANCE; // 0.75..1.25
+      return {
+        id: u.id,
+        icon: u.icon,
+        label: u.label.replace("\n", " "),
+        // Higher speed value = slower; divide so a higher factor → faster.
+        speed: UNIT_SPEED / factor,
+        startId: starts[i],
+        destId: dests[i],
+      };
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,25 +152,50 @@ export function RadarSandboxScreen({ navigation }: Props) {
 
             <RadarStreets size={RADAR_SIZE} />
 
-            {unitIcons.map((icon, i) => (
+            {/* One destination pin per unit — tip at the node, unit's own icon */}
+            {units.map((u) => {
+              if (!u.destId) return null;
+              const dx = nodes[u.destId].x * RADAR_SIZE;
+              const dy = nodes[u.destId].y * RADAR_SIZE;
+              return (
+                <View
+                  key={`pin-${u.id}`}
+                  style={[styles.pin, { left: dx - PIN_W / 2, top: dy - PIN_H }]}
+                  pointerEvents="none"
+                >
+                  <View style={styles.pinBubble}>
+                    <Text style={styles.pinIcon}>{u.icon}</Text>
+                  </View>
+                  <View style={styles.pinTip} />
+                </View>
+              );
+            })}
+
+            {units.map((u) => (
               <AmbientUnit
-                key={i}
+                key={u.id}
                 size={RADAR_SIZE}
-                icon={icon}
-                speed={UNIT_SPEED}
-                loop={TEST_LOOP}
+                icon={u.icon}
+                speed={u.speed}
+                startId={u.startId}
+                targetId={u.destId}
               />
             ))}
           </View>
         </View>
 
         <Text style={styles.hint}>
-          {NUM_AMBIENT_UNITS} units · moving along the street graph
+          {units.length} units · cada una a su propio destino
         </Text>
       </View>
     </SafeAreaView>
   );
 }
+
+const PIN_W = 34;
+const PIN_BUBBLE = 34;
+const PIN_TIP = 8;
+const PIN_H = PIN_BUBBLE + PIN_TIP;
 
 const styles = StyleSheet.create({
   container: {
@@ -188,6 +266,35 @@ const styles = StyleSheet.create({
     top: 0,
     height: 2,
     backgroundColor: "rgba(34, 211, 238, 0.15)",
+  },
+  pin: {
+    position: "absolute",
+    width: PIN_W,
+    alignItems: "center",
+  },
+  pinBubble: {
+    width: PIN_BUBBLE,
+    height: PIN_BUBBLE,
+    borderRadius: PIN_BUBBLE / 2,
+    backgroundColor: "rgba(245, 158, 11, 0.18)",
+    borderWidth: 2,
+    borderColor: colors.dispatch.amber,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  pinIcon: {
+    fontSize: 16,
+  },
+  pinTip: {
+    width: 0,
+    height: 0,
+    marginTop: -2,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: PIN_TIP,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: colors.dispatch.amber,
   },
   hint: {
     color: colors.dispatch.textMuted,

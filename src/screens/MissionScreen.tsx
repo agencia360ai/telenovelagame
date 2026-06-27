@@ -28,6 +28,7 @@ import { useEconomy } from "../context/EconomyContext";
 import {
   getMissionById,
   DISPATCH_OPTIONS,
+  SPECIAL_UNITS,
 } from "../content/missions";
 import {
   getBeat,
@@ -102,7 +103,6 @@ export function MissionScreen({ navigation, route }: Props) {
   const timeLimit = mission.time_limit_seconds ?? 15;
   // Default option set excludes special units (e.g. zombie_unit) — those only
   // show on calls that explicitly list them in their `units` field.
-  const SPECIAL_UNITS = ["zombie_unit", "dino_control"];
   const units =
     mission.units ??
     DISPATCH_OPTIONS.filter((o) => !SPECIAL_UNITS.includes(o.id)).map(
