@@ -1,0 +1,166 @@
+{
+  "schema": "mission@1",
+  "id": "call_giant_roach",
+  "title": "There's a Giant Cockroach!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "exotic",
+    "weird"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "PEST PROBLEM",
+    "location": "Sunny Acres Apts · unit 3C"
+  },
+  "units": [
+    "pest_control",
+    "animal_control",
+    "police",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_giant_roach.b0",
+  "assets": [
+    {
+      "key": "call-giant-roach",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-pest_control",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_giant_roach.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Skittering. A lot of skittering. And then a scream that goes up an entire octave."
+        }
+      ],
+      "next": "call_giant_roach.b1"
+    },
+    {
+      "id": "call_giant_roach.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "There's a cockroach in my kitchen and it's the SIZE OF A DOG. It just opened my fridge!"
+        }
+      ],
+      "next": "call_giant_roach.b2"
+    },
+    {
+      "id": "call_giant_roach.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_giant_roach.b2_0",
+          "label": "Get out of the room and shut the door.",
+          "next": "call_giant_roach.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_giant_roach.b2_1",
+          "label": "Did you name it yet?",
+          "next": "call_giant_roach.b3"
+        },
+        {
+          "id": "call_giant_roach.b2_2",
+          "label": "A dog-sized roach. Sure. 🙄",
+          "next": "call_giant_roach.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_giant_roach.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm in the hallway! It hissed at me and took my sandwich. Please send the bug people!"
+        }
+      ],
+      "next": "call_giant_roach.b4"
+    },
+    {
+      "id": "call_giant_roach.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_giant_roach.b4_0",
+          "label": "Don't corner it — wait outside for the team.",
+          "next": "call_giant_roach.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_giant_roach.b4_1",
+          "label": "Hit it with a shoe the size of a canoe.",
+          "next": "call_giant_roach.b5",
+          "effects": {
+            "trust": -1
+          }
+        },
+        {
+          "id": "call_giant_roach.b4_2",
+          "label": "Pest control's on it. Stay clear.",
+          "next": "call_giant_roach.b5",
+          "effects": {
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_giant_roach.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Sunny Acres, unit 3C. It's wearing my oven mitt now. WHY is it wearing my oven mitt?!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "pest_control",
+      "explanation": "Pest control rolling — traps, suits, the big vacuum. Stay in the hall. You can keep the sandwich; it can keep the mitt.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-pest_control",
+        "role": "deploy"
+      }
+    }
+  ]
+}

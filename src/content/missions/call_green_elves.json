@@ -31,6 +31,11 @@
   "start": "call_green_elves.b0",
   "assets": [
     {
+      "key": "call-green-elves",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
       "key": "deploy-ambulance",
       "type": "video",
       "role": "deploy"

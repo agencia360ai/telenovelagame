@@ -1,0 +1,166 @@
+{
+  "schema": "mission@1",
+  "id": "call_plane_crash",
+  "title": "A Plane Hit the Building!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 3,
+  "category": "daily",
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "WITNESS · MASS CASUALTY",
+    "location": "Sidewalk · outside Meridian Tower"
+  },
+  "units": [
+    "firefighters",
+    "ambulance",
+    "police",
+    "no_unit"
+  ],
+  "reward": 6,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_plane_crash.b0",
+  "assets": [
+    {
+      "key": "call-plane-crash",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-firefighters",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_plane_crash.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A roar, then an impact you can feel through the phone. Car alarms, screaming, a voice shouting from the middle of the street, out of breath."
+        }
+      ],
+      "next": "call_plane_crash.b1"
+    },
+    {
+      "id": "call_plane_crash.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Oh my god — a plane just hit the tower! I saw it, I'm right across the street, there's smoke and glass coming down everywhere!"
+        }
+      ],
+      "next": "call_plane_crash.b2"
+    },
+    {
+      "id": "call_plane_crash.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_plane_crash.b2_0",
+          "label": "Are you clear of the falling debris?",
+          "next": "call_plane_crash.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_plane_crash.b2_1",
+          "label": "How big was the plane?",
+          "next": "call_plane_crash.b3"
+        },
+        {
+          "id": "call_plane_crash.b2_2",
+          "label": "Whoa, did you film it? 📹",
+          "next": "call_plane_crash.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_plane_crash.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Small plane, stuck in the upper floors! Debris is falling, people are running out the lobby — some of them look hurt!"
+        }
+      ],
+      "next": "call_plane_crash.b4"
+    },
+    {
+      "id": "call_plane_crash.b4",
+      "type": "decision",
+      "prompt": "Instruction",
+      "choices": [
+        {
+          "id": "call_plane_crash.b4_0",
+          "label": "Move back, keep people away from the falling debris.",
+          "next": "call_plane_crash.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_plane_crash.b4_1",
+          "label": "Guide the injured to a safe corner for the medics.",
+          "next": "call_plane_crash.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_plane_crash.b4_2",
+          "label": "Get closer for a better look.",
+          "next": "call_plane_crash.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_plane_crash.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Okay — we're pulling back across the street. It's Meridian Tower. Hurry, there are still people inside!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Fire crews and rescue rolling, ambulances right behind. Keep everyone back across the street — you gave them a clear scene to work.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

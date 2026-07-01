@@ -1,0 +1,163 @@
+{
+  "schema": "mission@1",
+  "id": "call_drunk_caller",
+  "title": "I Looove This Hotline",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "daily",
+  "tags": [
+    "prank",
+    "misc"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "NON-EMERGENCY",
+    "location": "somewhere with a jukebox"
+  },
+  "units": [
+    "no_unit",
+    "police",
+    "ambulance"
+  ],
+  "reward": 3,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_drunk_caller.b0",
+  "assets": [
+    {
+      "key": "call-drunk",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-no_unit",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_drunk_caller.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Background music. A hiccup. The slow, careful voice of someone who thinks they're being very clear."
+        }
+      ],
+      "next": "call_drunk_caller.b1"
+    },
+    {
+      "id": "call_drunk_caller.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Hi… is this 911? I just wanted to say… you guys are doing a GREAT job. *hic* Truly."
+        }
+      ],
+      "next": "call_drunk_caller.b2"
+    },
+    {
+      "id": "call_drunk_caller.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_drunk_caller.b2_0",
+          "label": "Sir, are you having an emergency?",
+          "next": "call_drunk_caller.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_drunk_caller.b2_1",
+          "label": "Thank you. How many fingers am I holding up?",
+          "next": "call_drunk_caller.b3"
+        },
+        {
+          "id": "call_drunk_caller.b2_2",
+          "label": "Have you been drinking?",
+          "next": "call_drunk_caller.b3",
+          "effects": {
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_drunk_caller.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Emergency? Noooo. Well — they're out of nachos. That FEELS like an emergency. But no."
+        }
+      ],
+      "next": "call_drunk_caller.b4"
+    },
+    {
+      "id": "call_drunk_caller.b4",
+      "type": "decision",
+      "prompt": "Wrap it up",
+      "choices": [
+        {
+          "id": "call_drunk_caller.b4_0",
+          "label": "Drink water. Don't drive. Call a friend.",
+          "next": "call_drunk_caller.b5",
+          "effects": {
+            "integrity": 1,
+            "trust": 1
+          }
+        },
+        {
+          "id": "call_drunk_caller.b4_1",
+          "label": "I'll send a unit… of pizza. Now hang up.",
+          "next": "call_drunk_caller.b5"
+        },
+        {
+          "id": "call_drunk_caller.b4_2",
+          "label": "Please keep this line free for emergencies.",
+          "next": "call_drunk_caller.b5",
+          "effects": {
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_drunk_caller.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Okok. Water. No driving. You're the best. I'm gonna go… sit down now. Byeee."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "no_unit",
+      "explanation": "No emergency, no unit. You kept the line open and got him to put the keys down. Good shift.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-no_unit",
+        "role": "deploy"
+      }
+    }
+  ]
+}

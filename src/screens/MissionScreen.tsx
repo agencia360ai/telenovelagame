@@ -925,14 +925,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 8,
-    backgroundColor: colors.dispatch.panel,
+    // Distinct from the dialogue bubbles (neutral dark "panel"): the choices use
+    // a lighter elevated surface + a cyan accent border so they read as tappable
+    // actions, not as more speech.
+    backgroundColor: colors.dispatch.panelLight,
     borderWidth: 1,
-    borderColor: colors.dispatch.border,
+    borderColor: "rgba(34, 211, 238, 0.40)",
+    borderLeftWidth: 3,
+    borderLeftColor: colors.dispatch.cyan,
     borderRadius: sizes.radius.md,
     paddingHorizontal: 14,
     paddingVertical: 14,
   },
-  choiceBtnPremium: { borderColor: "rgba(245, 158, 11, 0.45)" },
+  choiceBtnPremium: { borderColor: "rgba(245, 158, 11, 0.45)", borderLeftColor: colors.dispatch.amber },
   choiceLabel: { color: colors.dispatch.text, fontSize: sizes.font.md, fontWeight: "600", flex: 1, lineHeight: 20 },
   gemPill: {
     backgroundColor: "rgba(245, 158, 11, 0.15)",

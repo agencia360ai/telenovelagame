@@ -1,3 +1,5 @@
+import { RANKS } from "./ranks";
+
 /**
  * Central asset registry.
  *
@@ -49,6 +51,51 @@ export const VIDEOS: Record<string, string | number> = {
   // Scene video for the "I'm Having a Heart Attack" call.
   "call-heart-attack":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Presion.mp4",
+  // Scene video for the "Someone's Drowning!" call.
+  "call-drowning":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Ahogo.mp4",
+  // Scene video for the "A Plane Hit the Building!" call.
+  "call-plane-crash":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Build.mp4",
+  // Scene video for the "He Dented My Bumper!" fender-bender call.
+  "call-fender-bender":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Choque.mp4",
+  // Scene video for the "I Looove This Hotline" drunk-caller call.
+  "call-drunk":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Drunk.mp4",
+  // Scene video for the "There's a Ghost in My House!" call.
+  "call-ghost":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Ghost.mp4",
+  // Scene video for the "There's a Giant Cockroach!" call.
+  "call-giant-roach":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Giant%20Cocoroach.mp4",
+  // Scene video for the "My House Is Full of Pests!" call.
+  "call-infestation":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Plaga.mp4",
+  // Story scene video for game_plot Week 1 — "The Call That Drops".
+  "plot-call-drops":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Denuncia.mp4",
+  // Scene video for the "Something's Off Across the Street" call (boxes at night).
+  "call-suspicious-boxes":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Caja.mp4",
+  // Scene video for "There's a Riot Outside" — an officer calling for backup.
+  "call-riot":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Patrulla.mp4",
+  // Scene video for "My Head's Exploding" (migraine).
+  "call-migraine":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Dolor%20de%20Cabeza.mp4",
+  // Scene video for "I See Green Elves".
+  "call-green-elves":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Elves.mp4",
+  // Scene video for "My Cat Vanished".
+  "call-cat-missing":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Gato%20(1).mp4",
+  // Scene video for "I Ate Glass".
+  "call-ate-glass":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Glass.mp4",
+  // Scene video for "Someone's at My Door".
+  "call-door-force":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Door.mp4",
   // Lobby viewport clips: idle desk vs. an incoming call ringing.
   "lobby-idle":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Lobby.mp4",
@@ -84,6 +131,10 @@ export const VIDEOS: Record<string, string | number> = {
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/ZombieUnit.mp4",
   "deploy-dino_control":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Jeep.mov",
+  "deploy-ghost_unit":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Ghostbuster.mp4",
+  "deploy-pest_control":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Pest%20Control.mp4",
   "deploy-border_patrol": require("../../assets/videos/border-runners-intro.mp4"),
   "deploy-no_unit": require("../../assets/videos/border-runners-intro.mp4"),
 };
@@ -101,6 +152,8 @@ export const DEPLOY_VIDEOS: Record<string, string> = {
   animal_control: "deploy-animal_control",
   zombie_unit: "deploy-zombie_unit",
   dino_control: "deploy-dino_control",
+  ghost_unit: "deploy-ghost_unit",
+  pest_control: "deploy-pest_control",
   border_patrol: "deploy-border_patrol",
   no_unit: "deploy-no_unit",
 };
@@ -121,6 +174,85 @@ export function resolveVideo(keyOrSource: string | number): string | number {
   }
 
   return keyOrSource; // assume it's already a raw http(s) URL
+}
+
+// ── Lobby viewport clips per police rank ─────────────────────────────────────
+// The main-menu window plays two looping clips: a calm "idle" desk loop, and a
+// "ringing" loop when a call comes in. These can change as the player gets
+// promoted (Trainee → Dispatcher → … → Director), so the desk visually levels
+// up with them.
+//
+// HOW TO ADD YOUR OWN per-rank footage:
+//   1. Upload the .mp4 to Supabase (public bucket "911 Clips").
+//   2. Paste its public URL below, in the row for that rank — `idle` for the
+//      calm loop, `ringing` for the incoming-call loop.
+//   3. That's it. Leave a field as "" if you don't have that clip yet.
+//
+// FALLBACK: if a rank has no clip for a phase, the game walks DOWN the ranks and
+// uses the nearest lower rank that does — and if none are set, the base
+// "lobby-idle" / "lobby-ringing" keys in VIDEOS above. So partial fills work:
+// set just Trainee + Commander and everyone in between shows the Trainee clip
+// until they reach Commander.
+export const LOBBY_VIDEOS_BY_RANK: Record<
+  string,
+  { idle?: string; ringing?: string }
+> = {
+  // Naming convention in the "911 Clips" bucket: "LVL <n> 1.mp4" = idle desk
+  // loop, "LVL <n> 2.mp4" = ringing loop. LVL 1 is the original pair already in
+  // use (Lobby.mp4 / LobbyCall.mp4), so Trainee keeps those; LVL 2..7 map to the
+  // ranks below.
+  // LVL 1 — Trainee (the clips already in use).
+  trainee: {
+    idle: "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Lobby.mp4",
+    ringing:
+      "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LobbyCall.mp4",
+  },
+  // LVL 2 — Dispatcher.
+  dispatcher: {
+    idle: "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%202%201.mp4",
+    ringing:
+      "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%202%202.mp4",
+  },
+  // LVL 3 — Sr. Dispatcher.
+  senior: {
+    idle: "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%203%201.mp4",
+    ringing:
+      "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%203%202.mp4",
+  },
+  // LVL 4 — Supervisor.
+  supervisor: {
+    idle: "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%204%201.mp4",
+    ringing:
+      "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%204%202.mp4",
+  },
+  // LVL 5 — Commander.
+  commander: {
+    idle: "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%205%201.mp4",
+    ringing:
+      "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/LVL%205%202.mp4",
+  },
+  // LVL 6 — Chief Operator. (clip not made yet → falls back to Commander's clips.)
+  chief: { idle: "", ringing: "" },
+  // LVL 7 — Director. (clip not made yet → falls back to Commander's clips.)
+  director: { idle: "", ringing: "" },
+};
+
+/**
+ * Pick the lobby clip for a given rank + phase. Walks down from the player's
+ * rank to find the nearest set clip, then falls back to the base VIDEOS key.
+ * Returns something `resolveVideo`/expo-video can play.
+ */
+export function getLobbyVideo(
+  rankIndex: number,
+  phase: "idle" | "ringing"
+): string | number {
+  const top = Math.min(Math.max(rankIndex, 0), RANKS.length - 1);
+  for (let i = top; i >= 0; i--) {
+    const rankId = RANKS[i]?.id;
+    const url = rankId ? LOBBY_VIDEOS_BY_RANK[rankId]?.[phase] : undefined;
+    if (url) return url;
+  }
+  return resolveVideo(phase === "ringing" ? "lobby-ringing" : "lobby-idle");
 }
 
 // ── Sound effects (bundled) ──────────────────────────────────────────────────

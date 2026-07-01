@@ -1,21 +1,21 @@
 {
   "schema": "mission@1",
   "id": "w1_weekend_coffee",
-  "title": "Coffee With Martha",
+  "title": "After Hours",
   "version": "1.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "weekend",
   "order": 0,
-  "caller": {
-    "name": "Martha",
-    "type": "OFF DUTY",
-    "location": "Corner cafe"
-  },
   "reward": 8,
+  "caller": {
+    "name": "Home",
+    "type": "OFF DUTY",
+    "location": "Your apartment"
+  },
   "initial_variables": {
     "integrity": 0,
-    "mara_trust": 0,
+    "compliance": 0,
     "don": 0,
     "loose_thread": 0,
     "case_file": 0,
@@ -23,9 +23,6 @@
   },
   "initial_flags": {},
   "assets": [],
-  "speakers": {
-    "mara": "Martha"
-  },
   "start": "w1_weekend.intro",
   "beats": [
     {
@@ -34,18 +31,18 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Martha texts: 'Coffee? You look like the job's already eating you.'"
+          "text": "Saturday. The shift is over, but the block isn't. You keep seeing the same street on the back of your eyelids — the blue house, the line that didn't hang up."
         }
       ],
-      "next": "w1_weekend.m1"
+      "next": "w1_weekend.sys"
     },
     {
-      "id": "w1_weekend.m1",
+      "id": "w1_weekend.sys",
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "mara",
-          "text": "I mean it about keeping you whole. I burned out two rookies before you. I'm not doing it again."
+          "speaker": "narrator",
+          "text": "That's the strange part: nobody told you to drop it. The system did — a recommendation, a default, a green button. No hands on it. Everyone's hands on it."
         }
       ],
       "next": "w1_weekend.d1"
@@ -53,30 +50,25 @@
     {
       "id": "w1_weekend.d1",
       "type": "decision",
-      "prompt": "Martha, off the clock, being genuinely kind",
+      "prompt": "Alone with the pattern. What do you do?",
       "choices": [
         {
           "id": "w1_weekend.d1_0",
-          "label": "Let her in. She's good company.",
+          "label": "Start a private file — dates, names, everything.",
           "next": "w1_weekend.fin",
           "effects": {
-            "mara_trust": 2
-          }
-        },
-        {
-          "id": "w1_weekend.d1_1",
-          "label": "Keep it professional.",
-          "next": "w1_weekend.fin",
-          "effects": {
+            "loose_thread": 2,
+            "case_file": 1,
             "integrity": 1
           }
         },
         {
-          "id": "w1_weekend.d1_2",
-          "label": "Ask why she really chose this job.",
-          "next": "w1_weekend.fin",
+          "id": "w1_weekend.d1_1",
+          "label": "You're imagining patterns. Let it go.",
+          "next": "w1_weekend.fin_let",
           "effects": {
-            "loose_thread": 1
+            "compliance": 1,
+            "pawn": 1
           }
         }
       ]
@@ -87,7 +79,18 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "She laughs at your jokes, pays for your coffee, and for one evening the city feels survivable. You almost forget the sticky note."
+          "text": "You open a notebook the department doesn't know about and write down everything you remember. It feels like paranoia. It feels like the only honest thing you've done all week."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w1_weekend.fin_let",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You close the laptop and pour a drink until the street goes quiet in your head. It's still there in the morning. It's always still there."
         }
       ],
       "next": "_end"

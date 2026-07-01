@@ -11,16 +11,16 @@
     "crime"
   ],
   "caller": {
-    "name": "Caller",
-    "type": "POLICE EMERGENCY",
-    "location": "Downtown"
+    "name": "Officer",
+    "type": "OFFICER NEEDS BACKUP",
+    "location": "Downtown · 5th & Main"
   },
   "units": [
     "police",
     "firefighters",
     "ambulance"
   ],
-  "reward": 5,
+  "reward": 6,
   "time_limit_seconds": 15,
   "initial_variables": {
     "trust": 0,
@@ -30,6 +30,11 @@
   "initial_flags": {},
   "start": "call_riot.b0",
   "assets": [
+    {
+      "key": "call-riot",
+      "type": "video",
+      "role": "ambient"
+    },
     {
       "key": "deploy-police",
       "type": "video",
@@ -43,7 +48,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Glass breaking. Screaming. A city tearing at itself."
+          "text": "Radio static, breaking glass, a siren drowned out by the roar of a crowd. An officer's voice cuts through, breathing hard."
         }
       ],
       "next": "call_riot.b1"
@@ -54,7 +59,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "There's a riot happening outside! 😱"
+          "text": "Dispatch, this is Unit 12 — riot's gone out of control downtown. I need backup, NOW!"
         }
       ],
       "next": "call_riot.b2"
@@ -66,13 +71,27 @@
       "choices": [
         {
           "id": "call_riot.b2_0",
-          "label": "How many people?",
-          "next": "call_riot.b3"
+          "label": "Copy, Unit 12. What's your situation?",
+          "next": "call_riot.b3",
+          "effects": {
+            "integrity": 1
+          }
         },
         {
           "id": "call_riot.b2_1",
-          "label": "Are you safe?",
-          "next": "call_riot.b3"
+          "label": "Are you injured, officer?",
+          "next": "call_riot.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_riot.b2_2",
+          "label": "Have you tried asking them nicely?",
+          "next": "call_riot.b3",
+          "effects": {
+            "trust": -1
+          }
         }
       ]
     },
@@ -82,7 +101,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Over 100! Guns and knives everywhere!"
+          "text": "Crowd's over a hundred and they've taken the intersection. I'm pinned behind my patrol car — I can't hold this alone!"
         }
       ],
       "next": "call_riot.b4"
@@ -94,7 +113,7 @@
       "choices": [
         {
           "id": "call_riot.b4_0",
-          "label": "Hide and stay hidden.",
+          "label": "Hold your position, backup is inbound.",
           "next": "call_riot.b5",
           "effects": {
             "integrity": 1
@@ -102,10 +121,18 @@
         },
         {
           "id": "call_riot.b4_1",
-          "label": "Run, get away from the crowd.",
+          "label": "Fall back to a safe perimeter and wait.",
           "next": "call_riot.b5",
           "effects": {
             "integrity": 1
+          }
+        },
+        {
+          "id": "call_riot.b4_2",
+          "label": "Charge in, you've got this!",
+          "next": "call_riot.b5",
+          "effects": {
+            "trust": -1
           }
         }
       ]
@@ -116,7 +143,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "I'm hiding. There's nowhere to go!"
+          "text": "Copy. Holding at 5th and Main — send everything you've got, fast!"
         }
       ],
       "next": "dispatch"
@@ -126,7 +153,7 @@
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "police",
-      "explanation": "Keep calm. Police are being dispatched now.",
+      "explanation": "Backup units rolling to 5th and Main. Hang on, Unit 12 — they're almost there.",
       "next": "outcome"
     },
     {

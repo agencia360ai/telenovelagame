@@ -6,22 +6,19 @@
   "locale_default": "en",
   "difficulty": 1,
   "category": "intro",
+  "reward": 0,
   "caller": {
     "name": "Dispatch",
     "type": "INTRO",
     "location": "Dispatch floor"
   },
-  "reward": 0,
   "initial_variables": {
     "integrity": 0,
-    "mara_trust": 0,
+    "compliance": 0,
     "don": 0
   },
   "initial_flags": {},
   "assets": [],
-  "speakers": {
-    "mara": "Martha"
-  },
   "start": "prologue.intro",
   "beats": [
     {
@@ -33,26 +30,15 @@
           "text": "Night one. The dispatch floor hums like a held breath — a wall of screens, a hundred blinking lines, and the quiet certainty that somewhere out there, someone is about to need you."
         }
       ],
-      "next": "prologue.mara1"
+      "next": "prologue.sys"
     },
     {
-      "id": "prologue.mara1",
+      "id": "prologue.sys",
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "mara",
-          "text": "You must be the rookie. Martha. Take the console next to mine — I'll keep you whole."
-        }
-      ],
-      "next": "prologue.mara2"
-    },
-    {
-      "id": "prologue.mara2",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "mara",
-          "text": "One rule before the lines light up: not every voice on this frequency wants saving. Part of the job is learning the difference."
+          "speaker": "narrator",
+          "text": "Rule one is stenciled right on the console: not every voice on this frequency wants saving. The system will help you tell the difference. By the end, you'll wonder if it helps a little too much."
         }
       ],
       "next": "prologue.d1"
@@ -60,7 +46,7 @@
     {
       "id": "prologue.d1",
       "type": "decision",
-      "prompt": "First thing you say to your mentor",
+      "prompt": "First night. What do you tell yourself?",
       "choices": [
         {
           "id": "prologue.d1_0",
@@ -72,15 +58,15 @@
         },
         {
           "id": "prologue.d1_1",
-          "label": "Teach me the difference, then.",
+          "label": "Learn the protocol. Trust the system.",
           "next": "prologue.fin",
           "effects": {
-            "mara_trust": 1
+            "compliance": 1
           }
         },
         {
           "id": "prologue.d1_2",
-          "label": "Whatever pays, right?",
+          "label": "Whatever keeps the paycheck coming.",
           "next": "prologue.fin",
           "effects": {
             "don": 1
@@ -94,7 +80,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Martha smiles like she already knows which kind of dispatcher you'll be. The first line lights up."
+          "text": "The board lights up. Your first line is waiting. Whatever you walked in believing, the city is about to start testing it — one call at a time."
         }
       ],
       "next": "_end"

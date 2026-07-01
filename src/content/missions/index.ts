@@ -13,12 +13,13 @@ import casoBitcoin from "./caso_bitcoin.json";
 // Prologue — one-off intro scene (category "intro", outside the calendar).
 import prologue from "./prologue.json";
 
-// Game Plot — 2-week Martha-villain arc (narrative, no dispatch).
+// Game Plot — systemic-corruption arc (narrative, no dispatch). No single
+// villain: the player uncovers it case by case as the system buries calls.
 import w1Plot from "./w1_plot.json"; // game_plot, order 10 (prologue + The Call That Drops)
-import w2Plot from "./w2_plot.json"; // game_plot, order 20 (Same Block — Martha revealed)
+import w2Plot from "./w2_plot.json"; // game_plot, order 20 (Same Block — the board re-routes)
 import w3Plot from "./w3_plot.json"; // game_plot, order 30 (The House on Calder)
 import w4Plot from "./w4_plot.json"; // game_plot, order 40 (The Envelope)
-import w1WeekendCoffee from "./w1_weekend_coffee.json"; // weekend, order 0 (Coffee With Martha)
+import w1WeekendCoffee from "./w1_weekend_coffee.json"; // weekend, order 0 (After Hours — alone with the pattern)
 
 // Daily calls (911 source, caso_cocina style) — new batch.
 import CallZombie from "./call_zombie.json";
@@ -41,6 +42,14 @@ import CallTrappedFire from "./call_i_m_trapped_in_the_fire.json";
 import CallLeak from "./call_i_think_there_s_a_leak.json";
 import CallCatTree from "./call_my_cat_is_stuck_on_a_tall_tree.json";
 import CallBathroomFire from "./call_there_s_a_fire_in_my_bathroom.json";
+import CallDrowning from "./call_drowning.json";
+import CallPlaneCrash from "./call_plane_crash.json";
+import CallFenderBender from "./call_fender_bender.json";
+import CallDrunkCaller from "./call_drunk_caller.json";
+import CallGhost from "./call_ghost.json";
+import CallGiantRoach from "./call_giant_roach.json";
+import CallInfestation from "./call_infestation.json";
+import CallSuspiciousBoxes from "./call_suspicious_boxes.json";
 import casoTrex from "./caso_trex.json";
 
 /**
@@ -78,6 +87,14 @@ export const BUNDLED_MISSIONS: Mission[] = [
   CallLeak as unknown as Mission,
   CallCatTree as unknown as Mission,
   CallBathroomFire as unknown as Mission,
+  CallDrowning as unknown as Mission, // "Someone's Drowning!" (Ahogo.mp4)
+  CallPlaneCrash as unknown as Mission, // "A Plane Hit the Building!" (Build.mp4)
+  CallFenderBender as unknown as Mission, // "He Dented My Bumper!" (Choque.mp4)
+  CallDrunkCaller as unknown as Mission, // "I Looove This Hotline" (Drunk.mp4)
+  CallGhost as unknown as Mission, // "There's a Ghost in My House!" (Ghost.mp4 + Ghostbusters)
+  CallGiantRoach as unknown as Mission, // "There's a Giant Cockroach!" (Giant Cocoroach.mp4 + Pest Control)
+  CallInfestation as unknown as Mission, // "My House Is Full of Pests!" (Plaga.mp4 + Pest Control)
+  CallSuspiciousBoxes as unknown as Mission, // "Something's Off Across the Street" (Caja.mp4)
   casoTrex as unknown as Mission, // "T-Rex" narrative-style call
   // Prologue intro scene — in the catalog so getMissionById finds it, but its
   // "intro" category keeps it out of every calendar pool.
@@ -110,6 +127,8 @@ export const DISPATCH_OPTIONS: DispatchOption[] = [
   // (e.g. call_zombie). Excluded from the default option set in MissionScreen.
   { id: "zombie_unit", label: "ZOMBIE\nUNIT", icon: "🧟" },
   { id: "dino_control", label: "DINO\nCONTROL", icon: "🦖" },
+  { id: "ghost_unit", label: "GHOST\nBUSTERS", icon: "👻" },
+  { id: "pest_control", label: "PEST\nCONTROL", icon: "🐛" },
   { id: "no_unit", label: "NO UNIT", icon: "🚫" },
 ];
 

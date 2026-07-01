@@ -1,0 +1,168 @@
+{
+  "schema": "mission@1",
+  "id": "call_ghost",
+  "title": "There's a Ghost in My House!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "exotic",
+    "weird"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "PARANORMAL",
+    "location": "Hollow Pines · 13 Mourning Dove Ln"
+  },
+  "units": [
+    "ghost_unit",
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_ghost.b0",
+  "assets": [
+    {
+      "key": "call-ghost",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-ghost_unit",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_ghost.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A door creaks on the other end. Then a whisper that is definitely not the caller."
+        }
+      ],
+      "next": "call_ghost.b1"
+    },
+    {
+      "id": "call_ghost.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "There's a GHOST in my house! It floated through the wall and rearranged my fridge magnets!"
+        }
+      ],
+      "next": "call_ghost.b2"
+    },
+    {
+      "id": "call_ghost.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_ghost.b2_0",
+          "label": "Okay… what did the magnets spell?",
+          "next": "call_ghost.b3"
+        },
+        {
+          "id": "call_ghost.b2_1",
+          "label": "Are you and everyone safe right now?",
+          "next": "call_ghost.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_ghost.b2_2",
+          "label": "Ghosts aren't real, ma'am.",
+          "next": "call_ghost.b2b"
+        }
+      ]
+    },
+    {
+      "id": "call_ghost.b2b",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "That's what I said! Then it turned the lights off. TWICE."
+        }
+      ],
+      "next": "call_ghost.b3"
+    },
+    {
+      "id": "call_ghost.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "It spelled 'BOO.' Real original. Now it's hovering by the stairs — please send someone who handles… this!"
+        }
+      ],
+      "next": "call_ghost.b4"
+    },
+    {
+      "id": "call_ghost.b4",
+      "type": "decision",
+      "prompt": "Get them safe",
+      "choices": [
+        {
+          "id": "call_ghost.b4_0",
+          "label": "Step outside, don't provoke it, wait for the team.",
+          "next": "call_ghost.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_ghost.b4_1",
+          "label": "Ask if it's a friendly ghost first 👻",
+          "next": "call_ghost.b5"
+        },
+        {
+          "id": "call_ghost.b4_2",
+          "label": "Who you gonna call? We've got a guy.",
+          "next": "call_ghost.b5"
+        }
+      ]
+    },
+    {
+      "id": "call_ghost.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I'm on the porch now. 13 Mourning Dove Lane, Hollow Pines. Hurry — it's doing the curtains thing!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "ghost_unit",
+      "explanation": "Ghostbusters rolling, proton packs charged. Stay on the porch — they've got the BOO under control.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-ghost_unit",
+        "role": "deploy"
+      }
+    }
+  ]
+}

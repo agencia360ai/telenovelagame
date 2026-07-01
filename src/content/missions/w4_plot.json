@@ -15,7 +15,7 @@
   "reward": 15,
   "initial_variables": {
     "integrity": 0,
-    "mara_trust": 0,
+    "compliance": 0,
     "don": 0,
     "loose_thread": 0,
     "case_file": 0,
@@ -24,9 +24,6 @@
   },
   "initial_flags": {},
   "assets": [],
-  "speakers": {
-    "mara": "Martha"
-  },
   "start": "w4_plot.intro",
   "beats": [
     {
@@ -35,7 +32,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "End of shift. There's an envelope tucked under your keyboard. Cash, and a note: 'For the dispatcher who knows when to look away. — a grateful friend.'"
+          "text": "End of shift. There's an envelope tucked under your keyboard — cash, and a typed note, unsigned: 'For the dispatcher who knows when to look away.'"
         }
       ],
       "next": "w4_plot.d1"
@@ -47,12 +44,11 @@
       "choices": [
         {
           "id": "w4_plot.d1_0",
-          "label": "Log it as evidence. Tampering, bribery.",
+          "label": "Log it as evidence. Bribery, tampering.",
           "next": "w4_plot.fin_log",
           "effects": {
             "integrity": 1,
-            "case_file": 2,
-            "money": 0
+            "case_file": 2
           }
         },
         {
@@ -67,21 +63,21 @@
         },
         {
           "id": "w4_plot.d1_2",
-          "label": "Show it to Martha.",
-          "next": "w4_plot.c_mara",
+          "label": "Ask around who left it.",
+          "next": "w4_plot.c_ask",
           "effects": {
-            "mara_trust": 1
+            "loose_thread": 1
           }
         }
       ]
     },
     {
-      "id": "w4_plot.c_mara",
+      "id": "w4_plot.c_ask",
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "mara",
-          "text": "Oh, that. The city takes care of people who don't make waves. Keep it or don't — but if you turn it in, you're telling them you're a wave. Think about which is safer."
+          "speaker": "narrator",
+          "text": "Nobody knows anything. No camera caught it. Just shrugs, and the same unspoken arithmetic everyone here already runs: the people who don't make waves stay whole. Turn it in, and you're telling the building you're a wave."
         }
       ],
       "next": "w4_plot.d2"
@@ -89,7 +85,7 @@
     {
       "id": "w4_plot.d2",
       "type": "decision",
-      "prompt": "Martha just told you who the envelope is from — without saying it",
+      "prompt": "You understand the offer now — and that no one's hand is on it.",
       "choices": [
         {
           "id": "w4_plot.d2_0",
@@ -97,8 +93,7 @@
           "next": "w4_plot.fin_log",
           "effects": {
             "integrity": 2,
-            "case_file": 2,
-            "mara_trust": -2
+            "case_file": 2
           }
         },
         {
@@ -130,7 +125,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The cash goes in your jacket. Warm, heavy, easy. You just learned the price of looking away. So did they."
+          "text": "The cash goes in your jacket. Warm, heavy, easy. You just learned the price of looking away. So did the building."
         }
       ],
       "next": "_end"

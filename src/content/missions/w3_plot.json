@@ -15,7 +15,7 @@
   "reward": 14,
   "initial_variables": {
     "integrity": 0,
-    "mara_trust": 0,
+    "compliance": 0,
     "don": 0,
     "loose_thread": 0,
     "case_file": 0,
@@ -24,9 +24,6 @@
   },
   "initial_flags": {},
   "assets": [],
-  "speakers": {
-    "mara": "Martha"
-  },
   "start": "w3_plot.intro",
   "beats": [
     {
@@ -76,10 +73,10 @@
         },
         {
           "id": "w3_plot.d1_2",
-          "label": "Loop Martha in before I move.",
-          "next": "w3_plot.c_mara",
+          "label": "See what the system lets me file.",
+          "next": "w3_plot.c_form",
           "effects": {
-            "mara_trust": 1
+            "compliance": 1
           }
         }
       ]
@@ -107,12 +104,12 @@
       "next": "w3_plot.fin_dispatch"
     },
     {
-      "id": "w3_plot.c_mara",
+      "id": "w3_plot.c_form",
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "mara",
-          "text": "Anonymous tip, no crime in progress, shy caller? That's a noise complaint, hon. Send a car and you'll spook a landlord, not save anyone. Let me file it soft."
+          "speaker": "narrator",
+          "text": "The intake form won't accept it as anything but a 'noise complaint' without a supervisor override code. No supervisor answers at 3am. The form, very politely, buries it for you."
         }
       ],
       "next": "w3_plot.d2"
@@ -124,20 +121,20 @@
       "choices": [
         {
           "id": "w3_plot.d2_0",
-          "label": "Dispatch anyway.",
+          "label": "Dispatch anyway. Paperwork later.",
           "next": "w3_plot.fin_dispatch",
           "effects": {
             "integrity": 1,
             "case_file": 1,
-            "mara_trust": -1
+            "compliance": -1
           }
         },
         {
           "id": "w3_plot.d2_1",
-          "label": "File it soft, like Martha says.",
+          "label": "File it the only way the system allows.",
           "next": "w3_plot.fin_soft",
           "effects": {
-            "mara_trust": 1,
+            "compliance": 1,
             "pawn": 1,
             "don": 1
           }
@@ -150,7 +147,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The unit reports a nervous man who won't open up and a house that's 'just movers.' No arrest. But it's the first official knock on that door — and the ring felt it."
+          "text": "The unit reports a nervous man who won't open up and a house that's 'just movers.' No arrest — but it's the first official knock on that door, and the quiet on the other end felt it."
         }
       ],
       "next": "_end"
@@ -161,7 +158,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Filed soft. Buried in the noise tickets. You tell yourself Martha knows the city better than you. The pawn doesn't always see the board."
+          "text": "Filed as noise. Buried in the queue. You tell yourself the system knows the city better than you do. That's exactly what it's built to make you think."
         }
       ],
       "next": "_end"
