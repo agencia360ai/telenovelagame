@@ -1,0 +1,162 @@
+{
+  "schema": "mission@1",
+  "id": "call_fender_bender",
+  "title": "He Dented My Bumper!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "mixed",
+    "crime"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "TRAFFIC INCIDENT",
+    "location": "Maple & 5th · drive-thru lane"
+  },
+  "units": [
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 4,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_fender_bender.b0",
+  "assets": [
+    {
+      "key": "call-fender-bender",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-police",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_fender_bender.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A gentle crunch of plastic, followed by the loudest human being in the city."
+        }
+      ],
+      "next": "call_fender_bender.b1"
+    },
+    {
+      "id": "call_fender_bender.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Emergency! A guy TAPPED my bumper in the drive-thru and now there's a scratch you can barely— okay it's a big scratch."
+        }
+      ],
+      "next": "call_fender_bender.b2"
+    },
+    {
+      "id": "call_fender_bender.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_fender_bender.b2_0",
+          "label": "Is anyone hurt?",
+          "next": "call_fender_bender.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_fender_bender.b2_1",
+          "label": "Sir, is the milkshake okay? 🥤",
+          "next": "call_fender_bender.b3"
+        },
+        {
+          "id": "call_fender_bender.b2_2",
+          "label": "This is a 911 line, not roadside assist.",
+          "next": "call_fender_bender.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_fender_bender.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Nobody's hurt! But he's trying to LEAVE and he won't give me his insurance. The nerve!"
+        }
+      ],
+      "next": "call_fender_bender.b4"
+    },
+    {
+      "id": "call_fender_bender.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_fender_bender.b4_0",
+          "label": "Leaving the scene — get a plate, stay safe.",
+          "next": "call_fender_bender.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_fender_bender.b4_1",
+          "label": "Block him with your cart. Citizen's arrest 🛒",
+          "next": "call_fender_bender.b5",
+          "effects": {
+            "trust": -1
+          }
+        },
+        {
+          "id": "call_fender_bender.b4_2",
+          "label": "I'll log it. Don't chase him.",
+          "next": "call_fender_bender.b5",
+          "effects": {
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_fender_bender.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Plate's BUN-2-GO. We're at Maple and 5th. Tell them to bring a tow… and maybe some fries."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Patrol's rolling for the hit-and-run report. Bumper's fine, ego's totaled.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

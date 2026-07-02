@@ -1,0 +1,165 @@
+{
+  "schema": "mission@1",
+  "id": "call_suspicious_boxes",
+  "title": "Something's Off Across the Street",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "real",
+    "crime"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "SUSPICIOUS ACTIVITY",
+    "location": "Calder Street · 3:14 AM"
+  },
+  "units": [
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_suspicious_boxes.b0",
+  "assets": [
+    {
+      "key": "call-suspicious-boxes",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-police",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_suspicious_boxes.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A hushed voice, curtains barely parted. Three in the morning, and the street outside should be empty."
+        }
+      ],
+      "next": "call_suspicious_boxes.b1"
+    },
+    {
+      "id": "call_suspicious_boxes.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "There are people loading boxes into a van across the street. No lights, no talking. They've been at it for an hour."
+        }
+      ],
+      "next": "call_suspicious_boxes.b2"
+    },
+    {
+      "id": "call_suspicious_boxes.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_suspicious_boxes.b2_0",
+          "label": "Stay inside. Can you describe the van?",
+          "next": "call_suspicious_boxes.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_suspicious_boxes.b2_1",
+          "label": "Maybe it's just a late move?",
+          "next": "call_suspicious_boxes.b3"
+        },
+        {
+          "id": "call_suspicious_boxes.b2_2",
+          "label": "Go knock and ask what they're doing.",
+          "next": "call_suspicious_boxes.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_suspicious_boxes.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "White panel van, no plates I can see. And… some of the boxes have air holes. Why would a box need air holes?"
+        }
+      ],
+      "next": "call_suspicious_boxes.b4"
+    },
+    {
+      "id": "call_suspicious_boxes.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_suspicious_boxes.b4_0",
+          "label": "Keep watching from cover. Help is coming.",
+          "next": "call_suspicious_boxes.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_suspicious_boxes.b4_1",
+          "label": "Get the cross streets and stay on the line.",
+          "next": "call_suspicious_boxes.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_suspicious_boxes.b4_2",
+          "label": "Honk your horn to scare them off.",
+          "next": "call_suspicious_boxes.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_suspicious_boxes.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Corner of Calder and 14th. They're closing the doors — please, send someone before they drive off!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Patrol rolling, quiet approach. You kept the caller safe and gave them a van, a corner, and a reason to hurry.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "schema": "mission@1",
+  "id": "call_infestation",
+  "title": "My House Is Full of Pests!",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "real",
+    "misc"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "PEST PROBLEM",
+    "location": "742 Birchwood Rd"
+  },
+  "units": [
+    "pest_control",
+    "animal_control",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0,
+    "integrity": 0,
+    "money": 0
+  },
+  "initial_flags": {},
+  "start": "call_infestation.b0",
+  "assets": [
+    {
+      "key": "call-infestation",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
+      "key": "deploy-pest_control",
+      "type": "video",
+      "role": "deploy"
+    }
+  ],
+  "beats": [
+    {
+      "id": "call_infestation.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A low, constant buzzing hum down the line. Something is moving in the walls."
+        }
+      ],
+      "next": "call_infestation.b1"
+    },
+    {
+      "id": "call_infestation.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My whole house is infested! Bugs in the walls, the vents, the cereal — everywhere! I can't even walk through the kitchen."
+        }
+      ],
+      "next": "call_infestation.b2"
+    },
+    {
+      "id": "call_infestation.b2",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_infestation.b2_0",
+          "label": "Is anyone having trouble breathing?",
+          "next": "call_infestation.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_infestation.b2_1",
+          "label": "Get everyone and the pets outside.",
+          "next": "call_infestation.b3",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_infestation.b2_2",
+          "label": "Have you tried moving? 📦",
+          "next": "call_infestation.b3",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_infestation.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "We're all out on the lawn. There's grandma, the kids, and the dog — and a LOT of bugs following us."
+        }
+      ],
+      "next": "call_infestation.b4"
+    },
+    {
+      "id": "call_infestation.b4",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_infestation.b4_0",
+          "label": "Stay out, don't reenter — sending the team.",
+          "next": "call_infestation.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_infestation.b4_1",
+          "label": "Seal the doors so they don't spread next door.",
+          "next": "call_infestation.b5",
+          "effects": {
+            "integrity": 1
+          }
+        },
+        {
+          "id": "call_infestation.b4_2",
+          "label": "Just light a few hundred candles 🕯️",
+          "next": "call_infestation.b5",
+          "effects": {
+            "trust": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "call_infestation.b5",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "742 Birchwood Road. We'll be on the lawn — the one cloud of bugs you can't miss. Please hurry!"
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "pest_control",
+      "explanation": "Pest control en route to fumigate and clear the house. Keep everyone on the lawn until they call the all-clear.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-pest_control",
+        "role": "deploy"
+      }
+    }
+  ]
+}

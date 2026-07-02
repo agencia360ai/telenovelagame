@@ -31,7 +31,7 @@ import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { useCalendar } from "../context/CalendarContext";
 import { useWardrobe } from "../context/WardrobeContext";
 import { usePaywall } from "../context/PaywallContext";
-import { resolveSkin, resolveVideo } from "../game/assets";
+import { resolveSkin, getLobbyVideo } from "../game/assets";
 import { getXPProgress, RANKS } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
@@ -39,7 +39,7 @@ import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DispatchLobby">;
 
-const COUNTDOWN_START = 10;
+const COUNTDOWN_START = 8;
 
 export function DispatchLobbyScreen({ navigation }: Props) {
   const progress = useDispatchProgress();
@@ -73,25 +73,48 @@ export function DispatchLobbyScreen({ navigation }: Props) {
 
   // Lobby viewport clip: a calm desk loop while idle, swapping to the ringing
   // clip when a call comes in. One looping player; we just swap its source.
-  const lobbyPlayer = useVideoPlayer(resolveVideo("lobby-idle"), (p) => {
-    p.loop = true;
-    p.muted = true;
-    p.play();
-  });
-  const lobbyClip = useRef<"idle" | "ringing">("idle");
+  const lobbyPlayer = useVideoPlayer(
+    getLobbyVideo(progress.rankIndex, "idle"),
+    (p) => {
+      p.loop = true;
+      p.muted = true;
+      p.play();
+    }
+  );
+  // Re-evaluate when the phase (idle/ringing) OR the player's rank changes, so a
+  // promotion swaps in the new rank's desk footage right away. We track both so
+  // a rank-up while sitting in the lobby still upgrades the clip. The ref is
+  // seeded with the initial idle tag so the first mount doesn't trigger a fade.
+  const lobbyClip = useRef<string>(`idle@${progress.rankIndex}`);
+  // Black overlay opacity for the fade-to-black transition between clips.
+  const fadeBlack = useSharedValue(0);
   useEffect(() => {
     const want = phase === "ringing" ? "ringing" : "idle";
-    if (lobbyClip.current === want) return;
-    lobbyClip.current = want;
-    try {
-      lobbyPlayer.replace(
-        resolveVideo(want === "ringing" ? "lobby-ringing" : "lobby-idle")
-      );
-      lobbyPlayer.loop = true;
-      lobbyPlayer.muted = true;
-      lobbyPlayer.play();
-    } catch {}
-  }, [phase]);
+    const tag = `${want}@${progress.rankIndex}`;
+    if (lobbyClip.current === tag) return;
+    lobbyClip.current = tag;
+    // Fade to black, swap the source at the darkest point, then fade back in.
+    fadeBlack.value = withTiming(1, {
+      duration: 200,
+      easing: Easing.in(Easing.quad),
+    });
+    const swap = setTimeout(() => {
+      try {
+        lobbyPlayer.replace(getLobbyVideo(progress.rankIndex, want));
+        lobbyPlayer.loop = true;
+        lobbyPlayer.muted = true;
+        lobbyPlayer.play();
+      } catch {}
+      fadeBlack.value = withTiming(0, {
+        duration: 260,
+        easing: Easing.out(Easing.quad),
+      });
+    }, 210);
+    return () => clearTimeout(swap);
+  }, [phase, progress.rankIndex]);
+  const fadeBlackStyle = useAnimatedStyle(() => ({
+    opacity: fadeBlack.value,
+  }));
 
   const pulse = useSharedValue(1);
   const glow = useSharedValue(0.4);
@@ -225,7 +248,9 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           onPress={() => navigation.navigate("Stats" as any)}
         >
           <Text style={styles.scoreIcon}>★</Text>
-          <Text style={styles.scoreValue}>{progress.xp}</Text>
+          <Text style={styles.scoreValue} numberOfLines={1}>
+            {progress.xp}
+          </Text>
         </Pressable>
       </View>
 
@@ -247,6 +272,15 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           style={StyleSheet.absoluteFill}
           contentFit="cover"
           nativeControls={false}
+        />
+        {/* Fade-to-black layer: covers the clip while the source swaps. */}
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: "#000" },
+            fadeBlackStyle,
+          ]}
         />
         {/* Small avatar (tap → wardrobe, long-press → dev reset) */}
         <Pressable
@@ -428,7 +462,11 @@ const styles = StyleSheet.create({
     borderRadius: sizes.radius.full,
     paddingHorizontal: 12,
     paddingVertical: 5,
-    width: 100,
+    // Grow with the XP number instead of a hard width (which let big numbers
+    // spill outside the pill). Anchored to the right by the header's
+    // space-between, so it expands leftward and stays on-screen.
+    minWidth: 100,
+    maxWidth: 160,
     justifyContent: "flex-end",
   },
   scoreIcon: {

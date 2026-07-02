@@ -15,7 +15,7 @@
   "reward": 15,
   "initial_variables": {
     "integrity": 0,
-    "mara_trust": 0,
+    "compliance": 0,
     "don": 0,
     "loose_thread": 0,
     "case_file": 0,
@@ -23,9 +23,6 @@
   },
   "initial_flags": {},
   "assets": [],
-  "speakers": {
-    "mara": "Martha"
-  },
   "start": "w2_plot.intro",
   "beats": [
     {
@@ -59,15 +56,15 @@
           "text": "It's 1411 Calder. One door down from the blue one."
         }
       ],
-      "next": "w2_plot.mara"
+      "next": "w2_plot.sys"
     },
     {
-      "id": "w2_plot.mara",
+      "id": "w2_plot.sys",
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "mara",
-          "text": "I've got the nearest unit on a fender-bender two blocks over. Let me re-balance the board — I'll route this one when a car frees up."
+          "speaker": "narrator",
+          "text": "Before you can assign a car, the system flags your nearest unit for a 'higher-priority' fender-bender two blocks over and re-routes it on its own. The board balances itself — always away from Calder."
         }
       ],
       "next": "w2_plot.d1"
@@ -75,22 +72,22 @@
     {
       "id": "w2_plot.d1",
       "type": "decision",
-      "prompt": "Martha wants to reroute the only nearby unit",
+      "prompt": "The only nearby unit just got pulled. What do you do?",
       "choices": [
         {
           "id": "w2_plot.d1_0",
-          "label": "No — send a car to Calder now.",
+          "label": "Override it. Send a car to Calder now.",
           "next": "w2_plot.fin_push",
           "effects": {
             "integrity": 1,
             "case_file": 1,
             "loose_thread": 1,
-            "mara_trust": -1
+            "compliance": -1
           }
         },
         {
           "id": "w2_plot.d1_1",
-          "label": "Note the address. Let her balance it.",
+          "label": "Note the address. Let the board balance.",
           "next": "w2_plot.fin_defer",
           "effects": {
             "loose_thread": 1,
@@ -99,10 +96,10 @@
         },
         {
           "id": "w2_plot.d1_2",
-          "label": "She's the veteran. Her call.",
+          "label": "Trust the system's priorities.",
           "next": "w2_plot.fin_defer2",
           "effects": {
-            "mara_trust": 1,
+            "compliance": 1,
             "pawn": 1
           }
         }
@@ -114,7 +111,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "A unit rolls to 1411. They find a locked, empty house and an open back door — but it's in the system now. Same block, twice. You pull the dispatch logs to prove the pattern, and the pattern has a name: every unit that ever drifted away from Calder was rerouted from one console. Martha's. She isn't the burned-out veteran keeping you whole. She's the reason the street stays a blur."
+          "text": "A unit rolls to 1411. They find a locked, empty house and an open back door. But it's in the system now — same block, twice. That's a pattern no auto-tag can hide."
         }
       ],
       "next": "_end"
@@ -125,7 +122,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "By the time a car frees up, there's nothing to find. You add 1411 to the sticky note — two addresses, one street — and watch Martha close the ticket with a practiced flick. That's when it lands: she didn't balance the board away from Calder by accident. She's been doing it for years. The veteran isn't protecting the floor. She's protecting the house."
+          "text": "By the time a car frees up, there's nothing to find. You add 1411 to the sticky note. Two addresses now, one street."
         }
       ],
       "next": "_end"
@@ -136,7 +133,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Martha handles it her way. The board balances, the street stays a blur — and you finally see the shape of it: the dropped calls, the rerouted units, the rookies she burned through before they could ask the wrong question. Martha was never looking out for you. She's the inside man, and tonight you helped her keep the door shut."
+          "text": "You let the board do its job. It balances. The street stays a blur — and you start to wonder who taught it which streets to forget."
         }
       ],
       "next": "_end"

@@ -15,17 +15,20 @@
   "reward": 12,
   "initial_variables": {
     "integrity": 0,
-    "mara_trust": 0,
+    "compliance": 0,
     "don": 0,
     "loose_thread": 0,
     "case_file": 0,
     "pawn": 0
   },
   "initial_flags": {},
-  "assets": [],
-  "speakers": {
-    "mara": "Martha"
-  },
+  "assets": [
+    {
+      "key": "plot-call-drops",
+      "type": "video",
+      "role": "ambient"
+    }
+  ],
   "start": "w1_plot.intro",
   "beats": [
     {
@@ -59,15 +62,15 @@
           "text": "The line goes dead. Not hung up. Taken away."
         }
       ],
-      "next": "w1_plot.mara"
+      "next": "w1_plot.sys"
     },
     {
-      "id": "w1_plot.mara",
+      "id": "w1_plot.sys",
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "mara",
-          "text": "Dropped call. We get a dozen a night off that block — kids daring each other. Mark it closed, rookie."
+          "speaker": "narrator",
+          "text": "Your screen tags it before you can think: 'CALDER ST — frequent prank origin. Recommend: CLOSE.' One green button and the call dissolves back into the noise of the night."
         }
       ],
       "next": "w1_plot.d1"
@@ -93,15 +96,15 @@
           "effects": {
             "integrity": 1,
             "case_file": 1,
-            "mara_trust": -1
+            "compliance": -1
           }
         },
         {
           "id": "w1_plot.d1_2",
-          "label": "Martha knows the block. Mark it closed.",
+          "label": "Take the recommendation. Close it.",
           "next": "w1_plot.fin_closed",
           "effects": {
-            "mara_trust": 1,
+            "compliance": 1,
             "pawn": 1
           }
         }
@@ -124,7 +127,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Straight to a dead tone — the line's been pulled. But the call's logged now, with a timestamp Martha can't quietly erase."
+          "text": "Straight to a dead tone — the line's been pulled. But the call's logged now, with a timestamp the system can't quietly swallow."
         }
       ],
       "next": "_end"
@@ -135,7 +138,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Closed: prank, juvenile. Martha nods, pleased. Somewhere a blue house on Calder goes quiet again."
+          "text": "Closed: prank, juvenile. The queue counter ticks down. Somewhere a blue house on Calder goes quiet again — and the system thanks you for keeping things tidy."
         }
       ],
       "next": "_end"

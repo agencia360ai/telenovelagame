@@ -20,6 +20,8 @@ export type DispatchType =
   | "animal_control"
   | "zombie_unit"
   | "dino_control"
+  | "ghost_unit"
+  | "pest_control"
   | "no_unit";
 
 export type DispatchOption = {

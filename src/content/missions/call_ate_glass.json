@@ -31,6 +31,11 @@
   "start": "call_ate_glass.b0",
   "assets": [
     {
+      "key": "call-ate-glass",
+      "type": "video",
+      "role": "ambient"
+    },
+    {
       "key": "deploy-ambulance",
       "type": "video",
       "role": "deploy"
