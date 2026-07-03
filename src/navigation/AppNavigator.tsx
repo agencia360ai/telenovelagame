@@ -15,6 +15,7 @@ import { SettingsScreen } from "../screens/SettingsScreen";
 import { WardrobeScreen } from "../screens/WardrobeScreen";
 import { ChapterEndScreen } from "../screens/ChapterEndScreen";
 import { WeekCompleteScreen } from "../screens/WeekCompleteScreen";
+import { RadarSandboxScreen } from "../screens/RadarSandboxScreen";
 import { colors } from "../theme/colors";
 
 export type RootStackParamList = {
@@ -44,6 +45,7 @@ export type RootStackParamList = {
     type: "chapter_transition" | "continuara";
     nextChapterId?: string;
   };
+  RadarSandbox: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -99,6 +101,7 @@ export function AppNavigator() {
           component={ChapterEndScreen}
           options={{ gestureEnabled: false }}
         />
+        <Stack.Screen name="RadarSandbox" component={RadarSandboxScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -5,9 +5,9 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-  SafeAreaView,
   Dimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import Animated, {
   FadeInDown,
@@ -48,6 +48,7 @@ export function CallScreen({ navigation, route }: Props) {
   const { callId } = route.params;
   const call = getCallById(callId);
   const progress = useDispatchProgress();
+  const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
 
   const [phase, setPhase] = useState<Phase>(
@@ -187,8 +188,8 @@ export function CallScreen({ navigation, route }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.container}>
+      <View style={[styles.header, { paddingTop: insets.top + sizes.spacing.sm }]}>
         <View style={styles.headerLeft}>
           <View style={styles.liveDot} />
           <Text style={styles.callType}>{call.callType}</Text>
@@ -338,7 +339,7 @@ export function CallScreen({ navigation, route }: Props) {
       </Pressable>
 
       {phase === "dialogue" && (
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { paddingBottom: insets.bottom + sizes.spacing.md }]}>
           <Text style={styles.hintText}>
             {allShown ? "TAP TO DISPATCH ▸" : "TAP TO CONTINUE ▸"}
           </Text>
@@ -346,7 +347,7 @@ export function CallScreen({ navigation, route }: Props) {
       )}
 
       {phase === "result" && (
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { paddingBottom: insets.bottom + sizes.spacing.md }]}>
           <Pressable style={styles.nextCallBtn} onPress={handleNextCall}>
             <Text style={styles.nextCallText}>NEXT CALL ▸</Text>
           </Pressable>
@@ -412,7 +413,7 @@ export function CallScreen({ navigation, route }: Props) {
           flashStyle,
         ]}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

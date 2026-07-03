@@ -5,10 +5,10 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-  SafeAreaView,
   Dimensions,
   Alert,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, {
@@ -28,6 +28,7 @@ import { useEconomy } from "../context/EconomyContext";
 import {
   getMissionById,
   DISPATCH_OPTIONS,
+  SPECIAL_UNITS,
 } from "../content/missions";
 import {
   getBeat,
@@ -75,6 +76,7 @@ export function MissionScreen({ navigation, route }: Props) {
   const progress = useDispatchProgress();
   const calendar = useCalendar();
   const economy = useEconomy();
+  const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
 
   // Capture the week/day label once so it stays stable after the call advances.
@@ -101,7 +103,6 @@ export function MissionScreen({ navigation, route }: Props) {
   const timeLimit = mission.time_limit_seconds ?? 15;
   // Default option set excludes special units (e.g. zombie_unit) — those only
   // show on calls that explicitly list them in their `units` field.
-  const SPECIAL_UNITS = ["zombie_unit", "dino_control"];
   const units =
     mission.units ??
     DISPATCH_OPTIONS.filter((o) => !SPECIAL_UNITS.includes(o.id)).map(
@@ -437,8 +438,8 @@ export function MissionScreen({ navigation, route }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.container}>
+      <View style={[styles.header, { paddingTop: insets.top + sizes.spacing.sm }]}>
         <View style={styles.headerLeft}>
           <View style={styles.liveDot} />
           <Text style={styles.callType}>{mission.caller.type}</Text>
@@ -642,7 +643,7 @@ export function MissionScreen({ navigation, route }: Props) {
       </View>
 
       {phase === "result" && (
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { paddingBottom: insets.bottom + sizes.spacing.md }]}>
           <Pressable style={styles.nextCallBtn} onPress={handleNextMission}>
             <Text style={styles.nextCallText}>
               {isIntro ? "ENTER DISPATCH ▸" : "NEXT CALL ▸"}
@@ -727,7 +728,7 @@ export function MissionScreen({ navigation, route }: Props) {
         pointerEvents="none"
         style={[StyleSheet.absoluteFill, { backgroundColor: colors.dispatch.cyan }, flashStyle]}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
