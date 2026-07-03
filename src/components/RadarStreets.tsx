@@ -3,24 +3,27 @@ import { View, StyleSheet } from "react-native";
 import { nodes, edges } from "../game/streetGraph";
 
 type Props = {
-  /** Canvas size in px; normalized 0..1 graph coords are scaled by this. */
+  /** Canvas width in px; normalized 0..1 x coords are scaled by this. */
   size: number;
+  /** Canvas height in px; normalized 0..1 y coords are scaled by this. Defaults to `size` (square). */
+  height?: number;
 };
 
 /**
  * Draws the street graph faintly: each edge is a thin rotated rect (same trick
  * as the radar `trail`), each node a small dot at the intersection.
  */
-export function RadarStreets({ size }: Props) {
+export function RadarStreets({ size, height }: Props) {
+  const h = height ?? size;
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {edges.map(([aId, bId]) => {
         const a = nodes[aId];
         const b = nodes[bId];
         const ax = a.x * size;
-        const ay = a.y * size;
+        const ay = a.y * h;
         const dx = (b.x - a.x) * size;
-        const dy = (b.y - a.y) * size;
+        const dy = (b.y - a.y) * h;
         const length = Math.sqrt(dx * dx + dy * dy);
         const angle = Math.atan2(dy, dx);
         return (
@@ -44,7 +47,7 @@ export function RadarStreets({ size }: Props) {
           key={n.id}
           style={[
             styles.node,
-            { left: n.x * size - NODE_SIZE / 2, top: n.y * size - NODE_SIZE / 2 },
+            { left: n.x * size - NODE_SIZE / 2, top: n.y * h - NODE_SIZE / 2 },
           ]}
         />
       ))}

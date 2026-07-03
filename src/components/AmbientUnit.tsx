@@ -21,8 +21,10 @@ import {
 import { colors } from "../theme/colors";
 
 type Props = {
-  /** Canvas size in px; normalized 0..1 graph coords are scaled by this. */
+  /** Canvas width in px; normalized 0..1 x coords are scaled by this. */
   size: number;
+  /** Canvas height in px; normalized 0..1 y coords are scaled by this. Defaults to `size` (square). */
+  height?: number;
   icon: string;
   /** ms per normalized distance unit (1.0 = full canvas width). Higher = slower. */
   speed: number;
@@ -55,6 +57,7 @@ type Props = {
  */
 export function AmbientUnit({
   size,
+  height,
   icon,
   speed,
   startId,
@@ -66,6 +69,7 @@ export function AmbientUnit({
   offset,
   onArrive,
 }: Props) {
+  const h = height ?? size; // canvas height; y coords scale by this, x by `size`
   const tx = useSharedValue(0);
   const ty = useSharedValue(0);
   const opacity = useSharedValue(0); // avoid a one-frame flash at the (0,0) corner
@@ -87,7 +91,7 @@ export function AmbientUnit({
       (targetId != null ? randomDifferentNodeId(targetId) : randomNodeId());
     const startNode = nodes[start];
     tx.value = startNode.x * size;
-    ty.value = startNode.y * size;
+    ty.value = startNode.y * h;
     opacity.value = restOpacity;
     startRouteFrom(start);
 
@@ -121,7 +125,7 @@ export function AmbientUnit({
       xSteps.push(withTiming(b.x * size, { duration, easing: Easing.linear }));
       ySteps.push(
         withTiming(
-          b.y * size,
+          b.y * h,
           { duration, easing: Easing.linear },
           isLast
             ? (finished) => {

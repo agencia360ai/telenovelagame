@@ -22,31 +22,40 @@ along the grid.
 
 | Topic | Decision |
 | --- | --- |
-| Streets | **Drawn faintly** for now. Later replaced by a stylized image + recreated graph. |
+| Background | A **stylized Manhattan image** (`assets/map/manhattan.png`, 688×1316) rendered behind the graph. The graph was **hand-authored on that image** with `tools/street-graph-editor.html`. Faint streets/nodes stay drawn on top for alignment. |
+| Shape | Radar changed from a **circle to a portrait rectangle** matching the image aspect ratio, so the whole island shows and nodes land on the streets. Circular rings/crosshair removed; the scan line stays. |
 | Units | **One per unlocked unit type** (`getUnlockedUnits()`). Each drives once to its own destination pin and parks (radar "ping" on arrival) — not endless wandering. |
 | Location | Started in an **isolated sandbox screen**, then **integrated into `DispatchRadar`** (the real dispatch flow). |
 | Libraries | `react-native-reanimated` only. No SVG/Skia — lines and pins are rotated rects / bordered views (same trick as the radar `trail`). |
 
 ## 3. Architecture
 
-Graph coordinates are **normalized 0..1** (resolution-independent). Each component
-multiplies by the canvas size (`RADAR_SIZE`). The same graph data will later map onto
-a larger stylized image without rewriting it.
+Graph coordinates are **normalized 0..1** (resolution-independent). `x` is a fraction
+of the map image **width**, `y` a fraction of its **height**; components multiply `x`
+by the canvas width (`RADAR_W`) and `y` by the canvas height (`RADAR_H`). Because the
+canvas is kept at the image's exact aspect ratio, changing the on-screen size never
+moves a node off its street — only a change to the image's **aspect ratio** would.
 
 ### Graph data + utilities — `src/game/streetGraph.ts`
 - `GraphNode = { id, x, y }` with `x,y ∈ [0,1]`; `Edge = [string, string]`.
-- A code-generated **Manhattan-style grid** (`GRID_COLS × GRID_ROWS`, 5×5) with one
-  node (`n_2_2`) and two edges removed so it isn't a perfect lattice. `MARGIN = 0.1`
-  keeps it off the canvas edge.
-- Pure helpers (no deps):
+- The graph is **hand-authored on `assets/map/manhattan.png`** using
+  `tools/street-graph-editor.html` (click intersections → connect streets → export).
+  Currently **125 nodes / 186 edges**, one connected component. Node ids are opaque
+  strings (`n_0`, `n_1`, …); to change the map, re-edit in the tool and paste a fresh
+  export over `nodes`/`edges`.
+- Pure helpers (no deps), unchanged and graph-agnostic:
   - `dist(a, b)` — euclidean distance.
   - `neighbors(id)` — adjacency derived from `edges`.
-  - `shortestPath(from, to): string[]` — **Dijkstra** weighted by edge length
-    (linear-scan priority queue; the graph is ~24 nodes).
+  - `shortestPath(from, to): string[]` — **Dijkstra** weighted by edge length.
   - `randomNodeId()` / `randomDifferentNodeId(exclude)`.
 
+### The editor tool — `tools/street-graph-editor.html`
+Standalone, dependency-free HTML page (open in a browser). Load the map image, click to
+place nodes on intersections, switch to edge mode to connect streets, right-click to
+delete, then **Export** a TypeScript block (or JSON, for re-import) with coords in 0..1.
+
 ### Faint streets — `src/components/RadarStreets.tsx`
-- Props: `size`.
+- Props: `size` (width), optional `height` (defaults to `size` for a square canvas).
 - Each edge → an absolutely-positioned `View`: a 2px rect anchored at the source node,
   `width = dist*size`, `transform: rotate(atan2(dy,dx))`, `transformOrigin: left center`
   — identical to the `trail` pattern in `DispatchRadar.tsx`. Low-opacity cyan.
@@ -56,9 +65,10 @@ a larger stylized image without rewriting it.
 Despite the name, this is the single reusable unit component for **both** the ambient
 "simulation" units and the prominent "hero" unit.
 
-- Props: `size`, `icon`, `speed` (ms per normalized distance unit), plus optional
-  `startId`, `targetId`, `loop`, `dotSize` (default 26), `iconSize` (default 14),
-  `dim`, `offset`, `onArrive`. (There is **no** `color` prop — the unit is cyan.)
+- Props: `size` (width), optional `height` (defaults to `size`), `icon`, `speed` (ms per
+  normalized distance unit), plus optional `startId`, `targetId`, `loop`, `dotSize`
+  (default 26), `iconSize` (default 14), `dim`, `offset`, `onArrive`. (There is **no**
+  `color` prop — the unit is cyan.)
 - Position via `useSharedValue` `tx`/`ty`; `useAnimatedStyle` translate.
 - **Straight per-segment movement, whole route at once**: `shortestPath` is turned into
   one `withSequence` per axis (`tx` and `ty` each get a `withTiming` step per segment,
@@ -88,12 +98,13 @@ Despite the name, this is the single reusable unit component for **both** the am
   an equivalent amber pin with local styles.)
 
 ### Sandbox screen — `src/screens/RadarSandboxScreen.tsx`
-- Replicates the radar frame (rings / cross / scan) via local styles (it's a test screen).
+- Renders the portrait map image + scan line via local styles (it's a test screen), and
+  is the handiest place to **verify the graph aligns with the image**.
 - Mounts `<RadarStreets>` + **one `<AmbientUnit>` per unlocked type** from
   `getUnlockedUnits()`, each with its **own unique start node** and **own unique
-  destination pin**. Destination nodes are restricted to those where the pin fits fully
-  inside the radar circle (`pinFits`/`within` geometry); no two pins and no two spawn
-  points overlap. The layout is `useMemo`-ized so re-renders don't reshuffle.
+  destination pin**. On the rectangular map every node is on-canvas, so `pinFits` only
+  keeps destinations whose pin bubble won't clip past the top edge; no two pins and no
+  two spawn points overlap. The layout is `useMemo`-ized so re-renders don't reshuffle.
 - Each unit gets `targetId` (its pin) ⇒ drives once and parks.
 - Config constants at top of file:
   - `UNIT_SPEED = 9000` (ms per unit of normalized distance; higher = slower).
@@ -101,17 +112,22 @@ Despite the name, this is the single reusable unit component for **both** the am
 - "← Exit" button to go back.
 
 ### Dispatch integration — `src/components/DispatchRadar.tsx`
-This is where the graph is used in the real flow (the doc's old "next step", now done):
+This is where the graph is used in the real flow:
+- **Canvas**: a portrait rectangle sized from `MAP_ASPECT = 688/1316` fit to the screen
+  (`RADAR_H = min(SCREEN_HEIGHT*0.6, (SCREEN_WIDTH-48)/MAP_ASPECT)`, `RADAR_W = RADAR_H *
+  MAP_ASPECT`). The Manhattan image sits behind everything at explicit `RADAR_W×RADAR_H`
+  with **`resizeMode="stretch"`**, so it uses the *exact same* `[0,1]→[0,W]×[0,H]` mapping
+  as the graph — nodes always land on the streets even if `MAP_ASPECT` is imperfect (image
+  and overlay scale identically). `MAP_ASPECT` only controls the frame's on-screen shape.
 - **Layout** (`useMemo` keyed on `callId`): a deterministic `shuffle(seed)` seeded by
   `hashStr(callId)` allocates unique nodes so a given call keeps a stable map:
-  - **hero** = the dispatched unit: its start node + a deterministic objective node
-    inside the circle.
+  - **hero** = the dispatched unit: its start node + a deterministic objective node.
   - **sims** = one ambient unit per unlocked type, each with its own start node and its
-    own destination pin (constrained to fit the circle). A shared `used` set prevents
-    any node collision across hero + sims.
-- **Render**: `<RadarStreets>`; small dim `<AmbientUnit dim>` sims each with a small
-  `<MapPin>`; then the prominent hero `<AmbientUnit>` (`dotSize=32`) driving to
-  `heroTarget`. The classic **amber blip** is kept, overlaid on the objective node.
+    own destination pin. A shared `used` set prevents any node collision across hero +
+    sims.
+- **Render**: map `<Image>`; scan line; `<RadarStreets>`; small dim `<AmbientUnit dim>`
+  sims each with a small `<MapPin>`; then the prominent hero `<AmbientUnit>` (`dotSize=32`)
+  driving to `heroTarget`. The classic **amber blip** is kept, overlaid on the objective.
 - **Flow control**: hero's `onArrive` fades in an "arrived" label and calls
   `onComplete()`. A **9s safety `setTimeout`** always advances the flow even if the
   arrival callback never fires. Sizing knobs (`SIM_UNIT_DOT`, `HERO_UNIT_DOT`,
@@ -126,12 +142,14 @@ This is where the graph is used in the real flow (the doc's old "next step", now
 
 ## 4. Files
 
-- New: `src/game/streetGraph.ts`
+- New: `src/game/streetGraph.ts` (now the hand-authored Manhattan graph)
 - New: `src/components/RadarStreets.tsx`
 - New: `src/components/AmbientUnit.tsx`
 - New: `src/components/MapPin.tsx`
 - New: `src/screens/RadarSandboxScreen.tsx`
-- Edit: `src/components/DispatchRadar.tsx` (street map + hero/sim units integrated)
+- New: `tools/street-graph-editor.html` (browser tool to author the graph on the image)
+- New: `assets/map/manhattan.png` (stylized map background)
+- Edit: `src/components/DispatchRadar.tsx` (map background + portrait canvas + units)
 - Edit: `src/navigation/AppNavigator.tsx`
 - Edit: `src/screens/DispatchLobbyScreen.tsx`
 
@@ -150,8 +168,8 @@ This is where the graph is used in the real flow (the doc's old "next step", now
 
 ## 6. Next steps (out of scope)
 
-- Replace the radar background with the stylized Manhattan image and **recreate the
-  graph** on that image's coordinates (same 0..1 format).
+- Tune the visual pass over the map: the faint `RadarStreets` overlay is currently kept
+  on for alignment checking — dim or drop it once the graph matches the drawn streets.
 - For hundreds of units: move to `react-native-skia` (single surface) instead of one
   `Animated.View` per unit.
 - Housekeeping: fold the sandbox's inline pin into `MapPin`; either wire up or remove

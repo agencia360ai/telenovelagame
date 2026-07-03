@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Pressable,
   Dimensions,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
@@ -27,11 +28,14 @@ const UNIT_SPEED = 9000; // ms per normalized distance unit (higher = slower)
 const SPEED_VARIANCE = 0.25; // each unit's speed varies by ±25%
 // ─────────────────────────────────────────────────────────────────────────────
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const RADAR_SIZE = Math.min(SCREEN_WIDTH - 48, 340);
-const CENTER = RADAR_SIZE / 2;
-const RINGS = [0.25, 0.5, 0.75, 1];
-const UNIT_CLEARANCE = 16; // px a spawning unit must stay inside the radar edge
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+// Portrait Manhattan map; canvas kept at the image's aspect ratio so normalized
+// (x÷width, y÷height) graph coords land exactly on the streets.
+const MAP_IMAGE = require("../../assets/map/manhattan.png");
+const MAP_ASPECT = 688 / 1316; // manhattan.png width / height
+const RADAR_H = Math.min(SCREEN_HEIGHT * 0.62, (SCREEN_WIDTH - 32) / MAP_ASPECT);
+const RADAR_W = RADAR_H * MAP_ASPECT;
 
 type Props = NativeStackScreenProps<RootStackParamList, "RadarSandbox">;
 
@@ -49,7 +53,7 @@ export function RadarSandboxScreen({ navigation }: Props) {
 
   useEffect(() => {
     scanY.value = withRepeat(
-      withTiming(RADAR_SIZE, { duration: 2600, easing: Easing.linear }),
+      withTiming(RADAR_H, { duration: 2600, easing: Easing.linear }),
       -1,
       false
     );
@@ -67,34 +71,15 @@ export function RadarSandboxScreen({ navigation }: Props) {
   const units = useMemo(() => {
     const unlocked = getUnlockedUnits();
     const N = unlocked.length;
-    const R = RADAR_SIZE / 2;
     const ids = Object.keys(nodes);
-    const px = (id: string) => ({
-      x: nodes[id].x * RADAR_SIZE,
-      y: nodes[id].y * RADAR_SIZE,
-    });
-    const within = (x: number, y: number, margin: number) =>
-      Math.hypot(x - CENTER, y - CENTER) <= R - margin;
-    const pinFits = (id: string) => {
-      const p = px(id);
-      const top = p.y - PIN_H;
-      return (
-        within(p.x - PIN_W / 2, top, 2) &&
-        within(p.x + PIN_W / 2, top, 2) &&
-        within(p.x, p.y, 2)
-      );
-    };
+    // Rectangular map: every node is on-canvas. Only keep destination nodes whose
+    // pin bubble won't clip past the top edge (it extends upward by PIN_H).
+    const pinFits = (id: string) => nodes[id].y * RADAR_H - PIN_H >= 2;
 
     const destPool = shuffle(ids.filter(pinFits));
     const dests = destPool.slice(0, N);
     const destSet = new Set(dests);
-    const startPool = shuffle(
-      ids.filter((id) => {
-        if (destSet.has(id)) return false;
-        const p = px(id);
-        return within(p.x, p.y, UNIT_CLEARANCE);
-      })
-    );
+    const startPool = shuffle(ids.filter((id) => !destSet.has(id)));
     const starts = startPool.slice(0, N);
 
     return unlocked.map((u, i) => {
@@ -124,39 +109,23 @@ export function RadarSandboxScreen({ navigation }: Props) {
       <View style={styles.center}>
         <View style={styles.radarOuter}>
           <View style={styles.radar}>
-            {RINGS.map((r) => {
-              const size = RADAR_SIZE * r;
-              return (
-                <View
-                  key={r}
-                  style={[
-                    styles.ring,
-                    {
-                      width: size,
-                      height: size,
-                      borderRadius: size / 2,
-                      left: CENTER - size / 2,
-                      top: CENTER - size / 2,
-                    },
-                  ]}
-                />
-              );
-            })}
-
-            <View style={[styles.crossH, { top: CENTER - 0.5, width: RADAR_SIZE }]} />
-            <View style={[styles.crossV, { left: CENTER - 0.5, height: RADAR_SIZE }]} />
-
-            <Animated.View
-              style={[styles.scanLine, { width: RADAR_SIZE }, scanStyle]}
+            <Image
+              source={MAP_IMAGE}
+              style={{ position: "absolute", top: 0, left: 0, width: RADAR_W, height: RADAR_H }}
+              resizeMode="stretch"
             />
 
-            <RadarStreets size={RADAR_SIZE} />
+            <Animated.View
+              style={[styles.scanLine, { width: RADAR_W }, scanStyle]}
+            />
+
+            <RadarStreets size={RADAR_W} height={RADAR_H} />
 
             {/* One destination pin per unit — tip at the node, unit's own icon */}
             {units.map((u) => {
               if (!u.destId) return null;
-              const dx = nodes[u.destId].x * RADAR_SIZE;
-              const dy = nodes[u.destId].y * RADAR_SIZE;
+              const dx = nodes[u.destId].x * RADAR_W;
+              const dy = nodes[u.destId].y * RADAR_H;
               return (
                 <View
                   key={`pin-${u.id}`}
@@ -174,7 +143,8 @@ export function RadarSandboxScreen({ navigation }: Props) {
             {units.map((u) => (
               <AmbientUnit
                 key={u.id}
-                size={RADAR_SIZE}
+                size={RADAR_W}
+                height={RADAR_H}
                 icon={u.icon}
                 speed={u.speed}
                 startId={u.startId}
@@ -230,35 +200,18 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   radarOuter: {
-    borderRadius: RADAR_SIZE / 2 + 4,
+    borderRadius: 14,
     borderWidth: 2,
     borderColor: "rgba(34, 211, 238, 0.25)",
     padding: 3,
     backgroundColor: "rgba(34, 211, 238, 0.03)",
   },
   radar: {
-    width: RADAR_SIZE,
-    height: RADAR_SIZE,
-    borderRadius: RADAR_SIZE / 2,
+    width: RADAR_W,
+    height: RADAR_H,
+    borderRadius: 10,
     overflow: "hidden",
     backgroundColor: "rgba(10, 14, 26, 0.95)",
-  },
-  ring: {
-    position: "absolute",
-    borderWidth: 1,
-    borderColor: "rgba(34, 211, 238, 0.1)",
-  },
-  crossH: {
-    position: "absolute",
-    left: 0,
-    height: 1,
-    backgroundColor: "rgba(34, 211, 238, 0.08)",
-  },
-  crossV: {
-    position: "absolute",
-    top: 0,
-    width: 1,
-    backgroundColor: "rgba(34, 211, 238, 0.08)",
   },
   scanLine: {
     position: "absolute",

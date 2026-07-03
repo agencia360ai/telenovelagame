@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Street Graph Editor — 911 Dispatch</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --panel: #131a2e;
+    --cyan: #22d3ee;
+    --cyan-dim: rgba(34, 211, 238, 0.4);
+    --amber: #fbbf24;
+    --red: #f87171;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: rgba(34, 211, 238, 0.25);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ---- Sidebar ---- */
+  #sidebar {
+    width: 340px;
+    min-width: 340px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  h1 { font-size: 16px; letter-spacing: 2px; margin: 0; color: var(--cyan); }
+  h2 { font-size: 11px; letter-spacing: 2px; margin: 0 0 6px; color: var(--muted); text-transform: uppercase; }
+  .card { background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  label.file {
+    display: block; padding: 10px; text-align: center; border: 1px dashed var(--cyan-dim);
+    border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--cyan);
+  }
+  label.file:hover { background: rgba(34,211,238,0.08); }
+  input[type=file] { display: none; }
+
+  .mode-row { display: flex; gap: 8px; }
+  .mode-btn {
+    flex: 1; padding: 10px 8px; border: 1px solid var(--border); border-radius: 6px;
+    background: transparent; color: var(--text); cursor: pointer; font-size: 12px; font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .mode-btn.active { background: var(--cyan); color: #05141a; border-color: var(--cyan); }
+  .mode-btn.active.edge { background: var(--amber); border-color: var(--amber); }
+
+  button.action {
+    width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px;
+    background: transparent; color: var(--text); cursor: pointer; font-size: 12px; margin-bottom: 6px;
+  }
+  button.action:hover { background: rgba(255,255,255,0.05); }
+  button.action.danger { color: var(--red); border-color: rgba(248,113,113,0.4); }
+  button.action.primary { background: var(--cyan); color: #05141a; font-weight: 800; border-color: var(--cyan); }
+
+  .stat { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+  .stat b { color: var(--text); }
+
+  .hint { font-size: 11px; line-height: 1.6; color: var(--muted); }
+  .hint b { color: var(--cyan); }
+  kbd {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 3px; padding: 1px 5px; font-size: 10px; font-family: monospace;
+  }
+
+  textarea {
+    width: 100%; height: 160px; background: #05070d; color: var(--cyan); border: 1px solid var(--border);
+    border-radius: 6px; font-family: monospace; font-size: 11px; padding: 8px; resize: vertical;
+  }
+  .row2 { display: flex; gap: 6px; }
+  .row2 > * { flex: 1; }
+  .toggle-fmt { display: flex; gap: 6px; font-size: 11px; align-items: center; color: var(--muted); }
+
+  /* ---- Canvas area ---- */
+  #stage {
+    flex: 1; position: relative; overflow: auto; display: flex;
+    align-items: center; justify-content: center; background:
+      linear-gradient(45deg, #0c1120 25%, transparent 25%),
+      linear-gradient(-45deg, #0c1120 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #0c1120 75%),
+      linear-gradient(-45deg, transparent 75%, #0c1120 75%);
+    background-size: 24px 24px;
+    background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+  }
+  #canvasWrap { position: relative; line-height: 0; box-shadow: 0 0 40px rgba(0,0,0,0.6); }
+  #mapImg { display: block; max-width: none; user-select: none; -webkit-user-drag: none; }
+  #overlay { position: absolute; inset: 0; cursor: crosshair; }
+  #empty {
+    color: var(--muted); font-size: 14px; text-align: center; padding: 40px;
+  }
+  #coordReadout {
+    position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8);
+    border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
+    font-family: monospace; font-size: 12px; color: var(--cyan); pointer-events: none;
+  }
+  .zoom-row { display:flex; gap:6px; align-items:center; }
+  .zoom-row input { flex:1; }
+</style>
+</head>
+<body>
+  <div id="sidebar">
+    <h1>STREET GRAPH EDITOR</h1>
+
+    <div class="card">
+      <h2>1 · Imagen del mapa</h2>
+      <label class="file">
+        Cargar imagen (manhattan.png)
+        <input type="file" id="fileInput" accept="image/*" />
+      </label>
+      <div class="zoom-row" style="margin-top:10px;">
+        <span class="hint">Zoom</span>
+        <input type="range" id="zoom" min="0.25" max="3" step="0.05" value="1" />
+        <span class="hint" id="zoomVal">100%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2 · Modo</h2>
+      <div class="mode-row">
+        <button class="mode-btn active" id="modeNode">● NODOS</button>
+        <button class="mode-btn edge" id="modeEdge">╱ ARISTAS</button>
+      </div>
+      <p class="hint" style="margin:10px 0 0;">
+        <b>Nodos:</b> clic en el mapa para agregar una intersección.<br>
+        <b>Aristas:</b> clic en un nodo y luego en otro para conectar la calle.<br>
+        <b>Borrar:</b> <kbd>clic derecho</kbd> sobre un nodo o arista.<br>
+        <b>Mover nodo:</b> arrástralo (modo nodos).
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>3 · Grafo</h2>
+      <div class="stat"><span>Nodos</span><b id="nodeCount">0</b></div>
+      <div class="stat"><span>Aristas</span><b id="edgeCount">0</b></div>
+      <div style="margin-top:10px;">
+        <button class="action" id="undoBtn">↶ Deshacer (Ctrl+Z)</button>
+        <button class="action danger" id="clearBtn">Borrar todo</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>4 · Exportar / Importar</h2>
+      <div class="toggle-fmt" style="margin-bottom:8px;">
+        <label><input type="radio" name="fmt" value="ts" checked /> TypeScript</label>
+        <label><input type="radio" name="fmt" value="json" /> JSON</label>
+      </div>
+      <div class="row2" style="margin-bottom:8px;">
+        <button class="action primary" id="exportBtn">Generar ⤓</button>
+        <button class="action" id="copyBtn">Copiar</button>
+      </div>
+      <textarea id="output" spellcheck="false" placeholder="El grafo exportado aparece aquí (coords normalizadas 0..1)…"></textarea>
+      <button class="action" id="importBtn" style="margin-top:8px;">Importar JSON pegado ↥</button>
+      <p class="hint" style="margin:8px 0 0;">
+        Coordenadas exportadas en <b>fracciones 0..1</b> (independientes del tamaño de la imagen).
+        Pega el bloque TS directamente en <b>src/game/streetGraph.ts</b>.
+      </p>
+    </div>
+  </div>
+
+  <div id="stage">
+    <div id="empty">← Carga una imagen del mapa para empezar</div>
+    <div id="canvasWrap" style="display:none;">
+      <img id="mapImg" alt="map" />
+      <svg id="overlay" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </div>
+  <div id="coordReadout">x: —  y: —</div>
+
+<script>
+(function () {
+  "use strict";
+  const SVGNS = "http://www.w3.org/2000/svg";
+
+  // ---- State ----
+  /** nodes: { id: {id, x, y} } with x,y in [0,1] */
+  let nodes = {};
+  /** edges: [ [aId, bId], ... ] */
+  let edges = [];
+  let nextId = 0;
+  let mode = "node"; // "node" | "edge"
+  let edgeAnchor = null; // first node id selected in edge mode
+  let imgW = 0, imgH = 0; // natural pixel size
+  let zoom = 1;
+  let dragId = null;
+  const undoStack = [];
+
+  const els = {
+    file: document.getElementById("fileInput"),
+    stage: document.getElementById("stage"),
+    wrap: document.getElementById("canvasWrap"),
+    empty: document.getElementById("empty"),
+    img: document.getElementById("mapImg"),
+    svg: document.getElementById("overlay"),
+    modeNode: document.getElementById("modeNode"),
+    modeEdge: document.getElementById("modeEdge"),
+    nodeCount: document.getElementById("nodeCount"),
+    edgeCount: document.getElementById("edgeCount"),
+    output: document.getElementById("output"),
+    coord: document.getElementById("coordReadout"),
+    zoom: document.getElementById("zoom"),
+    zoomVal: document.getElementById("zoomVal"),
+  };
+
+  // ---- Helpers ----
+  function edgeKey(a, b) { return a < b ? a + "|" + b : b + "|" + a; }
+  function hasEdge(a, b) {
+    const k = edgeKey(a, b);
+    return edges.some(([x, y]) => edgeKey(x, y) === k);
+  }
+  function round(n) { return Math.round(n * 10000) / 10000; }
+  function snapshot() {
+    undoStack.push(JSON.stringify({ nodes, edges, nextId }));
+    if (undoStack.length > 100) undoStack.shift();
+  }
+  function undo() {
+    const s = undoStack.pop();
+    if (!s) return;
+    const st = JSON.parse(s);
+    nodes = st.nodes; edges = st.edges; nextId = st.nextId;
+    edgeAnchor = null;
+    render();
+  }
+
+  // ---- Image loading ----
+  els.file.addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    els.img.onload = () => {
+      imgW = els.img.naturalWidth;
+      imgH = els.img.naturalHeight;
+      applyZoom();
+      els.empty.style.display = "none";
+      els.wrap.style.display = "block";
+      render();
+    };
+    els.img.src = url;
+  });
+
+  function applyZoom() {
+    if (!imgW) return;
+    els.img.width = imgW * zoom;
+    els.img.height = imgH * zoom;
+    els.svg.setAttribute("width", imgW * zoom);
+    els.svg.setAttribute("height", imgH * zoom);
+    els.svg.setAttribute("viewBox", `0 0 ${imgW * zoom} ${imgH * zoom}`);
+    els.zoomVal.textContent = Math.round(zoom * 100) + "%";
+    render();
+  }
+  els.zoom.addEventListener("input", () => { zoom = parseFloat(els.zoom.value); applyZoom(); });
+
+  // ---- Coordinate mapping ----
+  // Returns normalized {x,y} in [0,1] from a mouse event over the svg.
+  function eventToNorm(e) {
+    const rect = els.svg.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    return { x: Math.min(1, Math.max(0, px)), y: Math.min(1, Math.max(0, py)) };
+  }
+  // norm -> displayed pixels (for drawing on the scaled svg)
+  function normToPx(x, y) { return { x: x * imgW * zoom, y: y * imgH * zoom }; }
+
+  // ---- Node hit test (in displayed px) ----
+  const HIT_R = 10;
+  function nodeAt(e) {
+    const rect = els.svg.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    let best = null, bestD = HIT_R * HIT_R;
+    for (const id in nodes) {
+      const p = normToPx(nodes[id].x, nodes[id].y);
+      const d = (p.x - mx) ** 2 + (p.y - my) ** 2;
+      if (d <= bestD) { bestD = d; best = id; }
+    }
+    return best;
+  }
+
+  // ---- Interaction ----
+  els.svg.addEventListener("mousemove", (e) => {
+    const n = eventToNorm(e);
+    els.coord.textContent = `x: ${n.x.toFixed(3)}  y: ${n.y.toFixed(3)}`;
+    if (dragId && mode === "node") {
+      nodes[dragId].x = n.x;
+      nodes[dragId].y = n.y;
+      render();
+    }
+  });
+
+  els.svg.addEventListener("mousedown", (e) => {
+    if (e.button !== 0) return; // left only
+    const hit = nodeAt(e);
+    if (mode === "node") {
+      if (hit) { dragId = hit; return; } // start drag
+      // add node
+      snapshot();
+      const n = eventToNorm(e);
+      const id = "n_" + (nextId++);
+      nodes[id] = { id, x: n.x, y: n.y };
+      render();
+    } else {
+      // edge mode
+      if (!hit) { edgeAnchor = null; render(); return; }
+      if (edgeAnchor == null) { edgeAnchor = hit; render(); return; }
+      if (edgeAnchor === hit) { edgeAnchor = null; render(); return; }
+      if (!hasEdge(edgeAnchor, hit)) { snapshot(); edges.push([edgeAnchor, hit]); }
+      edgeAnchor = hit; // chain: keep going from the just-connected node
+      render();
+    }
+  });
+
+  window.addEventListener("mouseup", () => { dragId = null; });
+
+  // right-click delete
+  els.svg.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    const hit = nodeAt(e);
+    if (hit) {
+      snapshot();
+      delete nodes[hit];
+      edges = edges.filter(([a, b]) => a !== hit && b !== hit); // drop dangling
+      if (edgeAnchor === hit) edgeAnchor = null;
+      render();
+      return;
+    }
+    // try edge hit
+    const eid = edgeAt(e);
+    if (eid >= 0) { snapshot(); edges.splice(eid, 1); render(); }
+  });
+
+  function edgeAt(e) {
+    const rect = els.svg.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    for (let i = edges.length - 1; i >= 0; i--) {
+      const [a, b] = edges[i];
+      if (!nodes[a] || !nodes[b]) continue;
+      const p1 = normToPx(nodes[a].x, nodes[a].y);
+      const p2 = normToPx(nodes[b].x, nodes[b].y);
+      if (distToSeg(mx, my, p1, p2) < 6) return i;
+    }
+    return -1;
+  }
+  function distToSeg(px, py, a, b) {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len2 = dx * dx + dy * dy || 1;
+    let t = ((px - a.x) * dx + (py - a.y) * dy) / len2;
+    t = Math.max(0, Math.min(1, t));
+    const cx = a.x + t * dx, cy = a.y + t * dy;
+    return Math.hypot(px - cx, py - cy);
+  }
+
+  // ---- Modes ----
+  function setMode(m) {
+    mode = m;
+    edgeAnchor = null;
+    els.modeNode.classList.toggle("active", m === "node");
+    els.modeEdge.classList.toggle("active", m === "edge");
+    els.svg.style.cursor = m === "node" ? "crosshair" : "pointer";
+    render();
+  }
+  els.modeNode.addEventListener("click", () => setMode("node"));
+  els.modeEdge.addEventListener("click", () => setMode("edge"));
+
+  // ---- Render ----
+  function render() {
+    els.nodeCount.textContent = Object.keys(nodes).length;
+    els.edgeCount.textContent = edges.length;
+    if (!imgW) return;
+
+    // clear
+    while (els.svg.firstChild) els.svg.removeChild(els.svg.firstChild);
+
+    // edges
+    for (const [a, b] of edges) {
+      if (!nodes[a] || !nodes[b]) continue;
+      const p1 = normToPx(nodes[a].x, nodes[a].y);
+      const p2 = normToPx(nodes[b].x, nodes[b].y);
+      const line = document.createElementNS(SVGNS, "line");
+      line.setAttribute("x1", p1.x); line.setAttribute("y1", p1.y);
+      line.setAttribute("x2", p2.x); line.setAttribute("y2", p2.y);
+      line.setAttribute("stroke", "#22d3ee");
+      line.setAttribute("stroke-width", "3");
+      line.setAttribute("stroke-opacity", "0.7");
+      els.svg.appendChild(line);
+    }
+
+    // nodes
+    for (const id in nodes) {
+      const p = normToPx(nodes[id].x, nodes[id].y);
+      const c = document.createElementNS(SVGNS, "circle");
+      c.setAttribute("cx", p.x); c.setAttribute("cy", p.y);
+      c.setAttribute("r", id === edgeAnchor ? 8 : 6);
+      c.setAttribute("fill", id === edgeAnchor ? "#fbbf24" : "#0a0e1a");
+      c.setAttribute("stroke", id === edgeAnchor ? "#fbbf24" : "#22d3ee");
+      c.setAttribute("stroke-width", "2");
+      els.svg.appendChild(c);
+
+      const t = document.createElementNS(SVGNS, "text");
+      t.setAttribute("x", p.x + 9); t.setAttribute("y", p.y - 8);
+      t.setAttribute("fill", "#94a3b8");
+      t.setAttribute("font-size", "10");
+      t.setAttribute("font-family", "monospace");
+      t.textContent = id;
+      els.svg.appendChild(t);
+    }
+  }
+
+  // ---- Export / Import ----
+  function currentFmt() {
+    return document.querySelector('input[name=fmt]:checked').value;
+  }
+  function exportText() {
+    // stable order by numeric suffix then id
+    const ids = Object.keys(nodes).sort((a, b) => {
+      const na = parseInt(a.replace(/\D/g, ""), 10);
+      const nb = parseInt(b.replace(/\D/g, ""), 10);
+      if (!isNaN(na) && !isNaN(nb) && na !== nb) return na - nb;
+      return a < b ? -1 : 1;
+    });
+    if (currentFmt() === "json") {
+      const obj = {
+        nodes: ids.map((id) => ({ id, x: round(nodes[id].x), y: round(nodes[id].y) })),
+        edges: edges.map(([a, b]) => [a, b]),
+      };
+      return JSON.stringify(obj, null, 2);
+    }
+    // TypeScript block, ready to paste into streetGraph.ts
+    let s = "export const nodes: Record<string, GraphNode> = {\n";
+    for (const id of ids) {
+      s += `  ${id}: { id: "${id}", x: ${round(nodes[id].x)}, y: ${round(nodes[id].y)} },\n`;
+    }
+    s += "};\n\nexport const edges: Edge[] = [\n";
+    for (const [a, b] of edges) s += `  ["${a}", "${b}"],\n`;
+    s += "];\n";
+    return s;
+  }
+
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    els.output.value = exportText();
+  });
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    if (!els.output.value) els.output.value = exportText();
+    try { await navigator.clipboard.writeText(els.output.value); } catch (_) { els.output.select(); document.execCommand("copy"); }
+  });
+  document.querySelectorAll('input[name=fmt]').forEach((r) =>
+    r.addEventListener("change", () => { if (els.output.value) els.output.value = exportText(); })
+  );
+
+  document.getElementById("importBtn").addEventListener("click", () => {
+    const txt = els.output.value.trim();
+    if (!txt) return;
+    let data;
+    try { data = JSON.parse(txt); }
+    catch (_) { alert("Pega JSON válido (usa el formato JSON de export) en el cuadro de texto para importar."); return; }
+    if (!data.nodes) { alert("El JSON no tiene 'nodes'."); return; }
+    snapshot();
+    nodes = {}; edges = [];
+    let maxId = 0;
+    const list = Array.isArray(data.nodes) ? data.nodes : Object.values(data.nodes);
+    for (const n of list) {
+      nodes[n.id] = { id: n.id, x: n.x, y: n.y };
+      const num = parseInt(String(n.id).replace(/\D/g, ""), 10);
+      if (!isNaN(num)) maxId = Math.max(maxId, num + 1);
+    }
+    if (Array.isArray(data.edges)) {
+      for (const e of data.edges) if (nodes[e[0]] && nodes[e[1]] && !hasEdge(e[0], e[1])) edges.push([e[0], e[1]]);
+    }
+    nextId = maxId;
+    render();
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    if (!confirm("¿Borrar todos los nodos y aristas?")) return;
+    snapshot();
+    nodes = {}; edges = []; nextId = 0; edgeAnchor = null;
+    render();
+  });
+  document.getElementById("undoBtn").addEventListener("click", undo);
+
+  window.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
+    if (e.key === "n" || e.key === "N") setMode("node");
+    if (e.key === "e" || e.key === "E") setMode("edge");
+  });
+
+  setMode("node");
+})();
+</script>
+</body>
+</html>

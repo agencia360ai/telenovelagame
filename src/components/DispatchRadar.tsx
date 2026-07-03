@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -16,10 +16,15 @@ import { MapPin } from "./MapPin";
 import { getUnlockedUnits } from "../content/missions";
 import { nodes } from "../game/streetGraph";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const RADAR_SIZE = Math.min(SCREEN_WIDTH - 64, 300);
-const CENTER = RADAR_SIZE / 2;
-const RINGS = [0.25, 0.5, 0.75, 1];
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+// The dispatch map is a portrait Manhattan image. Keep the radar canvas at the
+// image's exact aspect ratio so the normalized (x÷width, y÷height) graph coords
+// land precisely on the streets, and fit it within the screen preserving that.
+const MAP_IMAGE = require("../../assets/map/manhattan.png");
+const MAP_ASPECT = 688 / 1316; // manhattan.png width / height (portrait)
+const RADAR_H = Math.min(SCREEN_HEIGHT * 0.6, (SCREEN_WIDTH - 48) / MAP_ASPECT);
+const RADAR_W = RADAR_H * MAP_ASPECT;
 
 // ── Map simulation sizing (easy to tweak) ────────────────────────────────────
 const SIM_UNIT_DOT = 16; // ambient ("simulation") unit dot diameter
@@ -81,27 +86,11 @@ export function DispatchRadar({
   // The objective is deterministic from callId so a call keeps a stable spot.
   const layout = useMemo(() => {
     const seed = hashStr(callId);
-    const R = RADAR_SIZE / 2;
     const ids = Object.keys(nodes);
-    const px = (id: string) => ({
-      x: nodes[id].x * RADAR_SIZE,
-      y: nodes[id].y * RADAR_SIZE,
-    });
-    const within = (x: number, y: number, m: number) =>
-      Math.hypot(x - CENTER, y - CENTER) <= R - m;
-    const pinFits = (id: string) => {
-      const p = px(id);
-      const top = p.y - SIM_PIN_H;
-      return (
-        within(p.x - SIM_PIN_SIZE / 2, top, 2) &&
-        within(p.x + SIM_PIN_SIZE / 2, top, 2) &&
-        within(p.x, p.y, 2)
-      );
-    };
-    const insideIds = ids.filter((id) => {
-      const p = px(id);
-      return within(p.x, p.y, HERO_UNIT_DOT / 2 + 2);
-    });
+    // The map is rectangular, so every node is on-canvas. Only keep destination
+    // pins that won't clip past the top edge (the pin bubble extends upward).
+    const pinFits = (id: string) => nodes[id].y * RADAR_H - SIM_PIN_H >= 2;
+    const insideIds = ids;
     const pinIds = ids.filter(pinFits);
 
     const used = new Set<string>();
@@ -136,8 +125,8 @@ export function DispatchRadar({
   }, [callId]);
 
   const heroNode = nodes[layout.heroTarget];
-  const heroX = heroNode.x * RADAR_SIZE;
-  const heroY = heroNode.y * RADAR_SIZE;
+  const heroX = heroNode.x * RADAR_W;
+  const heroY = heroNode.y * RADAR_H;
 
   const finish = () => {
     if (doneRef.current) return;
@@ -160,7 +149,7 @@ export function DispatchRadar({
       false
     );
     scanY.value = withRepeat(
-      withTiming(RADAR_SIZE, { duration: 2200, easing: Easing.linear }),
+      withTiming(RADAR_H, { duration: 2200, easing: Easing.linear }),
       -1,
       false
     );
@@ -191,45 +180,25 @@ export function DispatchRadar({
 
       <View style={styles.radarOuter}>
         <View style={styles.radar}>
-          {RINGS.map((r) => {
-            const size = RADAR_SIZE * r;
-            return (
-              <View
-                key={r}
-                style={[
-                  styles.ring,
-                  {
-                    width: size,
-                    height: size,
-                    borderRadius: size / 2,
-                    left: CENTER - size / 2,
-                    top: CENTER - size / 2,
-                  },
-                ]}
-              />
-            );
-          })}
-
-          <View
-            style={[styles.crossH, { top: CENTER - 0.5, width: RADAR_SIZE }]}
-          />
-          <View
-            style={[styles.crossV, { left: CENTER - 0.5, height: RADAR_SIZE }]}
+          <Image
+            source={MAP_IMAGE}
+            style={{ position: "absolute", top: 0, left: 0, width: RADAR_W, height: RADAR_H }}
+            resizeMode="stretch"
           />
 
           <Animated.View
-            style={[styles.scanLine, { width: RADAR_SIZE }, scanStyle]}
+            style={[styles.scanLine, { width: RADAR_W }, scanStyle]}
           />
 
-          <RadarStreets size={RADAR_SIZE} />
+          <RadarStreets size={RADAR_W} height={RADAR_H} />
 
           {/* Ambient simulation pins (small) */}
           {layout.sims.map((u) =>
             u.destId ? (
               <MapPin
                 key={`pin-${u.id}`}
-                x={nodes[u.destId].x * RADAR_SIZE}
-                y={nodes[u.destId].y * RADAR_SIZE}
+                x={nodes[u.destId].x * RADAR_W}
+                y={nodes[u.destId].y * RADAR_H}
                 icon={u.icon}
                 size={SIM_PIN_SIZE}
                 color="rgba(34, 211, 238, 0.7)"
@@ -241,7 +210,8 @@ export function DispatchRadar({
           {layout.sims.map((u) => (
             <AmbientUnit
               key={`sim-${u.id}`}
-              size={RADAR_SIZE}
+              size={RADAR_W}
+              height={RADAR_H}
               icon={u.icon}
               speed={u.speed}
               startId={u.startId}
@@ -263,7 +233,8 @@ export function DispatchRadar({
 
           {/* Selected unit — prominent, but travels along the streets too */}
           <AmbientUnit
-            size={RADAR_SIZE}
+            size={RADAR_W}
+            height={RADAR_H}
             icon={unitIcon}
             speed={DISPATCH_SPEED}
             startId={layout.heroStart}
@@ -315,35 +286,18 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   radarOuter: {
-    borderRadius: RADAR_SIZE / 2 + 4,
+    borderRadius: 14,
     borderWidth: 2,
     borderColor: "rgba(34, 211, 238, 0.25)",
     padding: 3,
     backgroundColor: "rgba(34, 211, 238, 0.03)",
   },
   radar: {
-    width: RADAR_SIZE,
-    height: RADAR_SIZE,
-    borderRadius: RADAR_SIZE / 2,
+    width: RADAR_W,
+    height: RADAR_H,
+    borderRadius: 10,
     overflow: "hidden",
     backgroundColor: "rgba(10, 14, 26, 0.95)",
-  },
-  ring: {
-    position: "absolute",
-    borderWidth: 1,
-    borderColor: "rgba(34, 211, 238, 0.1)",
-  },
-  crossH: {
-    position: "absolute",
-    left: 0,
-    height: 1,
-    backgroundColor: "rgba(34, 211, 238, 0.08)",
-  },
-  crossV: {
-    position: "absolute",
-    top: 0,
-    width: 1,
-    backgroundColor: "rgba(34, 211, 238, 0.08)",
   },
   scanLine: {
     position: "absolute",
