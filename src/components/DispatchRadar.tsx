@@ -21,18 +21,18 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 // The dispatch map is a portrait Manhattan image. Keep the radar canvas at the
 // image's exact aspect ratio so the normalized (x÷width, y÷height) graph coords
 // land precisely on the streets, and fit it within the screen preserving that.
-const MAP_IMAGE = require("../../assets/map/manhattan.png");
-const MAP_ASPECT = 688 / 1316; // manhattan.png width / height (portrait)
+const MAP_IMAGE = require("../../assets/map/manhattan2.png");
+const MAP_ASPECT = 720 / 1280; // manhattan2.png width / height (portrait)
 const RADAR_H = Math.min(SCREEN_HEIGHT * 0.6, (SCREEN_WIDTH - 48) / MAP_ASPECT);
 const RADAR_W = RADAR_H * MAP_ASPECT;
 
 // ── Map simulation sizing (easy to tweak) ────────────────────────────────────
-const SIM_UNIT_DOT = 16; // ambient ("simulation") unit dot diameter
-const SIM_UNIT_ICON = 9; // ambient unit emoji size
-const SIM_PIN_SIZE = 16; // ambient destination pin bubble diameter
-const HERO_UNIT_DOT = 32; // selected unit — keeps the prominent radar look
-const HERO_UNIT_ICON = 16;
-const DISPATCH_SPEED = 2200; // ms per normalized distance (≈2–3.5s per trip)
+const SIM_UNIT_DOT = 8; // ambient ("simulation") unit dot diameter
+const SIM_UNIT_ICON = 5; // ambient unit emoji size
+const SIM_PIN_SIZE = 8; // ambient destination pin bubble diameter
+const HERO_UNIT_DOT = 16; // selected unit — keeps the prominent radar look
+const HERO_UNIT_ICON = 8;
+const DISPATCH_SPEED = 3960; // ms per normalized distance (80% longer than 2200 ≈ 4–6s/trip)
 const SPEED_VARIANCE = 0.25; // ambient units vary their speed ±25%
 // ─────────────────────────────────────────────────────────────────────────────
 

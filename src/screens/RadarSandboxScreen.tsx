@@ -32,8 +32,8 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // Portrait Manhattan map; canvas kept at the image's aspect ratio so normalized
 // (x÷width, y÷height) graph coords land exactly on the streets.
-const MAP_IMAGE = require("../../assets/map/manhattan.png");
-const MAP_ASPECT = 688 / 1316; // manhattan.png width / height
+const MAP_IMAGE = require("../../assets/map/manhattan2.png");
+const MAP_ASPECT = 720 / 1280; // manhattan2.png width / height
 const RADAR_H = Math.min(SCREEN_HEIGHT * 0.62, (SCREEN_WIDTH - 32) / MAP_ASPECT);
 const RADAR_W = RADAR_H * MAP_ASPECT;
 

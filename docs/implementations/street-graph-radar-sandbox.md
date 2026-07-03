@@ -22,7 +22,7 @@ along the grid.
 
 | Topic | Decision |
 | --- | --- |
-| Background | A **stylized Manhattan image** (`assets/map/manhattan.png`, 688×1316) rendered behind the graph. The graph was **hand-authored on that image** with `tools/street-graph-editor.html`. Faint streets/nodes stay drawn on top for alignment. |
+| Background | A **stylized Manhattan image** (`assets/map/manhattan2.png`, 720×1280) rendered behind the graph. The graph was **hand-authored on that image** with `tools/street-graph-editor.html`. Faint streets/nodes stay drawn on top for alignment. |
 | Shape | Radar changed from a **circle to a portrait rectangle** matching the image aspect ratio, so the whole island shows and nodes land on the streets. Circular rings/crosshair removed; the scan line stays. |
 | Units | **One per unlocked unit type** (`getUnlockedUnits()`). Each drives once to its own destination pin and parks (radar "ping" on arrival) — not endless wandering. |
 | Location | Started in an **isolated sandbox screen**, then **integrated into `DispatchRadar`** (the real dispatch flow). |
@@ -38,7 +38,7 @@ moves a node off its street — only a change to the image's **aspect ratio** wo
 
 ### Graph data + utilities — `src/game/streetGraph.ts`
 - `GraphNode = { id, x, y }` with `x,y ∈ [0,1]`; `Edge = [string, string]`.
-- The graph is **hand-authored on `assets/map/manhattan.png`** using
+- The graph is **hand-authored on `assets/map/manhattan2.png`** using
   `tools/street-graph-editor.html` (click intersections → connect streets → export).
   Currently **125 nodes / 186 edges**, one connected component. Node ids are opaque
   strings (`n_0`, `n_1`, …); to change the map, re-edit in the tool and paste a fresh
@@ -113,7 +113,7 @@ Despite the name, this is the single reusable unit component for **both** the am
 
 ### Dispatch integration — `src/components/DispatchRadar.tsx`
 This is where the graph is used in the real flow:
-- **Canvas**: a portrait rectangle sized from `MAP_ASPECT = 688/1316` fit to the screen
+- **Canvas**: a portrait rectangle sized from `MAP_ASPECT = 720/1280` fit to the screen
   (`RADAR_H = min(SCREEN_HEIGHT*0.6, (SCREEN_WIDTH-48)/MAP_ASPECT)`, `RADAR_W = RADAR_H *
   MAP_ASPECT`). The Manhattan image sits behind everything at explicit `RADAR_W×RADAR_H`
   with **`resizeMode="stretch"`**, so it uses the *exact same* `[0,1]→[0,W]×[0,H]` mapping
@@ -148,7 +148,7 @@ This is where the graph is used in the real flow:
 - New: `src/components/MapPin.tsx`
 - New: `src/screens/RadarSandboxScreen.tsx`
 - New: `tools/street-graph-editor.html` (browser tool to author the graph on the image)
-- New: `assets/map/manhattan.png` (stylized map background)
+- New: `assets/map/manhattan2.png` (stylized map background)
 - Edit: `src/components/DispatchRadar.tsx` (map background + portrait canvas + units)
 - Edit: `src/navigation/AppNavigator.tsx`
 - Edit: `src/screens/DispatchLobbyScreen.tsx`
