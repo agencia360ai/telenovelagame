@@ -15,6 +15,7 @@ import { RootStackParamList } from "../navigation/AppNavigator";
 import { useUserIdentity } from "../context/UserIdentityContext";
 import { CutscenePlayer } from "../components/CutscenePlayer";
 import { VIDEOS } from "../game/assets";
+import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 import { analytics } from "../lib/analytics";
@@ -85,6 +86,14 @@ export function BootScreen({ navigation }: Props) {
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, userId, introSeen, navigation]);
+
+  // Dispatch-center radio plays only over the opening shot (the intro clip);
+  // it stops when we leave the clip (moving on to the prologue).
+  useEffect(() => {
+    if (!showIntro) return;
+    audio.playRadio();
+    return () => audio.stopRadio();
+  }, [showIntro]);
 
   const badgeStyle = useAnimatedStyle(() => ({
     opacity: badgeOpacity.value,
@@ -194,9 +203,4 @@ const styles = StyleSheet.create({
     gap: sizes.spacing.sm,
   },
   loaderText: {
-    color: colors.dispatch.textMuted,
-    fontSize: sizes.font.xs,
-    letterSpacing: 1.5,
-    fontWeight: "700",
-  },
-});
+    color: color

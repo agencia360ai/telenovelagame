@@ -101,7 +101,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Crowd's over a hundred and they've taken the intersection. I'm pinned behind my patrol car — I can't hold this alone!"
+          "text": "Crowd's over a hundred and they've taken the intersection. I'm not injured — I can't hold this alone!"
         }
       ],
       "next": "call_riot.b4"

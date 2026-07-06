@@ -131,6 +131,23 @@ export function visiblePins(beat: MissionBeat, rt: MissionRuntime): MapPinChoice
 }
 
 /**
+ * Where to go after a beat: the first matching `next_rules` entry wins, else
+ * the plain `next`. Lets a beat fan out to different branches (e.g. endings)
+ * based on the accumulated runtime/story state.
+ */
+export function resolveNextBeat(
+  beat: MissionBeat,
+  rt: MissionRuntime
+): string | null | undefined {
+  if (beat.next_rules) {
+    for (const rule of beat.next_rules) {
+      if (evaluateCondition(rule.when, rt)) return rule.next;
+    }
+  }
+  return beat.next;
+}
+
+/**
  * The correct unit for a dispatch beat. Conditional rules win in order; then a
  * declared default; then the simple `correct`; finally a safe fallback.
  */

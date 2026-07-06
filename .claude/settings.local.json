@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:docs.layer.ai)",
+      "Bash(claude mcp *)",
+      "PowerShell($c = Get-Command claude -ErrorAction SilentlyContinue; if \\($c\\) { $c.Source; claude mcp list } else { \"claude CLI not on PATH\" })",
+      "Read(//c/Users/Ariel/**)",
+      "Read(//c/Users/Ariel/.claude/**)",
+      "Bash(python -c ' *)",
+      "Bash(cp ~/.claude.json ~/.claude.json.bak-layer && echo \"backup creado: ~/.claude.json.bak-layer\")",
+      "Bash(rm -f \"D:/Work/telenovelagame/.mcp.json\" && echo \"eliminado .mcp.json \\(ya no se necesita; la config con token está en tu config de usuario\\)\")",
+      "mcp__Layer__list_workspaces",
+      "Bash(python -c \"import json;d=json.load\\(open\\('src/content/stories/corazon-en-roaming.json',encoding='utf-8'\\)\\);print\\('keys:',list\\(d.keys\\(\\)\\)\\);print\\({k:\\(len\\(v\\) if isinstance\\(v,\\(list,dict\\)\\) else v\\) for k,v in d.items\\(\\)}\\)\")"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "Layer"
+  ]
+}

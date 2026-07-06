@@ -1,0 +1,72 @@
+{
+  "schema": "mission@1",
+  "id": "event_one_month",
+  "title": "One Month",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 120,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Corner café" },
+  "speakers": { "partner": "Partner" },
+  "reward": 5,
+  "initial_variables": { "love": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_month.intro",
+  "beats": [
+    {
+      "id": "ev_month.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "One month since the burnt espresso. Same café, same weird hours." },
+        { "speaker": "narrator", "text": "They're at the counter holding two cups. One of them is yours." },
+        { "speaker": "partner", "text": "A month of putting up with dispatch schedules. I counted." }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "took_envelope" },
+          "lines": [
+            { "speaker": "narrator", "text": "One month since the burnt espresso. They're at the counter, two cups." },
+            { "speaker": "narrator", "text": "You could buy out this whole café now. You liked it better when you couldn't." },
+            { "speaker": "partner", "text": "A month of putting up with dispatch schedules. I counted." }
+          ]
+        }
+      ],
+      "next": "ev_month.d1"
+    },
+    {
+      "id": "ev_month.d1",
+      "type": "decision",
+      "prompt": "A month already.",
+      "choices": [
+        { "id": "ev_month.d1_0", "label": "Felt like a week.", "next": "ev_month.conv2", "effects": { "love": 1 } },
+        { "id": "ev_month.d1_1", "label": "Felt like a year. Good year.", "next": "ev_month.conv2", "effects": { "love": 1 } },
+        { "id": "ev_month.d1_2", "label": "You counted?", "next": "ev_month.conv2", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_month.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "Somebody has to keep records around here. You're always on shift." },
+        { "speaker": "narrator", "text": "They slide your cup over. Your exact order. They never asked; they learned." },
+        { "speaker": "partner", "text": "So. Best moment of the month. Go." }
+      ],
+      "next": "ev_month.d2"
+    },
+    {
+      "id": "ev_month.d2",
+      "type": "decision",
+      "prompt": "Best moment. On record.",
+      "choices": [
+        { "id": "ev_month.d2_0", "label": "The napkin. Obviously.", "next": "ev_month.pivot", "effects": { "love": 1 } },
+        { "id": "ev_month.d2_1", "label": "Every 3 a.m. phone call.", "next": "ev_month.pivot", "effects": { "love": 1 } },
+        { "id": "ev_month.d2_2", "label": "This one's climbing the list.", "next": "ev_month.pivot", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_month.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "They laugh into their coffee. The window light does its thing." }

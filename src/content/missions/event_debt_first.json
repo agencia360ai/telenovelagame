@@ -1,0 +1,54 @@
+{
+  "schema": "mission@1",
+  "id": "event_debt_first",
+  "title": "First Installment",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 32,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
+  "speakers": { "partner": "Partner" },
+  "reward": 5,
+  "initial_variables": { "debt_paid": 0, "debt_missed": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_debt1.intro",
+  "beats": [
+    {
+      "id": "ev_debt1.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Shift's over. The reminder goes off as you hang up the headset." },
+        { "speaker": "narrator", "text": "First installment. Due by midnight." }
+      ],
+      "next": "ev_debt1.d1"
+    },
+    {
+      "id": "ev_debt1.d1",
+      "type": "decision",
+      "prompt": "The reminder glows.",
+      "choices": [
+        { "id": "ev_debt1.d1_0", "label": "Check the balance now.", "next": "ev_debt1.locker" },
+        { "id": "ev_debt1.d1_1", "label": "Ignore it until home.", "next": "ev_debt1.locker" },
+        { "id": "ev_debt1.d1_2", "label": "Show Partner the notification.", "next": "ev_debt1.locker" }
+      ]
+    },
+    {
+      "id": "ev_debt1.locker",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Partner reads your face before you say a word. Occupational hazard." },
+        { "speaker": "partner", "text": "Student loans? I finished paying mine the year my kid started hers." }
+      ],
+      "next": "ev_debt1.d2"
+    },
+    {
+      "id": "ev_debt1.d2",
+      "type": "decision",
+      "prompt": "Partner waits for a reply.",
+      "choices": [
+        { "id": "ev_debt1.d2_0", "label": "At least it's character-building.", "next": "ev_debt1.bus" },
+        { "id": "ev_debt1.d2_1", "label": "Any advice?", "next": "ev_debt1.bus" },
+        { "id": "ev_debt1.d2_2", "label": "Don't jinx me.", "next": "ev_debt1.bus" }
+   

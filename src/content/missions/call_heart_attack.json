@@ -36,7 +36,7 @@
       "role": "ambient"
     },
     {
-      "key": "deploy-ambulance",
+      "key": "deploy-heart-ambulance",
       "type": "video",
       "role": "deploy"
     }
@@ -59,7 +59,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "I'm having a heart attack! ❤️‍🩹"
+          "text": "Help, my Mother-in-law is having a Heart Attack!"
         }
       ],
       "next": "call_heart_attack.b2"
@@ -71,16 +71,11 @@
       "choices": [
         {
           "id": "call_heart_attack.b2_0",
-          "label": "What does it feel like?",
+          "label": "What are the symptoms?",
           "next": "call_heart_attack.b3"
         },
         {
           "id": "call_heart_attack.b2_1",
-          "label": "Any other symptoms?",
-          "next": "call_heart_attack.b3"
-        },
-        {
-          "id": "call_heart_attack.b2_2",
           "label": "Is this a joke? 🙄",
           "next": "call_heart_attack.b3",
           "effects": {
@@ -95,7 +90,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Shortness of breath. There's an army in my chest!"
+          "text": "Shortness of breath. She says it hurts!"
         }
       ],
       "next": "call_heart_attack.b4"
@@ -112,7 +107,7 @@
         },
         {
           "id": "call_heart_attack.b4_1",
-          "label": "Tylenol won't fix this — help's coming.",
+          "label": "Help's coming.",
           "next": "call_heart_attack.b5"
         }
       ]
@@ -133,14 +128,14 @@
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "ambulance",
-      "explanation": "Ambulance dispatched. Stay calm, you'll be okay.",
+      "explanation": "Ambulance dispatched. Stay calm, she'll be okay.",
       "next": "outcome"
     },
     {
       "id": "outcome",
       "type": "outcome",
       "deploy_media": {
-        "key": "deploy-ambulance",
+        "key": "deploy-heart-ambulance",
         "role": "deploy"
       }
     }

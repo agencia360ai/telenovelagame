@@ -30,7 +30,7 @@
   "start": "caso_papel.intro",
   "assets": [
     {
-      "key": "armed-robbery",
+      "key": "call-toilet-paper",
       "type": "video",
       "role": "ambient"
     },

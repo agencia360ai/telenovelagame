@@ -1,0 +1,76 @@
+{
+  "schema": "mission@1",
+  "id": "event_the_gift",
+  "title": "The Gift",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 100,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Shop window" },
+  "reward": 5,
+  "initial_variables": { "love": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_gift.intro",
+  "beats": [
+    {
+      "id": "ev_gift.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Their birthday is Thursday. You've been staring at the same shop window for ten minutes." },
+        { "speaker": "narrator", "text": "The nice edition of the café book. The one with the map inside the cover." }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "took_envelope" },
+          "lines": [
+            { "speaker": "narrator", "text": "Their birthday is Thursday. The nice edition waits in the window." },
+            { "speaker": "narrator", "text": "For once you can afford it without checking your balance. You know exactly why." }
+          ]
+        },
+        {
+          "when": { "flag": "envelope_reported" },
+          "lines": [
+            { "speaker": "narrator", "text": "Their birthday is Thursday. Money's been thin since you bagged that envelope." },
+            { "speaker": "narrator", "text": "The building's least popular honest person, window-shopping. The glass doesn't care about integrity." }
+          ]
+        }
+      ],
+      "next": "ev_gift.d1"
+    },
+    {
+      "id": "ev_gift.d1",
+      "type": "decision",
+      "prompt": "Ten minutes at the glass.",
+      "choices": [
+        { "id": "ev_gift.d1_0", "label": "Go in. Just to look.", "next": "ev_gift.conv2", "effects": { "love": 1 } },
+        { "id": "ev_gift.d1_1", "label": "Check the balance first.", "next": "ev_gift.conv2" },
+        { "id": "ev_gift.d1_2", "label": "Walk a lap. Think.", "next": "ev_gift.conv2" }
+      ]
+    },
+    {
+      "id": "ev_gift.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Inside, the book smells like the café did that first night." },
+        { "speaker": "narrator", "text": "The map in the cover opens somewhere better. The price tag doesn't." },
+        { "speaker": "narrator", "text": "The clerk pretends not to watch you do math with your face." }
+      ],
+      "next": "ev_gift.d2"
+    },
+    {
+      "id": "ev_gift.d2",
+      "type": "decision",
+      "prompt": "What's a gift actually for?",
+      "choices": [
+        { "id": "ev_gift.d2_0", "label": "Proof you were paying attention.", "next": "ev_gift.pivot", "effects": { "love": 1 } },
+        { "id": "ev_gift.d2_1", "label": "Proof you can provide.", "next": "ev_gift.pivot" },
+        { "id": "ev_gift.d2_2", "label": "Proof this is real.", "next": "ev_gift.pivot", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_gift.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text":

@@ -22,6 +22,8 @@ export type DayTemplate = {
   slots: DayKind[];
   /** Mon–Fri candidates that may host the week's single Game Plot call. */
   gamePlotEligible?: boolean;
+  /** Candidates that may host the week's single off-duty event scene. */
+  eventEligible?: boolean;
   /** If true, the plot day keeps its daily call(s) AND adds the plot call.
    *  Default (false) = the plot replaces the day's daily call. */
   keepDailyOnPlotDay?: boolean;
@@ -34,11 +36,11 @@ export type DayTemplate = {
  *   Sun:     rest day (skipped)
  */
 export const DEFAULT_WEEK_TEMPLATE: DayTemplate[] = [
-  { id: "monday", label: "Monday", slots: ["daily"], gamePlotEligible: true },
-  { id: "tuesday", label: "Tuesday", slots: ["daily"], gamePlotEligible: true },
-  { id: "wednesday", label: "Wednesday", slots: ["daily"], gamePlotEligible: true },
-  { id: "thursday", label: "Thursday", slots: ["daily"], gamePlotEligible: true },
-  { id: "friday", label: "Friday", slots: ["daily"], gamePlotEligible: true },
+  { id: "monday", label: "Monday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
+  { id: "tuesday", label: "Tuesday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
+  { id: "wednesday", label: "Wednesday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
+  { id: "thursday", label: "Thursday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
+  { id: "friday", label: "Friday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
   { id: "saturday", label: "Saturday", slots: ["weekend"] },
   { id: "sunday", label: "Sunday", slots: [] },
 ];

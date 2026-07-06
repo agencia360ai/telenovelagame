@@ -31,7 +31,7 @@
   "start": "call_i_m_trapped_in_the_fire.intro",
   "assets": [
     {
-      "key": "kitchen-fire",
+      "key": "call-trapped-fire",
       "type": "video",
       "role": "ambient"
     },

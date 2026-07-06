@@ -1,0 +1,86 @@
+{
+  "schema": "mission@1",
+  "id": "life_rank2",
+  "title": "Word Gets Around",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life",
+  "rank": 2,
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "The city"
+  },
+  "reward": 0,
+  "initial_variables": {
+    "respect": 0
+  },
+  "initial_flags": {},
+  "assets": [
+    {
+      "key": "pov-rank3",
+      "type": "video",
+      "role": "ambient"
+    }
+  ],
+  "start": "life2.intro",
+  "beats": [
+    {
+      "id": "life2.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Senior Dispatcher now. Word gets around a small city. A save you worked makes the local news — a voice on the line that kept someone here long enough for help to arrive."
+        }
+      ],
+      "next": "life2.sit"
+    },
+    {
+      "id": "life2.sit",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The people who used to wave off the job — 'you just answer phones' — go quiet when it comes up now. They're starting to understand that the phone is the first thing that stands between a bad day and a funeral."
+        }
+      ],
+      "next": "life2.d1"
+    },
+    {
+      "id": "life2.d1",
+      "type": "decision",
+      "prompt": "The doubters are reconsidering. What sits with you?",
+      "choices": [
+        {
+          "id": "life2.d1_0",
+          "label": "It's not about them. It's about whoever calls next.",
+          "next": "life2.fin",
+          "effects": { "respect": 1 }
+        },
+        {
+          "id": "life2.d1_1",
+          "label": "Feels good to be seen for once.",
+          "next": "life2.fin",
+          "effects": { "respect": 1 }
+        }
+      ]
+    },
+    {
+      "id": "life2.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Either way, the story travels further than you do. You go back to the board the next night the same as always — but the city's picture of you has quietly changed."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

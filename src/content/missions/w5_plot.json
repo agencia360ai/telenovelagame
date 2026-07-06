@@ -1,0 +1,218 @@
+{
+  "schema": "mission@1",
+  "id": "w5_plot",
+  "title": "Week 5 — The Stadium Night",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 3,
+  "category": "game_plot",
+  "order": 50,
+  "caller": {
+    "name": "Dispatch",
+    "type": "STORY",
+    "location": "The stadium district"
+  },
+  "speakers": {
+    "voice": "No Caller ID",
+    "investigator": "Investigator"
+  },
+  "reward": 20,
+  "initial_variables": {
+    "integrity": 0,
+    "compliance": 0,
+    "don": 0,
+    "loose_thread": 0,
+    "case_file": 0,
+    "pawn": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "w5_plot.intro",
+  "beats": [
+    {
+      "id": "w5_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Season opener. Forty thousand people, one stadium." },
+        { "speaker": "narrator", "text": "The east lot fills with vans. The dead zone hums." }
+      ],
+      "next": "w5_plot.intro2"
+    },
+    {
+      "id": "w5_plot.intro2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Every thread you touched braids into tonight. Calder Street. The voice. The envelope nobody saw arrive." }
+      ],
+      "next_rules": [
+        { "when": { "flag": "took_envelope" }, "next": "w5_plot.c1" },
+        { "when": { "var": "don", "op": ">=", "value": 3 }, "next": "w5_plot.c1" },
+        { "when": { "var": "case_file", "op": ">=", "value": 4 }, "next": "w5_plot.j1" }
+      ],
+      "next": "w5_plot.p1"
+    },
+
+    {
+      "id": "w5_plot.c1",
+      "type": "dialogue",
+      "media": { "key": "pov-ending-corrupt", "role": "ambient" },
+      "lines": [
+        { "speaker": "narrator", "text": "19:40. Your personal phone buzzes." }
+      ],
+      "next": "w5_plot.c2"
+    },
+    {
+      "id": "w5_plot.c2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "voice", "text": "East lot cameras are down. Some calls will come in tonight." },
+        { "speaker": "voice", "text": "Take your time with them." }
+      ],
+      "next": "w5_plot.c3"
+    },
+    {
+      "id": "w5_plot.c3",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The envelope, it turns out, was a down payment." }
+      ],
+      "next": "w5_plot.c_d1"
+    },
+    {
+      "id": "w5_plot.c_d1",
+      "type": "decision",
+      "prompt": "The line clicks, waiting.",
+      "choices": [
+        {
+          "id": "w5_plot.c_d1_0",
+          "label": "Understood.",
+          "next": "w5_plot.c4",
+          "effects": { "don": 1, "pawn": 1 }
+        },
+        {
+          "id": "w5_plot.c_d1_1",
+          "label": "How much, this time?",
+          "next": "w5_plot.c4",
+          "effects": { "don": 2 }
+        }
+      ]
+    },
+    {
+      "id": "w5_plot.c4",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "21:02. First call. A van, the east lot." },
+        { "speaker": "caller", "text": "There's people inside, I swear—" }
+      ],
+      "next": "w5_plot.c5"
+    },
+    {
+      "id": "w5_plot.c5",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Your finger hovers over HOLD. Ninety seconds is nothing. Ninety seconds is everything." }
+      ],
+      "next": "w5_plot.c_d2"
+    },
+    {
+      "id": "w5_plot.c_d2",
+      "type": "decision",
+      "prompt": "Ninety seconds.",
+      "choices": [
+        {
+          "id": "w5_plot.c_d2_0",
+          "label": "Hold it.",
+          "next": "w5_plot.c6",
+          "effects": { "don": 2, "pawn": 1 },
+          "set_flags": { "ending_corrupt": true }
+        },
+        {
+          "id": "w5_plot.c_d2_1",
+          "label": "Send it late. Something, at least.",
+          "next": "w5_plot.c6",
+          "effects": { "don": 1, "integrity": 1 },
+          "set_flags": { "ending_corrupt": true }
+        }
+      ]
+    },
+    {
+      "id": "w5_plot.c6",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "No headline. That's what they bought: silence, in your voice." },
+        { "speaker": "narrator", "text": "The money spends fine. Sleep is the expensive part." }
+      ],
+      "next": "w5_plot.epilogue"
+    },
+
+    {
+      "id": "w5_plot.j1",
+      "type": "dialogue",
+      "media": { "key": "pov-ending-justice", "role": "ambient" },
+      "lines": [
+        { "speaker": "narrator", "text": "19:12. Your file leaves the building." }
+      ],
+      "next": "w5_plot.j2"
+    },
+    {
+      "id": "w5_plot.j2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Calder Street. The antennas. The plates. Five weeks of logged truth, on one desk that doesn't answer to yours." }
+      ],
+      "next": "w5_plot.j3"
+    },
+    {
+      "id": "w5_plot.j3",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "investigator", "text": "Who built this?" }
+      ],
+      "next": "w5_plot.j_d1"
+    },
+    {
+      "id": "w5_plot.j_d1",
+      "type": "decision",
+      "prompt": "Two words or none.",
+      "choices": [
+        {
+          "id": "w5_plot.j_d1_0",
+          "label": "I did.",
+          "next": "w5_plot.j4",
+          "effects": { "integrity": 1 }
+        },
+        {
+          "id": "w5_plot.j_d1_1",
+          "label": "Does it matter?",
+          "next": "w5_plot.j4",
+          "effects": { "loose_thread": 1 }
+        }
+      ]
+    },
+    {
+      "id": "w5_plot.j4",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "20:31. Unmarked cars ring the east lot." },
+        { "speaker": "narrator", "text": "The vans turn around — into a wall of headlights." }
+      ],
+      "next": "w5_plot.j5"
+    },
+    {
+      "id": "w5_plot.j5",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "On your headset, the night goes quiet. The good kind." }
+      ],
+      "next": "w5_plot.j_d2"
+    },
+    {
+      "id": "w5_plot.j_d2",
+      "type": "decision",
+      "prompt": "The record needs a name.",
+      "choices": [
+        {
+          "id": "w5_plot.j_d2_0",
+          "label": "Go on record.",
+          "next": "w5_plot.j6",
+          "effects": { "integrity": 2, "case_file"

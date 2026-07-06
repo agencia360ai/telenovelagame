@@ -1,0 +1,80 @@
+{
+  "schema": "mission@1",
+  "id": "life_rank3",
+  "title": "Closer to Home",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life",
+  "rank": 3,
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "The neighborhood"
+  },
+  "reward": 0,
+  "initial_variables": {
+    "respect": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "life3.intro",
+  "beats": [
+    {
+      "id": "life3.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Supervisor stripes. The job stops being an abstraction to the people around you the day an emergency lands on a street you know — and the calm voice that walked someone through it came from a room like yours."
+        }
+      ],
+      "next": "life3.sit"
+    },
+    {
+      "id": "life3.sit",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The ones who used to mock the work don't have jokes anymore. When it's their block, their worst minute, the person on the other end of the line is suddenly the most important voice in the world. They get it now."
+        }
+      ],
+      "next": "life3.d1"
+    },
+    {
+      "id": "life3.d1",
+      "type": "decision",
+      "prompt": "Respect earned the hard way. How do you meet it?",
+      "choices": [
+        {
+          "id": "life3.d1_0",
+          "label": "Graciously. Everyone's someone's worst day eventually.",
+          "next": "life3.fin",
+          "effects": { "respect": 1 }
+        },
+        {
+          "id": "life3.d1_1",
+          "label": "Let the work keep answering for you.",
+          "next": "life3.fin",
+          "effects": { "respect": 1 }
+        }
+      ]
+    },
+    {
+      "id": "life3.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "No speeches, no I-told-you-so. Just the quiet arithmetic of a city learning what you're for. The doubt doesn't survive contact with a real emergency."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

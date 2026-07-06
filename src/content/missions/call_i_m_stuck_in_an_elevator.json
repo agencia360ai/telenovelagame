@@ -31,7 +31,7 @@
   "start": "call_i_m_stuck_in_an_elevator.intro",
   "assets": [
     {
-      "key": "kitchen-fire",
+      "key": "call-elevator",
       "type": "video",
       "role": "ambient"
     },

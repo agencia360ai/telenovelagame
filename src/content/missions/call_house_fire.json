@@ -31,7 +31,7 @@
   "start": "call_house_fire.intro",
   "assets": [
     {
-      "key": "kitchen-fire",
+      "key": "call-house-fire",
       "type": "video",
       "role": "ambient"
     },

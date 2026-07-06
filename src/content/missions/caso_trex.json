@@ -31,7 +31,7 @@
   "start": "caso_trex.intro",
   "assets": [
     {
-      "key": "border-runners",
+      "key": "call-baby-dino",
       "type": "video",
       "role": "ambient"
     },

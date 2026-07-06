@@ -12,6 +12,7 @@ import Animated, {
 import { colors } from "../theme/colors";
 import { RadarStreets } from "./RadarStreets";
 import { AmbientUnit } from "./AmbientUnit";
+import { UnitIcon } from "./UnitIcon";
 import { MapPin } from "./MapPin";
 import { getUnlockedUnits } from "../content/missions";
 import { nodes } from "../game/streetGraph";
@@ -42,6 +43,9 @@ type Props = {
   location: string;
   unitIcon: string;
   unitLabel: string;
+  /** Fleet unit id (e.g. "police") — shows the unit's vehicle art in the
+   *  header when it has an image registered; falls back to the emoji. */
+  unitId?: string;
   callId: string;
   onComplete: () => void;
 };
@@ -73,6 +77,7 @@ export function DispatchRadar({
   location,
   unitIcon,
   unitLabel,
+  unitId,
   callId,
   onComplete,
 }: Props) {
@@ -174,7 +179,11 @@ export function DispatchRadar({
     <Animated.View entering={FadeIn.duration(250)} style={styles.container}>
       <Text style={styles.headerLabel}>DEPLOYING UNIT</Text>
       <View style={styles.unitRow}>
-        <Text style={styles.unitIcon}>{unitIcon}</Text>
+        {unitId ? (
+          <UnitIcon kind={unitId} emoji={unitIcon} size={24} />
+        ) : (
+          <Text style={styles.unitIcon}>{unitIcon}</Text>
+        )}
         <Text style={styles.unitLabel}>{unitLabel}</Text>
       </View>
 

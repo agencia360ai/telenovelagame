@@ -1,0 +1,80 @@
+{
+  "schema": "mission@1",
+  "id": "life_rank5",
+  "title": "Recognition",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life",
+  "rank": 5,
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "City Hall"
+  },
+  "reward": 0,
+  "initial_variables": {
+    "respect": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "life5.intro",
+  "beats": [
+    {
+      "id": "life5.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Chief Operator. A room at City Hall, your name read out loud with the word 'service' after it. Somewhere in the folding chairs sit people who once looked right through you."
+        }
+      ],
+      "next": "life5.sit"
+    },
+    {
+      "id": "life5.sit",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "There's no version of this where they don't have to admit it now. The ones who doubted, who mocked, who never expected anything of you — they're clapping. Respect, finally, out loud and on the record."
+        }
+      ],
+      "next": "life5.d1"
+    },
+    {
+      "id": "life5.d1",
+      "type": "decision",
+      "prompt": "The recognition you never expected. What do you feel?",
+      "choices": [
+        {
+          "id": "life5.d1_0",
+          "label": "Grateful. And a little proud. You allow yourself that.",
+          "next": "life5.fin",
+          "effects": { "respect": 1 }
+        },
+        {
+          "id": "life5.d1_1",
+          "label": "Focused. The medal doesn't answer calls — you do.",
+          "next": "life5.fin",
+          "effects": { "respect": 1 }
+        }
+      ]
+    },
+    {
+      "id": "life5.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You take the applause, then you take the elevator back down to the floor. The praise is nice. The work is the point. But tonight, just for a moment, the room feels a little bigger."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

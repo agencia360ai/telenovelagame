@@ -1,0 +1,59 @@
+{
+  "schema": "mission@1",
+  "id": "event_movie_night",
+  "title": "Movie Night",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 80,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
+  "speakers": { "partner": "Partner" },
+  "reward": 5,
+  "initial_variables": { "love": 0, "energy": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_movie.intro",
+  "beats": [
+    {
+      "id": "ev_movie.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "First time they see your place. The couch dent is shaped like your double shifts." },
+        { "speaker": "partner", "text": "I like it. Very you. Is that a police scanner on the shelf?" }
+      ],
+      "next": "ev_movie.d1"
+    },
+    {
+      "id": "ev_movie.d1",
+      "type": "decision",
+      "prompt": "The scanner. Explain.",
+      "choices": [
+        { "id": "ev_movie.d1_0", "label": "Decoration. Definitely decoration.", "next": "ev_movie.conv2", "effects": { "love": 1 } },
+        { "id": "ev_movie.d1_1", "label": "I can't sleep without static.", "next": "ev_movie.conv2", "effects": { "love": 1 } },
+        { "id": "ev_movie.d1_2", "label": "Occupational hazard. I'll unplug it.", "next": "ev_movie.conv2", "effects": { "love": 1, "energy": 1 } }
+      ]
+    },
+    {
+      "id": "ev_movie.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "Leave it on. I want the full experience." },
+        { "speaker": "narrator", "text": "They tour the apartment like a crime scene. Verdict: charmed." },
+        { "speaker": "partner", "text": "Now, the movie. I brought three options and strong opinions." }
+      ],
+      "next": "ev_movie.d2"
+    },
+    {
+      "id": "ev_movie.d2",
+      "type": "decision",
+      "prompt": "Pick the genre.",
+      "choices": [
+        { "id": "ev_movie.d2_0", "label": "The rom-com. Know your audience.", "next": "ev_movie.pivot", "effects": { "love": 1 } },
+        { "id": "ev_movie.d2_1", "label": "The noir. Obviously the noir.", "next": "ev_movie.pivot", "effects": { "love": 1 } },
+        { "id": "ev_movie.d2_2", "label": "The bad shark movie.", "next": "ev_movie.pivot", "effects": { "love": 1, "energy": 1 } }
+      ]
+    },
+    {
+      "id": "ev_movie.pivot",
+      "type":

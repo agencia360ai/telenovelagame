@@ -2,7 +2,7 @@
   "schema": "mission@1",
   "id": "w1_plot",
   "title": "Week 1 — The Call That Drops",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "game_plot",
@@ -24,9 +24,19 @@
   "initial_flags": {},
   "assets": [
     {
-      "key": "plot-call-drops",
+      "key": "plot-w1-van",
+      "type": "video",
+      "role": "intro"
+    },
+    {
+      "key": "plot-w1-call",
       "type": "video",
       "role": "ambient"
+    },
+    {
+      "key": "plot-w1-corte1",
+      "type": "video",
+      "role": "ambient_next"
     }
   ],
   "start": "w1_plot.intro",
@@ -35,10 +45,8 @@
       "id": "w1_plot.intro",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "A young woman's voice, low and fast, like she's not supposed to be on the phone."
-        }
+        { "speaker": "narrator", "text": "03:14. The night queue is dead quiet." },
+        { "speaker": "narrator", "text": "Then line three lights up." }
       ],
       "next": "w1_plot.v1"
     },
@@ -46,106 +54,57 @@
       "id": "w1_plot.v1",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "caller",
-          "text": "Please — I'm at, it's the house on Calder, the blue one with the—"
-        }
+        { "speaker": "caller", "text": "They took her. A girl — they just took her—" },
+        { "speaker": "caller", "text": "A van. Gray. No plates that I saw." }
       ],
-      "next": "w1_plot.v1b"
+      "next": "w1_plot.v2"
     },
     {
-      "id": "w1_plot.v1b",
+      "id": "w1_plot.v2",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "The line goes dead. Not hung up. Taken away."
-        }
+        { "speaker": "caller", "text": "I'm at, a house on Calder's Street, Please I nee—" }
       ],
-      "next": "w1_plot.sys"
+      "next": "w1_plot.v3"
     },
     {
-      "id": "w1_plot.sys",
+      "id": "w1_plot.v3",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Your screen tags it before you can think: 'CALDER ST — frequent prank origin. Recommend: CLOSE.' One green button and the call dissolves back into the noise of the night."
-        }
+        { "speaker": "narrator", "text": "Dead air." },
+        { "speaker": "narrator", "text": "Not a hang-up. A cut." }
       ],
-      "next": "w1_plot.d1"
+      "next": "w1_plot.d0"
     },
     {
-      "id": "w1_plot.d1",
+      "id": "w1_plot.d0",
       "type": "decision",
-      "prompt": "The line just died. What do you do?",
+      "prompt": "Ten seconds. Use them.",
       "choices": [
         {
-          "id": "w1_plot.d1_0",
-          "label": "Keep the address. Quietly.",
-          "next": "w1_plot.fin_thread",
-          "effects": {
-            "loose_thread": 1,
-            "integrity": 1
-          }
+          "id": "w1_plot.d0_0",
+          "label": "Replay the recording.",
+          "next": "w1_plot.r1",
+          "effects": { "case_file": 1 }
         },
         {
-          "id": "w1_plot.d1_1",
-          "label": "Call the number back.",
-          "next": "w1_plot.fin_callback",
-          "effects": {
-            "integrity": 1,
-            "case_file": 1,
-            "compliance": -1
-          }
-        },
-        {
-          "id": "w1_plot.d1_2",
-          "label": "Take the recommendation. Close it.",
-          "next": "w1_plot.fin_closed",
-          "effects": {
-            "compliance": 1,
-            "pawn": 1
-          }
+          "id": "w1_plot.d0_1",
+          "label": "Pull the tower ping.",
+          "next": "w1_plot.r2",
+          "effects": { "loose_thread": 1 }
         }
       ]
     },
     {
-      "id": "w1_plot.fin_thread",
+      "id": "w1_plot.r1",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "You write the address on a sticky note. Calder Street, blue house. Probably nothing. You keep it anyway."
-        }
+        { "speaker": "narrator", "text": "You play it back. Under her voice: an engine, idling." },
+        { "speaker": "narrator", "text": "Someone was waiting outside." }
       ],
-      "next": "_end"
+      "next": "w1_plot.v4"
     },
     {
-      "id": "w1_plot.fin_callback",
+      "id": "w1_plot.r2",
       "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Straight to a dead tone — the line's been pulled. But the call's logged now, with a timestamp the system can't quietly swallow."
-        }
-      ],
-      "next": "_end"
-    },
-    {
-      "id": "w1_plot.fin_closed",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Closed: prank, juvenile. The queue counter ticks down. Somewhere a blue house on Calder goes quiet again — and the system thanks you for keeping things tidy."
-        }
-      ],
-      "next": "_end"
-    },
-    {
-      "id": "_end",
-      "type": "outcome"
-    }
-  ]
-}
+      "li

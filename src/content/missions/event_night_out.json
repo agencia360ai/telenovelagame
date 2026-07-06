@@ -1,0 +1,59 @@
+{
+  "schema": "mission@1",
+  "id": "event_night_out",
+  "title": "Night Out",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 40,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Group chat" },
+  "speakers": { "friend": "Old Friend" },
+  "reward": 5,
+  "initial_variables": { "bond": 0, "energy": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_night.intro",
+  "beats": [
+    {
+      "id": "ev_night.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The group chat wakes up after months asleep. Forty-one messages in ten minutes." },
+        { "speaker": "friend", "text": "TAQUERÍA. Tonight. It's open late and everyone's asking about you. In??" }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "friend_close" },
+          "lines": [
+            { "speaker": "narrator", "text": "The group chat wakes up. First one tagged: you. Burgers earned you that." },
+            { "speaker": "friend", "text": "TAQUERÍA. Tonight. It's open late. You in??" }
+          ]
+        },
+        {
+          "when": { "flag": "friend_ignored" },
+          "lines": [
+            { "speaker": "narrator", "text": "The group chat wakes up. Your name comes up like a question." },
+            { "speaker": "friend", "text": "TAQUERÍA tonight. You in this time?? No pressure. Some pressure." }
+          ]
+        }
+      ],
+      "next": "ev_night.d1"
+    },
+    {
+      "id": "ev_night.d1",
+      "type": "decision",
+      "prompt": "Forty-one messages and counting.",
+      "choices": [
+        { "id": "ev_night.d1_0", "label": "'What taquería? Details.'", "next": "ev_night.conv2", "effects": { "bond": 1 } },
+        { "id": "ev_night.d1_1", "label": "Send a noncommittal thumbs up.", "next": "ev_night.conv2" },
+        { "id": "ev_night.d1_2", "label": "'Who is this again?'", "next": "ev_night.conv2", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_night.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "friend", "text": "The place behind the laundromat. Trust the process." },
+        { "speaker": "narrator", "text": "Someone posts a blurry photo of tacos. It looks like evidence, not dinner." },
+        { "speaker": "friend", "text": "Also someon

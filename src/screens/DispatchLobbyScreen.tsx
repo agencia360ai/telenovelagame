@@ -6,9 +6,13 @@ import {
   Pressable,
   Alert,
   DevSettings,
+  Modal,
 } from "react-native";
 import { useVideoPlayer, VideoView } from "expo-video";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import Animated, {
@@ -27,11 +31,20 @@ import { OfficerScene3D } from "../components/OfficerScene3D";
 import { RankBadge } from "../components/RankBadge";
 import { XPBar } from "../components/XPBar";
 import { SkinAvatar } from "../components/SkinAvatar";
+import { FleetPanel } from "../components/FleetPanel";
+import { UnitIcon } from "../components/UnitIcon";
+import {
+  useFleet,
+  FLEET_KINDS,
+  FLEET_UNITS,
+  FleetKind,
+} from "../context/FleetContext";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { useCalendar } from "../context/CalendarContext";
 import { useWardrobe } from "../context/WardrobeContext";
 import { usePaywall } from "../context/PaywallContext";
 import { resolveSkin, getLobbyVideo } from "../game/assets";
+import { getMissionById } from "../content/missions";
 import { getXPProgress, RANKS } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
@@ -40,9 +53,17 @@ import { sizes } from "../theme/sizes";
 type Props = NativeStackScreenProps<RootStackParamList, "DispatchLobby">;
 
 const COUNTDOWN_START = 8;
+const FIRST_CALL_COUNTDOWN = 5; // the very first call rings faster
+// Unit unlocks the player has already been congratulated for (popup shown once).
+const UNITS_SEEN_KEY = "fleet_units_seen_v1";
 
 export function DispatchLobbyScreen({ navigation }: Props) {
+  // Top inset applied by hand (with a minimum) — the wallet chip was still
+  // clipping under the status bar on some devices via SafeAreaView alone.
+  const insets = useSafeAreaInsets();
+  const headerTop = Math.max(insets.top, 24) + 4;
   const progress = useDispatchProgress();
+  const fleet = useFleet();
   const calendar = useCalendar();
   const { equippedId } = useWardrobe();
   const { canPlay, isTrialActive, trialDaysLeft, isSubscribed } = usePaywall();
@@ -69,7 +90,34 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     );
   };
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
-  const [countdown, setCountdown] = useState(COUNTDOWN_START);
+  const [countdown, setCountdown] = useState(
+    progress.callsHandled === 0 ? FIRST_CALL_COUNTDOWN : COUNTDOWN_START
+  );
+
+  // Units unlocked since the last visit → congratulate with a popup, once.
+  const [newUnits, setNewUnits] = useState<FleetKind[]>([]);
+  useEffect(() => {
+    (async () => {
+      const unlocked = FLEET_KINDS.filter((k) => fleet.isUnlocked(k));
+      try {
+        const raw = await AsyncStorage.getItem(UNITS_SEEN_KEY);
+        if (raw == null) {
+          // First visit: seed with what's already unlocked, no popup.
+          await AsyncStorage.setItem(UNITS_SEEN_KEY, JSON.stringify(unlocked));
+          return;
+        }
+        const seen: string[] = JSON.parse(raw);
+        const fresh = unlocked.filter((k) => !seen.includes(k));
+        if (fresh.length > 0) {
+          setNewUnits(fresh);
+          audio.playSfx("success");
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          await AsyncStorage.setItem(UNITS_SEEN_KEY, JSON.stringify(unlocked));
+        }
+      } catch {}
+    })();
+  }, [fleet.callsCompleted]);
+
 
   // Lobby viewport clip: a calm desk loop while idle, swapping to the ringing
   // clip when a call comes in. One looping player; we just swap its source.
@@ -159,6 +207,17 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     }
   }, [calendar.isWeekComplete]);
 
+  // Pending off-duty event scene? Personal moments don't ring the phone —
+  // flow straight into the scene (covers app relaunch mid-day).
+  useEffect(() => {
+    if (calendar.isWeekComplete) return;
+    const next = calendar.getNextMission();
+    if (!next) return;
+    if (getMissionById(next.missionId)?.category === "event") {
+      navigation.replace("Mission", { missionId: next.missionId });
+    }
+  }, []);
+
   useEffect(() => {
     if (phase !== "idle") return;
     if (countdown <= 0) {
@@ -228,9 +287,9 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   }));
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: headerTop }]}>
         <Pressable
           style={styles.headerLeft}
           onPress={() => navigation.navigate("Wardrobe" as any)}
@@ -243,15 +302,13 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         >
           DISPATCH CENTER
         </Text>
-        <Pressable
-          style={styles.scoreChip}
-          onPress={() => navigation.navigate("Stats" as any)}
-        >
-          <Text style={styles.scoreIcon}>★</Text>
+        {/* Cash wallet (display only). */}
+        <View style={styles.scoreChip}>
+          <Text style={styles.scoreIcon}>💵</Text>
           <Text style={styles.scoreValue} numberOfLines={1}>
-            {progress.xp}
+            ${fleet.cash}
           </Text>
-        </Pressable>
+        </View>
       </View>
 
       {/* Free-trial banner (top) */}
@@ -307,18 +364,24 @@ export function DispatchLobbyScreen({ navigation }: Props) {
         )}
       </View>
 
-      {/* Persistent player card under the avatar: rank, progress, resolved cases */}
+      {/* Persistent player card under the video: rank + XP. Tapping the rank
+          row opens the experience window (Stats). */}
       <View style={styles.infoPanel}>
-        <View style={styles.infoRankRow}>
+        <Pressable
+          style={styles.infoRankRow}
+          onPress={() => navigation.navigate("Stats" as any)}
+        >
           <Text style={styles.infoRankName}>
             {currentRank?.icon} {currentRank?.name ?? "Operator"}
           </Text>
-          {nearRankUp && nextRank && (
+          {nearRankUp && nextRank ? (
             <Animated.Text style={[styles.goalText, goalGlowStyle]}>
               Almost {nextRank.icon} {nextRank.name}!
             </Animated.Text>
+          ) : (
+            <Text style={styles.infoXP}>★ {progress.xp} XP</Text>
           )}
-        </View>
+        </Pressable>
         <XPBar
           current={xpInfo.current}
           needed={xpInfo.needed}
@@ -332,6 +395,9 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           <StatChip label="Streak" value={progress.currentStreak} />
         </View>
       </View>
+
+      {/* Fleet: owned vehicles per unit, buy buttons, Fire Dept unlock progress */}
+      <FleetPanel />
 
       {/* Bottom console */}
       <View style={styles.console}>
@@ -411,6 +477,35 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           </View>
         )}
       </View>
+
+      {/* New unit unlocked — one-time congratulation popup. */}
+      <Modal
+        visible={newUnits.length > 0}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setNewUnits([])}
+      >
+        <View style={styles.unlockBackdrop}>
+          <View style={styles.unlockSheet}>
+            <Text style={styles.unlockTitle}>🎉 NEW UNIT UNLOCKED</Text>
+            {newUnits.map((k) => (
+              <View key={k} style={styles.unlockRow}>
+                <UnitIcon kind={k} emoji={FLEET_UNITS[k].icon} size={34} />
+                <Text style={styles.unlockName}>{FLEET_UNITS[k].label}</Text>
+              </View>
+            ))}
+            <Text style={styles.unlockSub}>
+              Now available on your dispatch board.
+            </Text>
+            <Pressable
+              style={styles.unlockBtn}
+              onPress={() => setNewUnits([])}
+            >
+              <Text style={styles.unlockBtnText}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -657,6 +752,71 @@ const styles = StyleSheet.create({
   infoRankName: {
     color: colors.dispatch.text,
     fontSize: sizes.font.sm,
+    fontWeight: "900",
+    letterSpacing: 1,
+  },
+  infoXP: {
+    color: colors.dispatch.amber,
+    fontSize: sizes.font.sm,
+    fontWeight: "800",
+  },
+  // New-unit-unlocked popup
+  unlockBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.65)",
+    justifyContent: "center",
+    padding: sizes.spacing.lg,
+  },
+  unlockSheet: {
+    backgroundColor: colors.dispatch.panel,
+    borderColor: colors.dispatch.cyan,
+    borderWidth: 1,
+    borderRadius: sizes.radius.lg,
+    padding: sizes.spacing.lg,
+    gap: 10,
+    alignItems: "center",
+  },
+  unlockTitle: {
+    color: colors.dispatch.cyan,
+    fontSize: 16,
+    fontWeight: "900",
+    letterSpacing: 1.5,
+  },
+  unlockRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: colors.dispatch.panelLight,
+    borderColor: colors.dispatch.border,
+    borderWidth: 1,
+    borderRadius: sizes.radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  unlockIcon: { fontSize: 28 },
+  unlockName: {
+    color: colors.dispatch.text,
+    fontSize: 16,
+    fontWeight: "900",
+  },
+  unlockSub: {
+    color: colors.dispatch.textMuted,
+    fontSize: 12,
+    textAlign: "center",
+  },
+  unlockBtn: {
+    marginTop: 4,
+    alignSelf: "stretch",
+    alignItems: "center",
+    paddingVertical: 12,
+    backgroundColor: "rgba(34, 211, 238, 0.16)",
+    borderColor: "rgba(34, 211, 238, 0.4)",
+    borderWidth: 1,
+    borderRadius: sizes.radius.md,
+  },
+  unlockBtnText: {
+    color: colors.dispatch.cyan,
+    fontSize: 14,
     fontWeight: "900",
     letterSpacing: 1,
   },

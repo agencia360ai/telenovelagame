@@ -1,0 +1,62 @@
+{
+  "schema": "mission@1",
+  "id": "event_worlds_meet",
+  "title": "Worlds Meet",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 110,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Taquería" },
+  "speakers": { "friend": "Old Friend", "partner": "Partner" },
+  "reward": 5,
+  "initial_variables": { "bond": 0, "love": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_meet.intro",
+  "beats": [
+    {
+      "id": "ev_meet.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "One table, two halves of your off-duty life. The taquería, of course." },
+        { "speaker": "partner", "text": "So you're the famous friends. I've heard almost nothing. Suspicious." },
+        { "speaker": "friend", "text": "Oh, we can fix that." }
+      ],
+      "next": "ev_meet.d1"
+    },
+    {
+      "id": "ev_meet.d1",
+      "type": "decision",
+      "prompt": "This was always going to happen.",
+      "choices": [
+        { "id": "ev_meet.d1_0", "label": "'Be nice. Both of you.'", "next": "ev_meet.conv2", "effects": { "bond": 1 } },
+        { "id": "ev_meet.d1_1", "label": "'I already regret this dinner.'", "next": "ev_meet.conv2", "effects": { "love": 1 } },
+        { "id": "ev_meet.d1_2", "label": "Order for the table. Stall.", "next": "ev_meet.conv2", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_meet.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "friend", "text": "Has this one told you about the academy fitness test yet? No? OH." },
+        { "speaker": "narrator", "text": "Your partner sets down the menu. Full attention. Terrible sign." },
+        { "speaker": "partner", "text": "Go on." }
+      ],
+      "next": "ev_meet.d2"
+    },
+    {
+      "id": "ev_meet.d2",
+      "type": "decision",
+      "prompt": "The table leans in.",
+      "choices": [
+        { "id": "ev_meet.d2_0", "label": "'There was a rope involved.'", "next": "ev_meet.pivot", "effects": { "love": 1 } },
+        { "id": "ev_meet.d2_1", "label": "'Lies are about to be told.'", "next": "ev_meet.pivot", "effects": { "bond": 1 } },
+        { "id": "ev_meet.d2_2", "label": "Hide behind your horchata.", "next": "ev_meet.pivot", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_meet.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Three phones come out. There is, appare

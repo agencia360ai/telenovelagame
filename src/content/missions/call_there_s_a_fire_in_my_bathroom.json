@@ -31,7 +31,7 @@
   "start": "call_there_s_a_fire_in_my_bathroom.intro",
   "assets": [
     {
-      "key": "kitchen-fire",
+      "key": "call-bathroom-fire",
       "type": "video",
       "role": "ambient"
     },

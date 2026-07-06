@@ -7,7 +7,7 @@
  */
 
 /** The kind of call a day slot hosts. */
-export type DayKind = "daily" | "game_plot" | "weekend";
+export type DayKind = "daily" | "game_plot" | "weekend" | "event";
 
 /** One concrete day in a generated week. */
 export type ScheduledDay = {
@@ -29,6 +29,10 @@ export type WeekSchedule = {
   gamePlotMissionId: string | null;
   /** The weekend mission id placed this week (null if none/exhausted). */
   weekendMissionId: string | null;
+  /** Which days host off-duty events this week (may be empty). */
+  eventDayIds?: string[];
+  /** The event mission ids placed this week, in play order (may be empty). */
+  eventMissionIds?: string[];
 };
 
 /** Persisted calendar progress. */
@@ -43,6 +47,8 @@ export type CalendarState = {
   gamePlotIndex: number;
   /** How many weekend entries have been consumed (sequence pointer). */
   weekendIndex: number;
+  /** How many off-duty event entries have been consumed (sequence pointer). */
+  eventIndex: number;
   /** The frozen schedule for the current week. */
   schedule: WeekSchedule;
   /** Calls completed in the current week (for the summary screen). */

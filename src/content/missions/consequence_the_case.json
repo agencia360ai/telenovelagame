@@ -1,0 +1,70 @@
+{
+  "schema": "mission@1",
+  "id": "consequence_the_case",
+  "title": "The Case Moves",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "consequence",
+  "requires_flag": "envelope_reported",
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
+  "speakers": { "detective": "Detective" },
+  "reward": 0,
+  "initial_variables": { "integrity": 0, "case_file": 0, "loose_thread": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "cq_case.intro",
+  "beats": [
+    {
+      "id": "cq_case.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "A number you don't know. When you pick up, the voice is careful, low — a detective, off the record." }
+      ],
+      "next": "cq_case.v1"
+    },
+    {
+      "id": "cq_case.v1",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "detective", "text": "That case file you kept building? Somebody upstairs finally read it. We're moving. Quietly. I wanted you to hear it from me first." }
+      ],
+      "next": "cq_case.d1"
+    },
+    {
+      "id": "cq_case.d1",
+      "type": "decision",
+      "prompt": "The thing you documented is becoming real. What do you say?",
+      "choices": [
+        { "id": "cq_case.d1_0", "label": "Tell me what you need. I'm in.", "next": "cq_case.fin_in", "effects": { "integrity": 1, "case_file": 1 } },
+        { "id": "cq_case.d1_1", "label": "Keep my name out of it.", "next": "cq_case.fin_out", "effects": { "integrity": 1, "loose_thread": 1 } },
+        { "id": "cq_case.d1_2", "label": "It took you long enough.", "next": "cq_case.fin_bitter", "effects": { "integrity": 1 } }
+      ]
+    },
+    {
+      "id": "cq_case.fin_in",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You hand over everything — dates, plates, the map you kept on your fridge. For the first time the quiet on Calder Street has someone official listening." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "cq_case.fin_out",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "'Understood,' the detective says. Your name stays off it, but the file does the talking. Sometimes that's the bravest way to be brave." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "cq_case.fin_bitter",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "'Yeah,' the detective says, not arguing. 'It did.' Then, quieter: 'Thanks for not letting it die.'" }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

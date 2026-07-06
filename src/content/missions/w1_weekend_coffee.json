@@ -2,7 +2,7 @@
   "schema": "mission@1",
   "id": "w1_weekend_coffee",
   "title": "After Hours",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "weekend",
@@ -29,75 +29,34 @@
       "id": "w1_weekend.intro",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Saturday. The shift is over, but the block isn't. You keep seeing the same street on the back of your eyelids — the blue house, the line that didn't hang up."
-        }
-      ],
-      "next": "w1_weekend.sys"
-    },
-    {
-      "id": "w1_weekend.sys",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "That's the strange part: nobody told you to drop it. The system did — a recommendation, a default, a green button. No hands on it. Everyone's hands on it."
-        }
+        { "speaker": "narrator", "text": "Saturday. The shift is over. The headset is off." },
+        { "speaker": "narrator", "text": "The apartment doesn't quite know what to do with you. Neither do you." }
       ],
       "next": "w1_weekend.d1"
     },
     {
       "id": "w1_weekend.d1",
       "type": "decision",
-      "prompt": "Alone with the pattern. What do you do?",
+      "prompt": "The morning is yours. Allegedly.",
       "choices": [
-        {
-          "id": "w1_weekend.d1_0",
-          "label": "Start a private file — dates, names, everything.",
-          "next": "w1_weekend.fin",
-          "effects": {
-            "loose_thread": 2,
-            "case_file": 1,
-            "integrity": 1
-          }
-        },
-        {
-          "id": "w1_weekend.d1_1",
-          "label": "You're imagining patterns. Let it go.",
-          "next": "w1_weekend.fin_let",
-          "effects": {
-            "compliance": 1,
-            "pawn": 1
-          }
-        }
+        { "id": "w1_weekend.d1_0", "label": "Sleep until the city forgets you.", "next": "w1_weekend.conv2" },
+        { "id": "w1_weekend.d1_1", "label": "Coffee by the window. Watch the street.", "next": "w1_weekend.conv2" },
+        { "id": "w1_weekend.d1_2", "label": "Replay this week's calls in your head.", "next": "w1_weekend.conv2", "effects": { "loose_thread": 1 } }
       ]
     },
     {
-      "id": "w1_weekend.fin",
+      "id": "w1_weekend.conv2",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "You open a notebook the department doesn't know about and write down everything you remember. It feels like paranoia. It feels like the only honest thing you've done all week."
-        }
+        { "speaker": "narrator", "text": "The kettle clicks. Somewhere in your skull, this week's calls replay anyway." },
+        { "speaker": "narrator", "text": "Same street names. Same careful voices. A pattern, if you squint." },
+        { "speaker": "narrator", "text": "Your phone buzzes. Coworkers, a bar, tonight, question mark." }
       ],
-      "next": "_end"
+      "next": "w1_weekend.d2"
     },
     {
-      "id": "w1_weekend.fin_let",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "You close the laptop and pour a drink until the street goes quiet in your head. It's still there in the morning. It's always still there."
-        }
-      ],
-      "next": "_end"
-    },
-    {
-      "id": "_end",
-      "type": "outcome"
-    }
-  ]
-}
+      "id": "w1_weekend.d2",
+      "type": "decision",
+      "prompt": "Answer the group chat?",
+      "choices": [
+        { "id": "w1_weekend.d2_0", "label": "'In.'

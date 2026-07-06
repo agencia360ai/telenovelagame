@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: sizes.spacing.lg,
-    paddingTop: sizes.spacing.md,
+    paddingTop: sizes.spacing.md, // SafeAreaView already covers the status bar
     paddingBottom: sizes.spacing.md,
   },
   headerIcon: {

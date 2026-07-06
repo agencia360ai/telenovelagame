@@ -1,8 +1,8 @@
 {
   "schema": "mission@1",
   "id": "w3_plot",
-  "title": "Week 3 — The House on Calder",
-  "version": "1.0.0",
+  "title": "Week 3 — Vans at night",
+  "version": "1.1.0",
   "locale_default": "en",
   "difficulty": 2,
   "category": "game_plot",
@@ -30,9 +30,24 @@
       "id": "w3_plot.intro",
       "type": "dialogue",
       "lines": [
+        { "speaker": "narrator", "text": "02:58. A neighbor's whisper, hand cupped around the receiver." }
+      ],
+      "variants": [
         {
-          "speaker": "narrator",
-          "text": "A neighbor's whisper, hand cupped around the receiver."
+          "when": { "flag": "crosstown_night" },
+          "lines": [
+            { "speaker": "narrator", "text": "A neighbor's whisper, hand cupped around the receiver." },
+            { "speaker": "narrator", "text": "Vans by the stadium. You don't need the description." },
+            { "speaker": "narrator", "text": "You saw them yourself — engines running at midnight." }
+          ]
+        },
+        {
+          "when": { "var": "case_file", "op": ">=", "value": 2 },
+          "lines": [
+            { "speaker": "narrator", "text": "A neighbor's whisper, hand cupped around the receiver." },
+            { "speaker": "narrator", "text": "You've been keeping your own map of nights like this." },
+            { "speaker": "narrator", "text": "Calder Street. The stadium. It's starting to fill in." }
+          ]
         }
       ],
       "next": "w3_plot.v1"
@@ -41,10 +56,63 @@
       "id": "w3_plot.v1",
       "type": "dialogue",
       "lines": [
+        { "speaker": "caller", "text": "The vans are back. Near the stadium. Right now." },
+        { "speaker": "caller", "text": "Every few weeks, 3 a.m. Nobody loads merchandise at 3 a.m." }
+      ],
+      "next": "w3_plot.v2"
+    },
+    {
+      "id": "w3_plot.v2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You can hear it behind the whisper. Engines, idling." },
+        { "speaker": "narrator", "text": "The caller's breathing goes thin." }
+      ],
+      "next": "w3_plot.d0"
+    },
+    {
+      "id": "w3_plot.d0",
+      "type": "decision",
+      "prompt": "He's standing at the window.",
+      "choices": [
         {
-          "speaker": "caller",
-          "text": "The house on Calder. Curtains always shut. Vans at 3am. Girls I never see twice. I'm scared to give my name."
+          "id": "w3_plot.d0_0",
+          "label": "Keep him watching.",
+          "next": "w3_plot.r1",
+          "effects": { "case_file": 1 }
+        },
+        {
+          "id": "w3_plot.d0_1",
+          "label": "Get him away from the glass.",
+          "next": "w3_plot.r2",
+          "effects": { "integrity": 1 }
         }
+      ]
+    },
+    {
+      "id": "w3_plot.r1",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "caller", "text": "Three vans. Two men by the fence. One's on a phone." },
+        { "speaker": "narrator", "text": "Good eyes. Bad night to have them." }
+      ],
+      "next": "w3_plot.v3"
+    },
+    {
+      "id": "w3_plot.r2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You talk him back into the dark of his kitchen." },
+        { "speaker": "caller", "text": "Okay. Okay. I'm away from the window." }
+      ],
+      "next": "w3_plot.v3"
+    },
+    {
+      "id": "w3_plot.v3",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "A real tip. Your authority to dispatch." },
+        { "speaker": "narrator", "text": "And the vans won't wait for paperwork." }
       ],
       "next": "w3_plot.d1"
     },
@@ -55,11 +123,14 @@
       "choices": [
         {
           "id": "w3_plot.d1_0",
-          "label": "Send a welfare check now, on my authority.",
+          "label": "Send a unit now.",
           "next": "w3_plot.c_dispatch",
           "effects": {
             "integrity": 1,
             "case_file": 1
+          },
+          "set_flags": {
+            "w3_unit_sent": true
           }
         },
         {
@@ -70,102 +141,11 @@
             "case_file": 1,
             "loose_thread": 1
           }
-        },
-        {
-          "id": "w3_plot.d1_2",
-          "label": "See what the system lets me file.",
-          "next": "w3_plot.c_form",
-          "effects": {
-            "compliance": 1
-          }
         }
       ]
-    },
-    {
-      "id": "w3_plot.c_statement",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "You get it all down — times, plates, descriptions. A spine of a case forms on your screen."
-        }
-      ],
-      "next": "w3_plot.d2"
     },
     {
       "id": "w3_plot.c_dispatch",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "The car's already rolling. You'll write it up after."
-        }
-      ],
-      "next": "w3_plot.fin_dispatch"
-    },
-    {
-      "id": "w3_plot.c_form",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "The intake form won't accept it as anything but a 'noise complaint' without a supervisor override code. No supervisor answers at 3am. The form, very politely, buries it for you."
-        }
-      ],
-      "next": "w3_plot.d2"
-    },
-    {
-      "id": "w3_plot.d2",
-      "type": "decision",
-      "prompt": "Final move on the tip",
-      "choices": [
-        {
-          "id": "w3_plot.d2_0",
-          "label": "Dispatch anyway. Paperwork later.",
-          "next": "w3_plot.fin_dispatch",
-          "effects": {
-            "integrity": 1,
-            "case_file": 1,
-            "compliance": -1
-          }
-        },
-        {
-          "id": "w3_plot.d2_1",
-          "label": "File it the only way the system allows.",
-          "next": "w3_plot.fin_soft",
-          "effects": {
-            "compliance": 1,
-            "pawn": 1,
-            "don": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "w3_plot.fin_dispatch",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "The unit reports a nervous man who won't open up and a house that's 'just movers.' No arrest — but it's the first official knock on that door, and the quiet on the other end felt it."
-        }
-      ],
-      "next": "_end"
-    },
-    {
-      "id": "w3_plot.fin_soft",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Filed as noise. Buried in the queue. You tell yourself the system knows the city better than you do. That's exactly what it's built to make you think."
-        }
-      ],
-      "next": "_end"
-    },
-    {
-      "id": "_end",
-      "type": "outcome"
-    }
-  ]
-}
+        { "speaker": "narrator", "text": "A

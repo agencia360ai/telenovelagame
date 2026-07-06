@@ -1,16 +1,16 @@
 {
   "schema": "mission@1",
   "id": "w2_plot",
-  "title": "Week 2 — Same Block",
-  "version": "1.0.0",
+  "title": "Week 2 — Terrorist Threat",
+  "version": "1.1.0",
   "locale_default": "en",
   "difficulty": 2,
   "category": "game_plot",
   "order": 20,
   "caller": {
     "name": "Caller",
-    "type": "STORY CALL",
-    "location": "1411 Calder Street"
+    "type": "THREAT CALL",
+    "location": "Unknown"
   },
   "reward": 15,
   "initial_variables": {
@@ -22,16 +22,37 @@
     "pawn": 0
   },
   "initial_flags": {},
-  "assets": [],
+  "assets": [
+    {
+      "key": "plot-stadium-threat",
+      "type": "video",
+      "role": "ambient"
+    }
+  ],
   "start": "w2_plot.intro",
   "beats": [
     {
       "id": "w2_plot.intro",
       "type": "dialogue",
       "lines": [
+        { "speaker": "narrator", "text": "A gruesome voice appears on the Line." },
+        { "speaker": "narrator", "text": "Wrong from the first syllable." }
+      ],
+      "variants": [
         {
-          "speaker": "narrator",
-          "text": "Tuesday graveyard. A different voice. The same fear."
+          "when": { "flag": "w1_police_sent" },
+          "lines": [
+            { "speaker": "narrator", "text": "A gruesome voice appears on the Line." },
+            { "speaker": "narrator", "text": "All week you've told yourself the patrol reached Calder Street in time." },
+            { "speaker": "narrator", "text": "The voice doesn't sound like it agrees." }
+          ]
+        },
+        {
+          "when": { "flag": "w1_called_back" },
+          "lines": [
+            { "speaker": "narrator", "text": "A gruesome voice appears on the Line." },
+            { "speaker": "narrator", "text": "Same quality as Calder Street's dead tone — a line pulled on purpose." }
+          ]
         }
       ],
       "next": "w2_plot.v1"
@@ -40,10 +61,7 @@
       "id": "w2_plot.v1",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "caller",
-          "text": "There's a house — girls go in, they don't, they don't come back out. I'm across the street, I can see—"
-        }
+        { "speaker": "caller", "text": "This city will burn. And you can't stop us." }
       ],
       "next": "w2_plot.v2"
     },
@@ -51,96 +69,60 @@
       "id": "w2_plot.v2",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "caller",
-          "text": "It's 1411 Calder. One door down from the blue one."
-        }
+        { "speaker": "narrator", "text": "No demands. No location. Just a promise." },
+        { "speaker": "narrator", "text": "And he hasn't hung up." }
       ],
-      "next": "w2_plot.sys"
+      "next": "w2_plot.d0"
     },
     {
-      "id": "w2_plot.sys",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Before you can assign a car, the system flags your nearest unit for a 'higher-priority' fender-bender two blocks over and re-routes it on its own. The board balances itself — always away from Calder."
-        }
-      ],
-      "next": "w2_plot.d1"
-    },
-    {
-      "id": "w2_plot.d1",
+      "id": "w2_plot.d0",
       "type": "decision",
-      "prompt": "The only nearby unit just got pulled. What do you do?",
+      "prompt": "He's waiting for something.",
       "choices": [
         {
-          "id": "w2_plot.d1_0",
-          "label": "Override it. Send a car to Calder now.",
-          "next": "w2_plot.fin_push",
-          "effects": {
-            "integrity": 1,
-            "case_file": 1,
-            "loose_thread": 1,
-            "compliance": -1
-          }
+          "id": "w2_plot.d0_0",
+          "label": "Ask what he wants.",
+          "next": "w2_plot.r1",
+          "effects": { "loose_thread": 1 }
         },
         {
-          "id": "w2_plot.d1_1",
-          "label": "Note the address. Let the board balance.",
-          "next": "w2_plot.fin_defer",
-          "effects": {
-            "loose_thread": 1,
-            "pawn": 1
-          }
-        },
-        {
-          "id": "w2_plot.d1_2",
-          "label": "Trust the system's priorities.",
-          "next": "w2_plot.fin_defer2",
-          "effects": {
-            "compliance": 1,
-            "pawn": 1
-          }
+          "id": "w2_plot.d0_1",
+          "label": "Say nothing.",
+          "next": "w2_plot.r2",
+          "effects": { "integrity": 1 }
         }
       ]
     },
     {
-      "id": "w2_plot.fin_push",
+      "id": "w2_plot.r1",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "A unit rolls to 1411. They find a locked, empty house and an open back door. But it's in the system now — same block, twice. That's a pattern no auto-tag can hide."
-        }
+        { "speaker": "caller", "text": "Wants? I want you listening. You're good at that." },
+        { "speaker": "narrator", "text": "He knows your job. Maybe your building." }
       ],
-      "next": "_end"
+      "next": "w2_plot.v3"
     },
     {
-      "id": "w2_plot.fin_defer",
+      "id": "w2_plot.r2",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "By the time a car frees up, there's nothing to find. You add 1411 to the sticky note. Two addresses now, one street."
-        }
+        { "speaker": "narrator", "text": "You give him dead air. He laughs into it." },
+        { "speaker": "caller", "text": "Smart. The quiet ones last longer." }
       ],
-      "next": "_end"
+      "next": "w2_plot.v3"
     },
     {
-      "id": "w2_plot.fin_defer2",
+      "id": "w2_plot.v3",
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "narrator",
-          "text": "You let the board do its job. It balances. The street stays a blur — and you start to wonder who taught it which streets to forget."
-        }
+        { "speaker": "caller", "text": "Watch the stadium. When it's full." },
+        { "speaker": "narrator", "text": "A click. Then the hum of an open line." }
       ],
-      "next": "_end"
+      "next": "w2_plot.v4"
     },
     {
-      "id": "_end",
-      "type": "outcome"
-    }
-  ]
-}
+      "id": "w2_plot.v4",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "A real tip. Your authority to dispatch." },
+        { "speaker": "narrator", "text":

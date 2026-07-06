@@ -13,6 +13,8 @@ import { DispatchProgressProvider } from "./src/context/DispatchProgressContext"
 import { CalendarProvider } from "./src/context/CalendarContext";
 import { WardrobeProvider } from "./src/context/WardrobeContext";
 import { PaywallProvider } from "./src/context/PaywallContext";
+import { FleetProvider } from "./src/context/FleetContext";
+import { DispatchStoryProvider } from "./src/context/DispatchStoryContext";
 import { AppNavigator } from "./src/navigation/AppNavigator";
 import { audio } from "./src/lib/audio";
 import storyData from "./src/content/stories/corazon-en-roaming.json";
@@ -48,15 +50,21 @@ export default function App() {
                 >
                   <SubscriptionProvider>
                     <DispatchProgressProvider>
-                      <CalendarProvider>
-                        <WardrobeProvider>
-                          <PaywallProvider>
-                            <StatusBar style="light" />
-                            <AudioBridge />
-                            <AppNavigator />
-                          </PaywallProvider>
-                        </WardrobeProvider>
-                      </CalendarProvider>
+                      {/* FleetProvider must wrap CalendarProvider: the calendar
+                          gates calls by the fleet's callsCompleted counter. */}
+                      <FleetProvider>
+                        <DispatchStoryProvider>
+                        <CalendarProvider>
+                          <WardrobeProvider>
+                            <PaywallProvider>
+                              <StatusBar style="light" />
+                              <AudioBridge />
+                              <AppNavigator />
+                            </PaywallProvider>
+                          </WardrobeProvider>
+                        </CalendarProvider>
+                        </DispatchStoryProvider>
+                      </FleetProvider>
                     </DispatchProgressProvider>
                   </SubscriptionProvider>
                 </NarrativeStateProvider>

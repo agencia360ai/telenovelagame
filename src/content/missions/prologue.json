@@ -18,7 +18,13 @@
     "don": 0
   },
   "initial_flags": {},
-  "assets": [],
+  "assets": [
+    {
+      "key": "pov-first-shift",
+      "type": "video",
+      "role": "ambient"
+    }
+  ],
   "start": "prologue.intro",
   "beats": [
     {
@@ -27,7 +33,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Night one. The dispatch floor hums like a held breath — a wall of screens, a hundred blinking lines, and the quiet certainty that somewhere out there, someone is about to need you."
+          "text": "Night one — someone is about to need you."
         }
       ],
       "next": "prologue.sys"
@@ -38,7 +44,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Rule one is stenciled right on the console: not every voice on this frequency wants saving. The system will help you tell the difference. By the end, you'll wonder if it helps a little too much."
+          "text": "A prank? You have to tell the difference."
         }
       ],
       "next": "prologue.d1"
@@ -58,7 +64,7 @@
         },
         {
           "id": "prologue.d1_1",
-          "label": "Learn the protocol. Trust the system.",
+          "label": "Learn the job.",
           "next": "prologue.fin",
           "effects": {
             "compliance": 1
@@ -80,7 +86,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The board lights up. Your first line is waiting. Whatever you walked in believing, the city is about to start testing it — one call at a time."
+          "text": "One call at a time."
         }
       ],
       "next": "_end"

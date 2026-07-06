@@ -36,7 +36,7 @@
       "role": "ambient"
     },
     {
-      "key": "deploy-police",
+      "key": "deploy-police-night",
       "type": "video",
       "role": "deploy"
     }
@@ -143,7 +143,7 @@
       "id": "outcome",
       "type": "outcome",
       "deploy_media": {
-        "key": "deploy-police",
+        "key": "deploy-police-night",
         "role": "deploy"
       }
     }

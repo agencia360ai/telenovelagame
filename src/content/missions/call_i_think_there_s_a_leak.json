@@ -31,7 +31,7 @@
   "start": "call_i_think_there_s_a_leak.intro",
   "assets": [
     {
-      "key": "kitchen-fire",
+      "key": "call-leak-stink",
       "type": "video",
       "role": "ambient"
     },

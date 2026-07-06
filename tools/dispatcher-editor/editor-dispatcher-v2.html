@@ -33,6 +33,7 @@
   .item .meta{font-size:10px;color:var(--muted);font-family:monospace;margin-top:2px}
   .kind{font-size:9px;text-transform:uppercase;padding:1px 6px;border-radius:20px;margin-left:4px}
   .kind.plot_call,.kind.prologue{background:var(--plot);color:#fff}.kind.weekend{background:var(--ok);color:#06210f}.kind.daily_call{background:var(--choice);color:#1a1206}
+  .kind.life{background:#5a7bd6;color:#fff}.kind.event{background:#c86fb0;color:#fff}.kind.consequence{background:#d0693f;color:#fff}
   .badge{font-size:9px;text-transform:uppercase;padding:1px 6px;border-radius:20px;background:var(--accent2);color:#fff;margin-left:4px}
   .badge.decision{background:var(--choice);color:#1a1206}.badge.chapter_end,.badge.cliffhanger{background:var(--ok);color:#06210f}
   .rowbtns{display:flex;gap:4px;align-items:center;margin-top:5px}
@@ -62,6 +63,7 @@
   <h1>DISPATCHER · <b>Editor</b></h1>
   <button class="tab on" id="tabPlot">Game Plot</button>
   <button class="tab" id="tabDaily">Daily Calls</button>
+  <button class="tab" id="tabEvents">Eventos</button>
   <span class="pill" id="ctx"></span>
   <div class="grow"></div>
   <button id="imp">Importar</button>
@@ -91,10 +93,12 @@ function seed(){
     initial_variables:{trust:0}, initial_flags:{}, starting_gems:10,
     config:{months:3,weeks:12,daily_calls_per_day:3},
     game_plot:{ prologue:null, weeks:[] },
-    daily_calls:{ serve_per_day:3, library:[] } };
+    daily_calls:{ serve_per_day:3, library:[] },
+    events:[] };
 }
 let game = load() || seed();
-let tab="plot";          // "plot" | "daily"
+if(!game.events)game.events=[];
+let tab="plot";          // "plot" | "daily" | "events"
 let selChap=null;        // reference to chapter object
 let selBeat=null;        // beat id
 
@@ -140,11 +144,13 @@ function attachDnD(container, onDrop){
 function setTab(t){ tab=t; selChap=null; selBeat=null;
   document.getElementById("tabPlot").classList.toggle("on",t==="plot");
   document.getElementById("tabDaily").classList.toggle("on",t==="daily");
+  document.getElementById("tabEvents").classList.toggle("on",t==="events");
   render(); }
 document.getElementById("tabPlot").onclick=()=>setTab("plot");
 document.getElementById("tabDaily").onclick=()=>setTab("daily");
+document.getElementById("tabEvents").onclick=()=>setTab("events");
 
-function render(){ renderNav(); renderBeats(); renderEditor(); document.getElementById("ctx").textContent = tab==="plot"?"Arco principal · 2 beats/semana":"Pool de llamadas · arrastra o ▲▼ para ordenar"; save(); }
+function render(){ renderNav(); renderBeats(); renderEditor(); document.getElementById("ctx").textContent = tab==="plot"?"Arco principal · 2 beats/semana":(tab==="events"?"Eventos narrativos · por tipo (rank-up / personal / consecuencia)":"Pool de llamadas · arrastra o ▲▼ para ordenar"); save(); }
 
 function chapItem(ch, label){
   const d=document.createElement("div"); d.className="item"+(ch===selChap?" sel":"");
@@ -167,6 +173,25 @@ function renderNav(){
       if(wk.weekend) w.appendChild(chapItem(wk.weekend));
       el.appendChild(w);
     });
+  } else if(tab==="events"){
+    const evs=game.events||[];
+    el.innerHTML=`<h2>Eventos Narrativos · ${evs.length}</h2>`;
+    const cats=[["life","Rank-up (al ascender)"],["event","Personal (romance / amistad)"],["consequence","Consequence / Fallout"]];
+    const shown=new Set();
+    cats.forEach(([cat,label])=>{
+      const list=evs.filter(e=>(e.category||"event")===cat);
+      const grp=document.createElement("div"); grp.className="wk";
+      grp.innerHTML=`<div class="wkhd">${label} <span class="ct">· ${list.length}</span></div>`;
+      list.forEach(e=>{ shown.add(e); grp.appendChild(chapItem(e)); });
+      const add=document.createElement("button"); add.className="mini"; add.textContent="+ evento";
+      add.onclick=()=>{ let n=1; while(evs.find(x=>x.id===cat+"_"+n))n++; const id=cat+"_"+n;
+        const ch={id,title:"Nuevo evento",kind:cat,category:cat,start_beat:id+".intro",synopsis:"",beats:[{id:id+".intro",background:"bg_dispatch",type:"dialogue",characters_on_scene:[],lines:[{speaker:"narrator",expr:"neutral",text:""}],next:null}]};
+        evs.push(ch); game.events=evs; selChap=ch; selBeat=ch.start_beat; render(); };
+      grp.appendChild(add);
+      el.appendChild(grp);
+    });
+    const others=evs.filter(e=>!shown.has(e));
+    if(others.length){ const grp=document.createElement("div"); grp.className="wk"; grp.innerHTML=`<div class="wkhd">Otros · ${others.length}</div>`; others.forEach(e=>grp.appendChild(chapItem(e))); el.appendChild(grp); }
   } else {
     const lib=game.daily_calls.library||[];
     el.innerHTML=`<h2>Daily Calls · ${lib.length} en el pool</h2>`;
@@ -229,6 +254,13 @@ function renderBeats(){
     card.querySelector("#t_ty").onchange=e=>{t.type=e.target.value;renderNav();save();};
     card.querySelector("#t_un").onchange=e=>{t.unit=e.target.value;renderNav();save();};
     card.querySelector("#t_cat").oninput=e=>{const v=e.target.value.trim();if(v)t.category=v;else delete t.category;renderNav();save();};
+  }
+  if(tab==="events" && selChap){
+    const card=document.createElement("div"); card.className="card";
+    card.innerHTML=`<div class="sub">Tipo de evento</div>
+      <select id="ev_cat">${[["life","Rank-up (al ascender)"],["event","Personal (romance / amistad)"],["consequence","Consequence / Fallout"]].map(([v,l])=>`<option value="${v}" ${(selChap.category||"event")===v?"selected":""}>${l}</option>`).join("")}</select>`;
+    el.appendChild(card);
+    card.querySelector("#ev_cat").onchange=e=>{ selChap.category=e.target.value; selChap.kind=e.target.value; renderNav(); save(); };
   }
   const listHost=document.createElement("div"); el.appendChild(listHost);
   selChap.beats.forEach((b,bi)=>{
@@ -574,6 +606,7 @@ document.getElementById("imp").onclick=()=>document.getElementById("impFile").cl
 document.getElementById("impFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
   r.onload=()=>{try{ game=JSON.parse(r.result);
     if(!game.game_plot)game.game_plot={prologue:null,weeks:[]}; if(!game.daily_calls)game.daily_calls={serve_per_day:3,library:[]};
+    if(!game.events)game.events=[];
     setTab("plot"); alert("Importado."); }catch(err){alert("JSON inválido: "+err.message);}};
   r.readAsText(f);};
 

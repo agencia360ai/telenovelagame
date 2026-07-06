@@ -1,0 +1,71 @@
+{
+  "schema": "mission@1",
+  "id": "event_friend_help",
+  "title": "A Friend in Trouble",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 70,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
+  "speakers": { "friend": "Old Friend" },
+  "reward": 5,
+  "initial_variables": { "bond": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_help.intro",
+  "beats": [
+    {
+      "id": "ev_help.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "A call at an hour that's never good news. You answer anyway." },
+        { "speaker": "narrator", "text": "Their voice is doing the thing yours does on bad shifts — steady on purpose." },
+        { "speaker": "friend", "text": "Hey. Sorry. I know it's late." }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "friend_ignored" },
+          "lines": [
+            { "speaker": "narrator", "text": "A call at an hour that's never good news." },
+            { "speaker": "narrator", "text": "After every message you left hanging, they still dialed you first." },
+            { "speaker": "friend", "text": "Hey. Sorry. I know it's late." }
+          ]
+        },
+        {
+          "when": { "var": "cash", "op": "<", "value": 20 },
+          "lines": [
+            { "speaker": "narrator", "text": "A call at an hour that's never good news." },
+            { "speaker": "narrator", "text": "Your wallet is thin this week. The phone doesn't know that." },
+            { "speaker": "friend", "text": "Hey. Sorry. I know it's late." }
+          ]
+        }
+      ],
+      "next": "ev_help.d1"
+    },
+    {
+      "id": "ev_help.d1",
+      "type": "decision",
+      "prompt": "That steady-on-purpose voice.",
+      "choices": [
+        { "id": "ev_help.d1_0", "label": "'Never too late. What's wrong?'", "next": "ev_help.conv2", "effects": { "bond": 1 } },
+        { "id": "ev_help.d1_1", "label": "'You okay?'", "next": "ev_help.conv2", "effects": { "bond": 1 } },
+        { "id": "ev_help.d1_2", "label": "'I know that voice. Talk.'", "next": "ev_help.conv2", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_help.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "friend", "text": "It's dumb. Work cut my hours. Rent's short this month." },
+        { "speaker": "narrator", "text": "You've heard a thousand people work up to asking. You wait." },
+        { "speaker": "friend", "text": "Twenty would save me until Friday. I hate asking this." }
+      ],
+      "next": "ev_help.d2"
+    },
+    {
+      "id": "ev_help.d2",
+      "type": "decision",
+      "prompt": "The ask is out there now.",
+      "choices": [
+        { "id": "ev_help.d2_0", "label": "'How long has this been going?'", 

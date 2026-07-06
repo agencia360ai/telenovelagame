@@ -60,7 +60,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Oh my god — a plane just hit the tower! I saw it, I'm right across the street, there's smoke and glass coming down everywhere!"
+          "text": "Oh my god — a plane just hit the tower!"
         }
       ],
       "next": "call_plane_crash.b2"
@@ -99,7 +99,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Small plane, stuck in the upper floors! Debris is falling, people are running out the lobby — some of them look hurt!"
+          "text": "Small plane, I'm not sure, I'm across the river!"
         }
       ],
       "next": "call_plane_crash.b4"
@@ -111,7 +111,7 @@
       "choices": [
         {
           "id": "call_plane_crash.b4_0",
-          "label": "Move back, keep people away from the falling debris.",
+          "label": "Stay Safe. I'm tracking your location.",
           "next": "call_plane_crash.b5",
           "effects": {
             "integrity": 1
@@ -119,18 +119,15 @@
         },
         {
           "id": "call_plane_crash.b4_1",
-          "label": "Guide the injured to a safe corner for the medics.",
-          "next": "call_plane_crash.b5",
-          "effects": {
-            "integrity": 1
-          }
+          "label": "Wait for the help.",
+          "next": "call_plane_crash.b5"
         },
         {
           "id": "call_plane_crash.b4_2",
-          "label": "Get closer for a better look.",
+          "label": "Help is on the way.",
           "next": "call_plane_crash.b5",
           "effects": {
-            "trust": -1
+            "integrity": 1
           }
         }
       ]
@@ -141,7 +138,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Okay — we're pulling back across the street. It's Meridian Tower. Hurry, there are still people inside!"
+          "text": "Okay — thank you very much, pls hurry!"
         }
       ],
       "next": "dispatch"

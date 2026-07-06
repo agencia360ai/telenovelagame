@@ -13,14 +13,52 @@ import casoBitcoin from "./caso_bitcoin.json";
 // Prologue — one-off intro scene (category "intro", outside the calendar).
 import prologue from "./prologue.json";
 
+// Life scenes — personal-life vignettes (category "life", outside the calendar)
+// triggered on rank-up. Bully-to-respect arc, keyed by rank index.
+import lifeRank1 from "./life_rank1.json";
+import lifeRank2 from "./life_rank2.json";
+import lifeRank3 from "./life_rank3.json";
+import lifeRank4 from "./life_rank4.json";
+import lifeRank5 from "./life_rank5.json";
+import lifeRank6 from "./life_rank6.json";
+
+// Consequence / fallout events — pay off the player's main-arc choices,
+// triggered by story flags (e.g. took_envelope / envelope_reported).
+import consequenceVisit from "./consequence_the_visit.json";
+import consequenceCase from "./consequence_the_case.json";
+
 // Game Plot — systemic-corruption arc (narrative, no dispatch). No single
 // villain: the player uncovers it case by case as the system buries calls.
 import w1Plot from "./w1_plot.json"; // game_plot, order 10 (prologue + The Call That Drops)
-import w2Plot from "./w2_plot.json"; // game_plot, order 20 (Same Block — the board re-routes)
-import w3Plot from "./w3_plot.json"; // game_plot, order 30 (The House on Calder)
+import w2Plot from "./w2_plot.json"; // game_plot, order 20 (Terrorist Threat)
+import w3Plot from "./w3_plot.json"; // game_plot, order 30 (Vans at night)
 import w4Plot from "./w4_plot.json"; // game_plot, order 40 (The Envelope)
+import w5Plot from "./w5_plot.json"; // game_plot, order 50 (The Stadium Night — 3-way converging finale)
 import w1WeekendCoffee from "./w1_weekend_coffee.json"; // weekend, order 0 (After Hours — alone with the pattern)
 import w1WeekendMap from "./w1_weekend_map.json"; // weekend, order 1 (Día libre — interactive map beat demo)
+
+// Off-duty events — ordered personal vignettes (category "event", three per
+// week on random weekdays). No dispatch; choices may cost cash (`cash_cost`).
+// Generic friends & partner arc — no named characters.
+// Student-debt thread — periodic installments; miss them and the apartment
+// is at risk (flags: debt_active, apartment_at_risk, debt_cleared, apartment_lost).
+import eventDebtLetter from "./event_debt_letter.json"; // order 5 — The Letter
+import eventDebtFirst from "./event_debt_first.json"; // order 32 — First Installment
+import eventDebtSecond from "./event_debt_second.json"; // order 62 — Second Installment
+import eventDebtDeadline from "./event_debt_deadline.json"; // order 92 — The Deadline
+import eventFirstBreak from "./event_first_break.json"; // order 10 — First Break
+import eventFriendText from "./event_friend_text.json"; // order 20 — A Text From an Old Friend
+import eventCoffeePlace from "./event_coffee_place.json"; // order 30 — The Coffee Place
+import eventCrosstown from "./event_crosstown.json"; // order 34 — The Long Way (paid travel → plot clue)
+import eventNightOut from "./event_night_out.json"; // order 40 — Night Out
+import eventFirstDate from "./event_first_date.json"; // order 50 — First Date
+import eventWalkHome from "./event_walk_home.json"; // order 60 — The Walk Home
+import eventFriendHelp from "./event_friend_help.json"; // order 70 — A Friend in Trouble
+import eventMovieNight from "./event_movie_night.json"; // order 80 — Movie Night
+import eventTheQuestion from "./event_the_question.json"; // order 90 — The Question
+import eventTheGift from "./event_the_gift.json"; // order 100 — The Gift
+import eventWorldsMeet from "./event_worlds_meet.json"; // order 110 — Worlds Meet
+import eventOneMonth from "./event_one_month.json"; // order 120 — One Month
 
 // Daily calls (911 source, caso_cocina style) — new batch.
 import CallZombie from "./call_zombie.json";
@@ -100,13 +138,42 @@ export const BUNDLED_MISSIONS: Mission[] = [
   // Prologue intro scene — in the catalog so getMissionById finds it, but its
   // "intro" category keeps it out of every calendar pool.
   prologue as unknown as Mission,
+  // Life scenes (category "life") — served on rank-up, not by the calendar.
+  lifeRank1 as unknown as Mission,
+  lifeRank2 as unknown as Mission,
+  lifeRank3 as unknown as Mission,
+  lifeRank4 as unknown as Mission,
+  lifeRank5 as unknown as Mission,
+  lifeRank6 as unknown as Mission,
+  // Consequence / fallout events (category "consequence").
+  consequenceVisit as unknown as Mission,
+  consequenceCase as unknown as Mission,
   // Game Plot arc (served by the calendar: game_plot one per week, weekend on Sat).
   w1Plot as unknown as Mission,
   w2Plot as unknown as Mission,
   w3Plot as unknown as Mission,
   w4Plot as unknown as Mission,
+  w5Plot as unknown as Mission,
   w1WeekendCoffee as unknown as Mission,
   w1WeekendMap as unknown as Mission,
+  // Off-duty events (category "event") — three per week, choices can spend cash.
+  eventDebtLetter as unknown as Mission,
+  eventDebtFirst as unknown as Mission,
+  eventDebtSecond as unknown as Mission,
+  eventDebtDeadline as unknown as Mission,
+  eventFirstBreak as unknown as Mission,
+  eventFriendText as unknown as Mission,
+  eventCoffeePlace as unknown as Mission,
+  eventCrosstown as unknown as Mission,
+  eventNightOut as unknown as Mission,
+  eventFirstDate as unknown as Mission,
+  eventWalkHome as unknown as Mission,
+  eventFriendHelp as unknown as Mission,
+  eventMovieNight as unknown as Mission,
+  eventTheQuestion as unknown as Mission,
+  eventTheGift as unknown as Mission,
+  eventWorldsMeet as unknown as Mission,
+  eventOneMonth as unknown as Mission,
 ];
 
 // Demo missions kept available but out of rotation (re-add to the array to use).
@@ -194,6 +261,17 @@ export function getMissionsByCategory(category: MissionCategory): Mission[] {
   return catalog.filter((m) => getMissionCategory(m) === category);
 }
 
+/**
+ * The personal-life scene to play when the player reaches a given rank index,
+ * or undefined if that rank has none. Matched by the mission's `rank` field.
+ */
+export function getLifeMissionForRank(rankIndex: number): Mission | undefined {
+  return catalog.find(
+    (m) =>
+      (m as any).category === "life" && (m as any).rank === rankIndex
+  );
+}
+
 // Remembers the previous pick so we can avoid back-to-back repeats.
 let lastServedId: string | null = null;
 
@@ -223,10 +301,4 @@ export function getNextMissionId(missionsHandled: number, rankIndex = 0): string
 
   const candidates =
     eligible.length > 1
-      ? eligible.filter((m) => m.id !== lastServedId)
-      : eligible;
-
-  const choice = candidates[Math.floor(Math.random() * candidates.length)];
-  lastServedId = choice.id;
-  return choice.id;
-}
+      ? eligible.filter((m) => m.id !== lastServe

@@ -45,6 +45,33 @@ export const VIDEOS: Record<string, string | number> = {
   // Scene video for the "I Need Bitcoins" call.
   "call-bitcoin-need":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/ManPhone.mp4",
+  // Scene video for the "I Lost Everything in Bitcoin" call (caso_bitcoin).
+  "call-bitcoin-lost":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/Bitcoin.mp4",
+  // Scene video for the "I Found a Baby Dinosaur" call (caso_trex).
+  "call-baby-dino":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/Dinosaurio.mp4",
+  // Scene video for the "I'm trapped in the fire!" call.
+  "call-trapped-fire":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/Im%20trapped%20in%20the%20fire,%20I%20can't%20get%20to%20the%20door!.mp4",
+  // Scene video for the "My House Is on Fire" call.
+  "call-house-fire":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/my%20house%20is%20on%20fire.mp4",
+  // Scene video for the "I'm stuck in an elevator!" call.
+  "call-elevator":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/Elevador.mp4",
+  // Scene video for the "A man fell from a 2nd floor!" call.
+  "call-man-fell":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/Palida.mp4",
+  // Scene video for the "I'm Out of Toilet Paper" call (caso_papel).
+  "call-toilet-paper":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/Toilet.mp4",
+  // Scene video for the "There's a fire in my bathroom!" call.
+  "call-bathroom-fire":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/there%20is%20a%20fire%20in%20my%20bathroom,%20its%20climbing%20the%20towels.mp4",
+  // Scene video for the "I think there's a leak" call.
+  "call-leak-stink":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Daily%20Calls/Stink.mp4",
   // Scene video for the "My cat is stuck on a tall tree" call.
   "call-cat-tree":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Gato.mp4",
@@ -57,6 +84,9 @@ export const VIDEOS: Record<string, string | number> = {
   // Scene video for the "A Plane Hit the Building!" call.
   "call-plane-crash":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Build.mp4",
+  // Tailored ambulance deploy clip for the "mother-in-law heart attack" call.
+  "deploy-heart-ambulance":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Ambulance%20N.mp4",
   // Scene video for the "He Dented My Bumper!" fender-bender call.
   "call-fender-bender":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Choque.mp4",
@@ -75,6 +105,21 @@ export const VIDEOS: Record<string, string | number> = {
   // Story scene video for game_plot Week 1 — "The Call That Drops".
   "plot-call-drops":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Denuncia.mp4",
+  // Week 1 scene clips: the caller's phone call (loops during dialogue) and the
+  // van (plays on the "police rushes in" ending beat via beat.media).
+  "plot-w1-call":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Secuestro/ANIM-sec_04_phone_call.mp4",
+  "plot-w1-van":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Secuestro/ANIM-sec_02_inside_van.mp4",
+  // Week 1 — plays right after the call clip finishes (ambient_next).
+  "plot-w1-corte1":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Secuestro/Corte%201.mp4",
+  // Week 1 resolution clip — plays on the "police rushes in" ending beat.
+  "plot-w1-resolution":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Secuestro/Corte%201.mp4",
+  // Story scene video for game_plot Week 2 — the stadium threat call.
+  "plot-stadium-threat":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Stadium.mp4",
   // Scene video for the "Something's Off Across the Street" call (boxes at night).
   "call-suspicious-boxes":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Caja.mp4",
@@ -123,6 +168,25 @@ export const VIDEOS: Record<string, string | number> = {
   "excursion-cinema":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroPan.mp4",
 
+  // POV clips — first-person dispatcher scenes.
+  // Ambient for the First Shift prologue dialogue.
+  "pov-first-shift":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/ANIM-pov_01_dispatch_lvl1.mp4",
+  // Full-screen cinematic played on EVERY rank promotion.
+  "pov-promotion":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/ANIM-pov_04_promotion_medal.mp4",
+  // Ambients for the rank-up life scenes (LVL 2 and LVL 3).
+  "pov-rank2":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/ANIM-pov_02_dispatch_lvl2.mp4",
+  "pov-rank3":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/ANIM-pov_03_dispatch_lvl3.mp4",
+  // Finale (w5) — one POV clip per ending branch, fired via beat.media at the
+  // branch's turning point. Paste the hosted URLs here when the clips exist;
+  // empty entries are skipped and the current background keeps looping.
+  "pov-ending-corrupt": "",
+  "pov-ending-justice": "",
+  "pov-ending-pawn": "",
+
   // Per-unit DEPLOY clips — one reusable video per dispatch button, played on
   // the "deploying" beat. fire/police/ambulance stream from Supabase Storage
   // (public bucket "911 Clips"); the rest still use a bundled placeholder.
@@ -132,6 +196,9 @@ export const VIDEOS: Record<string, string | number> = {
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Bomberos.mp4",
   "deploy-police":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Police.mp4",
+  // Night-time police deploy — used by "Someone's at My Door" (call_door_force).
+  "deploy-police-night":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Police%20N.mp4",
   "deploy-ambulance":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/Ambulancia.mp4",
   "deploy-animal_control":
@@ -265,7 +332,16 @@ export function getLobbyVideo(
 }
 
 // ── Sound effects (bundled) ──────────────────────────────────────────────────
-export type SfxKey = "tap" | "ring" | "dispatch" | "success" | "fail";
+export type SfxKey =
+  | "tap"
+  | "ring"
+  | "dispatch"
+  | "success"
+  | "fail"
+  | "siren1"
+  | "siren2"
+  | "siren3"
+  | "radio";
 
 export const SFX: Record<SfxKey, number> = {
   tap: require("../../assets/audio/tap.wav"),
@@ -273,6 +349,10 @@ export const SFX: Record<SfxKey, number> = {
   dispatch: require("../../assets/audio/dispatch.wav"),
   success: require("../../assets/audio/success.wav"),
   fail: require("../../assets/audio/fail.wav"),
+  siren1: require("../../assets/audio/siren1.mp3"),
+  siren2: require("../../assets/audio/siren2.mp3"),
+  siren3: require("../../assets/audio/siren3.mp3"),
+  radio: require("../../assets/audio/radio.mp3"),
 };
 
 export const SFX_VOLUME: Record<SfxKey, number> = {
@@ -281,6 +361,10 @@ export const SFX_VOLUME: Record<SfxKey, number> = {
   dispatch: 0.6,
   success: 0.7,
   fail: 0.6,
+  siren1: 0.55,
+  siren2: 0.55,
+  siren3: 0.55,
+  radio: 0.5,
 };
 
 // ── Music beds (bundled, looping) ────────────────────────────────────────────
@@ -314,6 +398,35 @@ export function resolveImage(
   if (typeof found === "number") return found;
   if (typeof found === "string" && found) return { uri: found };
   return { uri: keyOrSource };
+}
+
+// ── Dispatch unit icons (2D vehicle art, comic cel-shade) ────────────────────
+// One image per fleet unit, replacing the emoji on dispatch buttons, the fleet
+// strip and the buy window. Generate in Layer (app.layer.ai), export the PNG
+// (transparent background, square), host it (Supabase / CDN), and paste the
+// URL here. Any unit left as "" keeps showing its emoji fallback.
+export const UNIT_ICON_IMAGES: Record<string, string | number> = {
+  // Bundled vehicle art (assets/Units, white background stripped).
+  police: require("../../assets/Units/PoliceCar.png"),
+  ambulance: require("../../assets/Units/Ambulance.png"),
+  firefighters: require("../../assets/Units/FireTruck.png"),
+  // Still emoji — paste a URL or add a require() to upgrade.
+  animal_control: "",
+  pest_control: "",
+  ghost_unit: "",
+  dino_control: "",
+  zombie_unit: "",
+  border_patrol: "",
+};
+
+/** Resolve a unit id to its icon image source, or null → use the emoji. */
+export function resolveUnitIcon(
+  kind: string
+): number | { uri: string } | null {
+  const found = UNIT_ICON_IMAGES[kind];
+  if (typeof found === "number") return found;
+  if (typeof found === "string" && found) return { uri: found };
+  return null;
 }
 
 // ── 3D models (bundled GLB or remote URL) ────────────────────────────────────
@@ -351,14 +464,4 @@ export const SKIN_IMAGES: Record<string, number | string> = {
 }
 
 /**
- * Resolve a skin id to a React Native image source, or null when no art has
- * been registered yet (callers should render a placeholder on null).
- */
-export function resolveSkin(
-  id: string
-): number | { uri: string } | null {
-  const found = SKIN_IMAGES[id];
-  if (typeof found === "number") return found;
-  if (typeof found === "string" && found) return { uri: found };
-  return null;
-}
+ * Resolve a skin id to a R

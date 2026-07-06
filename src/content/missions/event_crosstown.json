@@ -1,0 +1,60 @@
+{
+  "schema": "mission@1",
+  "id": "event_crosstown",
+  "title": "The Long Way",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 34,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Bus stop" },
+  "speakers": { "stranger": "Stranger" },
+  "reward": 5,
+  "initial_variables": { "energy": 0, "case_file": 0, "loose_thread": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_cross.intro",
+  "beats": [
+    {
+      "id": "ev_cross.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Night off. The city you only know by voice is out there." },
+        { "speaker": "narrator", "text": "Night market across town, or your own block. The bus costs what it costs." }
+      ],
+      "next": "ev_cross.d1"
+    },
+    {
+      "id": "ev_cross.d1",
+      "type": "decision",
+      "prompt": "The evening opens.",
+      "choices": [
+        { "id": "ev_cross.d1_0", "label": "Check the bus times.", "next": "ev_cross.stop" },
+        { "id": "ev_cross.d1_1", "label": "Grab your good jacket.", "next": "ev_cross.stop" },
+        { "id": "ev_cross.d1_2", "label": "Weigh the wallet first.", "next": "ev_cross.stop" }
+      ]
+    },
+    {
+      "id": "ev_cross.stop",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "At the stop, a stranger shares the bench and a bag of chestnuts." },
+        { "speaker": "stranger", "text": "Night market tonight. Whole city goes. You look like you never go." }
+      ],
+      "next": "ev_cross.d2"
+    },
+    {
+      "id": "ev_cross.d2",
+      "type": "decision",
+      "prompt": "The stranger waits.",
+      "choices": [
+        { "id": "ev_cross.d2_0", "label": "That obvious?", "next": "ev_cross.bus" },
+        { "id": "ev_cross.d2_1", "label": "What's good there?", "next": "ev_cross.bus" },
+        { "id": "ev_cross.d2_2", "label": "I go places.", "next": "ev_cross.bus" }
+      ]
+    },
+    {
+      "id": "ev_cross.bus",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "stranger", "text": "Try the dumpling stall by the stadium. Tell them the be

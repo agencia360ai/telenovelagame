@@ -30,6 +30,8 @@ class AudioManager {
   private musicKey: MusicKey | null = null;
   private muted = false;
   private initialized = false;
+  // A stoppable one-shot (the dispatch-center radio during the intro screen).
+  private radioPlayer: AudioPlayer | null = null;
 
   async init() {
     if (this.initialized) return;
@@ -69,6 +71,34 @@ class AudioManager {
       player.seekTo(0);
       player.play();
     } catch {}
+  }
+
+  /** Play one of the three siren variants at random (used when a unit rolls out). */
+  playRandomSiren() {
+    const sirens: SfxKey[] = ["siren1", "siren2", "siren3"];
+    this.playSfx(sirens[Math.floor(Math.random() * sirens.length)]);
+  }
+
+  /** Start the dispatch-center radio (intro screen). Stops on stopRadio(). */
+  playRadio() {
+    if (this.muted) return;
+    this.stopRadio();
+    try {
+      const player = createAudioPlayer(SFX.radio);
+      player.volume = SFX_VOLUME.radio ?? 0.5;
+      this.radioPlayer = player;
+      player.play();
+    } catch {}
+  }
+
+  /** Stop the intro radio (e.g. when leaving the intro screen). */
+  stopRadio() {
+    if (!this.radioPlayer) return;
+    try {
+      this.radioPlayer.pause();
+      this.radioPlayer.remove();
+    } catch {}
+    this.radioPlayer = null;
   }
 
   playMusic(key: MusicKey) {

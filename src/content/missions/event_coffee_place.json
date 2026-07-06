@@ -1,0 +1,53 @@
+{
+  "schema": "mission@1",
+  "id": "event_coffee_place",
+  "title": "The Coffee Place",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 30,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Corner café" },
+  "speakers": { "stranger": "Stranger" },
+  "reward": 5,
+  "initial_variables": { "love": 0, "energy": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_coffee.intro",
+  "beats": [
+    {
+      "id": "ev_coffee.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The café near the station, the one open at weird hours for people with weird hours. Someone at the counter is reading the book you own two copies of." },
+        { "speaker": "stranger", "text": "They always burn the espresso here. We keep coming anyway." }
+      ],
+      "next": "ev_coffee.d1"
+    },
+    {
+      "id": "ev_coffee.d1",
+      "type": "decision",
+      "prompt": "They nod at the book in your hand — same cover.",
+      "choices": [
+        { "id": "ev_coffee.d1_0", "label": "Two copies, actually. One to lend, one to keep.", "next": "ev_coffee.conv2", "effects": { "love": 1 } },
+        { "id": "ev_coffee.d1_1", "label": "I only read it on nights I can't sleep. So — often.", "next": "ev_coffee.conv2", "effects": { "love": 1 } },
+        { "id": "ev_coffee.d1_2", "label": "Don't tell me how it ends. I've stopped three times.", "next": "ev_coffee.conv2", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_coffee.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "stranger", "text": "A lender AND a keeper. Rare." },
+        { "speaker": "narrator", "text": "They set the book down like they've decided the conversation is worth more than the chapter." },
+        { "speaker": "stranger", "text": "Weird hours, huh. Let me guess — you're either a nurse or you're running from something." }
+      ],
+      "next": "ev_coffee.d2"
+    },
+    {
+      "id": "ev_coffee.d2",
+      "type": "decision",
+      "prompt": "How much do you give away?",
+      "choices": [
+        { "id": "ev_coffee.d2_0", "label": "911 dispatch. I run TOWARD the something.", "next": "ev_coffee.pivot", "effects": { "love": 2 } },
+        { "id": "ev_coffee.d2_1", "label": "Little of both. It's a long story and cold coffee.", "next": 

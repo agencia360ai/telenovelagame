@@ -19,7 +19,14 @@ export type MissionCondition =
 
 // ── Media ────────────────────────────────────────────────────────────────────
 export type MediaType = "video" | "image";
-export type MediaRole = "intro" | "ambient" | "deploy" | "still" | "portrait";
+export type MediaRole =
+  | "intro"
+  | "ambient"
+  /** Plays (looping) after the "ambient" clip finishes its single pass. */
+  | "ambient_next"
+  | "deploy"
+  | "still"
+  | "portrait";
 
 /** Production + delivery hints for one media file (see the table in the docs). */
 export type MediaSpec = {
@@ -59,8 +66,10 @@ export type MissionLine = {
 export type MissionChoice = {
   id: string;
   label: string;
-  /** Gem cost; >0 gates the choice behind the economy. */
+  /** Gem cost; >0 gates the choice behind the premium economy. */
   gem_cost?: number;
+  /** Cash cost; >0 spends the earned cash wallet (e.g. buying dinner). */
+  cash_cost?: number;
   premium?: boolean;
   /** Mutate numeric variables (e.g. { intel: 1, score_bonus: 2 }). */
   effects?: Record<string, number>;
@@ -138,6 +147,13 @@ export type MissionBeat = {
   deploy_media?: MediaRef;
 
   next?: string | null;
+  /**
+   * Conditional routing: after this beat, jump to the first rule whose
+   * condition matches the runtime state (accumulated across missions via the
+   * story context). Falls back to `next`. This is what lets every mission's
+   * decisions converge into different endings of the same narrative.
+   */
+  next_rules?: { when: MissionCondition; next: string }[];
 };
 
 // ── Mission ──────────────────────────────────────────────────────────────────
@@ -148,9 +164,19 @@ export type MissionBeat = {
  * - "weekend"   → drawn from the weekend pool on weekend days.
  * - "intro"     → one-off scene played outside the calendar (e.g. the prologue,
  *                 shown once at first launch). Never served by the scheduler.
+ * - "event"     → ordered off-duty vignette (breaks, meals, purchases) served
+ *                 once per week on a random weekday. No dispatch; choices may
+ *                 spend cash via `cash_cost`.
+ * - "life"      → rank-up follow-up scene, served on promotion (not calendar).
  * Defaults to "daily" when omitted (keeps older content valid).
  */
-export type MissionCategory = "daily" | "game_plot" | "weekend" | "intro";
+export type MissionCategory =
+  | "daily"
+  | "game_plot"
+  | "weekend"
+  | "intro"
+  | "event"
+  | "life";
 
 export type Mission = {
   schema: "mission@1";

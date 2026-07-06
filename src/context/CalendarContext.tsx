@@ -25,6 +25,7 @@ import {
   nextPlayableDay,
   resolveNextPlot,
   resolveNextWeekend,
+  resolveNextEvents,
   shortDayLabel,
 } from "../lib/calendar/schedule";
 import { DEFAULT_WEEK_TEMPLATE } from "../content/calendar/weekTemplate";
@@ -32,8 +33,41 @@ import { Mission } from "../lib/missions/types";
 import { sortByOrder } from "../content/calendar/gamePlot";
 import { getMissionsByCategory } from "../content/missions";
 import { useDispatchProgress } from "./DispatchProgressContext";
+import { unitUnlockedAt, useFleet } from "./FleetContext";
 
-const STORAGE_KEY = "dispatch_calendar_v1";
+// v2: bumped when call-gating by unlocked units was added, so pre-gating
+// frozen weeks (which could serve e.g. a fire call before firefighters unlock)
+// are discarded and week 1 is rebuilt with the gate applied.
+// v3: the gate now uses the fleet's callsCompleted counter (the one that
+// actually unlocks units) instead of progress.callsHandled, which drifted
+// ahead — weeks frozen under the old counter could still serve locked calls.
+// v4: scheduling rules added (no pranks before call #3, no back-to-back calls
+// with the same correct dispatch) — rebuild weeks frozen without them.
+// v5: off-duty "event" scenes added (one per week on a random weekday) —
+// rebuild so the current week gets its event slot.
+// v6: three events per week (friends & partner personal arc).
+// v7: student-debt installment events inserted into the sequence.
+// v8: crosstown travel event added (paid displacement → plot clue).
+const STORAGE_KEY = "dispatch_calendar_v8";
+
+/**
+ * The unit a call effectively REQUIRES to be resolved — its correct dispatch,
+ * or an explicit `requires_unit` flag on the mission. Used to keep calls that
+ * need a still-locked unit out of the served pool.
+ */
+function requiredUnit(m: any): string | null {
+  if (m?.requires_unit) return m.requires_unit as string;
+  const disp = m?.beats?.find((b: any) => b?.type === "dispatch");
+  return disp?.correct ?? null;
+}
+
+/** Daily pool, minus calls that need a unit the player hasn't unlocked yet. */
+function dailyPoolFor(callsHandled: number): Mission[] {
+  return getMissionsByCategory("daily").filter((m) => {
+    const req = requiredUnit(m);
+    return !req || unitUnlockedAt(req, callsHandled);
+  });
+}
 
 export type NextMission = { missionId: string; dayLabel: string; week: number };
 
@@ -60,9 +94,9 @@ type CalendarApi = {
   reset: () => void;
 };
 
-function buildPools(): MissionPools {
+function buildPools(callsHandled: number): MissionPools {
   return {
-    daily: getMissionsByCategory("daily"),
+    daily: dailyPoolFor(callsHandled),
     weekend: getMissionsByCategory("weekend"),
   };
 }
@@ -77,20 +111,29 @@ function buildWeekendList(): Mission[] {
   return sortByOrder(getMissionsByCategory("weekend"));
 }
 
+/** off-duty event missions sorted by `order` — the event sequence. */
+function buildEventList(): Mission[] {
+  return sortByOrder(getMissionsByCategory("event"));
+}
+
 /** Build a fresh, frozen week and position the player on its first playable day. */
 function buildWeek(
   week: number,
   plotIndex: number,
   weekendIndex: number,
   rankIndex: number,
-  servedDaily: string[] = []
+  servedDaily: string[] = [],
+  callsHandled: number = 0,
+  eventIndex: number = 0
 ): CalendarState {
-  const pools = buildPools();
+  const pools = buildPools(callsHandled);
   const plotMissionId = resolveNextPlot(buildPlotList(), plotIndex, {
     rankIndex,
     week,
   });
   const weekendMissionId = resolveNextWeekend(buildWeekendList(), weekendIndex);
+  // Up to three off-duty scenes per week, in authored order.
+  const eventMissionIds = resolveNextEvents(buildEventList(), eventIndex, 3);
   const schedule = generateWeek(
     week,
     DEFAULT_WEEK_TEMPLATE,
@@ -98,7 +141,9 @@ function buildWeek(
     plotMissionId,
     weekendMissionId,
     Math.random,
-    servedDaily
+    servedDaily,
+    callsHandled,
+    eventMissionIds
   );
   // Track which dailies have now been served; once the whole pool has been seen,
   // restart the cycle (keep just this week's so we don't immediately repeat).
@@ -114,6 +159,7 @@ function buildWeek(
     missionIndexInDay: 0,
     gamePlotIndex: plotIndex,
     weekendIndex,
+    eventIndex,
     schedule,
     completedThisWeek: 0,
     correctThisWeek: 0,
@@ -136,8 +182,14 @@ const CalendarContext = createContext<CalendarApi | null>(null);
 
 export function CalendarProvider({ children }: { children: React.ReactNode }) {
   const progress = useDispatchProgress();
+  const fleet = useFleet();
   const rankRef = useRef(progress.rankIndex);
   rankRef.current = progress.rankIndex;
+  // Gate calls by the FLEET's dispatch counter — the same one that unlocks
+  // units — not progress.callsHandled (which also counts narrative missions
+  // and timeouts, drifting ahead and letting still-locked calls through).
+  const callsRef = useRef(fleet.callsCompleted);
+  callsRef.current = fleet.callsCompleted;
 
   const [state, setState] = useState<CalendarState>(() => buildWeek(1, 0, 0, 0));
   const loaded = useRef(false);
@@ -151,6 +203,7 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
           if (isValidState(saved)) {
             // Backfill fields added after this state may have been persisted.
             if (typeof saved.weekendIndex !== "number") saved.weekendIndex = 0;
+            if (typeof saved.eventIndex !== "number") saved.eventIndex = 0;
             if (saved.schedule && saved.schedule.weekendMissionId === undefined) {
               saved.schedule.weekendMissionId = null;
             }
@@ -202,6 +255,13 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
           ? prev.weekendIndex + 1
           : prev.weekendIndex;
 
+      // Advance the event pointer as each off-duty scene of the week plays.
+      const eventIndex = (prev.schedule.eventMissionIds ?? []).includes(
+        missionId
+      )
+        ? prev.eventIndex + 1
+        : prev.eventIndex;
+
       if (missionIndexInDay >= day.missionIds.length) {
         missionIndexInDay = 0;
         dayIndex = nextPlayableDay(prev.schedule, prev.dayIndex + 1);
@@ -213,6 +273,7 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
         missionIndexInDay,
         gamePlotIndex,
         weekendIndex,
+        eventIndex,
         completedThisWeek: prev.completedThisWeek + 1,
         correctThisWeek: prev.correctThisWeek + (correct ? 1 : 0),
       };
@@ -226,7 +287,9 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
         prev.gamePlotIndex,
         prev.weekendIndex,
         rankRef.current,
-        prev.servedDaily
+        prev.servedDaily,
+        callsRef.current,
+        prev.eventIndex
       )
     );
   }, []);
@@ -270,6 +333,4 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
 
 export function useCalendar(): CalendarApi {
   const ctx = useContext(CalendarContext);
-  if (!ctx) throw new Error("useCalendar must be used within CalendarProvider");
-  return ctx;
-}
+  if (!ctx) throw new Error(

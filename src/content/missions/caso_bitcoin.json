@@ -30,7 +30,7 @@
   "start": "caso_bitcoin.intro",
   "assets": [
     {
-      "key": "armed-robbery",
+      "key": "call-bitcoin-lost",
       "type": "video",
       "role": "ambient"
     },
@@ -77,11 +77,6 @@
           "id": "caso_bitcoin.d1_1",
           "label": "Yikes. What are you gonna do?",
           "next": "caso_bitcoin.d2"
-        },
-        {
-          "id": "caso_bitcoin.d1_2",
-          "label": "Hey, chin up, it'll be okay.",
-          "next": "caso_bitcoin.d_ther2"
         }
       ]
     },

@@ -28,7 +28,7 @@ export type RootStackParamList = {
   IntroCinematic: undefined;
   DispatchLobby: undefined;
   Call: { callId: string };
-  Mission: { missionId: string; intro?: boolean };
+  Mission: { missionId: string; intro?: boolean; lifeScene?: boolean };
   WeekComplete: undefined;
   Stats: undefined;
   Paywall: undefined;

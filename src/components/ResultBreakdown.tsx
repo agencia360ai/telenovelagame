@@ -14,6 +14,10 @@ type Props = {
   correctDispatch: DispatchType;
   correctExplanation?: string;
   chosenDispatch?: DispatchType;
+  /** Cash ($) awarded for the correct dispatch — shown alongside the XP. */
+  cashEarned?: number;
+  /** The dispatch timer ran out — no unit was sent at all. */
+  timedOut?: boolean;
 };
 
 export function ResultBreakdown({
@@ -21,6 +25,8 @@ export function ResultBreakdown({
   correctDispatch,
   correctExplanation,
   chosenDispatch,
+  cashEarned = 0,
+  timedOut = false,
 }: Props) {
   const progress = useDispatchProgress();
   const xpInfo = getXPProgress(progress.xp, progress.rankIndex);
@@ -37,10 +43,10 @@ export function ResultBreakdown({
         style={[styles.box, styles.boxFail]}
       >
         <Text style={styles.emoji}>✗</Text>
-        <Text style={styles.title}>WRONG UNIT</Text>
+        <Text style={styles.title}>{timedOut ? "TIME'S UP" : "WRONG UNIT"}</Text>
         <View style={styles.teachSection}>
           <Text style={styles.teachSent}>
-            You sent {chosenLabel}
+            {timedOut ? "There was no dispatch sent" : `You sent ${chosenLabel}`}
           </Text>
           <Text style={styles.teachCorrect}>
             The right call was {correctLabel}
@@ -92,6 +98,15 @@ export function ResultBreakdown({
           bold
           delay={600}
         />
+        {cashEarned > 0 && (
+          <Row
+            label="💵 Cash earned"
+            value={`+$${cashEarned}`}
+            color={colors.dispatch.answer}
+            bold
+            delay={700}
+          />
+        )}
       </View>
 
       <View style={styles.xpSection}>

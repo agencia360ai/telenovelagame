@@ -1,0 +1,55 @@
+{
+  "schema": "mission@1",
+  "id": "event_friend_text",
+  "title": "A Text From an Old Friend",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 20,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Locker room" },
+  "speakers": { "friend": "Old Friend" },
+  "reward": 5,
+  "initial_variables": { "bond": 0, "energy": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_friend1.intro",
+  "beats": [
+    {
+      "id": "ev_friend1.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Shift's over. Your locker sticks, your feet ache, your phone buzzes." },
+        { "speaker": "narrator", "text": "A name you haven't seen since before the academy." },
+        { "speaker": "friend", "text": "Is this still your number?? Heard you work the 911 lines now. That's insane." }
+      ],
+      "next": "ev_friend1.d1"
+    },
+    {
+      "id": "ev_friend1.d1",
+      "type": "decision",
+      "prompt": "A name from before the academy.",
+      "choices": [
+        { "id": "ev_friend1.d1_0", "label": "Still me. Mostly.", "next": "ev_friend1.conv2", "effects": { "bond": 1 } },
+        { "id": "ev_friend1.d1_1", "label": "Depends who's asking.", "next": "ev_friend1.conv2", "effects": { "bond": 1 } },
+        { "id": "ev_friend1.d1_2", "label": "New number. Who dis.", "next": "ev_friend1.conv2", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_friend1.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "friend", "text": "Same you, then. Good. Do you actually say 'what's your emergency'?" },
+        { "speaker": "narrator", "text": "Five years compressed into typing bubbles. They appear, vanish, appear again." },
+        { "speaker": "friend", "text": "I kept meaning to text. Then it was five years. How does that happen?" }
+      ],
+      "next": "ev_friend1.d2"
+    },
+    {
+      "id": "ev_friend1.d2",
+      "type": "decision",
+      "prompt": "Five years. How DOES that happen?",
+      "choices": [
+        { "id": "ev_friend1.d2_0", "label": "One shift at a time.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } },
+        { "id": "ev_friend1.d2_1", "label": "You had my number too.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } },
+      

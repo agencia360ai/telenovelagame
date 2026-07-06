@@ -1,0 +1,71 @@
+{
+  "schema": "mission@1",
+  "id": "event_first_break",
+  "title": "First Break",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 10,
+  "caller": {
+    "name": "You",
+    "type": "BREAK",
+    "location": "Break room"
+  },
+  "speakers": { "partner": "Partner" },
+  "reward": 5,
+  "initial_variables": {
+    "energy": 0,
+    "money_spent": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "event_break1.intro",
+  "beats": [
+    {
+      "id": "event_break1.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "First break of the shift. The vending machine hums like it knows things." },
+        { "speaker": "narrator", "text": "Your stomach files a formal complaint." }
+      ],
+      "next": "event_break1.d1"
+    },
+    {
+      "id": "event_break1.d1",
+      "type": "decision",
+      "prompt": "Ten minutes. Spend them.",
+      "choices": [
+        { "id": "event_break1.d1_0", "label": "Claim the good chair.", "next": "event_break1.chat" },
+        { "id": "event_break1.d1_1", "label": "Stretch by the window.", "next": "event_break1.chat" },
+        { "id": "event_break1.d1_2", "label": "Study the vending machine.", "next": "event_break1.chat" }
+      ]
+    },
+    {
+      "id": "event_break1.chat",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "First rough call tonight? You've got the stare. We all get the stare." },
+        { "speaker": "narrator", "text": "Partner slides a coffee across the table. Break-room diplomacy." }
+      ],
+      "next": "event_break1.d2"
+    },
+    {
+      "id": "event_break1.d2",
+      "type": "decision",
+      "prompt": "Partner's watching you.",
+      "choices": [
+        { "id": "event_break1.d2_0", "label": "I'm fine. Mostly.", "next": "event_break1.reply" },
+        { "id": "event_break1.d2_1", "label": "Does it get easier?", "next": "event_break1.reply" },
+        { "id": "event_break1.d2_2", "label": "Nice stare yourself.", "next": "event_break1.reply" }
+      ]
+    },
+    {
+      "id": "event_break1.reply",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "It doesn't get easier. You just get better at ten-minute recoveries." },
+        { "speaker": "partner", "text": "Step one: eat something. Trust the veteran." },
+        { "speaker": "narrator", "text": "Partner heads back. Three minutes left, one humming machine, one thin wallet." }
+      ],
+   

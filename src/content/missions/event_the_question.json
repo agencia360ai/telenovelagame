@@ -1,0 +1,61 @@
+{
+  "schema": "mission@1",
+  "id": "event_the_question",
+  "title": "The Question",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 90,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Fire escape" },
+  "speakers": { "partner": "Partner" },
+  "reward": 5,
+  "initial_variables": { "love": 0, "energy": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_quest.intro",
+  "beats": [
+    {
+      "id": "ev_quest.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Late. The fire escape, two mugs, the city humming below." },
+        { "speaker": "partner", "text": "You came home quiet again. Third time this week." }
+      ],
+      "next": "ev_quest.d1"
+    },
+    {
+      "id": "ev_quest.d1",
+      "type": "decision",
+      "prompt": "They noticed.",
+      "choices": [
+        { "id": "ev_quest.d1_0", "label": "Long shift. Long everything.", "next": "ev_quest.conv2", "effects": { "love": 1 } },
+        { "id": "ev_quest.d1_1", "label": "Quiet? I'm always charming.", "next": "ev_quest.conv2", "effects": { "love": 1 } },
+        { "id": "ev_quest.d1_2", "label": "Say nothing. Sit closer.", "next": "ev_quest.conv2", "effects": { "love": 1, "energy": 1 } }
+      ]
+    },
+    {
+      "id": "ev_quest.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "They don't rush to fill the silence. You respect that in a person." },
+        { "speaker": "partner", "text": "You count sirens, you know. In your sleep. Under your breath." }
+      ],
+      "next": "ev_quest.d2"
+    },
+    {
+      "id": "ev_quest.d2",
+      "type": "decision",
+      "prompt": "Busted.",
+      "choices": [
+        { "id": "ev_quest.d2_0", "label": "Old habit. I count everything.", "next": "ev_quest.pivot", "effects": { "love": 1 } },
+        { "id": "ev_quest.d2_1", "label": "How high did I get?", "next": "ev_quest.pivot", "effects": { "love": 1 } },
+        { "id": "ev_quest.d2_2", "label": "You listen to me sleep?", "next": "ev_quest.pivot", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_quest.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "Somebody should keep track of you for a change." },
+        { "speaker": "narrator", "text": "The city

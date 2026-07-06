@@ -7,7 +7,10 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import Animated, {
   FadeInDown,
@@ -26,12 +29,11 @@ import {
   DISPATCH_OPTIONS,
 } from "../content/calls";
 import { DispatchType } from "../game/types";
-import { resolveVideo, IMAGES, VIDEOS } from "../game/assets";
+import { resolveVideo, VIDEOS } from "../game/assets";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
 import { CutscenePlayer } from "../components/CutscenePlayer";
-import { CinematicImage } from "../components/CinematicImage";
 import { ResultBreakdown } from "../components/ResultBreakdown";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
@@ -178,7 +180,7 @@ export function CallScreen({ navigation, route }: Props) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     // Cap a rank-up with a full-screen celebration — the cinematic "end" beat
     // of the session (peak-end). Falls through to the lobby when no rank-up.
-    if (progress.lastResult?.rankedUp && IMAGES["rank-up"]) {
+    if (progress.lastResult?.rankedUp) {
       audio.playSfx("success");
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setShowRankUp(true);
@@ -365,16 +367,14 @@ export function CallScreen({ navigation, route }: Props) {
         </View>
       )}
 
-      {showRankUp && IMAGES["rank-up"] && (
+      {showRankUp && (
         <View style={StyleSheet.absoluteFill}>
-          <CinematicImage
-            source={IMAGES["rank-up"]}
+          <CutscenePlayer
+            source="pov-promotion"
             tag="PROMOTION"
-            title="PROMOTED"
             caption={`You made ${
               progress.lastResult?.newRankName ?? "the next rank"
             }!`}
-            durationMs={4200}
             onComplete={() => navigation.replace("DispatchLobby")}
           />
         </View>
@@ -391,6 +391,7 @@ export function CallScreen({ navigation, route }: Props) {
           <View style={styles.deployVideoOverlay} />
           <DispatchRadar
             location={call.location}
+            unitId={chosenDispatch ?? undefined}
             unitIcon={
               DISPATCH_OPTIONS.find((o) => o.id === chosenDispatch)?.icon ??
               "🚔"

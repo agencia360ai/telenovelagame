@@ -1,0 +1,54 @@
+{
+  "schema": "mission@1",
+  "id": "event_debt_letter",
+  "title": "The Letter",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 5,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your mailbox" },
+  "speakers": { "neighbor": "Neighbor" },
+  "reward": 5,
+  "initial_variables": { "debt_paid": 0, "debt_missed": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_debt0.intro",
+  "beats": [
+    {
+      "id": "ev_debt0.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Mailbox day. Bills, a pizza menu, and one envelope with the university's crest." },
+        { "speaker": "narrator", "text": "They found your new address. Universities always do." }
+      ],
+      "next": "ev_debt0.d1"
+    },
+    {
+      "id": "ev_debt0.d1",
+      "type": "decision",
+      "prompt": "The envelope waits.",
+      "choices": [
+        { "id": "ev_debt0.d1_0", "label": "Open it right here.", "next": "ev_debt0.read" },
+        { "id": "ev_debt0.d1_1", "label": "Take the stairs first.", "next": "ev_debt0.read" },
+        { "id": "ev_debt0.d1_2", "label": "Sniff it for bad news.", "next": "ev_debt0.read" }
+      ]
+    },
+    {
+      "id": "ev_debt0.read",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You open it by the mailboxes anyway. Suspense is for people with savings." },
+        { "speaker": "narrator", "text": "Installments start this month. Miss them, and the apartment's on the line." },
+        { "speaker": "neighbor", "text": "University crest? My cousin got one of those. He lives in his car now." }
+      ],
+      "next": "ev_debt0.d2"
+    },
+    {
+      "id": "ev_debt0.d2",
+      "type": "decision",
+      "prompt": "The neighbor is waiting.",
+      "choices": [
+        { "id": "ev_debt0.d2_0", "label": "It's just paperwork.", "next": "ev_debt0.hall" },
+        { "id": "ev_debt0.d2_1", "label": "Pray for me.", "next": "ev_debt0.hall" },
+        { "id": "ev_debt0.d2_2", "label": "How's the cousin?", 

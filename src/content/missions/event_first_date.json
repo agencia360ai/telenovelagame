@@ -1,0 +1,51 @@
+{
+  "schema": "mission@1",
+  "id": "event_first_date",
+  "title": "First Date",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 50,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Small restaurant" },
+  "speakers": { "date": "Your Date" },
+  "reward": 5,
+  "initial_variables": { "love": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_date1.intro",
+  "beats": [
+    {
+      "id": "ev_date1.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The reader from the café was there again last week. This time you didn't take your cup to go. Tonight: dinner. A candle in a bottle, the kind of nervous that feels good." },
+        { "speaker": "date", "text": "So — a 911 operator. Do you ever get to say 'what's your emergency' in real life?" }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "got_number" },
+          "lines": [
+            { "speaker": "narrator", "text": "The napkin number turned into a dinner. Small place, a candle in a bottle, the kind of nervous that feels good." },
+            { "speaker": "date", "text": "So — a 911 operator. Do you ever get to say 'what's your emergency' in real life?" }
+          ]
+        },
+        {
+          "when": { "flag": "met_stranger" },
+          "lines": [
+            { "speaker": "narrator", "text": "Three more weird-hour coffees did what the napkin never had to. Tonight: dinner. A candle in a bottle, the kind of nervous that feels good." },
+            { "speaker": "date", "text": "So — a 911 operator. Do you ever get to say 'what's your emergency' in real life?" }
+          ]
+        }
+      ],
+      "next": "ev_date1.d1"
+    },
+    {
+      "id": "ev_date1.d1",
+      "type": "decision",
+      "prompt": "How do you answer?",
+      "choices": [
+        { "id": "ev_date1.d1_0", "label": "Only when someone forgets to hang up. Mostly I just listen.", "next": "ev_date1.conv2", "effects": { "love": 1 } },
+        { "id": "ev_date1.d1_1", "label": "All night. Then I come home and my plants don't answer.", "next": "ev_date1.conv2", "effects": { "love": 1 } },
+        { "id": "ev_date1.d1_2", "label": "You'd be surprised what people confess at 3 a.m.", "next": "ev_date1.conv2", "effects": { "love": 1 } }
+     

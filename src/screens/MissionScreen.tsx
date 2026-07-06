@@ -8,7 +8,10 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, {
@@ -25,8 +28,11 @@ import { RootStackParamList } from "../navigation/AppNavigator";
 import { useDispatchProgress } from "../context/DispatchProgressContext";
 import { useCalendar } from "../context/CalendarContext";
 import { useEconomy } from "../context/EconomyContext";
+import { useFleet } from "../context/FleetContext";
+import { useDispatchStory } from "../context/DispatchStoryContext";
 import {
   getMissionById,
+  getLifeMissionForRank,
   DISPATCH_OPTIONS,
   SPECIAL_UNITS,
 } from "../content/missions";
@@ -37,6 +43,7 @@ import {
   applyPin,
   visiblePins,
   resolveCorrectUnit,
+  resolveNextBeat,
   scoreBonus,
   initRuntime,
 } from "../lib/missions/engine";
@@ -48,22 +55,27 @@ import {
   MissionRuntime,
 } from "../lib/missions/types";
 import { DispatchType } from "../game/types";
-import { resolveVideo, IMAGES, DEPLOY_VIDEOS } from "../game/assets";
+import { resolveVideo, DEPLOY_VIDEOS } from "../game/assets";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
 import { ExcursionMap } from "../components/ExcursionMap";
 import { CutscenePlayer } from "../components/CutscenePlayer";
-import { CinematicImage } from "../components/CinematicImage";
 import { ResultBreakdown } from "../components/ResultBreakdown";
-import { Avatar3D } from "../components/Avatar3D";
-import { MODELS } from "../game/assets";
+import { UnitIcon } from "../components/UnitIcon";
 import { colors } from "../theme/colors";
 import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Mission">;
 
-type Phase = "intro" | "play" | "map" | "dispatch" | "deploying" | "result";
+type Phase =
+  | "intro"
+  | "plotIntro"
+  | "play"
+  | "map"
+  | "dispatch"
+  | "deploying"
+  | "result";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
@@ -73,30 +85,38 @@ const DEPLOY_KEY = "border-runners-intro";
 
 // Persisted flag: the one-off prologue/intro has been played (see BootScreen).
 const INTRO_SEEN_KEY = "dispatch_intro_seen_v1";
+// Cash per correct dispatch scales with rank: $5 as Trainee, $10 at rank 1,
+// $15 at rank 2… — promotions are raises, matching the rising costs (debt
+// installments, dates, unit prices) of the later weeks.
+const CASH_PER_CORRECT_BASE = 5;
+// Chat pacing: each message (narrator included) holds this long before the
+// next message / choices appear — a tap anywhere on the chat skips the wait.
+const LINE_PACE_MS = 2000;
 
 export function MissionScreen({ navigation, route }: Props) {
-  const { missionId, intro: isIntro = false } = route.params;
+  const { missionId, intro: isIntro = false, lifeScene: isLifeScene = false } =
+    route.params;
   const mission = getMissionById(missionId);
   const progress = useDispatchProgress();
   const calendar = useCalendar();
   const economy = useEconomy();
   const insets = useSafeAreaInsets();
+  const fleet = useFleet();
+  const story = useDispatchStory();
   const scrollRef = useRef<ScrollView>(null);
 
   // Capture the week/day label once so it stays stable after the call advances.
   const calendarLabel = useRef(calendar.shortLabel).current;
 
   const introAsset = mission.assets.find((a) => a.role === "intro");
-  // Looping CCTV background for the whole call. Prefer the bundled intro clip:
-  // it loads instantly with no buffering, where the streamed "ambient" URL may
-  // not play on mobile (the CCTV "CONNECTING FEED" fallback covers that case).
+  const ambientAssetKey = mission.assets.find((a) => a.role === "ambient")?.key;
+  // Looping CCTV background for the whole call. Regular calls prefer the intro
+  // clip (bundled = instant); game-plot scenes keep intro and ambient SEPARATE:
+  // the intro plays once on the big opening screen, the ambient loops in chat.
   const ambientKey =
-    introAsset?.key ??
-    mission.assets.find((a) => a.role === "ambient")?.key ??
-    mission.id;
-  const callerAvatar =
-    mission.caller.avatar ??
-    (MODELS["officer"] != null ? "officer" : undefined);
+    (mission.category === "game_plot"
+      ? ambientAssetKey ?? introAsset?.key
+      : introAsset?.key ?? ambientAssetKey) ?? mission.id;
   // The dispatch ("deploying") clip, read from the mission's outcome beat — or
   // an asset declared with role "deploy". Optional: missions without it skip the
   // video and just show the radar over the feed.
@@ -114,11 +134,34 @@ export function MissionScreen({ navigation, route }: Props) {
     );
   const unitOptions = DISPATCH_OPTIONS.filter((o) => units.includes(o.id));
 
-  const [phase, setPhase] = useState<Phase>(introAsset ? "intro" : "play");
-  const [beatId, setBeatId] = useState(mission.start);
-  const [runtime, setRuntime] = useState<MissionRuntime>(() =>
-    initRuntime(mission)
+  // Game-plot scenes open on a large one-shot video with the intro text — the
+  // "intro" asset when declared (e.g. w1's van clip), else the ambient clip.
+  // The ambient then loops behind the dialogue as usual.
+  const hasPlotIntro =
+    mission.category === "game_plot" && Boolean(introAsset ?? ambientAssetKey);
+  const plotIntroKey = introAsset?.key ?? ambientKey;
+  const [phase, setPhase] = useState<Phase>(
+    hasPlotIntro ? "plotIntro" : introAsset ? "intro" : "play"
   );
+  const [beatId, setBeatId] = useState(mission.start);
+  // Seed the runtime with the PERSISTENT story state (past plot & life
+  // decisions) plus the player's real wallet, so this mission's `variants`
+  // and `correct_rules` can react to everything that came before.
+  const [runtime, setRuntime] = useState<MissionRuntime>(() => {
+    const base = initRuntime(mission);
+    return {
+      ...base,
+      variables: { ...base.variables, ...story.variables, cash: fleet.cash },
+      flags: { ...base.flags, ...story.flags },
+    };
+  });
+  // Merge the finished mission's state back into the persistent story (once).
+  const storyCommitted = useRef(false);
+  const commitStory = (rt: MissionRuntime) => {
+    if (storyCommitted.current) return;
+    storyCommitted.current = true;
+    story.merge(rt.variables, rt.flags);
+  };
   const [displayedLines, setDisplayedLines] = useState<MissionLine[]>([]);
   const [showChoices, setShowChoices] = useState(false);
   // A per-beat intro clip played full-screen before the beat's lines (e.g. the
@@ -135,6 +178,8 @@ export function MissionScreen({ navigation, route }: Props) {
 
   const [dispatchTimer, setDispatchTimer] = useState(timeLimit);
   const [chosenDispatch, setChosenDispatch] = useState<DispatchType | null>(null);
+  // Ran out of time on the dispatch screen — no unit was ever sent.
+  const [timedOut, setTimedOut] = useState(false);
   // Deploy plays in two stages: the unit's video CLIP first, then the radar closer.
   const [deployStage, setDeployStage] = useState<"clip" | "radar">("clip");
   const [correctUnit, setCorrectUnit] = useState<DispatchType>("police");
@@ -149,22 +194,51 @@ export function MissionScreen({ navigation, route }: Props) {
   // next options appear after a short beat — instead of waiting on a tap.
   const autoMode = useRef(false);
   const isFirstMission = useRef(progress.callsHandled === 0).current;
+  // Rank-scaled paycheck for a correct dispatch ($5, $10, $15…). Read once at
+  // mount so a mid-call promotion pays out at the rank the call started at.
+  const cashPerCorrect = useRef(
+    CASH_PER_CORRECT_BASE * (progress.rankIndex + 1)
+  ).current;
   // A mission with no dispatch beat is a narrative scene (game_plot / weekend);
   // there we keep narrator lines (they ARE the story) and end with a scene card.
   const isStoryMission = useRef(
     !mission.beats.some((b) => b.type === "dispatch")
   ).current;
+  // Off-duty event scenes are personal moments, not calls — presented without
+  // the LIVE call framing and entered directly after a call (no lobby ring).
+  const isEventMission = mission.category === "event";
 
   const beat = getBeat(mission, beatId);
 
   const flashOpacity = useSharedValue(0);
   const flashStyle = useAnimatedStyle(() => ({ opacity: flashOpacity.value }));
 
+  // Optional chained background: when declared, the ambient clip plays ONCE
+  // and, as soon as it ends, this clip takes over and loops.
+  const ambientNextKey = mission.assets.find(
+    (a) => a.role === "ambient_next"
+  )?.key;
   const player = useVideoPlayer(resolveVideo(ambientKey), (p) => {
-    p.loop = true;
+    p.loop = !ambientNextKey;
     p.muted = true;
     p.play();
   });
+  useEffect(() => {
+    if (!ambientNextKey) return;
+    const sub = player.addListener("playToEnd", () => {
+      try {
+        player.replace(resolveVideo(ambientNextKey));
+        player.loop = true;
+        player.muted = true;
+        player.play();
+      } catch {}
+    });
+    return () => {
+      try {
+        (sub as any)?.remove?.();
+      } catch {}
+    };
+  }, []);
   const deployPlayer = useVideoPlayer(deploySource, (p) => {
     p.loop = false;
     p.muted = true;
@@ -174,10 +248,30 @@ export function MissionScreen({ navigation, route }: Props) {
     audio.stopMusic();
   }, []);
 
+  // Some story beats swap the looping background to their own clip via
+  // `beat.media` (e.g. Week 1's "police rushes in" ending). One-way switch:
+  // beats without media keep whatever's already playing.
+  useEffect(() => {
+    const b = getBeat(mission, beatId);
+    const key = b?.media?.key;
+    if (!key) return;
+    try {
+      player.replace(resolveVideo(key));
+      player.loop = true;
+      player.muted = true;
+      player.play();
+    } catch {}
+  }, [beatId]);
+
   // Pause the looping feed under full-screen overlays so audio doesn't clash.
   useEffect(() => {
     try {
-      if (phase === "intro" || phase === "deploying" || phase === "map")
+      if (
+        phase === "intro" ||
+        phase === "plotIntro" ||
+        phase === "deploying" ||
+        phase === "map"
+      )
         player.pause();
       else player.play();
     } catch {}
@@ -225,16 +319,59 @@ export function MissionScreen({ navigation, route }: Props) {
     }
   }, [phase, deployStage]);
 
-  // Dispatch countdown.
+  // Dispatch countdown. Hitting 0 means no dispatch was sent: the call is
+  // marked failed (wrong window, "There was no dispatch sent") with zero XP
+  // and zero cash — recordResult(false, 0) awards nothing.
   useEffect(() => {
     if (phase !== "dispatch") return;
-    if (dispatchTimer <= 0) return;
+    if (dispatchTimer <= 0) {
+      setTimedOut(true);
+      setChosenDispatch(null);
+      commitStory(runtime);
+      progress.recordResult(false, 0, 0);
+      calendar.completeMission(mission.id, false);
+      setPhase("result");
+      scrollSoon();
+      setTimeout(() => {
+        audio.playSfx("fail");
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }, 200);
+      return;
+    }
     const t = setTimeout(() => setDispatchTimer((s) => s - 1), 1000);
     return () => clearTimeout(t);
   }, [phase, dispatchTimer]);
 
   const scrollSoon = () =>
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
+
+  // Paced reveal machinery: one pending step at a time (next line, choices, or
+  // next beat). A tap on the chat fires the pending step immediately.
+  const paceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const paceAction = useRef<(() => void) | null>(null);
+  const paceStep = (fn: () => void, delay: number) => {
+    if (paceTimer.current) clearTimeout(paceTimer.current);
+    paceAction.current = fn;
+    paceTimer.current = setTimeout(() => {
+      paceTimer.current = null;
+      paceAction.current = null;
+      fn();
+    }, delay);
+  };
+  const paceSkip = () => {
+    if (!paceTimer.current || !paceAction.current) return;
+    clearTimeout(paceTimer.current);
+    const fn = paceAction.current;
+    paceTimer.current = null;
+    paceAction.current = null;
+    fn();
+  };
+  useEffect(
+    () => () => {
+      if (paceTimer.current) clearTimeout(paceTimer.current);
+    },
+    []
+  );
 
   // Load a beat when we enter it (during the "play" phase). A dispatch beat
   // switches us into the dispatch phase instead of showing lines.
@@ -249,15 +386,36 @@ export function MissionScreen({ navigation, route }: Props) {
         setBeatCutscene({ key: b.media.key, caption: asset?.caption, beat: b, rt });
         return;
       }
+      // Beat-scoped background: any other beat.media swaps the looping clip
+      // (e.g. each finale branch firing its own POV video). Keys that aren't
+      // registered (or are empty placeholders) are skipped silently.
+      if (b.media?.key && b.media.role !== "intro") {
+        try {
+          const src = resolveVideo(b.media.key);
+          const playable =
+            typeof src === "number" ||
+            (typeof src === "string" && /^https?:/.test(src));
+          if (playable) {
+            player.replace(src);
+            player.loop = true;
+            player.muted = true;
+            player.play();
+          }
+        } catch {}
+      }
       // Narrative ending: a mission that reaches an `outcome` beat during play
       // (i.e. without a dispatch step) is a story scene — resolve it as complete.
       if (b.type === "outcome") {
         if (!narrativeDone.current) {
           narrativeDone.current = true;
+          commitStory(rt);
           if (isIntro) {
             // One-off intro (prologue): don't touch progress or the calendar —
             // just remember it's been seen so it won't replay on next launch.
             AsyncStorage.setItem(INTRO_SEEN_KEY, "1").catch(() => {});
+          } else if (isLifeScene) {
+            // Personal-life scene (rank-up follow-up): standalone, so it must not
+            // award progress or advance the calendar.
           } else {
             progress.recordResult(true, mission.reward, 0);
             calendar.completeMission(mission.id, true);
@@ -299,25 +457,33 @@ export function MissionScreen({ navigation, route }: Props) {
         (l) => isStoryMission || l.speaker !== "narrator"
       );
 
-      // Dialogue auto-plays — no tap-to-continue. Reveal this beat's line(s),
-      // then advance on a timer so the chat reads at a natural pace. The player
-      // only taps for the things that matter: decision choices and dispatch.
-      if (lines.length > 0) {
-        setDisplayedLines((prev) => [...prev, ...lines]);
-        setRevealIndex(lines.length);
-      } else {
-        setRevealIndex(0);
-      }
+      // Dialogue auto-plays ONE MESSAGE AT A TIME: each line (narrator too)
+      // holds ~2s before the next line / choices / next beat, so nothing
+      // scrolls away unread. A tap on the chat skips the current wait.
       setShowChoices(false);
-      if (b.type === "decision") {
-        // Let the line land, then surface the choices.
-        setTimeout(() => {
+      const finish = () => {
+        if (b.type === "decision") {
           setShowChoices(true);
           scrollSoon();
-        }, lines.length > 0 ? 1000 : 300);
-      } else if (b.next) {
-        // Hold ~1s before the next message so the chat doesn't dump at once.
-        setTimeout(() => goToBeat(b.next), 1000);
+        } else {
+          // Conditional routing (next_rules) lets accumulated decisions steer
+          // the path — e.g. the finale fanning out into its endings.
+          const nextId = resolveNextBeat(b, rt);
+          if (nextId) goToBeat(nextId);
+        }
+      };
+      if (lines.length > 0) {
+        const step = (i: number) => {
+          setDisplayedLines((prev) => [...prev, lines[i]]);
+          setRevealIndex(i + 1);
+          scrollSoon();
+          if (i + 1 < lines.length) paceStep(() => step(i + 1), LINE_PACE_MS);
+          else paceStep(finish, LINE_PACE_MS);
+        };
+        step(0);
+      } else {
+        setRevealIndex(0);
+        paceStep(finish, 300);
       }
       scrollSoon();
     },
@@ -350,7 +516,23 @@ export function MissionScreen({ navigation, route }: Props) {
       );
       return;
     }
+    // Cash-priced option (off-duty events): spend from the earned wallet.
+    const cashCost = choice.cash_cost ?? 0;
+    if (cashCost > 0 && !fleet.spendCash(cashCost)) {
+      audio.playSfx("fail");
+      Alert.alert(
+        "Not enough cash",
+        `This costs $${cashCost}. Earn cash by resolving calls correctly.`
+      );
+      return;
+    }
     if (cost > 0) economy.spend(cost);
+
+    // Reserved effect `cash`: positive deltas pay REAL money into the wallet
+    // (e.g. taking the envelope). The wallet is the source of truth — the
+    // runtime copy only feeds conditions and is never persisted.
+    const cashEffect = choice.effects?.cash ?? 0;
+    if (cashEffect > 0) fleet.earnCash(cashEffect);
 
     audio.playSfx("tap");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -399,17 +581,24 @@ export function MissionScreen({ navigation, route }: Props) {
     }, 650);
   };
 
-  const handleDispatch = (choice: DispatchType) => {
+  const doDispatch = (choice: DispatchType) => {
     audio.playSfx("dispatch");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+
+    // Consume a vehicle (managed units) and advance the unlock progress.
+    fleet.onDispatch(choice);
 
     const elapsed = (Date.now() - dispatchStartTime.current) / 1000;
     const correct = choice === correctUnit;
     const reward = mission.reward + (correct ? scoreBonus(runtime) : 0);
+    commitStory(runtime);
 
     setChosenDispatch(choice);
     progress.recordResult(correct, reward, elapsed);
     calendar.completeMission(mission.id, correct);
+
+    // Reward cash for a correct dispatch (spent on units; gems stay premium).
+    if (correct) fleet.earnCash(cashPerCorrect);
 
     // "No dispatch needed": nothing rolls out, so skip the deploy clip AND the
     // radar closer — go straight to the result card.
@@ -427,13 +616,16 @@ export function MissionScreen({ navigation, route }: Props) {
       return;
     }
 
-    // Swap in the reusable deploy clip for the chosen unit ONLY when it differs
-    // from the one already loaded — otherwise replacing with the same source
-    // forces a reload and flashes the video for a frame.
+    // Pick the deploy clip: the mission's own tailored clip (deploy_media) wins
+    // when the player dispatched the correct unit; otherwise the reusable
+    // per-unit clip. Only replace when it differs from the preloaded source —
+    // replacing with the same source forces a reload and flashes the video.
     try {
-      const deployKey = DEPLOY_VIDEOS[choice] ?? DEPLOY_KEY;
-      const nextSrc = resolveVideo(deployKey);
-      const currentSrc = resolveVideo(DEPLOY_KEY);
+      const unitKey = DEPLOY_VIDEOS[choice] ?? DEPLOY_KEY;
+      const nextSrc = resolveVideo(
+        correct && deployKey ? deployKey : unitKey
+      );
+      const currentSrc = deploySource ?? resolveVideo(DEPLOY_KEY);
       if (nextSrc !== currentSrc) {
         deployPlayer.replace(nextSrc);
       }
@@ -443,8 +635,27 @@ export function MissionScreen({ navigation, route }: Props) {
       withTiming(0.3, { duration: 80 }),
       withTiming(0, { duration: 300 })
     );
+    // A siren rolls only for the emergency vehicles (not special units).
+    if (choice === "police" || choice === "firefighters" || choice === "ambulance") {
+      audio.playRandomSiren();
+    }
     setDeployStage("clip");
     setPhase("deploying");
+  };
+
+  // Fleet gate — units are unlock-only now. Locked units explain the unlock;
+  // anything unlocked can always be dispatched.
+  const handleDispatch = (choice: DispatchType) => {
+    if (fleet.canDispatch(choice)) {
+      doDispatch(choice);
+      return;
+    }
+    audio.playSfx("fail");
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Alert.alert(
+      "Unit locked",
+      `${fleet.labelOf(choice)} unlocks after ${fleet.unlockCallsOf(choice)} calls (${fleet.callsCompleted}/${fleet.unlockCallsOf(choice)}).`
+    );
   };
 
   const handleDeployComplete = () => {
@@ -464,17 +675,38 @@ export function MissionScreen({ navigation, route }: Props) {
   const handleNextMission = () => {
     audio.playSfx("tap");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    if (progress.lastResult?.rankedUp && IMAGES["rank-up"]) {
+    // A life scene is itself a rank-up follow-up, so don't loop the badge.
+    if (!isLifeScene && progress.lastResult?.rankedUp) {
       audio.playSfx("success");
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setShowRankUp(true);
       return;
+    }
+    // Off-duty event next in the day? Flow straight into the personal scene —
+    // no lobby, no ringing phone: it shouldn't feel like another call.
+    if (!isIntro && !isLifeScene) {
+      const next = calendar.getNextMission();
+      const nextMission = next ? getMissionById(next.missionId) : null;
+      if (nextMission?.category === "event") {
+        navigation.replace("Mission", { missionId: nextMission.id });
+        return;
+      }
     }
     // After the prologue (intro), play the "NIGHT SHIFT" shot before the menu.
     navigation.replace(isIntro ? "IntroCinematic" : "DispatchLobby");
   };
 
   const isDecisionPrompt = beat?.type === "decision" && showChoices;
+
+  // Upcoming fleet unlock — surfaced on the case-completed / result screen.
+  const upcomingUnit = fleet.nextUnlock();
+
+  // Intro text for the plot-intro screen: the start beat's first narrator line.
+  const plotIntroText = hasPlotIntro
+    ? getBeat(mission, mission.start)?.lines?.find(
+        (l) => l.speaker === "narrator"
+      )?.text
+    : undefined;
 
   const senderName = (speaker: string) => {
     if (speaker === "operator") return "You (Dispatch)";
@@ -488,14 +720,15 @@ export function MissionScreen({ navigation, route }: Props) {
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + sizes.spacing.sm }]}>
         <View style={styles.headerLeft}>
-          <View style={styles.liveDot} />
-          <Text style={styles.callType}>{mission.caller.type}</Text>
+          {!isEventMission && <View style={styles.liveDot} />}
+          <Text style={styles.callType}>
+            {isEventMission ? "OFF DUTY" : "LIVE"}
+          </Text>
         </View>
         <View style={styles.headerRight}>
           <View style={styles.shiftPill}>
             <Text style={styles.shiftText}>{calendarLabel}</Text>
           </View>
-          <Text style={styles.location}>{mission.caller.location}</Text>
         </View>
       </View>
 
@@ -525,21 +758,6 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
 
         <View style={styles.callerPortrait}>
-          {callerAvatar ? (
-            <Avatar3D
-              source={callerAvatar}
-              mode="bust"
-              size={64}
-              rimColor={0xf59e0b}
-              bgColor={0x0d1117}
-            />
-          ) : (
-            <View style={styles.callerInitial}>
-              <Text style={styles.callerInitialText}>
-                {mission.caller.name.charAt(0)}
-              </Text>
-            </View>
-          )}
           <Text style={styles.callerName}>{mission.caller.name}</Text>
         </View>
         <View style={styles.difficultyTag}>
@@ -547,7 +765,8 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
       </View>
 
-      <View style={styles.chatArea}>
+      {/* Tapping the chat skips the current message wait (paced reveal). */}
+      <Pressable style={styles.chatArea} onPress={paceSkip}>
         <ScrollView
           ref={scrollRef}
           style={styles.chatScroll}
@@ -613,18 +832,35 @@ export function MissionScreen({ navigation, route }: Props) {
           {isDecisionPrompt && beat?.choices && (
             <Animated.View entering={FadeInDown} style={styles.decisionSection}>
               <Text style={styles.decisionPrompt}>{beat.prompt}</Text>
+              {/* Mini cash wallet — shown when some option costs cash. */}
+              {beat.choices.some((c) => (c.cash_cost ?? 0) > 0) && (
+                <View style={styles.cashWallet}>
+                  <Text style={styles.cashWalletText}>💵 ${fleet.cash}</Text>
+                </View>
+              )}
               {beat.choices.map((c) => {
                 const cost = c.gem_cost ?? 0;
+                const cashCost = c.cash_cost ?? 0;
+                const cantAfford = cashCost > 0 && fleet.cash < cashCost;
                 return (
                   <Pressable
                     key={c.id}
-                    style={[styles.choiceBtn, c.premium && styles.choiceBtnPremium]}
+                    style={[
+                      styles.choiceBtn,
+                      c.premium && styles.choiceBtnPremium,
+                      cantAfford && styles.choiceBtnDim,
+                    ]}
                     onPress={() => handleChoice(c)}
                   >
                     <Text style={styles.choiceLabel}>{c.label}</Text>
                     {cost > 0 && (
                       <View style={styles.gemPill}>
                         <Text style={styles.gemPillText}>💎 {cost}</Text>
+                      </View>
+                    )}
+                    {cashCost > 0 && (
+                      <View style={[styles.cashPill, cantAfford && styles.cashPillDim]}>
+                        <Text style={styles.cashPillText}>💵 ${cashCost}</Text>
                       </View>
                     )}
                   </Pressable>
@@ -645,16 +881,28 @@ export function MissionScreen({ navigation, route }: Props) {
                 </Text>
               )}
               <View style={styles.dispatchRow}>
-                {unitOptions.map((opt) => (
-                  <Pressable
-                    key={opt.id}
-                    style={styles.dispatchBtn}
-                    onPress={() => handleDispatch(opt.id)}
-                  >
-                    <Text style={styles.dispatchIcon}>{opt.icon}</Text>
-                    <Text style={styles.dispatchLabel}>{opt.label}</Text>
-                  </Pressable>
-                ))}
+                {unitOptions.map((opt) => {
+                  const locked = !fleet.isUnlocked(opt.id);
+                  return (
+                    <Pressable
+                      key={opt.id}
+                      style={[styles.dispatchBtn, locked && styles.dispatchBtnDisabled]}
+                      onPress={() => handleDispatch(opt.id)}
+                    >
+                      {locked ? (
+                        <Text style={styles.dispatchIcon}>🔒</Text>
+                      ) : (
+                        <UnitIcon kind={opt.id} emoji={opt.icon} size={26} />
+                      )}
+                      <Text style={styles.dispatchLabel}>{opt.label}</Text>
+                      {locked && (
+                        <Text style={styles.dispatchLocked}>
+                          {fleet.callsCompleted}/{fleet.unlockCallsOf(opt.id)}
+                        </Text>
+                      )}
+                    </Pressable>
+                  );
+                })}
               </View>
               {progress.currentStreak >= 2 && (
                 <Text style={styles.streakHint}>
@@ -668,7 +916,11 @@ export function MissionScreen({ navigation, route }: Props) {
             <Animated.View entering={FadeInDown.duration(400)} style={styles.sceneBox}>
               <Text style={styles.sceneIcon}>✓</Text>
               <Text style={styles.sceneTitle}>
-                {isIntro ? "WELCOME TO THE FLOOR" : "CASE COMPLETED"}
+                {isIntro
+                  ? "WELCOME TO THE FLOOR"
+                  : isEventMission
+                  ? "OFF DUTY"
+                  : "CASE COMPLETED"}
               </Text>
               <Text style={styles.sceneSub}>
                 {isIntro
@@ -684,16 +936,36 @@ export function MissionScreen({ navigation, route }: Props) {
               correctDispatch={correctUnit}
               correctExplanation={explanation}
               chosenDispatch={chosenDispatch ?? undefined}
+              cashEarned={cashPerCorrect}
+              timedOut={timedOut}
             />
           )}
+
+          {/* Progress toward the next fleet unlock (not on off-duty scenes,
+              and not on the player's very first call). */}
+          {phase === "result" && upcomingUnit && !isEventMission && fleet.callsCompleted > 1 && (
+            <Animated.View
+              entering={FadeIn.delay(500).duration(400)}
+              style={styles.nextUnlockBox}
+            >
+              <Text style={styles.nextUnlockText}>
+                NEXT UNLOCK · {upcomingUnit.icon} {upcomingUnit.label} —{" "}
+                {fleet.callsCompleted}/{upcomingUnit.unlock} calls
+              </Text>
+            </Animated.View>
+          )}
         </ScrollView>
-      </View>
+      </Pressable>
 
       {phase === "result" && (
         <View style={[styles.bottomBar, { paddingBottom: insets.bottom + sizes.spacing.md }]}>
           <Pressable style={styles.nextCallBtn} onPress={handleNextMission}>
             <Text style={styles.nextCallText}>
-              {isIntro ? "ENTER DISPATCH ▸" : "NEXT CALL ▸"}
+              {isIntro
+                ? "ENTER DISPATCH ▸"
+                : isEventMission
+                ? "BACK TO THE DESK ▸"
+                : "NEXT CALL ▸"}
             </Text>
           </Pressable>
         </View>
@@ -707,6 +979,31 @@ export function MissionScreen({ navigation, route }: Props) {
             tag={`INCOMING · ${mission.caller.location}`}
             onComplete={() => setPhase("play")}
           />
+        </View>
+      )}
+
+      {/* Game-plot opening: the scene clip fills ~3/4 of the screen and plays
+          ONCE with the story's intro text below; it then loops as the ambient
+          background behind the dialogue. */}
+      {phase === "plotIntro" && (
+        <View style={[StyleSheet.absoluteFill, styles.plotIntroWrap]}>
+          <View style={styles.plotIntroVideo}>
+            <CutscenePlayer
+              source={plotIntroKey}
+              tag={`STORY · ${mission.caller.location}`}
+              onComplete={() => setPhase("play")}
+            />
+          </View>
+          <View style={styles.plotIntroTextWrap}>
+            {plotIntroText ? (
+              <Animated.Text
+                entering={FadeIn.delay(400).duration(600)}
+                style={styles.plotIntroText}
+              >
+                {plotIntroText}
+              </Animated.Text>
+            ) : null}
+          </View>
         </View>
       )}
 
@@ -735,15 +1032,25 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
       )}
 
-      {showRankUp && IMAGES["rank-up"] && (
+      {showRankUp && (
         <View style={StyleSheet.absoluteFill}>
-          <CinematicImage
-            source={IMAGES["rank-up"]}
+          <CutscenePlayer
+            source="pov-promotion"
             tag="PROMOTION"
-            title="PROMOTED"
             caption={`You made ${progress.lastResult?.newRankName ?? "the next rank"}!`}
-            durationMs={4200}
-            onComplete={() => navigation.replace("DispatchLobby")}
+            onComplete={() => {
+              // After the promotion badge, play this rank's personal-life scene
+              // (bully-to-respect arc) if there is one; otherwise back to lobby.
+              const life = getLifeMissionForRank(progress.rankIndex);
+              if (life) {
+                navigation.replace("Mission", {
+                  missionId: life.id,
+                  lifeScene: true,
+                });
+              } else {
+                navigation.replace("DispatchLobby");
+              }
+            }}
           />
         </View>
       )}
@@ -785,6 +1092,7 @@ export function MissionScreen({ navigation, route }: Props) {
           )}
           <DispatchRadar
             location={mission.caller.location}
+            unitId={chosenDispatch ?? undefined}
             unitIcon={unitOptions.find((o) => o.id === chosenDispatch)?.icon ?? "🚔"}
             unitLabel={
               unitOptions.find((o) => o.id === chosenDispatch)?.label.replace("\n", " ") ??
@@ -1025,6 +1333,26 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   gemPillText: { color: colors.dispatch.amber, fontSize: 12, fontWeight: "800" },
+  choiceBtnDim: { opacity: 0.55 },
+  cashPill: {
+    backgroundColor: "rgba(34, 197, 94, 0.15)",
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  cashPillDim: { backgroundColor: "rgba(100, 116, 139, 0.15)" },
+  cashPillText: { color: colors.dispatch.answer, fontSize: 12, fontWeight: "800" },
+  cashWallet: {
+    alignSelf: "flex-end",
+    backgroundColor: "rgba(34, 197, 94, 0.1)",
+    borderColor: "rgba(34, 197, 94, 0.3)",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    marginBottom: 2,
+  },
+  cashWalletText: { color: colors.dispatch.answer, fontSize: 12, fontWeight: "900" },
   dispatchSection: { marginTop: sizes.spacing.md, alignItems: "center", gap: sizes.spacing.md },
   dispatchPrompt: { color: colors.dispatch.amber, fontSize: sizes.font.lg, fontWeight: "900", letterSpacing: 2, textAlign: "center" },
   dispatchRow: { flexDirection: "row", gap: 12 },
@@ -1038,32 +1366,63 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
   },
+  dispatchBtnDisabled: { opacity: 0.4 },
   dispatchIcon: { fontSize: 32 },
   dispatchLabel: { color: colors.dispatch.text, fontSize: 11, fontWeight: "900", letterSpacing: 1, textAlign: "center" },
+  // Exhausted unit: the button shows the price and buys + sends in one tap.
+  // Game-plot opening screen (video ~3/4 + intro text below)
+  plotIntroWrap: {
+    backgroundColor: "#000",
+    zIndex: 10,
+  },
+  plotIntroVideo: {
+    height: SCREEN_HEIGHT * 0.75,
+    backgroundColor: "#070A12",
+    overflow: "hidden",
+  },
+  plotIntroTextWrap: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: sizes.spacing.lg,
+  },
+  plotIntroText: {
+    color: colors.dispatch.text,
+    fontSize: sizes.font.md,
+    fontStyle: "italic",
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  nextUnlockBox: {
+    marginTop: 10,
+    alignSelf: "center",
+    backgroundColor: "rgba(245, 158, 11, 0.08)",
+    borderColor: "rgba(245, 158, 11, 0.25)",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+  },
+  nextUnlockText: {
+    color: colors.dispatch.amber,
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  dispatchLocked: { color: colors.dispatch.amber, fontSize: 10, fontWeight: "800" },
   streakHint: { color: "#FF6B6B", fontSize: 12, fontWeight: "700" },
   sceneBox: {
-    marginTop: 12,
-    borderRadius: 16,
-    padding: 20,
+    marginTop: 8,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     alignItems: "center",
-    gap: 6,
+    gap: 3,
     backgroundColor: "rgba(34, 197, 94, 0.12)",
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.dispatch.answer,
   },
-  sceneIcon: { fontSize: 36, color: "#fff", fontWeight: "900" },
-  sceneTitle: { fontSize: 20, fontWeight: "900", color: "#fff", letterSpacing: 1 },
-  sceneSub: { fontSize: 15, fontWeight: "800", color: colors.dispatch.answer },
+  sceneIcon: { fontSize: 24, color: "#fff", fontWeight: "900" },
+  sceneTitle: { fontSize: 15, fontWeight: "900", color: "#fff", letterSpacing: 1 },
+  sceneSub: { fontSize: 12, fontWeight: "800", color: colors.dispatch.answer },
   bottomBar: { paddingVertical: sizes.spacing.md, alignItems: "center" },
-  hintText: { color: colors.dispatch.textMuted, fontSize: sizes.font.sm, fontWeight: "700", letterSpacing: 1 },
-  nextInlineBtn: {
-    borderColor: colors.dispatch.cyan,
-    borderWidth: 1,
-    borderRadius: sizes.radius.md,
-    paddingHorizontal: 28,
-    paddingVertical: 10,
-  },
-  nextInlineText: { color: colors.dispatch.cyan, fontSize: sizes.font.sm, fontWeight: "900", letterSpacing: 2 },
-  nextCallBtn: { backgroundColor: colors.dispatch.cyan, borderRadius: sizes.radius.md, paddingHorizontal: 32, paddingVertical: 14 },
-  nextCallText: { color: "#0A0E1A", fontSize: sizes.font.md, fontWeight: "900", letterSpacing: 2 },
-});
+  hintText: { color: colors.dispatch.textMuted, fontSize: sizes.font.sm, fontWeight: "

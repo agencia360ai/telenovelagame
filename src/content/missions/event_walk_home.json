@@ -1,0 +1,54 @@
+{
+  "schema": "mission@1",
+  "id": "event_walk_home",
+  "title": "The Walk Home",
+  "version": "1.1.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "event",
+  "order": 60,
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Night streets" },
+  "speakers": { "date": "Your Date" },
+  "reward": 5,
+  "initial_variables": { "love": 0, "energy": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "ev_walk.intro",
+  "beats": [
+    {
+      "id": "ev_walk.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Second date, no restaurant. Just the long way home through night streets." },
+        { "speaker": "narrator", "text": "Streets you usually only hear about through a headset." },
+        { "speaker": "date", "text": "So this is your city off the clock. Quieter than you make it sound." }
+      ],
+      "next": "ev_walk.d1"
+    },
+    {
+      "id": "ev_walk.d1",
+      "type": "decision",
+      "prompt": "The city, off the headset.",
+      "choices": [
+        { "id": "ev_walk.d1_0", "label": "'Quiet nights are my favorite calls.'", "next": "ev_walk.conv2", "effects": { "love": 1 } },
+        { "id": "ev_walk.d1_1", "label": "'Give it an hour.'", "next": "ev_walk.conv2", "effects": { "love": 1 } },
+        { "id": "ev_walk.d1_2", "label": "'It's better with company.'", "next": "ev_walk.conv2", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_walk.conv2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "date", "text": "Fair warning: I overshare on walks. It's the low lighting." },
+        { "speaker": "date", "text": "Dropped out of college twice, finished the third time. Your turn eventually." },
+        { "speaker": "narrator", "text": "They trade a story for nothing, easy as breath." }
+      ],
+      "next": "ev_walk.d2"
+    },
+    {
+      "id": "ev_walk.d2",
+      "type": "decision",
+      "prompt": "Their turn done. Yours pending.",
+      "choices": [
+        { "id": "ev_walk.d2_0", "label": "'Third time's very you.'", "next": "ev_walk.pivot", "effects": { "love": 1 } },
+        { "id": "ev_walk.d2_1", "label": "'What changed the third time?'", "next": "ev_walk.pivot", "effects": { 
