@@ -57,4 +57,59 @@
       "id": "ev_cross.bus",
       "type": "dialogue",
       "lines": [
-        { "speaker": "stranger", "text": "Try the dumpling stall by the stadium. Tell them the be
+        { "speaker": "stranger", "text": "Try the dumpling stall by the stadium. Tell them the bench sent you." },
+        { "speaker": "narrator", "text": "Headlights swing the corner. The bus kneels, doors open, fare box patient." }
+      ],
+      "next": "ev_cross.d3"
+    },
+    {
+      "id": "ev_cross.d3",
+      "type": "decision",
+      "prompt": "Where to?",
+      "choices": [
+        {
+          "id": "ev_cross.d3_0",
+          "label": "Cross town. Night market.",
+          "cash_cost": 6,
+          "next": "ev_cross.fin_market",
+          "effects": { "energy": 1, "loose_thread": 1, "case_file": 1 },
+          "set_flags": { "crosstown_night": true }
+        },
+        {
+          "id": "ev_cross.d3_1",
+          "label": "Stay on your block.",
+          "next": "ev_cross.fin_home",
+          "effects": { "energy": 1 }
+        }
+      ]
+    },
+    {
+      "id": "ev_cross.fin_market",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Good food, loud music, streets you've only seen as addresses." },
+        { "speaker": "narrator", "text": "The dumplings are real. So is the crowd. You almost relax." }
+      ],
+      "next": "ev_cross.vans"
+    },
+    {
+      "id": "ev_cross.vans",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Then, past the stadium: vans. Parked in a row, engines running at midnight." },
+        { "speaker": "narrator", "text": "You memorize a plate without deciding to. Old habit. New thread." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_cross.fin_home",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Your block, your corner store, your couch." },
+        { "speaker": "narrator", "text": "The city stays a voice on a wire. Tonight, that's enough." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

@@ -52,4 +52,57 @@
       "choices": [
         { "id": "ev_friend1.d2_0", "label": "One shift at a time.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } },
         { "id": "ev_friend1.d2_1", "label": "You had my number too.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } },
-      
+        { "id": "ev_friend1.d2_2", "label": "Doesn't matter. You texted.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_friend1.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The typing bubble thinks about that for a long time." },
+        { "speaker": "friend", "text": "Okay, enough nostalgia over text. There's a burger place near your station. Now?" },
+        { "speaker": "narrator", "text": "The city already took most of your voice tonight. A little is left." }
+      ],
+      "next": "ev_friend1.d3"
+    },
+    {
+      "id": "ev_friend1.d3",
+      "type": "decision",
+      "prompt": "An old friend, out of nowhere.",
+      "choices": [
+        { "id": "ev_friend1.d3_0", "label": "Grab a bite — my treat.", "cash_cost": 8, "next": "ev_friend1.fin_bite", "effects": { "bond": 2, "energy": 1 }, "set_flags": { "friend_close": true } },
+        { "id": "ev_friend1.d3_1", "label": "Reply: 'Soon, I promise.'", "next": "ev_friend1.fin_soon", "effects": { "bond": 1 } },
+        { "id": "ev_friend1.d3_2", "label": "Leave it on read. Too tired.", "next": "ev_friend1.fin_read", "effects": { "bond": -1 }, "set_flags": { "friend_ignored": true } }
+      ]
+    },
+    {
+      "id": "ev_friend1.fin_bite",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Two burgers, one hour, five years covered." },
+        { "speaker": "friend", "text": "Same laugh. Knew it." },
+        { "speaker": "narrator", "text": "You'd forgotten what off-duty felt like. It feels like this." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_friend1.fin_soon",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "'Soon.' A thumbs up comes back." },
+        { "speaker": "narrator", "text": "People say 'soon' a lot in this job. Some of them mean it." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_friend1.fin_read",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The message sits there, read and unanswered." },
+        { "speaker": "narrator", "text": "The city takes your voice all night. Sometimes there's none left over." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

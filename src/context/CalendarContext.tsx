@@ -333,4 +333,6 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
 
 export function useCalendar(): CalendarApi {
   const ctx = useContext(CalendarContext);
-  if (!ctx) throw new Error(
+  if (!ctx) throw new Error("useCalendar must be used within CalendarProvider");
+  return ctx;
+}

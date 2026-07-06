@@ -253,10 +253,15 @@ export function MissionScreen({ navigation, route }: Props) {
   // beats without media keep whatever's already playing.
   useEffect(() => {
     const b = getBeat(mission, beatId);
-    const key = b?.media?.key;
-    if (!key) return;
+    if (!b?.media?.key || b.media.role === "intro") return; // intro = cutscene
     try {
-      player.replace(resolveVideo(key));
+      const src = resolveVideo(b.media.key);
+      // Unregistered / empty placeholder keys are skipped silently.
+      const playable =
+        typeof src === "number" ||
+        (typeof src === "string" && /^https?:/.test(src));
+      if (!playable) return;
+      player.replace(src);
       player.loop = true;
       player.muted = true;
       player.play();
@@ -379,29 +384,13 @@ export function MissionScreen({ navigation, route }: Props) {
     (b: MissionBeat, rt: MissionRuntime) => {
       // A beat may declare an intro clip to play once, full-screen, before its
       // content (e.g. the destination "video del lugar" reached from a map beat).
-      // Show it, then re-enter this beat to reveal its lines/choices.
+      // Show it, then re-enter this beat to reveal its lines/choices. Ambient
+      // beat.media swaps are handled by the [beatId] effect above.
       if (b.media?.role === "intro" && cutscenePlayedFor.current !== b.id) {
         cutscenePlayedFor.current = b.id;
         const asset = mission.assets.find((a) => a.key === b.media?.key);
         setBeatCutscene({ key: b.media.key, caption: asset?.caption, beat: b, rt });
         return;
-      }
-      // Beat-scoped background: any other beat.media swaps the looping clip
-      // (e.g. each finale branch firing its own POV video). Keys that aren't
-      // registered (or are empty placeholders) are skipped silently.
-      if (b.media?.key && b.media.role !== "intro") {
-        try {
-          const src = resolveVideo(b.media.key);
-          const playable =
-            typeof src === "number" ||
-            (typeof src === "string" && /^https?:/.test(src));
-          if (playable) {
-            player.replace(src);
-            player.loop = true;
-            player.muted = true;
-            player.play();
-          }
-        } catch {}
       }
       // Narrative ending: a mission that reaches an `outcome` beat during play
       // (i.e. without a dispatch step) is a story scene — resolve it as complete.

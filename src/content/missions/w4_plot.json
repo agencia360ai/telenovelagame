@@ -158,3 +158,94 @@
       "variants": [
         {
           "when": { "flag": "w3_filed_away" },
+          "lines": [
+            { "speaker": "narrator", "text": "Nobody knows anything. No camera caught it." },
+            { "speaker": "narrator", "text": "You filed the vans away like the system wanted." },
+            { "speaker": "narrator", "text": "Maybe this is the system saying thank you." }
+          ]
+        }
+      ],
+      "next": "w4_plot.v3"
+    },
+    {
+      "id": "w4_plot.v3",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You sit with it a long minute. The building hums." },
+        { "speaker": "narrator", "text": "This is the offer. There won't be a cleaner one." }
+      ],
+      "next": "w4_plot.d2"
+    },
+    {
+      "id": "w4_plot.d2",
+      "type": "decision",
+      "prompt": "You understand the offer now — and that no one's hand is on it.",
+      "choices": [
+        {
+          "id": "w4_plot.d2_0",
+          "label": "Turn it in anyway.",
+          "next": "w4_plot.c_log",
+          "effects": {
+            "integrity": 2,
+            "case_file": 2
+          },
+          "set_flags": {
+            "envelope_reported": true
+          }
+        },
+        {
+          "id": "w4_plot.d2_1",
+          "label": "Keep it.",
+          "next": "w4_plot.c_take",
+          "effects": {
+            "cash": 60,
+            "don": 2,
+            "pawn": 2
+          },
+          "set_flags": {
+            "took_envelope": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "w4_plot.c_log",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You bag it. Photograph it. Log it." },
+        { "speaker": "narrator", "text": "Your hands shake the whole time." }
+      ],
+      "next": "w4_plot.fin_log"
+    },
+    {
+      "id": "w4_plot.fin_log",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Now there's paper that says someone paid you to look away." },
+        { "speaker": "narrator", "text": "And that you said no." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w4_plot.c_take",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The cash goes in your jacket. Warm. Heavy. Easy." }
+      ],
+      "next": "w4_plot.fin_take"
+    },
+    {
+      "id": "w4_plot.fin_take",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You just learned the price of looking away." },
+        { "speaker": "narrator", "text": "So did whoever gave it to you." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

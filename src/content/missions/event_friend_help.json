@@ -68,4 +68,58 @@
       "type": "decision",
       "prompt": "The ask is out there now.",
       "choices": [
-        { "id": "ev_help.d2_0", "label": "'How long has this been going?'", 
+        { "id": "ev_help.d2_0", "label": "'How long has this been going?'", "next": "ev_help.pivot", "effects": { "bond": 1 } },
+        { "id": "ev_help.d2_1", "label": "'Asking isn't the dumb part.'", "next": "ev_help.pivot", "effects": { "bond": 1 } },
+        { "id": "ev_help.d2_2", "label": "'Friday for sure?'", "next": "ev_help.pivot" }
+      ]
+    },
+    {
+      "id": "ev_help.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "friend", "text": "Friday. Paycheck clears, first thing back is yours." },
+        { "speaker": "narrator", "text": "You've heard steady promises of both kinds. This sounds like the real one." }
+      ],
+      "next": "ev_help.d3"
+    },
+    {
+      "id": "ev_help.d3",
+      "type": "decision",
+      "prompt": "You know what it costs to ask.",
+      "choices": [
+        { "id": "ev_help.d3_0", "label": "Send the twenty, no questions.", "cash_cost": 20, "next": "ev_help.fin_lend", "effects": { "bond": 2 } },
+        { "id": "ev_help.d3_1", "label": "Send half and a home-cooked meal.", "cash_cost": 10, "next": "ev_help.fin_half", "effects": { "bond": 2 } },
+        { "id": "ev_help.d3_2", "label": "'Money's tight — but talk to me.'", "next": "ev_help.fin_talk", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_help.fin_lend",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Sent. No lecture attached." },
+        { "speaker": "friend", "text": "Thank you. Really." },
+        { "speaker": "narrator", "text": "Three words, heavier than they look." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_help.fin_half",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Half the money and a full plate." },
+        { "speaker": "narrator", "text": "You eat together on a Tuesday, and the rent stops being the point." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_help.fin_talk",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You can't fix Friday, so you spend an hour fixing everything else." },
+        { "speaker": "narrator", "text": "It's not twenty bucks. It's not nothing, either." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

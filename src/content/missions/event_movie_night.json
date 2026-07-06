@@ -56,4 +56,61 @@
     },
     {
       "id": "ev_movie.pivot",
-      "type":
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "Excellent taste. Suspicious, but excellent." },
+        { "speaker": "narrator", "text": "The disc spins up. The fridge holds condiments and a theory." },
+        { "speaker": "partner", "text": "Okay, movie's picked. Food situation?" }
+      ],
+      "next": "ev_movie.d3"
+    },
+    {
+      "id": "ev_movie.d3",
+      "type": "decision",
+      "prompt": "Host mode: activate.",
+      "choices": [
+        { "id": "ev_movie.d3_0", "label": "Order the good takeout.", "cash_cost": 12, "next": "ev_movie.fin_takeout", "effects": { "love": 1, "energy": 1 } },
+        { "id": "ev_movie.d3_1", "label": "Cook whatever the fridge allows.", "next": "ev_movie.fin_cook", "effects": { "love": 2 } },
+        { "id": "ev_movie.d3_2", "label": "Popcorn. Dinner of champions.", "cash_cost": 3, "next": "ev_movie.fin_popcorn", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_movie.fin_takeout",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "You have a 'good takeout' place. That's basically a personality." },
+        { "speaker": "narrator", "text": "The noodles arrive hot. The couch dent, it turns out, fits two." }
+      ],
+      "next": "ev_movie.coda"
+    },
+    {
+      "id": "ev_movie.fin_cook",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "You made THIS out of three condiments and rice?" },
+        { "speaker": "narrator", "text": "Dispatcher improvisation, kitchen edition. They ask for seconds." }
+      ],
+      "next": "ev_movie.coda"
+    },
+    {
+      "id": "ev_movie.fin_popcorn",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Two bowls, extra butter, zero pretension." },
+        { "speaker": "partner", "text": "I'm stealing your bowl. This is a test of character." },
+        { "speaker": "narrator", "text": "You allow it. This is serious, then." }
+      ],
+      "next": "ev_movie.coda"
+    },
+    {
+      "id": "ev_movie.coda",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The movie is forgettable, which is fine. Nobody's watching it." },
+        { "speaker": "narrator", "text": "The credits roll on two people who missed the ending on purpose." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

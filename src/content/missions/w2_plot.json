@@ -125,4 +125,108 @@
       "type": "dialogue",
       "lines": [
         { "speaker": "narrator", "text": "A real tip. Your authority to dispatch." },
-        { "speaker": "narrator", "text":
+        { "speaker": "narrator", "text": "One move. Pick it." }
+      ],
+      "next": "w2_plot.d1"
+    },
+    {
+      "id": "w2_plot.d1",
+      "type": "decision",
+      "prompt": "A real tip. Your authority to dispatch.",
+      "choices": [
+        {
+          "id": "w2_plot.d1_0",
+          "label": "Send a welfare check now.",
+          "next": "w2_plot.da1",
+          "effects": {
+            "integrity": 1,
+            "case_file": 1
+          },
+          "set_flags": {
+            "w2_unit_sent": true
+          }
+        },
+        {
+          "id": "w2_plot.d1_1",
+          "label": "Write a complete report.",
+          "next": "w2_plot.rp1",
+          "effects": {
+            "case_file": 1,
+            "loose_thread": 1
+          },
+          "set_flags": {
+            "w2_documented": true
+          }
+        },
+        {
+          "id": "w2_plot.d1_2",
+          "label": "Keep him on the line.",
+          "next": "w2_plot.tr1",
+          "effects": {
+            "loose_thread": 1
+          },
+          "set_flags": {
+            "w2_traced": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "w2_plot.da1",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You call it in flat and fast. Stadium perimeter, unknown threat." },
+        { "speaker": "narrator", "text": "Nobody questions your voice. That's new." }
+      ],
+      "next": "w2_plot.fin_dispatch"
+    },
+    {
+      "id": "w2_plot.fin_dispatch",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The car's already rolling. You'll write it up after." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w2_plot.rp1",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You type while the memory's still warm." },
+        { "speaker": "narrator", "text": "Times. Active cameras. Antennas near possible locations." }
+      ],
+      "next": "w2_plot.fin_report"
+    },
+    {
+      "id": "w2_plot.fin_report",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You get it all down. Paper doesn't forget." },
+        { "speaker": "narrator", "text": "Somewhere, that matters. It has to." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w2_plot.tr1",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You stall. Slow questions, soft voice, trace running." },
+        { "speaker": "narrator", "text": "Thirty seconds from a fix." }
+      ],
+      "next": "w2_plot.fin_trace"
+    },
+    {
+      "id": "w2_plot.fin_trace",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The voice notices what you plot, and hangs up." },
+        { "speaker": "narrator", "text": "Twenty-eight seconds. Not enough. Never enough." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

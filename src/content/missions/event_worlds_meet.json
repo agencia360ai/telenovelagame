@@ -59,4 +59,52 @@
       "id": "ev_meet.pivot",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Three phones come out. There is, appare
+        { "speaker": "narrator", "text": "Three phones come out. There is, apparently, photographic evidence." },
+        { "speaker": "friend", "text": "We were saving these for a wedding, honestly." },
+        { "speaker": "partner", "text": "I need to see everything." }
+      ],
+      "next": "ev_meet.d3"
+    },
+    {
+      "id": "ev_meet.d3",
+      "type": "decision",
+      "prompt": "The table looks at you.",
+      "choices": [
+        { "id": "ev_meet.d3_0", "label": "Cover the whole table. Distraction!", "cash_cost": 18, "next": "ev_meet.fin_cover", "effects": { "bond": 1, "love": 1 } },
+        { "id": "ev_meet.d3_1", "label": "Tell the story yourself — worse version.", "next": "ev_meet.fin_story", "effects": { "bond": 2, "love": 1 } },
+        { "id": "ev_meet.d3_2", "label": "Deny everything. All lies.", "next": "ev_meet.fin_deny", "effects": { "bond": 1 } }
+      ]
+    },
+    {
+      "id": "ev_meet.fin_cover",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "'Dinner's on me' buys exactly eleven seconds of mercy." },
+        { "speaker": "partner", "text": "Worth every cent, I'm sure. Now — the rope?" },
+        { "speaker": "narrator", "text": "Money well wasted. The table votes to keep your partner." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_meet.fin_story",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "You got stuck WHERE on the rope climb?" },
+        { "speaker": "narrator", "text": "You tell it worse than it was, because the table deserves that." },
+        { "speaker": "narrator", "text": "Two worlds, one laugh. It fits." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_meet.fin_deny",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "'Slander,' you declare, as three phones produce the evidence." },
+        { "speaker": "partner", "text": "I'm saving this one for later." },
+        { "speaker": "narrator", "text": "You're doomed, happily." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

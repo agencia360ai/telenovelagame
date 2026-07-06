@@ -59,4 +59,76 @@
       "type": "decision",
       "prompt": "Answer the group chat?",
       "choices": [
-        { "id": "w1_weekend.d2_0", "label": "'In.'
+        { "id": "w1_weekend.d2_0", "label": "'In.' People are good for you.", "next": "w1_weekend.conv3", "effects": { "compliance": 1 } },
+        { "id": "w1_weekend.d2_1", "label": "'Maybe.' Keep the options open.", "next": "w1_weekend.conv3" },
+        { "id": "w1_weekend.d2_2", "label": "'Can't. Plans.' You have no plans.", "next": "w1_weekend.conv3", "effects": { "loose_thread": 1 } }
+      ]
+    },
+    {
+      "id": "w1_weekend.conv3",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You send it and set the phone face-down. Small mercy." },
+        { "speaker": "narrator", "text": "The afternoon burns off slow. Laundry. A walk you don't remember taking." }
+      ],
+      "next": "w1_weekend.pivot"
+    },
+    {
+      "id": "w1_weekend.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Evening comes anyway. The notebook sits on the desk, patient as a lawyer." },
+        { "speaker": "narrator", "text": "Outside: the whole city, off the clock. Inside: you, alone with the pattern." }
+      ],
+      "next": "w1_weekend.d3"
+    },
+    {
+      "id": "w1_weekend.d3",
+      "type": "decision",
+      "prompt": "Alone with the pattern. What do you do?",
+      "choices": [
+        {
+          "id": "w1_weekend.d3_0",
+          "label": "Start a private life — dates, go outside, everything.",
+          "next": "w1_weekend.fin_off",
+          "effects": {
+            "compliance": 1,
+            "pawn": 1
+          }
+        },
+        {
+          "id": "w1_weekend.d3_1",
+          "label": "I should focus on what happened.",
+          "next": "w1_weekend.fin_note",
+          "effects": {
+            "loose_thread": 2,
+            "case_file": 1,
+            "integrity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w1_weekend.fin_off",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You close the laptop, untie the necktie, pour a drink." },
+        { "speaker": "narrator", "text": "Off duty. The pattern can wait. Patterns always say they'll wait." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w1_weekend.fin_note",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You open the notebook and write down everything you remember." },
+        { "speaker": "narrator", "text": "Street names. Times. The careful voices. It fills three pages too easily." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

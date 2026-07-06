@@ -73,4 +73,48 @@
       "id": "ev_gift.pivot",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text":
+        { "speaker": "narrator", "text": "You put the book down. Pick it up again. The clerk sighs." },
+        { "speaker": "narrator", "text": "Thursday is coming either way. The register waits. So does your rent." }
+      ],
+      "next": "ev_gift.d3"
+    },
+    {
+      "id": "ev_gift.d3",
+      "type": "decision",
+      "prompt": "Thursday is coming either way.",
+      "choices": [
+        { "id": "ev_gift.d3_0", "label": "Buy the nice edition.", "cash_cost": 25, "next": "ev_gift.fin_buy", "effects": { "love": 2 } },
+        { "id": "ev_gift.d3_1", "label": "Frame the original napkin instead.", "cash_cost": 6, "next": "ev_gift.fin_napkin", "effects": { "love": 2 } },
+        { "id": "ev_gift.d3_2", "label": "Write them a letter. Just words.", "next": "ev_gift.fin_letter", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_gift.fin_buy",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Thursday: they unwrap it and freeze." },
+        { "speaker": "narrator", "text": "They read the map inside the cover for a full minute. Worth every shift." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_gift.fin_napkin",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The phone-number napkin, framed in cheap wood. They laugh, then don't." },
+        { "speaker": "narrator", "text": "It goes on the wall by the door, where keys live. The important spot." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_gift.fin_letter",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "A page and a half, in your careful report-writing hand. Weird hours, burnt espresso." },
+        { "speaker": "narrator", "text": "They keep it in a jacket pocket. You catch them re-reading it twice." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

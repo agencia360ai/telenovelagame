@@ -50,4 +50,54 @@
       "prompt": "How much do you give away?",
       "choices": [
         { "id": "ev_coffee.d2_0", "label": "911 dispatch. I run TOWARD the something.", "next": "ev_coffee.pivot", "effects": { "love": 2 } },
-        { "id": "ev_coffee.d2_1", "label": "Little of both. It's a long story and cold coffee.", "next": 
+        { "id": "ev_coffee.d2_1", "label": "Little of both. It's a long story and cold coffee.", "next": "ev_coffee.pivot", "effects": { "love": 1 } },
+        { "id": "ev_coffee.d2_2", "label": "Let's just say I'm good in a crisis.", "next": "ev_coffee.pivot", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_coffee.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "stranger", "text": "Then I'm safe. Good to know." },
+        { "speaker": "narrator", "text": "The barista calls the next order and doesn't call yours. The moment stretches, warm, waiting on you." }
+      ],
+      "next": "ev_coffee.d3"
+    },
+    {
+      "id": "ev_coffee.d3",
+      "type": "decision",
+      "prompt": "So — what now?",
+      "choices": [
+        { "id": "ev_coffee.d3_0", "label": "Buy their next coffee.", "cash_cost": 5, "next": "ev_coffee.fin_buy", "effects": { "love": 2, "energy": 1 }, "set_flags": { "met_stranger": true, "got_number": true } },
+        { "id": "ev_coffee.d3_1", "label": "'Great book. Terrible espresso.' Stay and talk.", "next": "ev_coffee.fin_talk", "effects": { "love": 1, "energy": 1 }, "set_flags": { "met_stranger": true } },
+        { "id": "ev_coffee.d3_2", "label": "Nod politely and take your cup to go.", "next": "ev_coffee.fin_go" }
+      ]
+    },
+    {
+      "id": "ev_coffee.fin_buy",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "stranger", "text": "Okay, burnt espresso tastes better free." },
+        { "speaker": "narrator", "text": "You trade a smile and a phone number scribbled on a napkin. The walk home feels shorter than the map says it is." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_coffee.fin_talk",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Twenty minutes become forty — the book, the city, the espresso. No numbers exchanged, but this café keeps weird hours, and so do you both. You'll be back tomorrow. So will they." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_coffee.fin_go",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You take the cup and the exit. Through the window, the reader turns a page. Maybe next time — you tell yourself, and almost believe it." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

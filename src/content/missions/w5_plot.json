@@ -215,4 +215,132 @@
           "id": "w5_plot.j_d2_0",
           "label": "Go on record.",
           "next": "w5_plot.j6",
-          "effects": { "integrity": 2, "case_file"
+          "effects": { "integrity": 2, "case_file": 1 },
+          "set_flags": { "ending_justice": true }
+        },
+        {
+          "id": "w5_plot.j_d2_1",
+          "label": "Stay a ghost.",
+          "next": "w5_plot.j6",
+          "effects": { "integrity": 1, "loose_thread": 1 },
+          "set_flags": { "ending_justice": true }
+        }
+      ]
+    },
+    {
+      "id": "w5_plot.j6",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Somebody had to build the quiet. One logged call at a time." },
+        { "speaker": "narrator", "text": "It was you." }
+      ],
+      "next": "w5_plot.epilogue"
+    },
+
+    {
+      "id": "w5_plot.p1",
+      "type": "dialogue",
+      "media": { "key": "pov-ending-pawn", "role": "ambient" },
+      "lines": [
+        { "speaker": "narrator", "text": "You work the night like any shift. Fast. Clean. By the book the building wrote." }
+      ],
+      "next": "w5_plot.p2"
+    },
+    {
+      "id": "w5_plot.p2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "22:47. Sirens you didn't send cross the district." },
+        { "speaker": "narrator", "text": "The queue never says why." }
+      ],
+      "next": "w5_plot.p3"
+    },
+    {
+      "id": "w5_plot.p3",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Morning: 'isolated incident, swiftly contained.' Three lines — wrong in the exact places the system needs." }
+      ],
+      "next": "w5_plot.p_d1"
+    },
+    {
+      "id": "w5_plot.p_d1",
+      "type": "decision",
+      "prompt": "The paper is still in your hands.",
+      "choices": [
+        {
+          "id": "w5_plot.p_d1_0",
+          "label": "Read it twice.",
+          "next": "w5_plot.p4",
+          "effects": { "loose_thread": 1 }
+        },
+        {
+          "id": "w5_plot.p_d1_1",
+          "label": "Turn the page.",
+          "next": "w5_plot.p4",
+          "effects": { "compliance": 1 }
+        }
+      ]
+    },
+    {
+      "id": "w5_plot.p4",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The coffee tastes the same. The desk hums the same." },
+        { "speaker": "narrator", "text": "Something in you doesn't." }
+      ],
+      "next": "w5_plot.p_d2"
+    },
+    {
+      "id": "w5_plot.p_d2",
+      "type": "decision",
+      "prompt": "Late is not never.",
+      "choices": [
+        {
+          "id": "w5_plot.p_d2_0",
+          "label": "Start your own file.",
+          "next": "w5_plot.p5",
+          "effects": { "case_file": 2, "integrity": 1 },
+          "set_flags": { "ending_pawn": true }
+        },
+        {
+          "id": "w5_plot.p_d2_1",
+          "label": "Close the tab.",
+          "next": "w5_plot.p5",
+          "effects": { "compliance": 2, "pawn": 1 },
+          "set_flags": { "ending_pawn": true }
+        }
+      ]
+    },
+    {
+      "id": "w5_plot.p5",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Nobody thanks you. Nobody blames you." },
+        { "speaker": "narrator", "text": "The machine hums on — and you're its cleanest part." }
+      ],
+      "next": "w5_plot.epilogue"
+    },
+
+    {
+      "id": "w5_plot.epilogue",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The stadium empties. The city keeps most of its secrets — but it knows your voice now." }
+      ],
+      "next": "w5_plot.epilogue2"
+    },
+    {
+      "id": "w5_plot.epilogue2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Whatever kind of dispatcher you became tonight: the line rings again tomorrow. It always does." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

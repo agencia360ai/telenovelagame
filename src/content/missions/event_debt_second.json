@@ -86,4 +86,56 @@
         },
         {
           "id": "ev_debt2.d3_1",
-          "label
+          "label": "Catch up on everything.",
+          "cash_cost": 35,
+          "next": "ev_debt2.fin_catchup",
+          "effects": { "debt_paid": 2, "debt_missed": -1 }
+        },
+        {
+          "id": "ev_debt2.d3_2",
+          "label": "Skip it.",
+          "next": "ev_debt2.fin_missed",
+          "effects": { "debt_missed": 1 },
+          "set_flags": { "apartment_at_risk": true }
+        }
+      ]
+    },
+    {
+      "id": "ev_debt2.fin_paid",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Paid. You eat cheap for a few days and call it a diet." },
+        { "speaker": "narrator", "text": "The apartment doesn't thank you. It doesn't have to — it stays." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_debt2.fin_catchup",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Everything, plus fees. The red banner disappears." },
+        { "speaker": "narrator", "text": "For one night the account is clean and the wallet is very light." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_debt2.fin_missed",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Skipped. The portal logs it without comment." },
+        { "speaker": "narrator", "text": "Machines don't threaten. They schedule." }
+      ],
+      "variants": [
+        {
+          "when": { "var": "debt_missed", "op": ">=", "value": 2 },
+          "lines": [
+            { "speaker": "narrator", "text": "Two missed now. The next letter won't be a letter." },
+            { "speaker": "narrator", "text": "It'll be yellow, on the door, where the whole hallway can read it." }
+          ]
+        }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

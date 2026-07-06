@@ -148,4 +148,102 @@
       "id": "w3_plot.c_dispatch",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "A
+        { "speaker": "narrator", "text": "A unit rushes toward the scene, lights off, as asked." },
+        { "speaker": "narrator", "text": "You hold the caller on the line and wait." }
+      ],
+      "next": "w3_plot.fin_dispatch"
+    },
+    {
+      "id": "w3_plot.c_statement",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "License plates. Vehicle details. Times, down to the minute." },
+        { "speaker": "narrator", "text": "By the time you finish, one van is gone." }
+      ],
+      "next": "w3_plot.d2"
+    },
+    {
+      "id": "w3_plot.d2",
+      "type": "decision",
+      "prompt": "Final move on the tip.",
+      "choices": [
+        {
+          "id": "w3_plot.d2_0",
+          "label": "Dispatch anyway. Paperwork later.",
+          "next": "w3_plot.c_dispatch2",
+          "effects": {
+            "integrity": 1,
+            "case_file": 1,
+            "compliance": -1
+          },
+          "set_flags": {
+            "w3_unit_sent": true
+          }
+        },
+        {
+          "id": "w3_plot.d2_1",
+          "label": "File it the only way allowed.",
+          "next": "w3_plot.c_soft",
+          "effects": {
+            "compliance": 1,
+            "pawn": 1,
+            "don": 1
+          },
+          "set_flags": {
+            "w3_filed_away": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "w3_plot.c_dispatch2",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You send the car late and log it later." },
+        { "speaker": "narrator", "text": "Somebody will ask about the gap. Let them." }
+      ],
+      "next": "w3_plot.fin_dispatch"
+    },
+    {
+      "id": "w3_plot.fin_dispatch",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The unit reports back: a vehicle full of Stadium Merchandise." },
+        { "speaker": "narrator", "text": "All legal. All boxed. All wrong somehow." }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "w2_documented" },
+          "lines": [
+            { "speaker": "narrator", "text": "The unit reports back: a vehicle full of Stadium Merchandise." },
+            { "speaker": "narrator", "text": "Your Week 2 notes put the antennas near the stadium too." },
+            { "speaker": "narrator", "text": "That's twice now. Twice is a pattern." }
+          ]
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w3_plot.c_soft",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The form has no box for vans at 3 a.m." },
+        { "speaker": "narrator", "text": "You pick the closest lie: routine activity, no unit required." }
+      ],
+      "next": "w3_plot.fin_soft"
+    },
+    {
+      "id": "w3_plot.fin_soft",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You open a case for your supervisor." },
+        { "speaker": "narrator", "text": "It lands on a desk that never calls back." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

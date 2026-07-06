@@ -51,4 +51,57 @@
       "prompt": "Their turn done. Yours pending.",
       "choices": [
         { "id": "ev_walk.d2_0", "label": "'Third time's very you.'", "next": "ev_walk.pivot", "effects": { "love": 1 } },
-        { "id": "ev_walk.d2_1", "label": "'What changed the third time?'", "next": "ev_walk.pivot", "effects": { 
+        { "id": "ev_walk.d2_1", "label": "'What changed the third time?'", "next": "ev_walk.pivot", "effects": { "love": 1 } },
+        { "id": "ev_walk.d2_2", "label": "Just walk and listen.", "next": "ev_walk.pivot", "effects": { "energy": 1 } }
+      ]
+    },
+    {
+      "id": "ev_walk.pivot",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Then a corner. Your steps slow without asking permission." },
+        { "speaker": "date", "text": "You went quiet just there. Rough call once?" },
+        { "speaker": "narrator", "text": "They noticed. Of course they noticed." }
+      ],
+      "next": "ev_walk.d3"
+    },
+    {
+      "id": "ev_walk.d3",
+      "type": "decision",
+      "prompt": "They noticed.",
+      "choices": [
+        { "id": "ev_walk.d3_0", "label": "Tell the truth — a little.", "next": "ev_walk.fin_open", "effects": { "love": 2 } },
+        { "id": "ev_walk.d3_1", "label": "'Long story. Another night.'", "next": "ev_walk.fin_later", "effects": { "love": 1 } },
+        { "id": "ev_walk.d3_2", "label": "Change the subject with a joke.", "next": "ev_walk.fin_joke" }
+      ]
+    },
+    {
+      "id": "ev_walk.fin_open",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You tell it plainly, no drama. They don't flinch, don't pity." },
+        { "speaker": "narrator", "text": "They just move a half step closer for the rest of the walk." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_walk.fin_later",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "date", "text": "Deal. I collect long stories." },
+        { "speaker": "narrator", "text": "A promise shaped like a door left open." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_walk.fin_joke",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The joke lands, the laugh is real, and the corner stays yours." },
+        { "speaker": "narrator", "text": "Some walls take longer than others." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

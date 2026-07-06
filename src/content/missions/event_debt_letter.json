@@ -51,4 +51,64 @@
       "choices": [
         { "id": "ev_debt0.d2_0", "label": "It's just paperwork.", "next": "ev_debt0.hall" },
         { "id": "ev_debt0.d2_1", "label": "Pray for me.", "next": "ev_debt0.hall" },
-        { "id": "ev_debt0.d2_2", "label": "How's the cousin?", 
+        { "id": "ev_debt0.d2_2", "label": "How's the cousin?", "next": "ev_debt0.hall" }
+      ]
+    },
+    {
+      "id": "ev_debt0.hall",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "neighbor", "text": "Hang in there. If you move out, I call dibs on the parking spot." },
+        { "speaker": "narrator", "text": "Comforting, in the way a fire alarm is." }
+      ],
+      "next": "ev_debt0.math"
+    },
+    {
+      "id": "ev_debt0.math",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Upstairs, you run the numbers twice. Same answer both times." },
+        { "speaker": "narrator", "text": "Rent, shifts, groceries, and now this. The kitchen feels smaller." }
+      ],
+      "next": "ev_debt0.d3"
+    },
+    {
+      "id": "ev_debt0.d3",
+      "type": "decision",
+      "prompt": "Your monthly math just changed.",
+      "choices": [
+        {
+          "id": "ev_debt0.d3_0",
+          "label": "Pin it to the fridge.",
+          "next": "ev_debt0.fin_plan",
+          "set_flags": { "debt_active": true }
+        },
+        {
+          "id": "ev_debt0.d3_1",
+          "label": "Call and argue the interest.",
+          "next": "ev_debt0.fin_call",
+          "set_flags": { "debt_active": true }
+        }
+      ]
+    },
+    {
+      "id": "ev_debt0.fin_plan",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "It goes on the fridge, next to the shift schedule." },
+        { "speaker": "narrator", "text": "Two papers that own your life now. At least they're organized." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_debt0.fin_call",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Forty minutes on hold to hear 'non-negotiable', said very kindly." },
+        { "speaker": "narrator", "text": "The installments stand. You pin the letter up anyway. Arguing was free." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

@@ -107,4 +107,96 @@
     {
       "id": "w1_plot.r2",
       "type": "dialogue",
-      "li
+      "lines": [
+        { "speaker": "narrator", "text": "The ping lands on Calder Street. Then the signal simply stops." },
+        { "speaker": "narrator", "text": "Phones don't do that on their own." }
+      ],
+      "next": "w1_plot.v4"
+    },
+    {
+      "id": "w1_plot.v4",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Calder Street. No unit assigned. No supervisor awake." },
+        { "speaker": "narrator", "text": "Just you and a dead line." }
+      ],
+      "next": "w1_plot.d1"
+    },
+    {
+      "id": "w1_plot.d1",
+      "type": "decision",
+      "prompt": "The line just died. What do you do?",
+      "choices": [
+        {
+          "id": "w1_plot.d1_0",
+          "label": "Call the number back.",
+          "next": "w1_plot.cb1",
+          "effects": {
+            "integrity": 1,
+            "case_file": 1,
+            "compliance": -1
+          },
+          "set_flags": {
+            "w1_called_back": true
+          }
+        },
+        {
+          "id": "w1_plot.d1_1",
+          "label": "Send a Police Car.",
+          "next": "w1_plot.p1",
+          "effects": {
+            "compliance": 1,
+            "pawn": 1
+          },
+          "set_flags": {
+            "w1_police_sent": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "w1_plot.cb1",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Against procedure. You dial anyway." },
+        { "speaker": "narrator", "text": "One ring. Two." }
+      ],
+      "next": "w1_plot.fin_callback"
+    },
+    {
+      "id": "w1_plot.fin_callback",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Straight to a dead tone — the line's been pulled." },
+        { "speaker": "narrator", "text": "You write the address down anyway. Calder Street." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w1_plot.p1",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You key the dispatch. By the book, every word." },
+        { "speaker": "narrator", "text": "A patrol turns toward Calder Street." }
+      ],
+      "next": "w1_plot.fin_police"
+    },
+    {
+      "id": "w1_plot.fin_police",
+      "type": "dialogue",
+      "media": {
+        "type": "video",
+        "key": "plot-w1-resolution"
+      },
+      "lines": [
+        { "speaker": "narrator", "text": "The Police rushes in." },
+        { "speaker": "narrator", "text": "The house is dark. The van is already gone." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

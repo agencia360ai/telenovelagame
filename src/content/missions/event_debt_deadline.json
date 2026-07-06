@@ -87,4 +87,54 @@
           "id": "ev_debt3.d3_0",
           "label": "Pay the installment.",
           "cash_cost": 25,
-          "next": "ev
+          "next": "ev_debt3.fin_cleared",
+          "effects": { "debt_paid": 1 },
+          "set_flags": { "debt_cleared": true }
+        },
+        {
+          "id": "ev_debt3.d3_1",
+          "label": "Pay EVERYTHING you owe.",
+          "cash_cost": 45,
+          "next": "ev_debt3.fin_all",
+          "effects": { "debt_paid": 2, "debt_missed": -2 },
+          "set_flags": { "debt_cleared": true }
+        },
+        {
+          "id": "ev_debt3.d3_2",
+          "label": "You can't pay.",
+          "next": "ev_debt3.fin_lost",
+          "effects": { "debt_missed": 1 },
+          "set_flags": { "apartment_lost": true }
+        }
+      ]
+    },
+    {
+      "id": "ev_debt3.fin_cleared",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "PAID — the semester's plan, closed. The apartment is yours, every scuffed meter." },
+        { "speaker": "narrator", "text": "You stand in the kitchen a while, just because you can." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_debt3.fin_all",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "All of it, fees included. The zero looks fake. You screenshot it." },
+        { "speaker": "narrator", "text": "Some trophies are just receipts." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_debt3.fin_lost",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You box what matters in two trips. A friend's couch, for now." },
+        { "speaker": "narrator", "text": "The city keeps calling all night. It only cares that you answer." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

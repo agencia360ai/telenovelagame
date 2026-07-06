@@ -69,4 +69,58 @@
       "id": "ev_month.pivot",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "They laugh into their coffee. The window light does its thing." }
+        { "speaker": "narrator", "text": "They laugh into their coffee. The window light does its thing." },
+        { "speaker": "partner", "text": "I think a month deserves something. Your call, operator." },
+        { "speaker": "narrator", "text": "The flower stand outside. The window table. The espresso machine, hissing." }
+      ],
+      "next": "ev_month.d3"
+    },
+    {
+      "id": "ev_month.d3",
+      "type": "decision",
+      "prompt": "Mark the month.",
+      "choices": [
+        { "id": "ev_month.d3_0", "label": "Flowers from the stand outside.", "cash_cost": 10, "next": "ev_month.fin_flowers", "effects": { "love": 2 } },
+        { "id": "ev_month.d3_1", "label": "Claim 'your' table by the window, forever.", "next": "ev_month.fin_table", "effects": { "love": 2 } },
+        { "id": "ev_month.d3_2", "label": "'It deserves… more burnt espresso.'", "cash_cost": 5, "next": "ev_month.fin_espresso", "effects": { "love": 1 } }
+      ]
+    },
+    {
+      "id": "ev_month.fin_flowers",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The flower stand guy says 'the usual?' You've been planning this a week." },
+        { "speaker": "partner", "text": "I'm carrying these home like a trophy. Don't look at me." }
+      ],
+      "next": "ev_month.coda"
+    },
+    {
+      "id": "ev_month.fin_table",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You write 'RESERVED — weird hours only' on a napkin. Prop it on the window table." },
+        { "speaker": "narrator", "text": "The barista laminates it the next day. It's official, then." }
+      ],
+      "next": "ev_month.coda"
+    },
+    {
+      "id": "ev_month.fin_espresso",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "Two burnt espressos. To bad coffee and good timing." },
+        { "speaker": "narrator", "text": "Paper cups touch like champagne glasses. A siren passes — not yours tonight." }
+      ],
+      "next": "ev_month.coda"
+    },
+    {
+      "id": "ev_month.coda",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "partner", "text": "Same time next month?" },
+        { "speaker": "narrator", "text": "You don't have to answer. You both already know." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

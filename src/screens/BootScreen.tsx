@@ -203,4 +203,9 @@ const styles = StyleSheet.create({
     gap: sizes.spacing.sm,
   },
   loaderText: {
-    color: color
+    color: colors.dispatch.textMuted,
+    fontSize: sizes.font.xs,
+    letterSpacing: 1.5,
+    fontWeight: "700",
+  },
+});

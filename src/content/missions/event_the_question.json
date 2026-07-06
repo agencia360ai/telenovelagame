@@ -58,4 +58,50 @@
       "type": "dialogue",
       "lines": [
         { "speaker": "partner", "text": "Somebody should keep track of you for a change." },
-        { "speaker": "narrator", "text": "The city
+        { "speaker": "narrator", "text": "The city hums. They set their mug down, careful, deliberate." },
+        { "speaker": "partner", "text": "The job takes pieces of you some nights. Where do they go?" },
+        { "speaker": "narrator", "text": "Nobody's ever asked it like that." }
+      ],
+      "next": "ev_quest.d3"
+    },
+    {
+      "id": "ev_quest.d3",
+      "type": "decision",
+      "prompt": "Where do the pieces go?",
+      "choices": [
+        { "id": "ev_quest.d3_0", "label": "Answer honestly. All of it.", "next": "ev_quest.fin_open", "effects": { "love": 2, "energy": 1 } },
+        { "id": "ev_quest.d3_1", "label": "'They come back when I'm here.'", "next": "ev_quest.fin_sweet", "effects": { "love": 2 } },
+        { "id": "ev_quest.d3_2", "label": "'I'm fine. Really.'", "next": "ev_quest.fin_fine", "effects": { "love": -1 } }
+      ]
+    },
+    {
+      "id": "ev_quest.fin_open",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You talk until the streetlights buzz off. Voices you couldn't save. Ones you did." },
+        { "speaker": "partner", "text": "Thank you for trusting me with them." },
+        { "speaker": "narrator", "text": "They hold your coffee so your hands are free to shake. It helps." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_quest.fin_sweet",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "It's the truest thing you've said all week. You both know it." },
+        { "speaker": "narrator", "text": "The city hums. Nobody moves for a long time." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "ev_quest.fin_fine",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "'Fine.' The word every operator knows means the opposite." },
+        { "speaker": "narrator", "text": "They let it go, this time. The space between you keeps its exact width." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}
