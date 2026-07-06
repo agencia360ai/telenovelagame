@@ -420,11 +420,12 @@ export function MissionScreen({ navigation, route }: Props) {
         return;
       }
       if (b.type === "map") {
-        // Interactive displacement: show the map and wait for the player to pick
-        // a destination pin (handled by handlePinSelect). No lines auto-play.
+        // Interactive displacement: DON'T jump to the map yet. Stay in "play" so
+        // the preceding dialogue stays readable and surface a "Go to map" button
+        // (handleGoToMap) — the player opens the map when they're done reading.
         autoMode.current = false;
         setShowChoices(false);
-        setPhase("map");
+        scrollSoon();
         return;
       }
       if (b.type === "dispatch") {
@@ -552,6 +553,13 @@ export function MissionScreen({ navigation, route }: Props) {
     } else {
       setTimeout(proceed, 1000);
     }
+  };
+
+  const handleGoToMap = () => {
+    audio.playSfx("tap");
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setPhase("map");
+    scrollSoon();
   };
 
   const handlePinSelect = (pin: MapPinChoice) => {
@@ -855,6 +863,14 @@ export function MissionScreen({ navigation, route }: Props) {
                   </Pressable>
                 );
               })}
+            </Animated.View>
+          )}
+
+          {phase === "play" && beat?.type === "map" && (
+            <Animated.View entering={FadeInDown} style={styles.mapCtaWrap}>
+              <Pressable style={styles.mapCtaBtn} onPress={handleGoToMap}>
+                <Text style={styles.mapCtaLabel}>{beat.map_cta ?? "Go to map"}</Text>
+              </Pressable>
             </Animated.View>
           )}
 
@@ -1289,6 +1305,26 @@ const styles = StyleSheet.create({
   noteLabel: { color: colors.dispatch.amber },
   bubbleText: { color: colors.dispatch.text, fontSize: sizes.font.md, lineHeight: 21 },
   decisionSection: { marginTop: sizes.spacing.sm, gap: 8 },
+  mapCtaWrap: { marginTop: sizes.spacing.sm, alignItems: "stretch" },
+  mapCtaBtn: {
+    // Same tappable-action look as the dialogue choices, but centered and with a
+    // stronger cyan fill so "Go to map" reads as the single next step.
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(34, 211, 238, 0.14)",
+    borderWidth: 1,
+    borderColor: "rgba(34, 211, 238, 0.55)",
+    borderRadius: sizes.radius.md,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+  },
+  mapCtaLabel: {
+    color: colors.dispatch.cyan,
+    fontSize: sizes.font.md,
+    fontWeight: "800",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+  },
   decisionPrompt: {
     color: colors.dispatch.amber,
     fontSize: sizes.font.md,

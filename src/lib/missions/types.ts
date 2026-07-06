@@ -136,6 +136,8 @@ export type MissionBeat = {
   map?: string;
   /** Destination pins the player can pick from. */
   pins?: MapPinChoice[];
+  /** Label for the button that opens the map from the chat (default "Go to map"). */
+  map_cta?: string;
 
   // dispatch
   correct?: DispatchType;
