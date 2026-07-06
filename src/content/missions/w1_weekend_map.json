@@ -74,6 +74,7 @@
           "icon": "🎡",
           "label": "Feria (Este)",
           "note": "Moved to the Fair",
+          "description": "A riverside fair — burnt sugar, motor oil, and lights that keep spinning even by day. Sofía is around somewhere.",
           "set_flags": { "visito_feria": true },
           "effects": { "animo": 2 },
           "next": "feria_intro"
@@ -85,6 +86,7 @@
           "icon": "🏥",
           "label": "Hospital (Oeste)",
           "note": "Moved to the Hospital",
+          "description": "The General Hospital, all linoleum and white light. Marco is in room 214, waiting for a visit.",
           "set_flags": { "visito_hospital": true },
           "effects": { "vinculo": 2 },
           "next": "hospital_intro"
@@ -96,6 +98,7 @@
           "icon": "🏔️",
           "label": "Montañas (Norte)",
           "note": "Moved to the Mountains",
+          "description": "Half an hour by train and the asphalt turns to pine. No signal up here — and for once you're grateful.",
           "set_flags": { "visito_montanas": true },
           "effects": { "animo": 1 },
           "next": "montanas_intro"
@@ -107,6 +110,7 @@
           "icon": "🎬",
           "label": "Cine (Sur)",
           "note": "Moved to the Cinema",
+          "description": "The Roxy is running an '80s double feature. The hall is almost empty, warm and dark.",
           "set_flags": { "visito_cine": true },
           "next": "cine_intro"
         }

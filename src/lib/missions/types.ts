@@ -105,6 +105,11 @@ export type MapPinChoice = {
    * to `Moved to {label}` when omitted.
    */
   note?: string;
+  /**
+   * Short blurb shown in the map's info panel when the pin is tapped, before
+   * the player confirms the move. Optional.
+   */
+  description?: string;
   /** Mutate numeric variables (same as MissionChoice). */
   effects?: Record<string, number>;
   /** Set boolean flags (persist into the mission runtime). */
