@@ -76,6 +76,30 @@ export type MissionVariant = {
   lines: MissionLine[];
 };
 
+/**
+ * A destination pin on an interactive map beat. Choosing a pin is the map
+ * equivalent of a `MissionChoice`: it can set flags / mutate variables and then
+ * routes the conversation to `next` (a beat in the SAME mission).
+ */
+export type MapPinChoice = {
+  id: string;
+  /** Normalized map coordinates in [0,1] (x = fraction of width, y of height). */
+  x: number;
+  y: number;
+  /** Emoji shown in the pin bubble (like MapPin). */
+  icon: string;
+  /** Visible name under the pin. */
+  label: string;
+  /** Mutate numeric variables (same as MissionChoice). */
+  effects?: Record<string, number>;
+  /** Set boolean flags (persist into the mission runtime). */
+  set_flags?: Record<string, boolean>;
+  /** Optional gating; hidden/disabled when the condition isn't met. */
+  requires?: MissionCondition;
+  /** Beat to continue at (within this mission). */
+  next: string;
+};
+
 /** Conditional correctness for a dispatch beat. */
 export type CorrectRule = {
   when: MissionCondition;
@@ -83,7 +107,7 @@ export type CorrectRule = {
 };
 
 // ── Beats ──────────────────────────────────────────────────────────────────────
-export type BeatType = "dialogue" | "decision" | "dispatch" | "outcome";
+export type BeatType = "dialogue" | "decision" | "dispatch" | "outcome" | "map";
 
 export type MissionBeat = {
   id: string;
@@ -97,6 +121,12 @@ export type MissionBeat = {
   // decision
   prompt?: string;
   choices?: MissionChoice[];
+
+  // map (interactive displacement to a destination)
+  /** Background map image key (e.g. "manhattan2"). Defaults to the radar map. */
+  map?: string;
+  /** Destination pins the player can pick from. */
+  pins?: MapPinChoice[];
 
   // dispatch
   correct?: DispatchType;

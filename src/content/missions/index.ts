@@ -20,6 +20,7 @@ import w2Plot from "./w2_plot.json"; // game_plot, order 20 (Same Block — the 
 import w3Plot from "./w3_plot.json"; // game_plot, order 30 (The House on Calder)
 import w4Plot from "./w4_plot.json"; // game_plot, order 40 (The Envelope)
 import w1WeekendCoffee from "./w1_weekend_coffee.json"; // weekend, order 0 (After Hours — alone with the pattern)
+import w1WeekendMap from "./w1_weekend_map.json"; // weekend, order 1 (Día libre — interactive map beat demo)
 
 // Daily calls (911 source, caso_cocina style) — new batch.
 import CallZombie from "./call_zombie.json";
@@ -105,6 +106,7 @@ export const BUNDLED_MISSIONS: Mission[] = [
   w3Plot as unknown as Mission,
   w4Plot as unknown as Mission,
   w1WeekendCoffee as unknown as Mission,
+  w1WeekendMap as unknown as Mission,
 ];
 
 // Demo missions kept available but out of rotation (re-add to the array to use).

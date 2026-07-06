@@ -114,6 +114,15 @@ export const VIDEOS: Record<string, string | number> = {
   "intro-clip":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroPan.mp4",
 
+  // Weekend "excursion" (map beat) destination clips. PLACEHOLDERS: these reuse
+  // existing footage so the map demo plays with no new assets — swap each URL
+  // for the real "video del lugar" (feria/hospital/mountains/cinema).
+  "excursion-feria": require("../../assets/videos/border-runners-intro.mp4"),
+  "excursion-hospital": require("../../assets/videos/kitchen-fire-intro.mp4"),
+  "excursion-mountains": require("../../assets/videos/armed-robbery-intro.mp4"),
+  "excursion-cinema":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroPan.mp4",
+
   // Per-unit DEPLOY clips — one reusable video per dispatch button, played on
   // the "deploying" beat. fire/police/ambulance stream from Supabase Storage
   // (public bucket "911 Clips"); the rest still use a bundled placeholder.
