@@ -99,6 +99,12 @@ export type MapPinChoice = {
   icon: string;
   /** Visible name under the pin. */
   label: string;
+  /**
+   * System note echoed into the chat when this pin is picked, so the player
+   * sees a record of where they went (e.g. "Moved to the Hospital"). Defaults
+   * to `Moved to {label}` when omitted.
+   */
+  note?: string;
   /** Mutate numeric variables (same as MissionChoice). */
   effects?: Record<string, number>;
   /** Set boolean flags (persist into the mission runtime). */

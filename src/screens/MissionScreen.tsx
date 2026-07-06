@@ -574,6 +574,12 @@ export function MissionScreen({ navigation, route }: Props) {
     // Small beat so the pin's selected state reads before the map dismisses.
     setTimeout(() => {
       setPhase("play");
+      // Echo a system note into the chat so there's a record of the choice
+      // (e.g. "Moved to the Hospital") before the destination scene plays.
+      setDisplayedLines((prev) => [
+        ...prev,
+        { speaker: "dispatch", text: pin.note ?? `Moved to ${pin.label}` },
+      ]);
       goToBeat(pin.next);
     }, 650);
   };

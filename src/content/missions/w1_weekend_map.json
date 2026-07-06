@@ -73,6 +73,7 @@
           "y": 0.36,
           "icon": "🎡",
           "label": "Feria (Este)",
+          "note": "Moved to the Fair",
           "set_flags": { "visito_feria": true },
           "effects": { "animo": 2 },
           "next": "feria_intro"
@@ -83,6 +84,7 @@
           "y": 0.52,
           "icon": "🏥",
           "label": "Hospital (Oeste)",
+          "note": "Moved to the Hospital",
           "set_flags": { "visito_hospital": true },
           "effects": { "vinculo": 2 },
           "next": "hospital_intro"
@@ -93,6 +95,7 @@
           "y": 0.14,
           "icon": "🏔️",
           "label": "Montañas (Norte)",
+          "note": "Moved to the Mountains",
           "set_flags": { "visito_montanas": true },
           "effects": { "animo": 1 },
           "next": "montanas_intro"
@@ -103,6 +106,7 @@
           "y": 0.72,
           "icon": "🎬",
           "label": "Cine (Sur)",
+          "note": "Moved to the Cinema",
           "set_flags": { "visito_cine": true },
           "next": "cine_intro"
         }
