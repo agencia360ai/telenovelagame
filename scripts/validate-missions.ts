@@ -60,7 +60,7 @@ function validateMission(file: string, m: any): Err[] {
     if (beatIds.has(beat.id)) add(`beat:${beat.id}`, "duplicate beat id");
     beatIds.add(beat.id);
 
-    if (!["dialogue", "decision", "dispatch", "outcome"].includes(beat.type)) {
+    if (!["dialogue", "decision", "dispatch", "outcome", "map"].includes(beat.type)) {
       add(`beat:${beat.id}`, `bad beat type: ${beat.type}`);
     }
 
@@ -93,6 +93,22 @@ function validateMission(file: string, m: any): Err[] {
         if (typeof c.gem_cost === "number" && c.gem_cost < 0) {
           add(`choice:${c.id}`, "negative gem_cost");
         }
+      }
+    }
+
+    if (beat.type === "map") {
+      if (!beat.pins?.length) add(`beat:${beat.id}`, "map beat has no pins");
+      const pinIds = new Set<string>();
+      for (const p of beat.pins ?? []) {
+        if (!p.id) add(`beat:${beat.id}`, "pin missing id");
+        else if (pinIds.has(p.id)) add(`beat:${beat.id}`, `duplicate pin id: ${p.id}`);
+        else pinIds.add(p.id);
+        if (typeof p.x !== "number" || p.x < 0 || p.x > 1) add(`pin:${p.id}`, "x must be in [0,1]");
+        if (typeof p.y !== "number" || p.y < 0 || p.y > 1) add(`pin:${p.id}`, "y must be in [0,1]");
+        if (!p.icon) add(`pin:${p.id}`, "pin missing icon");
+        if (!p.label) add(`pin:${p.id}`, "pin missing label");
+        if (!p.next) add(`pin:${p.id}`, "pin missing next");
+        else referenced.add(p.next);
       }
     }
 

@@ -1,0 +1,246 @@
+{
+  "schema": "mission@1",
+  "id": "w1_weekend_map",
+  "title": "Día libre",
+  "version": "1.0.0",
+  "locale_default": "es",
+  "difficulty": 1,
+  "category": "weekend",
+  "order": 1,
+  "reward": 8,
+  "caller": {
+    "name": "Casa",
+    "type": "DÍA LIBRE",
+    "location": "Manhattan"
+  },
+  "speakers": {
+    "amiga": "Sofía",
+    "amigo": "Marco"
+  },
+  "initial_variables": {
+    "animo": 0,
+    "vinculo": 0
+  },
+  "initial_flags": {},
+  "assets": [
+    {
+      "key": "excursion-feria",
+      "type": "video",
+      "role": "intro",
+      "caption": "Feria del río · Este"
+    },
+    {
+      "key": "excursion-hospital",
+      "type": "video",
+      "role": "intro",
+      "caption": "Hospital General · Oeste"
+    },
+    {
+      "key": "excursion-mountains",
+      "type": "video",
+      "role": "intro",
+      "caption": "Las montañas · Norte"
+    },
+    {
+      "key": "excursion-cinema",
+      "type": "video",
+      "role": "intro",
+      "caption": "Cine Roxy · Sur"
+    }
+  ],
+  "start": "intro",
+  "beats": [
+    {
+      "id": "intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Domingo. Sin turnos, sin radio, sin llamadas. Por primera vez en la semana el día es tuyo. Abres el mapa: la ciudad entera cabe en una decisión."
+        }
+      ],
+      "next": "mapa"
+    },
+    {
+      "id": "mapa",
+      "type": "map",
+      "prompt": "¿A dónde quieres ir hoy?",
+      "map": "manhattan2",
+      "pins": [
+        {
+          "id": "feria",
+          "x": 0.75,
+          "y": 0.36,
+          "icon": "🎡",
+          "label": "Feria (Este)",
+          "set_flags": { "visito_feria": true },
+          "effects": { "animo": 2 },
+          "next": "feria_intro"
+        },
+        {
+          "id": "hospital",
+          "x": 0.4,
+          "y": 0.52,
+          "icon": "🏥",
+          "label": "Hospital (Oeste)",
+          "set_flags": { "visito_hospital": true },
+          "effects": { "vinculo": 2 },
+          "next": "hospital_intro"
+        },
+        {
+          "id": "montanas",
+          "x": 0.55,
+          "y": 0.14,
+          "icon": "🏔️",
+          "label": "Montañas (Norte)",
+          "set_flags": { "visito_montanas": true },
+          "effects": { "animo": 1 },
+          "next": "montanas_intro"
+        },
+        {
+          "id": "cine",
+          "x": 0.52,
+          "y": 0.72,
+          "icon": "🎬",
+          "label": "Cine (Sur)",
+          "set_flags": { "visito_cine": true },
+          "next": "cine_intro"
+        }
+      ]
+    },
+
+    {
+      "id": "feria_intro",
+      "type": "dialogue",
+      "media": { "key": "excursion-feria", "role": "intro" },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "La feria huele a azúcar quemada y aceite de motor. Las luces giran aunque sea de día."
+        }
+      ],
+      "next": "feria_d"
+    },
+    {
+      "id": "feria_d",
+      "type": "decision",
+      "prompt": "Sofía te saluda desde la rueda de la fortuna.",
+      "choices": [
+        {
+          "id": "feria_sube",
+          "label": "Subirte con ella.",
+          "feedback": "Arriba, la ciudad se ve pequeña y silenciosa.",
+          "effects": { "vinculo": 1 },
+          "next": "_end"
+        },
+        {
+          "id": "feria_paso",
+          "label": "Mejor un hot dog y caminar.",
+          "next": "_end"
+        }
+      ]
+    },
+
+    {
+      "id": "hospital_intro",
+      "type": "dialogue",
+      "media": { "key": "excursion-hospital", "role": "intro" },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Pasillos de linóleo y luz blanca. Marco está en la 214, más pálido de lo que recordabas, pero sonríe al verte."
+        }
+      ],
+      "next": "hospital_d"
+    },
+    {
+      "id": "hospital_d",
+      "type": "decision",
+      "prompt": "\"Viniste\", dice Marco. \"¿Cómo va todo en la central?\"",
+      "choices": [
+        {
+          "id": "hospital_verdad",
+          "label": "Contarle lo que viste esta semana.",
+          "feedback": "Marco te escucha sin interrumpir. Alguien más lo sabe ahora.",
+          "set_flags": { "conto_a_marco": true },
+          "effects": { "vinculo": 1 },
+          "next": "_end"
+        },
+        {
+          "id": "hospital_calla",
+          "label": "Cambiar de tema. Hoy no.",
+          "next": "_end"
+        }
+      ]
+    },
+
+    {
+      "id": "montanas_intro",
+      "type": "dialogue",
+      "media": { "key": "excursion-mountains", "role": "intro" },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Media hora de tren y el asfalto se vuelve pino. El teléfono se queda sin señal, y por una vez lo agradeces."
+        }
+      ],
+      "next": "montanas_d"
+    },
+    {
+      "id": "montanas_d",
+      "type": "decision",
+      "prompt": "El sendero se bifurca.",
+      "choices": [
+        {
+          "id": "montanas_cima",
+          "label": "Subir hasta la cima.",
+          "feedback": "Desde arriba, la semana entera cabe en la palma de tu mano.",
+          "effects": { "animo": 2 },
+          "next": "_end"
+        },
+        {
+          "id": "montanas_rio",
+          "label": "Quedarte junto al río.",
+          "next": "_end"
+        }
+      ]
+    },
+
+    {
+      "id": "cine_intro",
+      "type": "dialogue",
+      "media": { "key": "excursion-cinema", "role": "intro" },
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "El Roxy proyecta una función doble de los años ochenta. La sala está casi vacía, tibia y a oscuras."
+        }
+      ],
+      "next": "cine_d"
+    },
+    {
+      "id": "cine_d",
+      "type": "decision",
+      "prompt": "Empiezan los créditos iniciales.",
+      "choices": [
+        {
+          "id": "cine_final",
+          "label": "Quedarte hasta el final.",
+          "feedback": "Sales cuando ya es de noche, con una melodía pegada.",
+          "effects": { "animo": 1 },
+          "next": "_end"
+        },
+        {
+          "id": "cine_salir",
+          "label": "Salir a mitad de la película.",
+          "next": "_end"
+        }
+      ]
+    },
+
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

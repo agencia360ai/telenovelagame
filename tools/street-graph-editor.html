@@ -11,6 +11,7 @@
     --cyan: #22d3ee;
     --cyan-dim: rgba(34, 211, 238, 0.4);
     --amber: #fbbf24;
+    --violet: #a78bfa;
     --red: #f87171;
     --text: #e2e8f0;
     --muted: #94a3b8;
@@ -57,6 +58,24 @@
   }
   .mode-btn.active { background: var(--cyan); color: #05141a; border-color: var(--cyan); }
   .mode-btn.active.edge { background: var(--amber); border-color: var(--amber); }
+  .mode-btn.active.pin { background: var(--violet); border-color: var(--violet); }
+
+  /* ---- Pin (destino) editor ---- */
+  .pin-row {
+    display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px;
+    border: 1px solid transparent; cursor: pointer; font-size: 12px;
+  }
+  .pin-row:hover { background: rgba(255,255,255,0.04); }
+  .pin-row.sel { border-color: var(--violet); background: rgba(167,139,250,0.12); }
+  .pin-row .ico { font-size: 16px; width: 22px; text-align: center; }
+  .pin-row .lbl { flex: 1; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pin-row .nxt { color: var(--muted); font-family: monospace; font-size: 10px; }
+  .field { margin-bottom: 8px; }
+  .field label { display: block; font-size: 10px; letter-spacing: 1px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; }
+  .field input {
+    width: 100%; background: #05070d; color: var(--text); border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 8px; font-size: 13px;
+  }
 
   button.action {
     width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px;
@@ -132,12 +151,14 @@
       <div class="mode-row">
         <button class="mode-btn active" id="modeNode">● NODOS</button>
         <button class="mode-btn edge" id="modeEdge">╱ ARISTAS</button>
+        <button class="mode-btn pin" id="modePin">◆ DESTINOS</button>
       </div>
       <p class="hint" style="margin:10px 0 0;">
         <b>Nodos:</b> clic en el mapa para agregar una intersección.<br>
         <b>Aristas:</b> clic en un nodo y luego en otro para conectar la calle.<br>
-        <b>Borrar:</b> <kbd>clic derecho</kbd> sobre un nodo o arista.<br>
-        <b>Mover nodo:</b> arrástralo (modo nodos).
+        <b>Destinos:</b> clic en el mapa para poner un pin de destino; edítalo abajo.<br>
+        <b>Borrar:</b> <kbd>clic derecho</kbd> sobre un nodo, arista o pin.<br>
+        <b>Mover:</b> arrastra un nodo (modo nodos) o un pin (modo destinos).
       </p>
     </div>
 
@@ -149,6 +170,38 @@
         <button class="action" id="undoBtn">↶ Deshacer (Ctrl+Z)</button>
         <button class="action danger" id="clearBtn">Borrar todo</button>
       </div>
+    </div>
+
+    <div class="card" id="pinCard" style="display:none;">
+      <h2>Destinos · beat "map"</h2>
+      <div class="stat"><span>Pines</span><b id="pinCount">0</b></div>
+      <div id="pinList" style="margin:8px 0;"></div>
+
+      <div id="pinEditor" style="display:none; border-top:1px solid var(--border); padding-top:10px;">
+        <div class="field">
+          <label>Icono (emoji)</label>
+          <input id="pinIcon" maxlength="4" placeholder="🎡" />
+        </div>
+        <div class="field">
+          <label>Nombre</label>
+          <input id="pinLabel" placeholder="Feria" />
+        </div>
+        <div class="field">
+          <label>Destino · beat id (next)</label>
+          <input id="pinNext" placeholder="feria_intro" spellcheck="false" />
+        </div>
+        <button class="action danger" id="pinDelete">Borrar pin seleccionado</button>
+      </div>
+
+      <div class="row2" style="margin-top:8px;">
+        <button class="action primary" id="exportPinsBtn">Generar pins ⤓</button>
+        <button class="action" id="copyPinsBtn">Copiar</button>
+      </div>
+      <textarea id="pinOutput" spellcheck="false" placeholder="El bloque de pines aparece aquí; pégalo en el beat map de tu misión…"></textarea>
+      <p class="hint" style="margin:8px 0 0;">
+        Pega este arreglo como el campo <b>"pins"</b> de un beat <b>{ "type": "map" }</b>.
+        Coordenadas en fracciones 0..1.
+      </p>
     </div>
 
     <div class="card">
@@ -190,12 +243,19 @@
   /** edges: [ [aId, bId], ... ] */
   let edges = [];
   let nextId = 0;
-  let mode = "node"; // "node" | "edge"
+  let mode = "node"; // "node" | "edge" | "pin"
   let edgeAnchor = null; // first node id selected in edge mode
   let imgW = 0, imgH = 0; // natural pixel size
   let zoom = 1;
   let dragId = null;
   const undoStack = [];
+
+  // ---- Destino (map beat) pins ----
+  /** pins: [ {id, x, y, icon, label, next} ] with x,y in [0,1] */
+  let pins = [];
+  let pinNextId = 0;
+  let selectedPin = null; // pin id being edited
+  let dragPin = null;     // pin id being dragged
 
   const els = {
     file: document.getElementById("fileInput"),
@@ -206,12 +266,25 @@
     svg: document.getElementById("overlay"),
     modeNode: document.getElementById("modeNode"),
     modeEdge: document.getElementById("modeEdge"),
+    modePin: document.getElementById("modePin"),
     nodeCount: document.getElementById("nodeCount"),
     edgeCount: document.getElementById("edgeCount"),
     output: document.getElementById("output"),
     coord: document.getElementById("coordReadout"),
     zoom: document.getElementById("zoom"),
     zoomVal: document.getElementById("zoomVal"),
+    // pin editor
+    pinCard: document.getElementById("pinCard"),
+    pinCount: document.getElementById("pinCount"),
+    pinList: document.getElementById("pinList"),
+    pinEditor: document.getElementById("pinEditor"),
+    pinIcon: document.getElementById("pinIcon"),
+    pinLabel: document.getElementById("pinLabel"),
+    pinNext: document.getElementById("pinNext"),
+    pinDelete: document.getElementById("pinDelete"),
+    pinOutput: document.getElementById("pinOutput"),
+    exportPinsBtn: document.getElementById("exportPinsBtn"),
+    copyPinsBtn: document.getElementById("copyPinsBtn"),
   };
 
   // ---- Helpers ----
@@ -222,7 +295,7 @@
   }
   function round(n) { return Math.round(n * 10000) / 10000; }
   function snapshot() {
-    undoStack.push(JSON.stringify({ nodes, edges, nextId }));
+    undoStack.push(JSON.stringify({ nodes, edges, nextId, pins, pinNextId }));
     if (undoStack.length > 100) undoStack.shift();
   }
   function undo() {
@@ -230,8 +303,11 @@
     if (!s) return;
     const st = JSON.parse(s);
     nodes = st.nodes; edges = st.edges; nextId = st.nextId;
-    edgeAnchor = null;
+    pins = st.pins || []; pinNextId = st.pinNextId || 0;
+    edgeAnchor = null; dragPin = null;
+    if (selectedPin && !pins.some((p) => p.id === selectedPin)) selectedPin = null;
     render();
+    renderPinPanel();
   }
 
   // ---- Image loading ----
@@ -288,6 +364,21 @@
     return best;
   }
 
+  // ---- Pin hit test (in displayed px) ----
+  const PIN_HIT_R = 16;
+  function pinAt(e) {
+    const rect = els.svg.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    let best = null, bestD = PIN_HIT_R * PIN_HIT_R;
+    for (const p of pins) {
+      const q = normToPx(p.x, p.y);
+      const d = (q.x - mx) ** 2 + (q.y - my) ** 2;
+      if (d <= bestD) { bestD = d; best = p.id; }
+    }
+    return best;
+  }
+
   // ---- Interaction ----
   els.svg.addEventListener("mousemove", (e) => {
     const n = eventToNorm(e);
@@ -297,10 +388,27 @@
       nodes[dragId].y = n.y;
       render();
     }
+    if (dragPin && mode === "pin") {
+      const p = pins.find((pp) => pp.id === dragPin);
+      if (p) { p.x = n.x; p.y = n.y; render(); }
+    }
   });
 
   els.svg.addEventListener("mousedown", (e) => {
     if (e.button !== 0) return; // left only
+    if (mode === "pin") {
+      const ph = pinAt(e);
+      if (ph) { selectedPin = ph; dragPin = ph; renderPinPanel(); render(); return; }
+      // add a new pin at the click
+      snapshot();
+      const n = eventToNorm(e);
+      const id = "pin_" + (pinNextId++);
+      pins.push({ id, x: n.x, y: n.y, icon: "📍", label: "Destino", next: "" });
+      selectedPin = id; dragPin = id;
+      renderPinPanel();
+      render();
+      return;
+    }
     const hit = nodeAt(e);
     if (mode === "node") {
       if (hit) { dragId = hit; return; } // start drag
@@ -321,11 +429,22 @@
     }
   });
 
-  window.addEventListener("mouseup", () => { dragId = null; });
+  window.addEventListener("mouseup", () => { dragId = null; dragPin = null; });
 
   // right-click delete
   els.svg.addEventListener("contextmenu", (e) => {
     e.preventDefault();
+    if (mode === "pin") {
+      const ph = pinAt(e);
+      if (ph) {
+        snapshot();
+        pins = pins.filter((p) => p.id !== ph);
+        if (selectedPin === ph) selectedPin = null;
+        renderPinPanel();
+        render();
+      }
+      return;
+    }
     const hit = nodeAt(e);
     if (hit) {
       snapshot();
@@ -367,11 +486,98 @@
     edgeAnchor = null;
     els.modeNode.classList.toggle("active", m === "node");
     els.modeEdge.classList.toggle("active", m === "edge");
-    els.svg.style.cursor = m === "node" ? "crosshair" : "pointer";
+    els.modePin.classList.toggle("active", m === "pin");
+    els.pinCard.style.display = m === "pin" ? "block" : "none";
+    els.svg.style.cursor = m === "edge" ? "pointer" : "crosshair";
     render();
+    if (m === "pin") renderPinPanel();
   }
   els.modeNode.addEventListener("click", () => setMode("node"));
   els.modeEdge.addEventListener("click", () => setMode("edge"));
+  els.modePin.addEventListener("click", () => setMode("pin"));
+
+  // ---- Pin editor panel ----
+  function renderPinPanel() {
+    els.pinCount.textContent = pins.length;
+    els.pinList.innerHTML = "";
+    for (const p of pins) {
+      const row = document.createElement("div");
+      row.className = "pin-row" + (p.id === selectedPin ? " sel" : "");
+      row.innerHTML =
+        '<span class="ico"></span><span class="lbl"></span><span class="nxt"></span>';
+      row.querySelector(".ico").textContent = p.icon || "📍";
+      row.querySelector(".lbl").textContent = p.label || "(sin nombre)";
+      row.querySelector(".nxt").textContent = p.next ? "→ " + p.next : "→ ?";
+      row.addEventListener("click", () => {
+        selectedPin = p.id;
+        renderPinPanel();
+        render();
+      });
+      els.pinList.appendChild(row);
+    }
+    const p = pins.find((pp) => pp.id === selectedPin);
+    els.pinEditor.style.display = p ? "block" : "none";
+    if (p) {
+      els.pinIcon.value = p.icon || "";
+      els.pinLabel.value = p.label || "";
+      els.pinNext.value = p.next || "";
+    }
+  }
+
+  function bindPinField(input, key) {
+    input.addEventListener("input", () => {
+      const p = pins.find((pp) => pp.id === selectedPin);
+      if (!p) return;
+      p[key] = input.value;
+      render();
+      // refresh only the list rows' text without stealing focus from the input
+      els.pinCount.textContent = pins.length;
+      const rows = els.pinList.querySelectorAll(".pin-row");
+      let i = 0;
+      for (const pp of pins) {
+        const row = rows[i++];
+        if (!row) continue;
+        row.querySelector(".ico").textContent = pp.icon || "📍";
+        row.querySelector(".lbl").textContent = pp.label || "(sin nombre)";
+        row.querySelector(".nxt").textContent = pp.next ? "→ " + pp.next : "→ ?";
+      }
+    });
+  }
+  bindPinField(els.pinIcon, "icon");
+  bindPinField(els.pinLabel, "label");
+  bindPinField(els.pinNext, "next");
+
+  els.pinDelete.addEventListener("click", () => {
+    if (!selectedPin) return;
+    snapshot();
+    pins = pins.filter((p) => p.id !== selectedPin);
+    selectedPin = null;
+    renderPinPanel();
+    render();
+  });
+
+  function exportPins() {
+    return JSON.stringify(
+      pins.map((p) => ({
+        id: p.id,
+        x: round(p.x),
+        y: round(p.y),
+        icon: p.icon || "📍",
+        label: p.label || "",
+        next: p.next || "",
+      })),
+      null,
+      2
+    );
+  }
+  els.exportPinsBtn.addEventListener("click", () => {
+    els.pinOutput.value = exportPins();
+  });
+  els.copyPinsBtn.addEventListener("click", async () => {
+    if (!els.pinOutput.value) els.pinOutput.value = exportPins();
+    try { await navigator.clipboard.writeText(els.pinOutput.value); }
+    catch (_) { els.pinOutput.select(); document.execCommand("copy"); }
+  });
 
   // ---- Render ----
   function render() {
@@ -414,6 +620,36 @@
       t.setAttribute("font-family", "monospace");
       t.textContent = id;
       els.svg.appendChild(t);
+    }
+
+    // destino pins (drawn on top, always visible)
+    for (const p of pins) {
+      const q = normToPx(p.x, p.y);
+      const sel = p.id === selectedPin;
+      const ring = document.createElementNS(SVGNS, "circle");
+      ring.setAttribute("cx", q.x); ring.setAttribute("cy", q.y);
+      ring.setAttribute("r", 12);
+      ring.setAttribute("fill", "rgba(167,139,250,0.18)");
+      ring.setAttribute("stroke", sel ? "#facc15" : "#a78bfa");
+      ring.setAttribute("stroke-width", sel ? "3" : "2");
+      els.svg.appendChild(ring);
+
+      const ico = document.createElementNS(SVGNS, "text");
+      ico.setAttribute("x", q.x); ico.setAttribute("y", q.y);
+      ico.setAttribute("text-anchor", "middle");
+      ico.setAttribute("dominant-baseline", "central");
+      ico.setAttribute("font-size", "14");
+      ico.textContent = p.icon || "📍";
+      els.svg.appendChild(ico);
+
+      const lbl = document.createElementNS(SVGNS, "text");
+      lbl.setAttribute("x", q.x); lbl.setAttribute("y", q.y + 24);
+      lbl.setAttribute("text-anchor", "middle");
+      lbl.setAttribute("fill", "#e2e8f0");
+      lbl.setAttribute("font-size", "11");
+      lbl.setAttribute("font-weight", "700");
+      lbl.textContent = p.label || "";
+      els.svg.appendChild(lbl);
     }
   }
 
@@ -491,8 +727,12 @@
 
   window.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
+    // Don't hijack single-key shortcuts while typing in the pin editor fields.
+    const t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
     if (e.key === "n" || e.key === "N") setMode("node");
     if (e.key === "e" || e.key === "E") setMode("edge");
+    if (e.key === "d" || e.key === "D") setMode("pin");
   });
 
   setMode("node");

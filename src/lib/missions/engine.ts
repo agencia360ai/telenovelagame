@@ -8,6 +8,7 @@
  */
 import { DispatchType } from "../../game/types";
 import {
+  MapPinChoice,
   Mission,
   MissionBeat,
   MissionChoice,
@@ -100,6 +101,33 @@ export function applyChoice(
     flags,
     choices_made: [...rt.choices_made, choice.id],
   };
+}
+
+/** Apply a map pin selection to runtime state (same rules as a decision choice). */
+export function applyPin(rt: MissionRuntime, pin: MapPinChoice): MissionRuntime {
+  const variables = { ...rt.variables };
+  if (pin.effects) {
+    for (const [key, delta] of Object.entries(pin.effects)) {
+      variables[key] = (variables[key] ?? 0) + delta;
+    }
+  }
+  const flags = { ...rt.flags };
+  if (pin.set_flags) {
+    for (const [key, val] of Object.entries(pin.set_flags)) {
+      flags[key] = val;
+    }
+  }
+  return {
+    variables,
+    flags,
+    choices_made: [...rt.choices_made, pin.id],
+  };
+}
+
+/** Pins whose `requires` condition is met (or that have none). */
+export function visiblePins(beat: MissionBeat, rt: MissionRuntime): MapPinChoice[] {
+  const pins = beat.pins ?? [];
+  return pins.filter((p) => !p.requires || evaluateCondition(p.requires, rt));
 }
 
 /**

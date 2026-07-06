@@ -1,4 +1,13 @@
 {
+  "permissions": {
+    "allow": [
+      "PowerShell(npm run validate-missions)",
+      "PowerShell(npm run typecheck)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git restore *)"
+    ]
+  },
   "enabledPlugins": {
     "expo@claude-plugins-official": true
   }

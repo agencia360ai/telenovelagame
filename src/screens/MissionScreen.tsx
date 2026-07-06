@@ -34,11 +34,14 @@ import {
   getBeat,
   resolveLines,
   applyChoice,
+  applyPin,
+  visiblePins,
   resolveCorrectUnit,
   scoreBonus,
   initRuntime,
 } from "../lib/missions/engine";
 import {
+  MapPinChoice,
   MissionBeat,
   MissionChoice,
   MissionLine,
@@ -49,6 +52,7 @@ import { resolveVideo, IMAGES, DEPLOY_VIDEOS } from "../game/assets";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
 import { DispatchRadar } from "../components/DispatchRadar";
+import { ExcursionMap } from "../components/ExcursionMap";
 import { CutscenePlayer } from "../components/CutscenePlayer";
 import { CinematicImage } from "../components/CinematicImage";
 import { ResultBreakdown } from "../components/ResultBreakdown";
@@ -59,7 +63,7 @@ import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Mission">;
 
-type Phase = "intro" | "play" | "dispatch" | "deploying" | "result";
+type Phase = "intro" | "play" | "map" | "dispatch" | "deploying" | "result";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.38;
@@ -117,6 +121,15 @@ export function MissionScreen({ navigation, route }: Props) {
   );
   const [displayedLines, setDisplayedLines] = useState<MissionLine[]>([]);
   const [showChoices, setShowChoices] = useState(false);
+  // A per-beat intro clip played full-screen before the beat's lines (e.g. the
+  // "video del lugar" after picking a map destination). Holds the beat to resume.
+  const [beatCutscene, setBeatCutscene] = useState<{
+    key: string;
+    caption?: string;
+    beat: MissionBeat;
+    rt: MissionRuntime;
+  } | null>(null);
+  const cutscenePlayedFor = useRef<string | null>(null);
   // How many lines of the CURRENT beat are revealed (chat accumulates across beats).
   const [revealIndex, setRevealIndex] = useState(0);
 
@@ -164,7 +177,8 @@ export function MissionScreen({ navigation, route }: Props) {
   // Pause the looping feed under full-screen overlays so audio doesn't clash.
   useEffect(() => {
     try {
-      if (phase === "intro" || phase === "deploying") player.pause();
+      if (phase === "intro" || phase === "deploying" || phase === "map")
+        player.pause();
       else player.play();
     } catch {}
   }, [phase]);
@@ -226,6 +240,15 @@ export function MissionScreen({ navigation, route }: Props) {
   // switches us into the dispatch phase instead of showing lines.
   const loadBeat = useCallback(
     (b: MissionBeat, rt: MissionRuntime) => {
+      // A beat may declare an intro clip to play once, full-screen, before its
+      // content (e.g. the destination "video del lugar" reached from a map beat).
+      // Show it, then re-enter this beat to reveal its lines/choices.
+      if (b.media?.role === "intro" && cutscenePlayedFor.current !== b.id) {
+        cutscenePlayedFor.current = b.id;
+        const asset = mission.assets.find((a) => a.key === b.media?.key);
+        setBeatCutscene({ key: b.media.key, caption: asset?.caption, beat: b, rt });
+        return;
+      }
       // Narrative ending: a mission that reaches an `outcome` beat during play
       // (i.e. without a dispatch step) is a story scene — resolve it as complete.
       if (b.type === "outcome") {
@@ -247,6 +270,14 @@ export function MissionScreen({ navigation, route }: Props) {
         }
         setPhase("result");
         scrollSoon();
+        return;
+      }
+      if (b.type === "map") {
+        // Interactive displacement: show the map and wait for the player to pick
+        // a destination pin (handled by handlePinSelect). No lines auto-play.
+        autoMode.current = false;
+        setShowChoices(false);
+        setPhase("map");
         return;
       }
       if (b.type === "dispatch") {
@@ -350,6 +381,22 @@ export function MissionScreen({ navigation, route }: Props) {
     } else {
       setTimeout(proceed, 1000);
     }
+  };
+
+  const handlePinSelect = (pin: MapPinChoice) => {
+    audio.playSfx("tap");
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+    // Choosing a pin applies its flags/effects (same rules as a decision) and
+    // routes the conversation to the destination beat within this mission.
+    const nextRuntime = applyPin(runtime, pin);
+    setRuntime(nextRuntime);
+    autoMode.current = true;
+    // Small beat so the pin's selected state reads before the map dismisses.
+    setTimeout(() => {
+      setPhase("play");
+      goToBeat(pin.next);
+    }, 650);
   };
 
   const handleDispatch = (choice: DispatchType) => {
@@ -663,6 +710,31 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
       )}
 
+      {phase === "map" && beat?.type === "map" && (
+        <View style={[styles.mapOverlay, { paddingTop: insets.top }]}>
+          <ExcursionMap
+            prompt={beat.prompt}
+            map={beat.map}
+            pins={visiblePins(beat, runtime)}
+            onSelectPin={handlePinSelect}
+          />
+        </View>
+      )}
+
+      {beatCutscene && (
+        <View style={StyleSheet.absoluteFill}>
+          <CutscenePlayer
+            source={beatCutscene.key}
+            caption={beatCutscene.caption}
+            onComplete={() => {
+              const pending = beatCutscene;
+              setBeatCutscene(null);
+              loadBeat(pending.beat, pending.rt);
+            }}
+          />
+        </View>
+      )}
+
       {showRankUp && IMAGES["rank-up"] && (
         <View style={StyleSheet.absoluteFill}>
           <CinematicImage
@@ -843,6 +915,12 @@ const styles = StyleSheet.create({
   },
   difficultyText: { color: colors.dispatch.amber, fontSize: 12, letterSpacing: 2 },
   deployVideoOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(5, 8, 16, 0.55)" },
+  mapOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(5, 8, 16, 0.94)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   deployClipTag: {
     position: "absolute",
     bottom: 40,
