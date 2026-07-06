@@ -301,4 +301,10 @@ export function getNextMissionId(missionsHandled: number, rankIndex = 0): string
 
   const candidates =
     eligible.length > 1
-      ? eligible.filter((m) => m.id !== lastServe
+      ? eligible.filter((m) => m.id !== lastServedId)
+      : eligible;
+
+  const choice = candidates[Math.floor(Math.random() * candidates.length)];
+  lastServedId = choice.id;
+  return choice.id;
+}

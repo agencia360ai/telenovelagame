@@ -464,4 +464,14 @@ export const SKIN_IMAGES: Record<string, number | string> = {
 }
 
 /**
- * Resolve a skin id to a R
+ * Resolve a skin id to a React Native image source, or null when no art has
+ * been registered yet (callers should render a placeholder on null).
+ */
+export function resolveSkin(
+  id: string
+): number | { uri: string } | null {
+  const found = SKIN_IMAGES[id];
+  if (typeof found === "number") return found;
+  if (typeof found === "string" && found) return { uri: found };
+  return null;
+}

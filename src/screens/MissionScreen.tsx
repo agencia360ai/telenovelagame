@@ -1414,4 +1414,15 @@ const styles = StyleSheet.create({
   sceneTitle: { fontSize: 15, fontWeight: "900", color: "#fff", letterSpacing: 1 },
   sceneSub: { fontSize: 12, fontWeight: "800", color: colors.dispatch.answer },
   bottomBar: { paddingVertical: sizes.spacing.md, alignItems: "center" },
-  hintText: { color: colors.dispatch.textMuted, fontSize: sizes.font.sm, fontWeight: "
+  hintText: { color: colors.dispatch.textMuted, fontSize: sizes.font.sm, fontWeight: "700", letterSpacing: 1 },
+  nextInlineBtn: {
+    borderColor: colors.dispatch.cyan,
+    borderWidth: 1,
+    borderRadius: sizes.radius.md,
+    paddingHorizontal: 28,
+    paddingVertical: 10,
+  },
+  nextInlineText: { color: colors.dispatch.cyan, fontSize: sizes.font.sm, fontWeight: "900", letterSpacing: 2 },
+  nextCallBtn: { backgroundColor: colors.dispatch.cyan, borderRadius: sizes.radius.md, paddingHorizontal: 32, paddingVertical: 14 },
+  nextCallText: { color: "#0A0E1A", fontSize: sizes.font.md, fontWeight: "900", letterSpacing: 2 },
+});
