@@ -2,7 +2,7 @@ import { ExpoConfig, ConfigContext } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Corazón en Roaming",
+  name: "911 Dispatch Center",
   slug: "corazon-en-roaming",
   version: "1.0.0",
   orientation: "portrait",

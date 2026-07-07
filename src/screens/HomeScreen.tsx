@@ -113,8 +113,8 @@ export function HomeScreen({ navigation }: Props) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.heroSection}>
-          <Text style={styles.appTitle}>{"Corazón en Roaming"}</Text>
-          <Text style={styles.subtitle}>Una historia de amor y secretos</Text>
+          <Text style={styles.appTitle}>{"911 Dispatch Center"}</Text>
+          <Text style={styles.subtitle}>Cada llamada, una decisión</Text>
         </View>
 
         {/* Player avatar + rank + experience */}
