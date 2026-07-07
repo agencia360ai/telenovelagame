@@ -2,86 +2,90 @@
   "schema": "mission@1",
   "id": "event_friend_text",
   "title": "A Text From an Old Friend",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 20,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Locker room" },
-  "speakers": { "friend": "Old Friend" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Locker room"
+  },
   "reward": 5,
-  "initial_variables": { "bond": 0, "energy": 0 },
-  "initial_flags": {},
+  "order": 20,
+  "initial_variables": {
+    "bond": 0,
+    "energy": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_friend1.intro",
+  "speakers": {
+    "friend": "Old Friend"
+  },
   "beats": [
     {
       "id": "ev_friend1.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Shift's over. Your locker sticks, your feet ache, your phone buzzes." },
-        { "speaker": "narrator", "text": "A name you haven't seen since before the academy." },
-        { "speaker": "friend", "text": "Is this still your number?? Heard you work the 911 lines now. That's insane." }
+        {
+          "speaker": "narrator",
+          "text": "Shift's over. Your phone buzzes — a name you haven't seen since before the academy."
+        },
+        {
+          "speaker": "friend",
+          "text": "Heard you're working the 911 lines now?? That's insane. Wanna catch up sometime?"
+        }
       ],
       "next": "ev_friend1.d1"
     },
     {
       "id": "ev_friend1.d1",
       "type": "decision",
-      "prompt": "A name from before the academy.",
-      "choices": [
-        { "id": "ev_friend1.d1_0", "label": "Still me. Mostly.", "next": "ev_friend1.conv2", "effects": { "bond": 1 } },
-        { "id": "ev_friend1.d1_1", "label": "Depends who's asking.", "next": "ev_friend1.conv2", "effects": { "bond": 1 } },
-        { "id": "ev_friend1.d1_2", "label": "New number. Who dis.", "next": "ev_friend1.conv2", "effects": { "bond": 1 } }
-      ]
-    },
-    {
-      "id": "ev_friend1.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "friend", "text": "Same you, then. Good. Do you actually say 'what's your emergency'?" },
-        { "speaker": "narrator", "text": "Five years compressed into typing bubbles. They appear, vanish, appear again." },
-        { "speaker": "friend", "text": "I kept meaning to text. Then it was five years. How does that happen?" }
-      ],
-      "next": "ev_friend1.d2"
-    },
-    {
-      "id": "ev_friend1.d2",
-      "type": "decision",
-      "prompt": "Five years. How DOES that happen?",
-      "choices": [
-        { "id": "ev_friend1.d2_0", "label": "One shift at a time.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } },
-        { "id": "ev_friend1.d2_1", "label": "You had my number too.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } },
-        { "id": "ev_friend1.d2_2", "label": "Doesn't matter. You texted.", "next": "ev_friend1.pivot", "effects": { "bond": 1 } }
-      ]
-    },
-    {
-      "id": "ev_friend1.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The typing bubble thinks about that for a long time." },
-        { "speaker": "friend", "text": "Okay, enough nostalgia over text. There's a burger place near your station. Now?" },
-        { "speaker": "narrator", "text": "The city already took most of your voice tonight. A little is left." }
-      ],
-      "next": "ev_friend1.d3"
-    },
-    {
-      "id": "ev_friend1.d3",
-      "type": "decision",
       "prompt": "An old friend, out of nowhere.",
       "choices": [
-        { "id": "ev_friend1.d3_0", "label": "Grab a bite — my treat.", "cash_cost": 8, "next": "ev_friend1.fin_bite", "effects": { "bond": 2, "energy": 1 }, "set_flags": { "friend_close": true } },
-        { "id": "ev_friend1.d3_1", "label": "Reply: 'Soon, I promise.'", "next": "ev_friend1.fin_soon", "effects": { "bond": 1 } },
-        { "id": "ev_friend1.d3_2", "label": "Leave it on read. Too tired.", "next": "ev_friend1.fin_read", "effects": { "bond": -1 }, "set_flags": { "friend_ignored": true } }
+        {
+          "id": "ev_friend1.d1_0",
+          "label": "Yes! Grab a bite right now — my treat.",
+          "next": "ev_friend1.fin_bite",
+          "cash_cost": 8,
+          "effects": {
+            "bond": 2,
+            "energy": 1
+          },
+          "set_flags": {
+            "friend_close": true
+          }
+        },
+        {
+          "id": "ev_friend1.d1_1",
+          "label": "Reply: 'Soon, I promise.'",
+          "next": "ev_friend1.fin_soon",
+          "effects": {
+            "bond": 1
+          }
+        },
+        {
+          "id": "ev_friend1.d1_2",
+          "label": "Leave it on read. Too tired.",
+          "next": "ev_friend1.fin_read",
+          "effects": {
+            "bond": -1
+          },
+          "set_flags": {
+            "friend_ignored": true
+          }
+        }
       ]
     },
     {
       "id": "ev_friend1.fin_bite",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Two burgers, one hour, five years covered." },
-        { "speaker": "friend", "text": "Same laugh. Knew it." },
-        { "speaker": "narrator", "text": "You'd forgotten what off-duty felt like. It feels like this." }
+        {
+          "speaker": "narrator",
+          "text": "Two burgers, one hour, five years covered. The laugh is the same as ever. You'd forgotten what off-duty felt like."
+        }
       ],
       "next": "_end"
     },
@@ -89,8 +93,10 @@
       "id": "ev_friend1.fin_soon",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "'Soon.' A thumbs up comes back." },
-        { "speaker": "narrator", "text": "People say 'soon' a lot in this job. Some of them mean it." }
+        {
+          "speaker": "narrator",
+          "text": "'Soon.' A thumbs up comes back. People say 'soon' a lot in this job. Some of them mean it."
+        }
       ],
       "next": "_end"
     },
@@ -98,11 +104,16 @@
       "id": "ev_friend1.fin_read",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The message sits there, read and unanswered." },
-        { "speaker": "narrator", "text": "The city takes your voice all night. Sometimes there's none left over." }
+        {
+          "speaker": "narrator",
+          "text": "The message sits there, read and unanswered. The city takes your voice all night; sometimes there's none left over."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

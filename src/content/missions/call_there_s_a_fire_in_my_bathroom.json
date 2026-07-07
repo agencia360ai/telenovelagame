@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "call_there_s_a_fire_in_my_bathroom",
   "title": "There's a fire in my bathroom!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "fire"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_there_s_a_fire_in_my_bathroom.intro",
   "assets": [
     {
       "key": "call-bathroom-fire",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_there_s_a_fire_in_my_bathroom.intro",
   "beats": [
     {
       "id": "call_there_s_a_fire_in_my_bathroom.intro",
@@ -105,10 +106,10 @@
           "text": "Flat 7, 19 Sienna Road."
         }
       ],
-      "next": "call_there_s_a_fire_in_my_bathroom.d2"
+      "next": "dispatch"
     },
     {
-      "id": "call_there_s_a_fire_in_my_bathroom.d2",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "firefighters",

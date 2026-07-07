@@ -189,6 +189,9 @@ export type MissionCategory =
   | "weekend"
   | "intro"
   | "event"
+  /** Travel destination scene — played on demand from the city map, never
+   *  scheduled by the calendar. */
+  | "place"
   | "life";
 
 export type Mission = {

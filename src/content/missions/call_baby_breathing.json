@@ -1,0 +1,103 @@
+{
+  "schema": "mission@1",
+  "id": "call_baby_breathing",
+  "title": "She's Not Breathing",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "real",
+    "medical"
+  ],
+  "caller": {
+    "name": "Caller",
+    "type": "MEDICAL EMERGENCY",
+    "location": "22 Rosemont Ave"
+  },
+  "units": [
+    "ambulance",
+    "police",
+    "firefighters"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "call_baby_breathing.b0",
+  "beats": [
+    {
+      "id": "call_baby_breathing.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The worst sound a line can carry: a parent past screaming, into begging."
+        }
+      ],
+      "next": "call_baby_breathing.b1"
+    },
+    {
+      "id": "call_baby_breathing.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My baby's not breathing — she's blue, please, PLEASE—"
+        }
+      ],
+      "next": "call_baby_breathing.d1"
+    },
+    {
+      "id": "call_baby_breathing.d1",
+      "type": "decision",
+      "prompt": "Respond — every second is one second.",
+      "choices": [
+        {
+          "id": "call_baby_breathing.d1_0",
+          "label": "Flat surface. Two fingers, center chest. With me — 1, 2, 3.",
+          "next": "call_baby_breathing.b2"
+        },
+        {
+          "id": "call_baby_breathing.d1_1",
+          "label": "Ambulance first: address, fast.",
+          "next": "call_baby_breathing.b2"
+        }
+      ]
+    },
+    {
+      "id": "call_baby_breathing.b2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Okay — okay — one, two, three— she's— WAIT."
+        },
+        {
+          "speaker": "narrator",
+          "text": "A cough. Then the single greatest sound in the world: a furious, outraged, gloriously loud cry."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "ambulance",
+      "explanation": "Medics take over a crying, breathing baby. You unclench one finger at a time. Best save of the month — and it was made of counting out loud.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-ambulance",
+        "role": "deploy"
+      }
+    }
+  ]
+}

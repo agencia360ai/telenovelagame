@@ -2,85 +2,79 @@
   "schema": "mission@1",
   "id": "event_walk_home",
   "title": "The Walk Home",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 60,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Night streets" },
-  "speakers": { "date": "Your Date" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Night streets"
+  },
   "reward": 5,
-  "initial_variables": { "love": 0, "energy": 0 },
-  "initial_flags": {},
+  "order": 60,
+  "initial_variables": {
+    "love": 0,
+    "energy": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_walk.intro",
+  "speakers": {
+    "date": "Date"
+  },
   "beats": [
     {
       "id": "ev_walk.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Second date, no restaurant. Just the long way home through night streets." },
-        { "speaker": "narrator", "text": "Streets you usually only hear about through a headset." },
-        { "speaker": "date", "text": "So this is your city off the clock. Quieter than you make it sound." }
+        {
+          "speaker": "narrator",
+          "text": "Second date, no restaurant this time — just the long way home through streets you usually only hear about through a headset."
+        },
+        {
+          "speaker": "date",
+          "text": "You went quiet at that corner. Rough call once?"
+        }
       ],
       "next": "ev_walk.d1"
     },
     {
       "id": "ev_walk.d1",
       "type": "decision",
-      "prompt": "The city, off the headset.",
-      "choices": [
-        { "id": "ev_walk.d1_0", "label": "'Quiet nights are my favorite calls.'", "next": "ev_walk.conv2", "effects": { "love": 1 } },
-        { "id": "ev_walk.d1_1", "label": "'Give it an hour.'", "next": "ev_walk.conv2", "effects": { "love": 1 } },
-        { "id": "ev_walk.d1_2", "label": "'It's better with company.'", "next": "ev_walk.conv2", "effects": { "love": 1 } }
-      ]
-    },
-    {
-      "id": "ev_walk.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "date", "text": "Fair warning: I overshare on walks. It's the low lighting." },
-        { "speaker": "date", "text": "Dropped out of college twice, finished the third time. Your turn eventually." },
-        { "speaker": "narrator", "text": "They trade a story for nothing, easy as breath." }
-      ],
-      "next": "ev_walk.d2"
-    },
-    {
-      "id": "ev_walk.d2",
-      "type": "decision",
-      "prompt": "Their turn done. Yours pending.",
-      "choices": [
-        { "id": "ev_walk.d2_0", "label": "'Third time's very you.'", "next": "ev_walk.pivot", "effects": { "love": 1 } },
-        { "id": "ev_walk.d2_1", "label": "'What changed the third time?'", "next": "ev_walk.pivot", "effects": { "love": 1 } },
-        { "id": "ev_walk.d2_2", "label": "Just walk and listen.", "next": "ev_walk.pivot", "effects": { "energy": 1 } }
-      ]
-    },
-    {
-      "id": "ev_walk.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Then a corner. Your steps slow without asking permission." },
-        { "speaker": "date", "text": "You went quiet just there. Rough call once?" },
-        { "speaker": "narrator", "text": "They noticed. Of course they noticed." }
-      ],
-      "next": "ev_walk.d3"
-    },
-    {
-      "id": "ev_walk.d3",
-      "type": "decision",
       "prompt": "They noticed.",
       "choices": [
-        { "id": "ev_walk.d3_0", "label": "Tell the truth — a little.", "next": "ev_walk.fin_open", "effects": { "love": 2 } },
-        { "id": "ev_walk.d3_1", "label": "'Long story. Another night.'", "next": "ev_walk.fin_later", "effects": { "love": 1 } },
-        { "id": "ev_walk.d3_2", "label": "Change the subject with a joke.", "next": "ev_walk.fin_joke" }
+        {
+          "id": "ev_walk.d1_0",
+          "label": "Tell them the truth — a little of it.",
+          "next": "ev_walk.fin_open",
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_walk.d1_1",
+          "label": "'Long story. Another night.'",
+          "next": "ev_walk.fin_later",
+          "effects": {
+            "love": 1
+          }
+        },
+        {
+          "id": "ev_walk.d1_2",
+          "label": "Change the subject with a joke.",
+          "next": "ev_walk.fin_joke"
+        }
       ]
     },
     {
       "id": "ev_walk.fin_open",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You tell it plainly, no drama. They don't flinch, don't pity." },
-        { "speaker": "narrator", "text": "They just move a half step closer for the rest of the walk." }
+        {
+          "speaker": "narrator",
+          "text": "You tell it plainly, no drama. They don't flinch, don't pity — they just move a half step closer for the rest of the walk."
+        }
       ],
       "next": "_end"
     },
@@ -88,8 +82,14 @@
       "id": "ev_walk.fin_later",
       "type": "dialogue",
       "lines": [
-        { "speaker": "date", "text": "Deal. I collect long stories." },
-        { "speaker": "narrator", "text": "A promise shaped like a door left open." }
+        {
+          "speaker": "date",
+          "text": "Deal. I collect long stories."
+        },
+        {
+          "speaker": "narrator",
+          "text": "A promise shaped like a door left open."
+        }
       ],
       "next": "_end"
     },
@@ -97,11 +97,16 @@
       "id": "ev_walk.fin_joke",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The joke lands, the laugh is real, and the corner stays yours." },
-        { "speaker": "narrator", "text": "Some walls take longer than others." }
+        {
+          "speaker": "narrator",
+          "text": "The joke lands, the laugh is real, and the corner stays yours alone. Some walls take longer than others."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

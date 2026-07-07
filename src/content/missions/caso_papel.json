@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "caso_papel",
   "title": "I'm Out of Toilet Paper",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
+  "category": "daily",
   "tags": [
     "prank",
     "none"
@@ -27,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "caso_papel.intro",
   "assets": [
     {
       "key": "call-toilet-paper",
@@ -40,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "caso_papel.intro",
   "beats": [
     {
       "id": "caso_papel.intro",
@@ -81,7 +82,7 @@
         {
           "id": "caso_papel.d1_2",
           "label": "Sending a patrol car.",
-          "next": "caso_papel.d4"
+          "next": "dispatch"
         }
       ]
     },
@@ -126,17 +127,18 @@
         {
           "id": "caso_papel.d3c_0",
           "label": "That's too much info 😬",
-          "next": "caso_papel.d4"
+          "next": "dispatch"
         },
         {
           "id": "caso_papel.d3c_1",
           "label": "Then your hand will do.",
-          "next": "caso_papel.d4"
+          "next": "dispatch"
         }
-      ]
+      ],
+      "next": "dispatch"
     },
     {
-      "id": "caso_papel.d4",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "no_unit",

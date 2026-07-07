@@ -2,92 +2,60 @@
   "schema": "mission@1",
   "id": "event_debt_letter",
   "title": "The Letter",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 5,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your mailbox" },
-  "speakers": { "neighbor": "Neighbor" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Your mailbox"
+  },
   "reward": 5,
-  "initial_variables": { "debt_paid": 0, "debt_missed": 0 },
-  "initial_flags": {},
+  "order": 5,
+  "initial_variables": {
+    "debt_paid": 0,
+    "debt_missed": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_debt0.intro",
   "beats": [
     {
       "id": "ev_debt0.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Mailbox day. Bills, a pizza menu, and one envelope with the university's crest." },
-        { "speaker": "narrator", "text": "They found your new address. Universities always do." }
+        {
+          "speaker": "narrator",
+          "text": "Bills, flyers, and one envelope with the university's crest. You know before opening it: the student loan office found your new address."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Installments start this month. Miss them, and the lien lands on the one thing you own — the apartment."
+        }
       ],
       "next": "ev_debt0.d1"
     },
     {
       "id": "ev_debt0.d1",
       "type": "decision",
-      "prompt": "The envelope waits.",
-      "choices": [
-        { "id": "ev_debt0.d1_0", "label": "Open it right here.", "next": "ev_debt0.read" },
-        { "id": "ev_debt0.d1_1", "label": "Take the stairs first.", "next": "ev_debt0.read" },
-        { "id": "ev_debt0.d1_2", "label": "Sniff it for bad news.", "next": "ev_debt0.read" }
-      ]
-    },
-    {
-      "id": "ev_debt0.read",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You open it by the mailboxes anyway. Suspense is for people with savings." },
-        { "speaker": "narrator", "text": "Installments start this month. Miss them, and the apartment's on the line." },
-        { "speaker": "neighbor", "text": "University crest? My cousin got one of those. He lives in his car now." }
-      ],
-      "next": "ev_debt0.d2"
-    },
-    {
-      "id": "ev_debt0.d2",
-      "type": "decision",
-      "prompt": "The neighbor is waiting.",
-      "choices": [
-        { "id": "ev_debt0.d2_0", "label": "It's just paperwork.", "next": "ev_debt0.hall" },
-        { "id": "ev_debt0.d2_1", "label": "Pray for me.", "next": "ev_debt0.hall" },
-        { "id": "ev_debt0.d2_2", "label": "How's the cousin?", "next": "ev_debt0.hall" }
-      ]
-    },
-    {
-      "id": "ev_debt0.hall",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "neighbor", "text": "Hang in there. If you move out, I call dibs on the parking spot." },
-        { "speaker": "narrator", "text": "Comforting, in the way a fire alarm is." }
-      ],
-      "next": "ev_debt0.math"
-    },
-    {
-      "id": "ev_debt0.math",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Upstairs, you run the numbers twice. Same answer both times." },
-        { "speaker": "narrator", "text": "Rent, shifts, groceries, and now this. The kitchen feels smaller." }
-      ],
-      "next": "ev_debt0.d3"
-    },
-    {
-      "id": "ev_debt0.d3",
-      "type": "decision",
       "prompt": "Your monthly math just changed.",
       "choices": [
         {
-          "id": "ev_debt0.d3_0",
-          "label": "Pin it to the fridge.",
+          "id": "ev_debt0.d1_0",
+          "label": "Pin it to the fridge. You'll make the payments.",
           "next": "ev_debt0.fin_plan",
-          "set_flags": { "debt_active": true }
+          "set_flags": {
+            "debt_active": true
+          }
         },
         {
-          "id": "ev_debt0.d3_1",
-          "label": "Call and argue the interest.",
+          "id": "ev_debt0.d1_1",
+          "label": "Call and argue about the interest.",
           "next": "ev_debt0.fin_call",
-          "set_flags": { "debt_active": true }
+          "set_flags": {
+            "debt_active": true
+          }
         }
       ]
     },
@@ -95,8 +63,10 @@
       "id": "ev_debt0.fin_plan",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "It goes on the fridge, next to the shift schedule." },
-        { "speaker": "narrator", "text": "Two papers that own your life now. At least they're organized." }
+        {
+          "speaker": "narrator",
+          "text": "The letter goes on the fridge, next to the shift schedule. Two pieces of paper that own your life now. You'll answer to both."
+        }
       ],
       "next": "_end"
     },
@@ -104,11 +74,16 @@
       "id": "ev_debt0.fin_call",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Forty minutes on hold to hear 'non-negotiable', said very kindly." },
-        { "speaker": "narrator", "text": "The installments stand. You pin the letter up anyway. Arguing was free." }
+        {
+          "speaker": "narrator",
+          "text": "Forty minutes on hold to learn the interest is 'non-negotiable.' You're better on the other side of a phone line. The installments stand."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

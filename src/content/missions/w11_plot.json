@@ -1,0 +1,174 @@
+{
+  "schema": "mission@1",
+  "id": "w11_plot",
+  "title": "Week 11 — The Name on the Log",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "week": 11,
+  "order": 11,
+  "goal_trust": 33,
+  "unlock": {
+    "minWeek": 11
+  },
+  "caller": {
+    "name": "Detective",
+    "type": "STORY",
+    "location": "Records room"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0,
+    "debt_missed": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w11_plot.intro",
+  "speakers": {
+    "detective": "Detective",
+    "director": "Director Hale"
+  },
+  "beats": [
+    {
+      "id": "w11_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The detective lays the edits out by date, oldest first. Then stops. Slides one page across, face-down — the way your partner did."
+        }
+      ],
+      "next": "w11_plot.v1"
+    },
+    {
+      "id": "w11_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "detective",
+          "text": "The oldest smoothed log in the archive. Decades old. Same login."
+        },
+        {
+          "speaker": "detective",
+          "text": "48 Calder Street. Medical call. Logged response: four minutes. Actual: nine. Caller: a minor. A boy."
+        }
+      ],
+      "next": "w11_plot.memory"
+    },
+    {
+      "id": "w11_plot.memory",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You are nine years old. The dispatcher stays with you. The lights pass the window. Your mother's hand is in yours and then, at some point you refuse to remember exactly, it isn't."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Someone typed 4 over the 9 before the sun came up, and the center's numbers stayed beautiful."
+        }
+      ],
+      "next": "w11_plot.v2"
+    },
+    {
+      "id": "w11_plot.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "detective",
+          "text": "The login belongs to the night supervisor from back then. He never left the building, Charlie. He runs it."
+        },
+        {
+          "speaker": "narrator",
+          "text": "R. HALE. The man who pinned your badge. The man who calls you 'son' in the hallway."
+        }
+      ],
+      "next": "w11_plot.d1"
+    },
+    {
+      "id": "w11_plot.d1",
+      "type": "decision",
+      "prompt": "Thirty years of smoothed nights, and one of them is yours.",
+      "choices": [
+        {
+          "id": "w11_plot.d1_0",
+          "label": "Confront Hale tonight, face to face.",
+          "next": "w11_plot.c_confront",
+          "set_flags": {
+            "confronted_hale": true
+          }
+        },
+        {
+          "id": "w11_plot.d1_1",
+          "label": "Build it cold. Every log, every signature, no warning.",
+          "next": "w11_plot.c_cold",
+          "set_flags": {
+            "built_cold": true
+          },
+          "effects": {
+            "case_file": 1
+          }
+        },
+        {
+          "id": "w11_plot.d1_2",
+          "label": "Pull the original archive box yourself first.",
+          "next": "w11_plot.c_box",
+          "gem_cost": 5,
+          "set_flags": {
+            "archive_box": true
+          },
+          "effects": {
+            "case_file": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w11_plot.c_confront",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "director",
+          "text": "You were the boy on Calder Street? Then you know why the numbers matter. Panic doesn't fund a dispatch center, Charlie. Confidence does."
+        },
+        {
+          "speaker": "narrator",
+          "text": "He doesn't deny it. He explains it. Somehow that's worse."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w11_plot.c_cold",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You say nothing to him. You smile in the hallway. You photograph everything. The warmest thing about you now is the copier."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w11_plot.c_box",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The archive box smells like a basement keeping secrets. Inside: the original tape. Your own nine-year-old voice, saying the address right. Twice."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You did nothing wrong. You've waited a lifetime for a cardboard box to say so."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "mission@1",
+  "id": "call_wood_chipper",
+  "title": "Probably Nothin'",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "real",
+    "crime"
+  ],
+  "caller": {
+    "name": "Neighbor",
+    "type": "SUSPICIOUS ACTIVITY",
+    "location": "Larkin Road"
+  },
+  "units": [
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "call_wood_chipper.b0",
+  "beats": [
+    {
+      "id": "call_wood_chipper.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A very polite voice, apologizing in advance for existing."
+        }
+      ],
+      "next": "call_wood_chipper.b1"
+    },
+    {
+      "id": "call_wood_chipper.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Hi, sorry to bother ya. My neighbor's runnin' his wood chipper at 2 a.m. Which is probably nothin'."
+        }
+      ],
+      "next": "call_wood_chipper.d1"
+    },
+    {
+      "id": "call_wood_chipper.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_wood_chipper.d1_0",
+          "label": "What exactly is he feeding into it?",
+          "next": "call_wood_chipper.b2"
+        },
+        {
+          "id": "call_wood_chipper.d1_1",
+          "label": "Noise complaint. Logged. Anything else?",
+          "next": "call_wood_chipper.b2"
+        }
+      ]
+    },
+    {
+      "id": "call_wood_chipper.b2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Branches, I s'pose. Though — heck. There's a shoe in the driveway. Probably nothin'."
+        }
+      ],
+      "next": "call_wood_chipper.d2"
+    },
+    {
+      "id": "call_wood_chipper.d2",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_wood_chipper.d2_0",
+          "label": "Stay inside. Units are on the way NOW.",
+          "next": "call_wood_chipper.b3"
+        },
+        {
+          "id": "call_wood_chipper.d2_1",
+          "label": "A shoe is a fashion emergency, not a real one. 😏",
+          "next": "call_wood_chipper.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_wood_chipper.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Okey-doke. I'll keep the porch light off. He just waved at me. With… a glove that don't fit him right."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Patrol finds a man chipping his ex-business partner's belongings — suits, golf clubs, one shoe at a time. Divorce paperwork, not homicide. This time. You still log the glove.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

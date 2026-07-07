@@ -2,7 +2,7 @@
   "schema": "mission@1",
   "id": "call_zombie",
   "title": "I Saw a Zombie",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "daily",
@@ -29,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_zombie.b0",
   "assets": [
     {
       "key": "call-zombie",
@@ -42,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_zombie.b0",
   "beats": [
     {
       "id": "call_zombie.b0",

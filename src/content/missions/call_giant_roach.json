@@ -2,9 +2,9 @@
   "schema": "mission@1",
   "id": "call_giant_roach",
   "title": "There's a Giant Cockroach!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
   "category": "daily",
   "tags": [
     "exotic",
@@ -29,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_giant_roach.b0",
   "assets": [
     {
       "key": "call-giant-roach",
@@ -42,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_giant_roach.b0",
   "beats": [
     {
       "id": "call_giant_roach.b0",

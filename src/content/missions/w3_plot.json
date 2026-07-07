@@ -2,51 +2,52 @@
   "schema": "mission@1",
   "id": "w3_plot",
   "title": "Week 3 — Vans at night",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 2,
   "category": "game_plot",
-  "order": 30,
+  "week": 3,
+  "order": 3,
+  "goal_trust": 9,
+  "unlock": {
+    "minWeek": 3
+  },
   "caller": {
-    "name": "Caller",
+    "name": "Edward",
     "type": "STORY CALL",
-    "location": "Calder Street"
+    "location": "Stadium district"
   },
-  "reward": 14,
+  "reward": 12,
   "initial_variables": {
-    "integrity": 0,
-    "compliance": 0,
-    "don": 0,
-    "loose_thread": 0,
     "case_file": 0,
-    "pawn": 0,
-    "money": 0
+    "love": 0,
+    "debt_missed": 0
   },
-  "initial_flags": {},
   "assets": [],
+  "initial_flags": {},
   "start": "w3_plot.intro",
   "beats": [
     {
       "id": "w3_plot.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "02:58. A neighbor's whisper, hand cupped around the receiver." }
+        {
+          "speaker": "narrator",
+          "text": "A neighbor's whisper, hand cupped around the receiver."
+        }
       ],
       "variants": [
         {
-          "when": { "flag": "crosstown_night" },
+          "when": {
+            "var": "case_file",
+            "op": ">=",
+            "value": 2
+          },
           "lines": [
-            { "speaker": "narrator", "text": "A neighbor's whisper, hand cupped around the receiver." },
-            { "speaker": "narrator", "text": "Vans by the stadium. You don't need the description." },
-            { "speaker": "narrator", "text": "You saw them yourself — engines running at midnight." }
-          ]
-        },
-        {
-          "when": { "var": "case_file", "op": ">=", "value": 2 },
-          "lines": [
-            { "speaker": "narrator", "text": "A neighbor's whisper, hand cupped around the receiver." },
-            { "speaker": "narrator", "text": "You've been keeping your own map of nights like this." },
-            { "speaker": "narrator", "text": "Calder Street. The stadium. It's starting to fill in." }
+            {
+              "speaker": "narrator",
+              "text": "A neighbor's whisper, hand cupped around the receiver. You've been keeping your own map of nights like this — Calder Street, the stadium — and it's starting to fill in."
+            }
           ]
         }
       ],
@@ -56,63 +57,10 @@
       "id": "w3_plot.v1",
       "type": "dialogue",
       "lines": [
-        { "speaker": "caller", "text": "The vans are back. Near the stadium. Right now." },
-        { "speaker": "caller", "text": "Every few weeks, 3 a.m. Nobody loads merchandise at 3 a.m." }
-      ],
-      "next": "w3_plot.v2"
-    },
-    {
-      "id": "w3_plot.v2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You can hear it behind the whisper. Engines, idling." },
-        { "speaker": "narrator", "text": "The caller's breathing goes thin." }
-      ],
-      "next": "w3_plot.d0"
-    },
-    {
-      "id": "w3_plot.d0",
-      "type": "decision",
-      "prompt": "He's standing at the window.",
-      "choices": [
         {
-          "id": "w3_plot.d0_0",
-          "label": "Keep him watching.",
-          "next": "w3_plot.r1",
-          "effects": { "case_file": 1 }
-        },
-        {
-          "id": "w3_plot.d0_1",
-          "label": "Get him away from the glass.",
-          "next": "w3_plot.r2",
-          "effects": { "integrity": 1 }
+          "speaker": "caller",
+          "text": "Hello, this is Edward, I live on the 37th. Vans at 3am appear, I see them every once in a while near the stadium, they are here right now."
         }
-      ]
-    },
-    {
-      "id": "w3_plot.r1",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "caller", "text": "Three vans. Two men by the fence. One's on a phone." },
-        { "speaker": "narrator", "text": "Good eyes. Bad night to have them." }
-      ],
-      "next": "w3_plot.v3"
-    },
-    {
-      "id": "w3_plot.r2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You talk him back into the dark of his kitchen." },
-        { "speaker": "caller", "text": "Okay. Okay. I'm away from the window." }
-      ],
-      "next": "w3_plot.v3"
-    },
-    {
-      "id": "w3_plot.v3",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "A real tip. Your authority to dispatch." },
-        { "speaker": "narrator", "text": "And the vans won't wait for paperwork." }
       ],
       "next": "w3_plot.d1"
     },
@@ -124,22 +72,14 @@
         {
           "id": "w3_plot.d1_0",
           "label": "Send a unit now.",
-          "next": "w3_plot.c_dispatch",
-          "effects": {
-            "integrity": 1,
-            "case_file": 1
-          },
-          "set_flags": {
-            "w3_unit_sent": true
-          }
+          "next": "w3_plot.c_dispatch"
         },
         {
           "id": "w3_plot.d1_1",
           "label": "Take a full statement first.",
           "next": "w3_plot.c_statement",
           "effects": {
-            "case_file": 1,
-            "loose_thread": 1
+            "case_file": 1
           }
         }
       ]
@@ -148,96 +88,82 @@
       "id": "w3_plot.c_dispatch",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "A unit rushes toward the scene, lights off, as asked." },
-        { "speaker": "narrator", "text": "You hold the caller on the line and wait." }
+        {
+          "speaker": "narrator",
+          "text": "A unit rush towards the scene."
+        }
       ],
-      "next": "w3_plot.fin_dispatch"
+      "next": "w3_plot.d2"
     },
     {
       "id": "w3_plot.c_statement",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "License plates. Vehicle details. Times, down to the minute." },
-        { "speaker": "narrator", "text": "By the time you finish, one van is gone." }
+        {
+          "speaker": "narrator",
+          "text": "License plates, vehicle details."
+        }
       ],
       "next": "w3_plot.d2"
     },
     {
       "id": "w3_plot.d2",
       "type": "decision",
-      "prompt": "Final move on the tip.",
+      "prompt": "Final move on the tip",
       "choices": [
         {
           "id": "w3_plot.d2_0",
           "label": "Dispatch anyway. Paperwork later.",
-          "next": "w3_plot.c_dispatch2",
-          "effects": {
-            "integrity": 1,
-            "case_file": 1,
-            "compliance": -1
-          },
+          "next": "w3_plot.fin_dispatch",
           "set_flags": {
-            "w3_unit_sent": true
+            "w3_dispatched": true
           }
         },
         {
           "id": "w3_plot.d2_1",
-          "label": "File it the only way allowed.",
-          "next": "w3_plot.c_soft",
-          "effects": {
-            "compliance": 1,
-            "pawn": 1,
-            "don": 1
-          },
+          "label": "File it the only way the system allows.",
+          "next": "w3_plot.fin_soft",
           "set_flags": {
             "w3_filed_away": true
+          },
+          "effects": {
+            "case_file": 1
           }
         }
       ]
     },
     {
-      "id": "w3_plot.c_dispatch2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You send the car late and log it later." },
-        { "speaker": "narrator", "text": "Somebody will ask about the gap. Let them." }
-      ],
-      "next": "w3_plot.fin_dispatch"
-    },
-    {
       "id": "w3_plot.fin_dispatch",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The unit reports back: a vehicle full of Stadium Merchandise." },
-        { "speaker": "narrator", "text": "All legal. All boxed. All wrong somehow." }
+        {
+          "speaker": "narrator",
+          "text": "The unit reports a vehicle that was full of Stadium Merchandise."
+        }
       ],
       "variants": [
         {
-          "when": { "flag": "w2_documented" },
+          "when": {
+            "flag": "w2_documented"
+          },
           "lines": [
-            { "speaker": "narrator", "text": "The unit reports back: a vehicle full of Stadium Merchandise." },
-            { "speaker": "narrator", "text": "Your Week 2 notes put the antennas near the stadium too." },
-            { "speaker": "narrator", "text": "That's twice now. Twice is a pattern." }
+            {
+              "speaker": "narrator",
+              "text": "The unit reports a vehicle full of Stadium Merchandise. Your Week 2 notes put the antennas near the stadium too. That's twice now — and twice is a pattern."
+            }
           ]
         }
       ],
       "next": "_end"
     },
     {
-      "id": "w3_plot.c_soft",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The form has no box for vans at 3 a.m." },
-        { "speaker": "narrator", "text": "You pick the closest lie: routine activity, no unit required." }
-      ],
-      "next": "w3_plot.fin_soft"
-    },
-    {
       "id": "w3_plot.fin_soft",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You open a case for your supervisor." },
-        { "speaker": "narrator", "text": "It lands on a desk that never calls back." }
+        {
+          "speaker": "narrator",
+          "text": "You open a case for your supervisor."
+        }
       ],
       "next": "_end"
     },

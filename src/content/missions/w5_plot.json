@@ -1,340 +1,196 @@
 {
   "schema": "mission@1",
   "id": "w5_plot",
-  "title": "Week 5 — The Stadium Night",
-  "version": "1.1.0",
+  "title": "Week 5 — Her Voice Again",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 3,
   "category": "game_plot",
-  "order": 50,
+  "week": 5,
+  "order": 5,
+  "goal_trust": 15,
+  "unlock": {
+    "minWeek": 5
+  },
   "caller": {
-    "name": "Dispatch",
-    "type": "STORY",
-    "location": "The stadium district"
+    "name": "Mara",
+    "type": "STORY CALL",
+    "location": "Moving vehicle"
   },
-  "speakers": {
-    "voice": "No Caller ID",
-    "investigator": "Investigator"
-  },
-  "reward": 20,
+  "reward": 12,
   "initial_variables": {
-    "integrity": 0,
-    "compliance": 0,
-    "don": 0,
-    "loose_thread": 0,
     "case_file": 0,
-    "pawn": 0
+    "love": 0,
+    "debt_missed": 0
   },
-  "initial_flags": {},
   "assets": [],
+  "initial_flags": {},
   "start": "w5_plot.intro",
+  "speakers": {
+    "mara": "Mara"
+  },
   "beats": [
     {
       "id": "w5_plot.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Season opener. Forty thousand people, one stadium." },
-        { "speaker": "narrator", "text": "The east lot fills with vans. The dead zone hums." }
-      ],
-      "next": "w5_plot.intro2"
-    },
-    {
-      "id": "w5_plot.intro2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Every thread you touched braids into tonight. Calder Street. The voice. The envelope nobody saw arrive." }
-      ],
-      "next_rules": [
-        { "when": { "flag": "took_envelope" }, "next": "w5_plot.c1" },
-        { "when": { "var": "don", "op": ">=", "value": 3 }, "next": "w5_plot.c1" },
-        { "when": { "var": "case_file", "op": ">=", "value": 4 }, "next": "w5_plot.j1" }
-      ],
-      "next": "w5_plot.p1"
-    },
-
-    {
-      "id": "w5_plot.c1",
-      "type": "dialogue",
-      "media": { "key": "pov-ending-corrupt", "role": "ambient" },
-      "lines": [
-        { "speaker": "narrator", "text": "19:40. Your personal phone buzzes." }
-      ],
-      "next": "w5_plot.c2"
-    },
-    {
-      "id": "w5_plot.c2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "voice", "text": "East lot cameras are down. Some calls will come in tonight." },
-        { "speaker": "voice", "text": "Take your time with them." }
-      ],
-      "next": "w5_plot.c3"
-    },
-    {
-      "id": "w5_plot.c3",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The envelope, it turns out, was a down payment." }
-      ],
-      "next": "w5_plot.c_d1"
-    },
-    {
-      "id": "w5_plot.c_d1",
-      "type": "decision",
-      "prompt": "The line clicks, waiting.",
-      "choices": [
         {
-          "id": "w5_plot.c_d1_0",
-          "label": "Understood.",
-          "next": "w5_plot.c4",
-          "effects": { "don": 1, "pawn": 1 }
+          "speaker": "narrator",
+          "text": "2:57 a.m. A whisper call, road noise underneath — a phone hidden low, in a moving vehicle."
+        }
+      ],
+      "next": "w5_plot.v1"
+    },
+    {
+      "id": "w5_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "You answered before. Calder Street. I remember your voice."
         },
         {
-          "id": "w5_plot.c_d1_1",
-          "label": "How much, this time?",
-          "next": "w5_plot.c4",
-          "effects": { "don": 2 }
+          "speaker": "mara",
+          "text": "Please don't hang up. They're in the front seat."
+        }
+      ],
+      "next": "w5_plot.d1"
+    },
+    {
+      "id": "w5_plot.d1",
+      "type": "decision",
+      "prompt": "It's her. Moving. Maybe four minutes of battery.",
+      "choices": [
+        {
+          "id": "w5_plot.d1_0",
+          "label": "Keep her talking — every detail is a map.",
+          "next": "w5_plot.c_talk"
+        },
+        {
+          "id": "w5_plot.d1_1",
+          "label": "Ping the towers and triangulate now.",
+          "next": "w5_plot.c_towers"
+        },
+        {
+          "id": "w5_plot.d1_2",
+          "label": "Run her audio through the analyzer.",
+          "next": "w5_plot.c_audio",
+          "gem_cost": 5
         }
       ]
     },
     {
-      "id": "w5_plot.c4",
+      "id": "w5_plot.c_talk",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "21:02. First call. A van, the east lot." },
-        { "speaker": "caller", "text": "There's people inside, I swear—" }
-      ],
-      "next": "w5_plot.c5"
-    },
-    {
-      "id": "w5_plot.c5",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Your finger hovers over HOLD. Ninety seconds is nothing. Ninety seconds is everything." }
-      ],
-      "next": "w5_plot.c_d2"
-    },
-    {
-      "id": "w5_plot.c_d2",
-      "type": "decision",
-      "prompt": "Ninety seconds.",
-      "choices": [
         {
-          "id": "w5_plot.c_d2_0",
-          "label": "Hold it.",
-          "next": "w5_plot.c6",
-          "effects": { "don": 2, "pawn": 1 },
-          "set_flags": { "ending_corrupt": true }
+          "speaker": "mara",
+          "text": "We stop where it echoes. Big and empty, like a... a stadium? There's a gate. Gate C."
         },
         {
-          "id": "w5_plot.c_d2_1",
-          "label": "Send it late. Something, at least.",
-          "next": "w5_plot.c6",
-          "effects": { "don": 1, "integrity": 1 },
-          "set_flags": { "ending_corrupt": true }
+          "speaker": "narrator",
+          "text": "Gate C. You write it on your skin because paper can be taken."
+        }
+      ],
+      "next": "w5_plot.cut"
+    },
+    {
+      "id": "w5_plot.c_towers",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Two towers catch her signal — both sit on the stadium district. Then the trace thins out to nothing."
+        }
+      ],
+      "next": "w5_plot.cut"
+    },
+    {
+      "id": "w5_plot.c_audio",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The analyzer isolates a sound under the road noise: a stadium PA test, same one every Tuesday night. District confirmed. Your case file gets its first hard edge."
+        }
+      ],
+      "next": "w5_plot.cut"
+    },
+    {
+      "id": "w5_plot.cut",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "They're slowing down. If nobody comes, please just— remember I called. Last time nobody—"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Click. You sit with your hand on the dead line like it's a pulse."
+        }
+      ],
+      "next": "w5_plot.d2"
+    },
+    {
+      "id": "w5_plot.d2",
+      "type": "decision",
+      "prompt": "The line is gone. What do you leave her with?",
+      "choices": [
+        {
+          "id": "w5_plot.d2_0",
+          "label": "\"I will find you.\" Say it like a fact.",
+          "next": "w5_plot.fin_promise",
+          "set_flags": {
+            "promised_mara": true
+          }
+        },
+        {
+          "id": "w5_plot.d2_1",
+          "label": "Log everything. Promises are for amateurs.",
+          "next": "w5_plot.fin_log",
+          "set_flags": {
+            "w5_logged": true
+          },
+          "effects": {
+            "case_file": 1
+          }
         }
       ]
     },
     {
-      "id": "w5_plot.c6",
+      "id": "w5_plot.fin_promise",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "No headline. That's what they bought: silence, in your voice." },
-        { "speaker": "narrator", "text": "The money spends fine. Sleep is the expensive part." }
-      ],
-      "next": "w5_plot.epilogue"
-    },
-
-    {
-      "id": "w5_plot.j1",
-      "type": "dialogue",
-      "media": { "key": "pov-ending-justice", "role": "ambient" },
-      "lines": [
-        { "speaker": "narrator", "text": "19:12. Your file leaves the building." }
-      ],
-      "next": "w5_plot.j2"
-    },
-    {
-      "id": "w5_plot.j2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Calder Street. The antennas. The plates. Five weeks of logged truth, on one desk that doesn't answer to yours." }
-      ],
-      "next": "w5_plot.j3"
-    },
-    {
-      "id": "w5_plot.j3",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "investigator", "text": "Who built this?" }
-      ],
-      "next": "w5_plot.j_d1"
-    },
-    {
-      "id": "w5_plot.j_d1",
-      "type": "decision",
-      "prompt": "Two words or none.",
-      "choices": [
         {
-          "id": "w5_plot.j_d1_0",
-          "label": "I did.",
-          "next": "w5_plot.j4",
-          "effects": { "integrity": 1 }
+          "speaker": "narrator",
+          "text": "You say it to a dead line anyway. Some promises are for you."
+        }
+      ],
+      "next": "w5_plot.memory"
+    },
+    {
+      "id": "w5_plot.fin_log",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Times, sounds, Gate C. Cold ink, warm anger. The file is becoming a case."
+        }
+      ],
+      "next": "w5_plot.memory"
+    },
+    {
+      "id": "w5_plot.memory",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Nine years old. The dispatcher stayed on the line with you and the sirens still went to the wrong house."
         },
         {
-          "id": "w5_plot.j_d1_1",
-          "label": "Does it matter?",
-          "next": "w5_plot.j4",
-          "effects": { "loose_thread": 1 }
+          "speaker": "narrator",
+          "text": "That's why you don't hang up. Ever."
         }
-      ]
-    },
-    {
-      "id": "w5_plot.j4",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "20:31. Unmarked cars ring the east lot." },
-        { "speaker": "narrator", "text": "The vans turn around — into a wall of headlights." }
-      ],
-      "next": "w5_plot.j5"
-    },
-    {
-      "id": "w5_plot.j5",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "On your headset, the night goes quiet. The good kind." }
-      ],
-      "next": "w5_plot.j_d2"
-    },
-    {
-      "id": "w5_plot.j_d2",
-      "type": "decision",
-      "prompt": "The record needs a name.",
-      "choices": [
-        {
-          "id": "w5_plot.j_d2_0",
-          "label": "Go on record.",
-          "next": "w5_plot.j6",
-          "effects": { "integrity": 2, "case_file": 1 },
-          "set_flags": { "ending_justice": true }
-        },
-        {
-          "id": "w5_plot.j_d2_1",
-          "label": "Stay a ghost.",
-          "next": "w5_plot.j6",
-          "effects": { "integrity": 1, "loose_thread": 1 },
-          "set_flags": { "ending_justice": true }
-        }
-      ]
-    },
-    {
-      "id": "w5_plot.j6",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Somebody had to build the quiet. One logged call at a time." },
-        { "speaker": "narrator", "text": "It was you." }
-      ],
-      "next": "w5_plot.epilogue"
-    },
-
-    {
-      "id": "w5_plot.p1",
-      "type": "dialogue",
-      "media": { "key": "pov-ending-pawn", "role": "ambient" },
-      "lines": [
-        { "speaker": "narrator", "text": "You work the night like any shift. Fast. Clean. By the book the building wrote." }
-      ],
-      "next": "w5_plot.p2"
-    },
-    {
-      "id": "w5_plot.p2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "22:47. Sirens you didn't send cross the district." },
-        { "speaker": "narrator", "text": "The queue never says why." }
-      ],
-      "next": "w5_plot.p3"
-    },
-    {
-      "id": "w5_plot.p3",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Morning: 'isolated incident, swiftly contained.' Three lines — wrong in the exact places the system needs." }
-      ],
-      "next": "w5_plot.p_d1"
-    },
-    {
-      "id": "w5_plot.p_d1",
-      "type": "decision",
-      "prompt": "The paper is still in your hands.",
-      "choices": [
-        {
-          "id": "w5_plot.p_d1_0",
-          "label": "Read it twice.",
-          "next": "w5_plot.p4",
-          "effects": { "loose_thread": 1 }
-        },
-        {
-          "id": "w5_plot.p_d1_1",
-          "label": "Turn the page.",
-          "next": "w5_plot.p4",
-          "effects": { "compliance": 1 }
-        }
-      ]
-    },
-    {
-      "id": "w5_plot.p4",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The coffee tastes the same. The desk hums the same." },
-        { "speaker": "narrator", "text": "Something in you doesn't." }
-      ],
-      "next": "w5_plot.p_d2"
-    },
-    {
-      "id": "w5_plot.p_d2",
-      "type": "decision",
-      "prompt": "Late is not never.",
-      "choices": [
-        {
-          "id": "w5_plot.p_d2_0",
-          "label": "Start your own file.",
-          "next": "w5_plot.p5",
-          "effects": { "case_file": 2, "integrity": 1 },
-          "set_flags": { "ending_pawn": true }
-        },
-        {
-          "id": "w5_plot.p_d2_1",
-          "label": "Close the tab.",
-          "next": "w5_plot.p5",
-          "effects": { "compliance": 2, "pawn": 1 },
-          "set_flags": { "ending_pawn": true }
-        }
-      ]
-    },
-    {
-      "id": "w5_plot.p5",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Nobody thanks you. Nobody blames you." },
-        { "speaker": "narrator", "text": "The machine hums on — and you're its cleanest part." }
-      ],
-      "next": "w5_plot.epilogue"
-    },
-
-    {
-      "id": "w5_plot.epilogue",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The stadium empties. The city keeps most of its secrets — but it knows your voice now." }
-      ],
-      "next": "w5_plot.epilogue2"
-    },
-    {
-      "id": "w5_plot.epilogue2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Whatever kind of dispatcher you became tonight: the line rings again tomorrow. It always does." }
       ],
       "next": "_end"
     },

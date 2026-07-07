@@ -2,7 +2,7 @@
   "schema": "mission@1",
   "id": "call_student_loan",
   "title": "I Can't Pay My Debt",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "daily",
@@ -28,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_student_loan.b0",
   "assets": [
     {
       "key": "call-debt",
@@ -41,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_student_loan.b0",
   "beats": [
     {
       "id": "call_student_loan.b0",

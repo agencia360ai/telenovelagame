@@ -1,0 +1,102 @@
+{
+  "schema": "mission@1",
+  "id": "place_market",
+  "title": "Night Market",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "place",
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Night market" },
+  "reward": 0,
+  "initial_variables": { "energy": 0, "loose_thread": 0, "case_file": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "pl_market.intro",
+  "beats": [
+    {
+      "id": "pl_market.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Lanterns, smoke, a hundred voices you don't have to answer." },
+        { "speaker": "narrator", "text": "The stadium looms a block away, dark and patient." }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "crosstown_night" },
+          "lines": [
+            { "speaker": "narrator", "text": "Lanterns, smoke, and the dumpling stall that knows your face now." },
+            { "speaker": "narrator", "text": "You catch yourself checking the stadium lot anyway. Old habit. New thread." }
+          ]
+        }
+      ],
+      "next": "pl_market.d1"
+    },
+    {
+      "id": "pl_market.d1",
+      "type": "decision",
+      "prompt": "The market pulls in three directions.",
+      "choices": [
+        {
+          "id": "pl_market.d1_0",
+          "label": "Dumplings. Obviously.",
+          "cash_cost": 4,
+          "next": "pl_market.fin_food",
+          "effects": { "energy": 2 },
+          "set_flags": { "visited_market": true }
+        },
+        {
+          "id": "pl_market.d1_1",
+          "label": "Walk the back stalls.",
+          "next": "pl_market.fin_stalls",
+          "effects": { "loose_thread": 1, "case_file": 1 },
+          "set_flags": { "visited_market": true, "crosstown_night": true }
+        },
+        {
+          "id": "pl_market.d1_2",
+          "label": "Buy something small for someone.",
+          "cash_cost": 7,
+          "next": "pl_market.fin_gift",
+          "effects": { "love": 1, "bond": 1 },
+          "set_flags": { "visited_market": true }
+        }
+      ]
+    },
+    {
+      "id": "pl_market.fin_food",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Scalding, oversauced, exactly right." },
+        { "speaker": "narrator", "text": "For eight minutes the headset doesn't exist." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "pl_market.fin_stalls",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Past the last lanterns, the market thins into shadows — and there they are." },
+        { "speaker": "narrator", "text": "Vans by the stadium lot. Engines running at midnight. You memorize a plate without deciding to." }
+      ],
+      "variants": [
+        {
+          "when": { "flag": "crosstown_night" },
+          "lines": [
+            { "speaker": "narrator", "text": "The vans again. Same corner, different plates." },
+            { "speaker": "narrator", "text": "That's not a coincidence anymore. That's a schedule." }
+          ]
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "pl_market.fin_gift",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "A small thing from a crowded stall — the kind of gift that says 'I thought of you on a Tuesday.'" },
+        { "speaker": "narrator", "text": "Those are the ones people keep." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

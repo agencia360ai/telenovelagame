@@ -2,22 +2,22 @@
   "schema": "mission@1",
   "id": "life_rank4",
   "title": "The Weight",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "life",
-  "rank": 4,
   "caller": {
     "name": "You",
     "type": "OFF DUTY",
     "location": "Home, after a shift"
   },
   "reward": 0,
+  "rank": 4,
   "initial_variables": {
     "respect": 0
   },
-  "initial_flags": {},
   "assets": [],
+  "initial_flags": {},
   "start": "life4.intro",
   "beats": [
     {
@@ -51,13 +51,17 @@
           "id": "life4.d1_0",
           "label": "Set it down for the night. You did enough today.",
           "next": "life4.fin",
-          "effects": { "respect": 1 }
+          "effects": {
+            "respect": 1
+          }
         },
         {
           "id": "life4.d1_1",
           "label": "Carry it. It's the price of being the one they trust.",
           "next": "life4.fin",
-          "effects": { "respect": 1 }
+          "effects": {
+            "respect": 1
+          }
         }
       ]
     },

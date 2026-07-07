@@ -1,0 +1,140 @@
+{
+  "schema": "mission@1",
+  "id": "w7_plot",
+  "title": "Week 7 — The Wrong Address",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "week": 7,
+  "order": 7,
+  "goal_trust": 21,
+  "unlock": {
+    "minWeek": 7
+  },
+  "caller": {
+    "name": "Caller",
+    "type": "STORY CALL",
+    "location": "48 Harlow Drive"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0,
+    "debt_missed": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w7_plot.intro",
+  "beats": [
+    {
+      "id": "w7_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A house fire, a panicked caller, an address on the screen: 84 Harlow Drive. Units rolling."
+        }
+      ],
+      "next": "w7_plot.v1"
+    },
+    {
+      "id": "w7_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "They're driving PAST us! The trucks — they went past! We're at FORTY-eight! Four-eight!"
+        },
+        {
+          "speaker": "narrator",
+          "text": "84. 48. Two digits doing a little dance. You have seen this exact dance before — through a window, when you were nine."
+        }
+      ],
+      "next": "w7_plot.d1"
+    },
+    {
+      "id": "w7_plot.d1",
+      "type": "decision",
+      "prompt": "Protocol says verify, then re-route. The fire says now.",
+      "choices": [
+        {
+          "id": "w7_plot.d1_0",
+          "label": "Re-route on your own authority. Now.",
+          "next": "w7_plot.c_reroute",
+          "set_flags": {
+            "rerouted": true
+          }
+        },
+        {
+          "id": "w7_plot.d1_1",
+          "label": "Verify per protocol, then correct it.",
+          "next": "w7_plot.c_protocol",
+          "set_flags": {
+            "by_protocol": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "w7_plot.c_reroute",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You call it. Trucks U-turn mid-block. Thirty seconds — that's what your childhood cost, and what you just gave back."
+        },
+        {
+          "speaker": "caller",
+          "text": "They're here! They're HERE! Thank you—"
+        }
+      ],
+      "next": "w7_plot.v2"
+    },
+    {
+      "id": "w7_plot.c_protocol",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Verification takes ninety seconds. The family gets out; the kitchen doesn't. Nobody will ever write those ninety seconds up. You will remember them anyway."
+        }
+      ],
+      "next": "w7_plot.v2"
+    },
+    {
+      "id": "w7_plot.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Later you pull the original entry. The caller said forty-eight — clearly. Someone keyed 84. The correction was already drafted before you touched anything."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The 'errors' aren't errors. They're cover — traffic steered away from streets where certain vans work."
+        }
+      ],
+      "next": "w7_plot.memory"
+    },
+    {
+      "id": "w7_plot.memory",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A photocopy you've owned since you were sixteen: response time, 4 minutes. Your memory: 9. Two numbers doing a little dance."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You've been carrying a smoothed log your whole life. Tonight you learned they still make them."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

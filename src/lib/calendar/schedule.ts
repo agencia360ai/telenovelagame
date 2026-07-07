@@ -184,9 +184,12 @@ export function generateWeek(
     if (isPlotDay && plotMissionId) {
       slots = day.keepDailyOnPlotDay ? [...day.slots, "game_plot"] : ["game_plot"];
     }
-    // Event days APPEND the off-duty scene after the day's normal calls.
+    // Event days INSERT the off-duty scene between the day's calls (random
+    // position after at least one call) so the waits between calls carry the
+    // personal life too — not just the end of the shift.
     if (eventDayIds.includes(day.id)) {
-      slots = [...slots, "event"];
+      const at = 1 + Math.floor(rng() * slots.length);
+      slots = [...slots.slice(0, at), "event", ...slots.slice(at)];
     }
 
     const missionIds: string[] = [];

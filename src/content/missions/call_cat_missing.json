@@ -2,7 +2,7 @@
   "schema": "mission@1",
   "id": "call_cat_missing",
   "title": "My Cat Vanished",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "daily",
@@ -28,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_cat_missing.b0",
   "assets": [
     {
       "key": "call-cat-missing",
@@ -41,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_cat_missing.b0",
   "beats": [
     {
       "id": "call_cat_missing.b0",

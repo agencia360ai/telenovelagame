@@ -2,40 +2,39 @@
   "schema": "mission@1",
   "id": "event_night_out",
   "title": "Night Out",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 40,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Group chat" },
-  "speakers": { "friend": "Old Friend" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Group chat"
+  },
   "reward": 5,
-  "initial_variables": { "bond": 0, "energy": 0 },
-  "initial_flags": {},
+  "order": 40,
+  "initial_variables": {
+    "bond": 0,
+    "energy": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_night.intro",
+  "speakers": {
+    "friend": "Old Friend"
+  },
   "beats": [
     {
       "id": "ev_night.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The group chat wakes up after months asleep. Forty-one messages in ten minutes." },
-        { "speaker": "friend", "text": "TAQUERÍA. Tonight. It's open late and everyone's asking about you. In??" }
-      ],
-      "variants": [
         {
-          "when": { "flag": "friend_close" },
-          "lines": [
-            { "speaker": "narrator", "text": "The group chat wakes up. First one tagged: you. Burgers earned you that." },
-            { "speaker": "friend", "text": "TAQUERÍA. Tonight. It's open late. You in??" }
-          ]
+          "speaker": "narrator",
+          "text": "The group chat wakes up after months asleep. Someone found a taquería that's open late. Everyone's in. Everyone's asking about you."
         },
         {
-          "when": { "flag": "friend_ignored" },
-          "lines": [
-            { "speaker": "narrator", "text": "The group chat wakes up. Your name comes up like a question." },
-            { "speaker": "friend", "text": "TAQUERÍA tonight. You in this time?? No pressure. Some pressure." }
-          ]
+          "speaker": "friend",
+          "text": "You in?? We're covering the table, everyone throws in for their share."
         }
       ],
       "next": "ev_night.d1"
@@ -43,59 +42,46 @@
     {
       "id": "ev_night.d1",
       "type": "decision",
-      "prompt": "Forty-one messages and counting.",
-      "choices": [
-        { "id": "ev_night.d1_0", "label": "'What taquería? Details.'", "next": "ev_night.conv2", "effects": { "bond": 1 } },
-        { "id": "ev_night.d1_1", "label": "Send a noncommittal thumbs up.", "next": "ev_night.conv2" },
-        { "id": "ev_night.d1_2", "label": "'Who is this again?'", "next": "ev_night.conv2", "effects": { "bond": 1 } }
-      ]
-    },
-    {
-      "id": "ev_night.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "friend", "text": "The place behind the laundromat. Trust the process." },
-        { "speaker": "narrator", "text": "Someone posts a blurry photo of tacos. It looks like evidence, not dinner." },
-        { "speaker": "friend", "text": "Also someone's bringing a karaoke speaker. This is your only warning." }
-      ],
-      "next": "ev_night.d2"
-    },
-    {
-      "id": "ev_night.d2",
-      "type": "decision",
-      "prompt": "Karaoke speaker. Consider carefully.",
-      "choices": [
-        { "id": "ev_night.d2_0", "label": "'I don't sing. I dispatch.'", "next": "ev_night.pivot", "effects": { "bond": 1 } },
-        { "id": "ev_night.d2_1", "label": "'Save me a mic.'", "next": "ev_night.pivot", "effects": { "bond": 1 } },
-        { "id": "ev_night.d2_2", "label": "'I'll bring earplugs.'", "next": "ev_night.pivot", "effects": { "bond": 1 } }
-      ]
-    },
-    {
-      "id": "ev_night.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The chat votes. You're officially expected. Your early shift clears its throat." },
-        { "speaker": "friend", "text": "Everyone throws in for their share. So — actually coming?" }
-      ],
-      "next": "ev_night.d3"
-    },
-    {
-      "id": "ev_night.d3",
-      "type": "decision",
       "prompt": "First invite in a long time.",
       "choices": [
-        { "id": "ev_night.d3_0", "label": "Go. Throw in your share.", "cash_cost": 10, "next": "ev_night.fin_go", "effects": { "bond": 2, "energy": 1 } },
-        { "id": "ev_night.d3_1", "label": "Go, but just for a soda.", "cash_cost": 3, "next": "ev_night.fin_soda", "effects": { "bond": 1 } },
-        { "id": "ev_night.d3_2", "label": "'Next time. Early shift tomorrow.'", "next": "ev_night.fin_skip", "effects": { "bond": -1, "energy": 1 } }
+        {
+          "id": "ev_night.d1_0",
+          "label": "Go. Throw in your share.",
+          "next": "ev_night.fin_go",
+          "cash_cost": 10,
+          "effects": {
+            "bond": 2,
+            "energy": 1
+          }
+        },
+        {
+          "id": "ev_night.d1_1",
+          "label": "Go, but just for a soda.",
+          "next": "ev_night.fin_soda",
+          "cash_cost": 3,
+          "effects": {
+            "bond": 1
+          }
+        },
+        {
+          "id": "ev_night.d1_2",
+          "label": "'Next time. Early shift tomorrow.'",
+          "next": "ev_night.fin_skip",
+          "effects": {
+            "bond": -1,
+            "energy": 1
+          }
+        }
       ]
     },
     {
       "id": "ev_night.fin_go",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Tacos, bad jokes, truly terrible karaoke. Nobody asks about the sirens." },
-        { "speaker": "friend", "text": "Told you the laundromat place was real." },
-        { "speaker": "narrator", "text": "For three hours you're just a person at a table." }
+        {
+          "speaker": "narrator",
+          "text": "Tacos, bad jokes, someone's terrible karaoke. Nobody asks about the sirens. For three hours you're just a person at a table."
+        }
       ],
       "next": "_end"
     },
@@ -103,8 +89,10 @@
       "id": "ev_night.fin_soda",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You nurse one soda and stay two hours anyway." },
-        { "speaker": "narrator", "text": "Turns out the company was the thing, not the tacos." }
+        {
+          "speaker": "narrator",
+          "text": "You nurse one soda and stay two hours anyway. Turns out the company was the thing, not the tacos."
+        }
       ],
       "next": "_end"
     },
@@ -112,11 +100,16 @@
       "id": "ev_night.fin_skip",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The chat posts photos until 1 a.m." },
-        { "speaker": "narrator", "text": "You sleep early, wake rested, and scroll through the night you didn't have." }
+        {
+          "speaker": "narrator",
+          "text": "The chat posts photos until 1 a.m. You sleep early, wake rested, and scroll through the night you didn't have."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

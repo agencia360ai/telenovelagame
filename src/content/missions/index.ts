@@ -27,16 +27,27 @@ import lifeRank6 from "./life_rank6.json";
 import consequenceVisit from "./consequence_the_visit.json";
 import consequenceCase from "./consequence_the_case.json";
 
-// Game Plot — systemic-corruption arc (narrative, no dispatch). No single
-// villain: the player uncovers it case by case as the system buries calls.
-import w1Plot from "./w1_plot.json"; // game_plot, order 10 (prologue + The Call That Drops)
-import w2Plot from "./w2_plot.json"; // game_plot, order 20 (Terrorist Threat)
-import w3Plot from "./w3_plot.json"; // game_plot, order 30 (Vans at night)
-import w4Plot from "./w4_plot.json"; // game_plot, order 40 (The Envelope)
-import w5Plot from "./w5_plot.json"; // game_plot, order 50 (The Stadium Night — 3-way converging finale)
-import w1WeekendCoffee from "./w1_weekend_coffee.json"; // weekend, order 0 (After Hours — alone with the pattern)
-import w1WeekendMap from "./w1_weekend_map.json"; // weekend, order 1 (Día libre — interactive map beat demo)
-import testUsamap from "./test_usamap.json"; // weekend, order 99 (PRUEBA — mapa de USA, estaciones por estado)
+// Game Plot — the 12-week Hale arc (Charlie/Mara storyline). One plot call per
+// week, in order, each gated to its week via `unlock.minWeek`. Week 12 is the
+// hearing-room finale (testify / quiet deal / confess-it-all endings).
+import w1Plot from "./w1_plot.json"; // week 1 — The Call That Drops
+import w2Plot from "./w2_plot.json"; // week 2 — The Voice
+import w3Plot from "./w3_plot.json"; // week 3 — Vans at night
+import w4Plot from "./w4_plot.json"; // week 4 — The Envelope
+import w5Plot from "./w5_plot.json"; // week 5 — Her Voice Again
+import w6Plot from "./w6_plot.json"; // week 6 — The Audit
+import w7Plot from "./w7_plot.json"; // week 7 — The Wrong Address
+import w8Plot from "./w8_plot.json"; // week 8 — The Partner
+import w9Plot from "./w9_plot.json"; // week 9 — Two Alarms
+import w10Plot from "./w10_plot.json"; // week 10 — The Raid
+import w11Plot from "./w11_plot.json"; // week 11 — The Name on the Log
+import w12Plot from "./w12_plot.json"; // week 12 — The Last Shift (finale)
+// Weekend scenes — authored for specific weeks (see mission `week` field).
+import w1WeekendCoffee from "./w1_weekend_coffee.json"; // week 1 — After Hours
+import w6WeekendPartner from "./w6_weekend_partner.json"; // week 6 — Coffee at 3 A.M.
+import w11WeekendEve from "./w11_weekend_eve.json"; // week 11 — The Night Before
+import w1WeekendMap from "./w1_weekend_map.json"; // interactive-map weekend demo (out of rotation)
+import testUsamap from "./test_usamap.json"; // interactive-map USA test (out of rotation)
 
 // Off-duty events — ordered personal vignettes (category "event", three per
 // week on random weekdays). No dispatch; choices may cost cash (`cash_cost`).
@@ -48,6 +59,12 @@ import eventDebtFirst from "./event_debt_first.json"; // order 32 — First Inst
 import eventDebtSecond from "./event_debt_second.json"; // order 62 — Second Installment
 import eventDebtDeadline from "./event_debt_deadline.json"; // order 92 — The Deadline
 import eventFirstBreak from "./event_first_break.json"; // order 10 — First Break
+
+// City places (category "place") — travel destinations opened from the lobby
+// map (SALIR). Played on demand, never scheduled by the calendar.
+import placeHome from "./place_home.json";
+import placeCafe from "./place_cafe.json";
+import placeMarket from "./place_market.json";
 import eventFriendText from "./event_friend_text.json"; // order 20 — A Text From an Old Friend
 import eventCoffeePlace from "./event_coffee_place.json"; // order 30 — The Coffee Place
 import eventCrosstown from "./event_crosstown.json"; // order 34 — The Long Way (paid travel → plot clue)
@@ -91,6 +108,14 @@ import CallGiantRoach from "./call_giant_roach.json";
 import CallInfestation from "./call_infestation.json";
 import CallSuspiciousBoxes from "./call_suspicious_boxes.json";
 import casoTrex from "./caso_trex.json";
+
+// Daily calls — new batch from the 12-week narrative package.
+import CallUnderControl from "./call_under_control.json"; // chemical plant "not fire"
+import CallBabyBreathing from "./call_baby_breathing.json"; // infant CPR save
+import CallQuarryKid from "./call_quarry_kid.json"; // walkie-talkie missing friend
+import CallWoodChipper from "./call_wood_chipper.json"; // 2 a.m. wood chipper
+import CallOnlyDown from "./call_only_down.json"; // the elevator only goes down
+import CallBillboardMan from "./call_billboard_man.json"; // handcuffed to a billboard
 
 /**
  * The mission registry. To add an interactive call:
@@ -149,15 +174,23 @@ export const BUNDLED_MISSIONS: Mission[] = [
   // Consequence / fallout events (category "consequence").
   consequenceVisit as unknown as Mission,
   consequenceCase as unknown as Mission,
-  // Game Plot arc (served by the calendar: game_plot one per week, weekend on Sat).
+  // Game Plot arc (served by the calendar: one plot call per week, in order).
   w1Plot as unknown as Mission,
   w2Plot as unknown as Mission,
   w3Plot as unknown as Mission,
   w4Plot as unknown as Mission,
   w5Plot as unknown as Mission,
+  w6Plot as unknown as Mission,
+  w7Plot as unknown as Mission,
+  w8Plot as unknown as Mission,
+  w9Plot as unknown as Mission,
+  w10Plot as unknown as Mission,
+  w11Plot as unknown as Mission,
+  w12Plot as unknown as Mission,
+  // Weekend scenes (weeks 1, 6 and 11 — matched by their `week` field).
   w1WeekendCoffee as unknown as Mission,
-  w1WeekendMap as unknown as Mission,
-  testUsamap as unknown as Mission,
+  w6WeekendPartner as unknown as Mission,
+  w11WeekendEve as unknown as Mission,
   // Off-duty events (category "event") — three per week, choices can spend cash.
   eventDebtLetter as unknown as Mission,
   eventDebtFirst as unknown as Mission,
@@ -166,7 +199,6 @@ export const BUNDLED_MISSIONS: Mission[] = [
   eventFirstBreak as unknown as Mission,
   eventFriendText as unknown as Mission,
   eventCoffeePlace as unknown as Mission,
-  eventCrosstown as unknown as Mission,
   eventNightOut as unknown as Mission,
   eventFirstDate as unknown as Mission,
   eventWalkHome as unknown as Mission,
@@ -176,12 +208,30 @@ export const BUNDLED_MISSIONS: Mission[] = [
   eventTheGift as unknown as Mission,
   eventWorldsMeet as unknown as Mission,
   eventOneMonth as unknown as Mission,
+  // City places — reachable only through the lobby travel map.
+  placeHome as unknown as Mission,
+  placeCafe as unknown as Mission,
+  placeMarket as unknown as Mission,
 ];
 
 // Demo missions kept available but out of rotation (re-add to the array to use).
 void armedRobbery;
 void kitchenFire;
 void borderRunners;
+// Out of rotation since the 12-week package: crosstown travel event (superseded
+// by the after-hours city map) and the interactive-map weekend/USA demos (kept
+// importable so they're still loadable by id for testing).
+void eventCrosstown;
+void w1WeekendMap;
+void testUsamap;
+// Out of rotation: extra package calls — the daily pool is the user's fixed
+// 30-call list (re-add here to rotate them back in).
+void CallUnderControl;
+void CallBabyBreathing;
+void CallQuarryKid;
+void CallWoodChipper;
+void CallOnlyDown;
+void CallBillboardMan;
 
 /**
  * The units the operator can dispatch (rendered as buttons in a mission).

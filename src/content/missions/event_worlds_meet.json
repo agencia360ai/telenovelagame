@@ -2,86 +2,86 @@
   "schema": "mission@1",
   "id": "event_worlds_meet",
   "title": "Worlds Meet",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 110,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Taquería" },
-  "speakers": { "friend": "Old Friend", "partner": "Partner" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Taquería"
+  },
   "reward": 5,
-  "initial_variables": { "bond": 0, "love": 0 },
-  "initial_flags": {},
+  "order": 110,
+  "initial_variables": {
+    "bond": 0,
+    "love": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_meet.intro",
+  "speakers": {
+    "friend": "Old Friend",
+    "partner": "Partner"
+  },
   "beats": [
     {
       "id": "ev_meet.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "One table, two halves of your off-duty life. The taquería, of course." },
-        { "speaker": "partner", "text": "So you're the famous friends. I've heard almost nothing. Suspicious." },
-        { "speaker": "friend", "text": "Oh, we can fix that." }
+        {
+          "speaker": "narrator",
+          "text": "The two halves of your off-duty life at one table. The friends brought embarrassing stories. Your partner brought an appetite for them."
+        },
+        {
+          "speaker": "friend",
+          "text": "Has this one told you about the academy fitness test yet? No? OH."
+        }
       ],
       "next": "ev_meet.d1"
     },
     {
       "id": "ev_meet.d1",
       "type": "decision",
-      "prompt": "This was always going to happen.",
-      "choices": [
-        { "id": "ev_meet.d1_0", "label": "'Be nice. Both of you.'", "next": "ev_meet.conv2", "effects": { "bond": 1 } },
-        { "id": "ev_meet.d1_1", "label": "'I already regret this dinner.'", "next": "ev_meet.conv2", "effects": { "love": 1 } },
-        { "id": "ev_meet.d1_2", "label": "Order for the table. Stall.", "next": "ev_meet.conv2", "effects": { "bond": 1 } }
-      ]
-    },
-    {
-      "id": "ev_meet.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "friend", "text": "Has this one told you about the academy fitness test yet? No? OH." },
-        { "speaker": "narrator", "text": "Your partner sets down the menu. Full attention. Terrible sign." },
-        { "speaker": "partner", "text": "Go on." }
-      ],
-      "next": "ev_meet.d2"
-    },
-    {
-      "id": "ev_meet.d2",
-      "type": "decision",
-      "prompt": "The table leans in.",
-      "choices": [
-        { "id": "ev_meet.d2_0", "label": "'There was a rope involved.'", "next": "ev_meet.pivot", "effects": { "love": 1 } },
-        { "id": "ev_meet.d2_1", "label": "'Lies are about to be told.'", "next": "ev_meet.pivot", "effects": { "bond": 1 } },
-        { "id": "ev_meet.d2_2", "label": "Hide behind your horchata.", "next": "ev_meet.pivot", "effects": { "bond": 1 } }
-      ]
-    },
-    {
-      "id": "ev_meet.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Three phones come out. There is, apparently, photographic evidence." },
-        { "speaker": "friend", "text": "We were saving these for a wedding, honestly." },
-        { "speaker": "partner", "text": "I need to see everything." }
-      ],
-      "next": "ev_meet.d3"
-    },
-    {
-      "id": "ev_meet.d3",
-      "type": "decision",
       "prompt": "The table looks at you.",
       "choices": [
-        { "id": "ev_meet.d3_0", "label": "Cover the whole table. Distraction!", "cash_cost": 18, "next": "ev_meet.fin_cover", "effects": { "bond": 1, "love": 1 } },
-        { "id": "ev_meet.d3_1", "label": "Tell the story yourself — worse version.", "next": "ev_meet.fin_story", "effects": { "bond": 2, "love": 1 } },
-        { "id": "ev_meet.d3_2", "label": "Deny everything. All lies.", "next": "ev_meet.fin_deny", "effects": { "bond": 1 } }
+        {
+          "id": "ev_meet.d1_0",
+          "label": "Cover the whole table. Distraction!",
+          "next": "ev_meet.fin_cover",
+          "cash_cost": 18,
+          "effects": {
+            "bond": 1,
+            "love": 1
+          }
+        },
+        {
+          "id": "ev_meet.d1_1",
+          "label": "Tell the story yourself — worse version.",
+          "next": "ev_meet.fin_story",
+          "effects": {
+            "bond": 2,
+            "love": 1
+          }
+        },
+        {
+          "id": "ev_meet.d1_2",
+          "label": "Deny everything. All lies.",
+          "next": "ev_meet.fin_deny",
+          "effects": {
+            "bond": 1
+          }
+        }
       ]
     },
     {
       "id": "ev_meet.fin_cover",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "'Dinner's on me' buys exactly eleven seconds of mercy." },
-        { "speaker": "partner", "text": "Worth every cent, I'm sure. Now — the rope?" },
-        { "speaker": "narrator", "text": "Money well wasted. The table votes to keep your partner." }
+        {
+          "speaker": "narrator",
+          "text": "'Dinner's on me' buys exactly eleven seconds of mercy, then the story gets told anyway. Money well wasted. The table votes to keep your partner."
+        }
       ],
       "next": "_end"
     },
@@ -89,9 +89,14 @@
       "id": "ev_meet.fin_story",
       "type": "dialogue",
       "lines": [
-        { "speaker": "partner", "text": "You got stuck WHERE on the rope climb?" },
-        { "speaker": "narrator", "text": "You tell it worse than it was, because the table deserves that." },
-        { "speaker": "narrator", "text": "Two worlds, one laugh. It fits." }
+        {
+          "speaker": "partner",
+          "text": "You got stuck WHERE on the rope climb?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "You tell it worse than it was, because that's what the table deserves. Two worlds, one laugh. It fits."
+        }
       ],
       "next": "_end"
     },
@@ -99,12 +104,16 @@
       "id": "ev_meet.fin_deny",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "'Slander,' you declare, as three phones produce the evidence." },
-        { "speaker": "partner", "text": "I'm saving this one for later." },
-        { "speaker": "narrator", "text": "You're doomed, happily." }
+        {
+          "speaker": "narrator",
+          "text": "'Slander,' you declare, as three phones produce photographic evidence. Your partner saves one for later. You're doomed, happily."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

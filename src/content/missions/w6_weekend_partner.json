@@ -1,0 +1,98 @@
+{
+  "schema": "mission@1",
+  "id": "w6_weekend_partner",
+  "title": "Coffee at 3 A.M.",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "weekend",
+  "week": 6,
+  "order": 6,
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "After hours"
+  },
+  "reward": 8,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w6_weekend.intro",
+  "speakers": {
+    "partner": "Partner"
+  },
+  "beats": [
+    {
+      "id": "w6_weekend.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The café for people with weird hours. Your partner stirs sugar into coffee that stopped being coffee an hour ago."
+        }
+      ],
+      "next": "w6_weekend.v1"
+    },
+    {
+      "id": "w6_weekend.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "partner",
+          "text": "Everyone signs one correction eventually. Times get smoothed, response looks better, the city sleeps."
+        },
+        {
+          "speaker": "partner",
+          "text": "You sign, you go home. That's the whole religion around here."
+        }
+      ],
+      "next": "w6_weekend.d1"
+    },
+    {
+      "id": "w6_weekend.d1",
+      "type": "decision",
+      "prompt": "Your partner just confessed to one signature. Your move.",
+      "choices": [
+        {
+          "id": "w6_weekend.d1_0",
+          "label": "\"Show me one. Just one log.\"",
+          "next": "w6_weekend.fin_show"
+        },
+        {
+          "id": "w6_weekend.d1_1",
+          "label": "Let it go. Protect the friendship.",
+          "next": "w6_weekend.fin_drop"
+        }
+      ]
+    },
+    {
+      "id": "w6_weekend.fin_show",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A napkin, a case number from memory. Their hand shakes writing it. Now you owe each other silence — or the truth."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w6_weekend.fin_drop",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You talk about anything else. The case number stays in their pocket, and between you."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

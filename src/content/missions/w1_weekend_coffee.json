@@ -2,109 +2,51 @@
   "schema": "mission@1",
   "id": "w1_weekend_coffee",
   "title": "After Hours",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "weekend",
-  "order": 0,
-  "reward": 8,
+  "week": 1,
+  "order": 1,
   "caller": {
-    "name": "Home",
+    "name": "You",
     "type": "OFF DUTY",
-    "location": "Your apartment"
+    "location": "After hours"
   },
+  "reward": 8,
   "initial_variables": {
-    "integrity": 0,
-    "compliance": 0,
-    "don": 0,
-    "loose_thread": 0,
     "case_file": 0,
-    "pawn": 0
+    "love": 0
   },
-  "initial_flags": {},
   "assets": [],
+  "initial_flags": {},
   "start": "w1_weekend.intro",
   "beats": [
     {
       "id": "w1_weekend.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Saturday. The shift is over. The headset is off." },
-        { "speaker": "narrator", "text": "The apartment doesn't quite know what to do with you. Neither do you." }
+        {
+          "speaker": "narrator",
+          "text": "Saturday. The shift is over."
+        }
       ],
       "next": "w1_weekend.d1"
     },
     {
       "id": "w1_weekend.d1",
       "type": "decision",
-      "prompt": "The morning is yours. Allegedly.",
-      "choices": [
-        { "id": "w1_weekend.d1_0", "label": "Sleep until the city forgets you.", "next": "w1_weekend.conv2" },
-        { "id": "w1_weekend.d1_1", "label": "Coffee by the window. Watch the street.", "next": "w1_weekend.conv2" },
-        { "id": "w1_weekend.d1_2", "label": "Replay this week's calls in your head.", "next": "w1_weekend.conv2", "effects": { "loose_thread": 1 } }
-      ]
-    },
-    {
-      "id": "w1_weekend.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The kettle clicks. Somewhere in your skull, this week's calls replay anyway." },
-        { "speaker": "narrator", "text": "Same street names. Same careful voices. A pattern, if you squint." },
-        { "speaker": "narrator", "text": "Your phone buzzes. Coworkers, a bar, tonight, question mark." }
-      ],
-      "next": "w1_weekend.d2"
-    },
-    {
-      "id": "w1_weekend.d2",
-      "type": "decision",
-      "prompt": "Answer the group chat?",
-      "choices": [
-        { "id": "w1_weekend.d2_0", "label": "'In.' People are good for you.", "next": "w1_weekend.conv3", "effects": { "compliance": 1 } },
-        { "id": "w1_weekend.d2_1", "label": "'Maybe.' Keep the options open.", "next": "w1_weekend.conv3" },
-        { "id": "w1_weekend.d2_2", "label": "'Can't. Plans.' You have no plans.", "next": "w1_weekend.conv3", "effects": { "loose_thread": 1 } }
-      ]
-    },
-    {
-      "id": "w1_weekend.conv3",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You send it and set the phone face-down. Small mercy." },
-        { "speaker": "narrator", "text": "The afternoon burns off slow. Laundry. A walk you don't remember taking." }
-      ],
-      "next": "w1_weekend.pivot"
-    },
-    {
-      "id": "w1_weekend.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Evening comes anyway. The notebook sits on the desk, patient as a lawyer." },
-        { "speaker": "narrator", "text": "Outside: the whole city, off the clock. Inside: you, alone with the pattern." }
-      ],
-      "next": "w1_weekend.d3"
-    },
-    {
-      "id": "w1_weekend.d3",
-      "type": "decision",
       "prompt": "Alone with the pattern. What do you do?",
       "choices": [
         {
-          "id": "w1_weekend.d3_0",
+          "id": "w1_weekend.d1_0",
           "label": "Start a private life — dates, go outside, everything.",
-          "next": "w1_weekend.fin_off",
-          "effects": {
-            "compliance": 1,
-            "pawn": 1
-          }
+          "next": "w1_weekend.fin_off"
         },
         {
-          "id": "w1_weekend.d3_1",
+          "id": "w1_weekend.d1_1",
           "label": "I should focus on what happened.",
-          "next": "w1_weekend.fin_note",
-          "effects": {
-            "loose_thread": 2,
-            "case_file": 1,
-            "integrity": 1
-          }
+          "next": "w1_weekend.fin_note"
         }
       ]
     },
@@ -112,8 +54,10 @@
       "id": "w1_weekend.fin_off",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You close the laptop, untie the necktie, pour a drink." },
-        { "speaker": "narrator", "text": "Off duty. The pattern can wait. Patterns always say they'll wait." }
+        {
+          "speaker": "narrator",
+          "text": "You close the laptop, untie your necktie and pour a drink, you are Off Duty."
+        }
       ],
       "next": "_end"
     },
@@ -121,8 +65,10 @@
       "id": "w1_weekend.fin_note",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You open the notebook and write down everything you remember." },
-        { "speaker": "narrator", "text": "Street names. Times. The careful voices. It fills three pages too easily." }
+        {
+          "speaker": "narrator",
+          "text": "You open a notebook and write down everything you remember."
+        }
       ],
       "next": "_end"
     },

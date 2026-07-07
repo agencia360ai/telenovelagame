@@ -1,0 +1,162 @@
+{
+  "schema": "mission@1",
+  "id": "w10_plot",
+  "title": "Week 10 — The Raid",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "week": 10,
+  "order": 10,
+  "goal_trust": 30,
+  "unlock": {
+    "minWeek": 10
+  },
+  "caller": {
+    "name": "Mara",
+    "type": "STORY CALL",
+    "location": "Stadium — Gate C"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0,
+    "debt_missed": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w10_plot.intro",
+  "speakers": {
+    "mara": "Mara",
+    "detective": "Detective"
+  },
+  "beats": [
+    {
+      "id": "w10_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Third call. No whisper this time — she's spent it all getting to a real phone."
+        }
+      ],
+      "next": "w10_plot.v1"
+    },
+    {
+      "id": "w10_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "Stadium. Container row behind Gate C — blue containers, third one has a white door. There are nineteen of us."
+        },
+        {
+          "speaker": "mara",
+          "text": "They load the vans on Sunday. You said you'd find me. Find me before Sunday."
+        }
+      ],
+      "next": "w10_plot.d1"
+    },
+    {
+      "id": "w10_plot.d1",
+      "type": "decision",
+      "prompt": "The system leaks. The clock runs. Route this how?",
+      "choices": [
+        {
+          "id": "w10_plot.d1_0",
+          "label": "Call the detective's personal line. Off the record.",
+          "next": "w10_plot.c_detective",
+          "set_flags": {
+            "via_detective": true
+          }
+        },
+        {
+          "id": "w10_plot.d1_1",
+          "label": "File it by the book, but time-stamp everything publicly.",
+          "next": "w10_plot.c_book",
+          "set_flags": {
+            "filed_public": true
+          },
+          "effects": {
+            "case_file": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w10_plot.c_detective",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "detective",
+          "text": "Off the record gets warrants moving on the record. Saturday night. Tell no one inside your center — no one."
+        },
+        {
+          "speaker": "narrator",
+          "text": "For once, the leak springs on their side: nobody warns the vans."
+        }
+      ],
+      "next": "w10_plot.raid"
+    },
+    {
+      "id": "w10_plot.c_book",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You file it loud — copies everywhere, timestamps notarized by sheer volume. Too public to bury. The raid happens because burying it would now be the scandal."
+        }
+      ],
+      "next": "w10_plot.raid"
+    },
+    {
+      "id": "w10_plot.raid",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Saturday, 11:40 p.m. Bolt cutters. Floodlights. A white door opens and the night inhales."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nineteen girls walk out blinking into the blue-red wash. One of them asks the officers: 'Which one of you is the voice?'"
+        }
+      ],
+      "next": "w10_plot.v2"
+    },
+    {
+      "id": "w10_plot.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "mara",
+          "text": "It's you, right? On the phone. It's you."
+        },
+        {
+          "speaker": "narrator",
+          "text": "They put her on the radio because she won't get in the ambulance until they do. You say her name. She says yours. The channel stays quiet for a moment out of respect."
+        }
+      ],
+      "next": "w10_plot.fin"
+    },
+    {
+      "id": "w10_plot.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The vans' paper trail dies inside city systems — permits, routes, corrections. Signed by a login you already know."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You saved nineteen. Now comes the man who made saving them this hard."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

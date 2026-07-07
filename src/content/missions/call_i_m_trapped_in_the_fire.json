@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "call_i_m_trapped_in_the_fire",
   "title": "I'm trapped in the fire!!!!!!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "fire"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_i_m_trapped_in_the_fire.intro",
   "assets": [
     {
       "key": "call-trapped-fire",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_i_m_trapped_in_the_fire.intro",
   "beats": [
     {
       "id": "call_i_m_trapped_in_the_fire.intro",
@@ -105,10 +106,10 @@
           "text": "Second floor, 22 Halford Street."
         }
       ],
-      "next": "call_i_m_trapped_in_the_fire.d2"
+      "next": "dispatch"
     },
     {
-      "id": "call_i_m_trapped_in_the_fire.d2",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "firefighters",

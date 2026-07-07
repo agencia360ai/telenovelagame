@@ -1,0 +1,132 @@
+{
+  "schema": "mission@1",
+  "id": "call_under_control",
+  "title": "Everything Is Under Control",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 2,
+  "category": "daily",
+  "tags": [
+    "real",
+    "fire"
+  ],
+  "caller": {
+    "name": "Night Supervisor",
+    "type": "INDUSTRIAL EMERGENCY",
+    "location": "Chemical plant, Route 12"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "ambulance"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "call_under_control.b0",
+  "beats": [
+    {
+      "id": "call_under_control.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Alarms scream in the background. The voice on the line is glacially, professionally calm."
+        }
+      ],
+      "next": "call_under_control.b1"
+    },
+    {
+      "id": "call_under_control.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Good evening. Chemical plant, night shift supervisor. There is no fire. The roof is merely… glowing."
+        }
+      ],
+      "next": "call_under_control.d1"
+    },
+    {
+      "id": "call_under_control.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_under_control.d1_0",
+          "label": "Sir, roofs don't glow. Evacuate now.",
+          "next": "call_under_control.b2"
+        },
+        {
+          "id": "call_under_control.d1_1",
+          "label": "How big is the 'not fire'?",
+          "next": "call_under_control.b2"
+        },
+        {
+          "id": "call_under_control.d1_2",
+          "label": "Glowing like… pretty? Send a pic.",
+          "next": "call_under_control.b2"
+        }
+      ]
+    },
+    {
+      "id": "call_under_control.b2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Evacuation is unnecessary. Protocol states— okay, the protocol binder just caught fire."
+        }
+      ],
+      "next": "call_under_control.d2"
+    },
+    {
+      "id": "call_under_control.d2",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_under_control.d2_0",
+          "label": "Get everyone out. NOW. I'm dispatching.",
+          "next": "call_under_control.b3"
+        },
+        {
+          "id": "call_under_control.d2_1",
+          "label": "Save the binder, it's evidence. 😏",
+          "next": "call_under_control.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_under_control.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "…Yes. Fine. We are evacuating. For unrelated reasons."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Hazmat and fire roll heavy. Everyone gets out — including the supervisor's dignity, mostly. The roof was not fine.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

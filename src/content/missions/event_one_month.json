@@ -2,34 +2,54 @@
   "schema": "mission@1",
   "id": "event_one_month",
   "title": "One Month",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 120,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Corner café" },
-  "speakers": { "partner": "Partner" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Corner café"
+  },
   "reward": 5,
-  "initial_variables": { "love": 0 },
-  "initial_flags": {},
+  "order": 120,
+  "initial_variables": {
+    "love": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_month.intro",
+  "speakers": {
+    "partner": "Partner"
+  },
   "beats": [
     {
       "id": "ev_month.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "One month since the burnt espresso. Same café, same weird hours." },
-        { "speaker": "narrator", "text": "They're at the counter holding two cups. One of them is yours." },
-        { "speaker": "partner", "text": "A month of putting up with dispatch schedules. I counted." }
+        {
+          "speaker": "narrator",
+          "text": "One month since the burnt espresso. Same café, same weird hours. They're already at the counter, holding two cups, one of them yours."
+        },
+        {
+          "speaker": "partner",
+          "text": "A month of putting up with dispatch schedules. I think that deserves something."
+        }
       ],
       "variants": [
         {
-          "when": { "flag": "took_envelope" },
+          "when": {
+            "flag": "took_envelope"
+          },
           "lines": [
-            { "speaker": "narrator", "text": "One month since the burnt espresso. They're at the counter, two cups." },
-            { "speaker": "narrator", "text": "You could buy out this whole café now. You liked it better when you couldn't." },
-            { "speaker": "partner", "text": "A month of putting up with dispatch schedules. I counted." }
+            {
+              "speaker": "narrator",
+              "text": "One month since the burnt espresso. They're already at the counter, holding two cups. You could buy out this whole café now. You liked it better when you couldn't."
+            },
+            {
+              "speaker": "partner",
+              "text": "A month of putting up with dispatch schedules. I think that deserves something."
+            }
           ]
         }
       ],
@@ -38,89 +58,76 @@
     {
       "id": "ev_month.d1",
       "type": "decision",
-      "prompt": "A month already.",
-      "choices": [
-        { "id": "ev_month.d1_0", "label": "Felt like a week.", "next": "ev_month.conv2", "effects": { "love": 1 } },
-        { "id": "ev_month.d1_1", "label": "Felt like a year. Good year.", "next": "ev_month.conv2", "effects": { "love": 1 } },
-        { "id": "ev_month.d1_2", "label": "You counted?", "next": "ev_month.conv2", "effects": { "love": 1 } }
-      ]
-    },
-    {
-      "id": "ev_month.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "Somebody has to keep records around here. You're always on shift." },
-        { "speaker": "narrator", "text": "They slide your cup over. Your exact order. They never asked; they learned." },
-        { "speaker": "partner", "text": "So. Best moment of the month. Go." }
-      ],
-      "next": "ev_month.d2"
-    },
-    {
-      "id": "ev_month.d2",
-      "type": "decision",
-      "prompt": "Best moment. On record.",
-      "choices": [
-        { "id": "ev_month.d2_0", "label": "The napkin. Obviously.", "next": "ev_month.pivot", "effects": { "love": 1 } },
-        { "id": "ev_month.d2_1", "label": "Every 3 a.m. phone call.", "next": "ev_month.pivot", "effects": { "love": 1 } },
-        { "id": "ev_month.d2_2", "label": "This one's climbing the list.", "next": "ev_month.pivot", "effects": { "love": 1 } }
-      ]
-    },
-    {
-      "id": "ev_month.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "They laugh into their coffee. The window light does its thing." },
-        { "speaker": "partner", "text": "I think a month deserves something. Your call, operator." },
-        { "speaker": "narrator", "text": "The flower stand outside. The window table. The espresso machine, hissing." }
-      ],
-      "next": "ev_month.d3"
-    },
-    {
-      "id": "ev_month.d3",
-      "type": "decision",
       "prompt": "Mark the month.",
       "choices": [
-        { "id": "ev_month.d3_0", "label": "Flowers from the stand outside.", "cash_cost": 10, "next": "ev_month.fin_flowers", "effects": { "love": 2 } },
-        { "id": "ev_month.d3_1", "label": "Claim 'your' table by the window, forever.", "next": "ev_month.fin_table", "effects": { "love": 2 } },
-        { "id": "ev_month.d3_2", "label": "'It deserves… more burnt espresso.'", "cash_cost": 5, "next": "ev_month.fin_espresso", "effects": { "love": 1 } }
+        {
+          "id": "ev_month.d1_0",
+          "label": "Flowers from the stand outside.",
+          "next": "ev_month.fin_flowers",
+          "cash_cost": 10,
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_month.d1_1",
+          "label": "Claim 'your' table by the window, forever.",
+          "next": "ev_month.fin_table",
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_month.d1_2",
+          "label": "'It deserves… more burnt espresso.'",
+          "next": "ev_month.fin_espresso",
+          "cash_cost": 5,
+          "effects": {
+            "love": 1
+          }
+        }
       ]
     },
     {
       "id": "ev_month.fin_flowers",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The flower stand guy says 'the usual?' You've been planning this a week." },
-        { "speaker": "partner", "text": "I'm carrying these home like a trophy. Don't look at me." }
+        {
+          "speaker": "narrator",
+          "text": "The flower stand guy says 'the usual?' and you realize you've been planning this for a week. They carry the flowers all the way home like a trophy."
+        }
       ],
-      "next": "ev_month.coda"
+      "next": "_end"
     },
     {
       "id": "ev_month.fin_table",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You write 'RESERVED — weird hours only' on a napkin. Prop it on the window table." },
-        { "speaker": "narrator", "text": "The barista laminates it the next day. It's official, then." }
+        {
+          "speaker": "narrator",
+          "text": "You write 'RESERVED — weird hours only' on a napkin and prop it on the window table. The barista laminates it the next day. It's official, then."
+        }
       ],
-      "next": "ev_month.coda"
+      "next": "_end"
     },
     {
       "id": "ev_month.fin_espresso",
       "type": "dialogue",
       "lines": [
-        { "speaker": "partner", "text": "Two burnt espressos. To bad coffee and good timing." },
-        { "speaker": "narrator", "text": "Paper cups touch like champagne glasses. A siren passes — not yours tonight." }
-      ],
-      "next": "ev_month.coda"
-    },
-    {
-      "id": "ev_month.coda",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "Same time next month?" },
-        { "speaker": "narrator", "text": "You don't have to answer. You both already know." }
+        {
+          "speaker": "partner",
+          "text": "Two burnt espressos. To bad coffee and good timing."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Paper cups touch like champagne glasses. Somewhere outside, a siren goes by — and for once, it's not yours to answer."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

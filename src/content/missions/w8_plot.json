@@ -1,0 +1,175 @@
+{
+  "schema": "mission@1",
+  "id": "w8_plot",
+  "title": "Week 8 — The Partner",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "week": 8,
+  "order": 8,
+  "goal_trust": 24,
+  "unlock": {
+    "minWeek": 8
+  },
+  "caller": {
+    "name": "Partner",
+    "type": "STORY",
+    "location": "Dispatch floor"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0,
+    "debt_missed": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w8_plot.intro",
+  "speakers": {
+    "partner": "Partner",
+    "voice": "The Voice"
+  },
+  "beats": [
+    {
+      "id": "w8_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Your partner drops a printout on your desk face-down, the way people hand over things they can't say."
+        }
+      ],
+      "next": "w8_plot.v1"
+    },
+    {
+      "id": "w8_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "partner",
+          "text": "The login behind the edits — it's supervisor-level, older than both of us. Created before this building had cameras."
+        },
+        {
+          "speaker": "partner",
+          "text": "Whoever owns it never logged out of the old system. Or the old habits."
+        }
+      ],
+      "next": "w8_plot.d1"
+    },
+    {
+      "id": "w8_plot.d1",
+      "type": "decision",
+      "prompt": "Your partner is halfway in. All the way is dangerous.",
+      "choices": [
+        {
+          "id": "w8_plot.d1_0",
+          "label": "Bring them in. Two sets of eyes.",
+          "next": "w8_plot.c_in",
+          "set_flags": {
+            "partner_in": true
+          },
+          "effects": {
+            "case_file": 1
+          }
+        },
+        {
+          "id": "w8_plot.d1_1",
+          "label": "Keep them out. This lands on you alone.",
+          "next": "w8_plot.c_out",
+          "set_flags": {
+            "partner_out": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "w8_plot.c_in",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "partner",
+          "text": "Okay. We split shifts on watching the log. First edit we catch live, we screenshot everything."
+        },
+        {
+          "speaker": "narrator",
+          "text": "It stops being your case and starts being a case."
+        }
+      ],
+      "next": "w8_plot.v2"
+    },
+    {
+      "id": "w8_plot.c_out",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You take the printout and burn the copy trail. If this goes wrong, it goes wrong on one name: yours."
+        }
+      ],
+      "next": "w8_plot.v2"
+    },
+    {
+      "id": "w8_plot.v2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Your personal phone buzzes. Unknown number. Nobody has this number."
+        },
+        {
+          "speaker": "voice",
+          "text": "How's your mother, Charlie? Oh — my mistake. Old data."
+        }
+      ],
+      "next": "w8_plot.d2"
+    },
+    {
+      "id": "w8_plot.d2",
+      "type": "decision",
+      "prompt": "He just used your name. And hers.",
+      "choices": [
+        {
+          "id": "w8_plot.d2_0",
+          "label": "Say nothing. Let him hear silence.",
+          "next": "w8_plot.fin_silence"
+        },
+        {
+          "id": "w8_plot.d2_1",
+          "label": "\"You just made this personal.\"",
+          "next": "w8_plot.fin_personal"
+        }
+      ]
+    },
+    {
+      "id": "w8_plot.fin_silence",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You give him dead air — the one thing a voice can't stand. He hangs up first. Small victory. It counts."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w8_plot.fin_personal",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "voice",
+          "text": "It was always personal, dispatcher. You just didn't know which person."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The line dies. The room feels colder by exactly one family."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

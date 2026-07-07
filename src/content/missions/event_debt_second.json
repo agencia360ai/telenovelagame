@@ -2,32 +2,46 @@
   "schema": "mission@1",
   "id": "event_debt_second",
   "title": "Second Installment",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 62,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
-  "speakers": { "landlord": "Landlord" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Your apartment"
+  },
   "reward": 5,
-  "initial_variables": { "debt_paid": 0, "debt_missed": 0 },
-  "initial_flags": {},
+  "order": 62,
+  "initial_variables": {
+    "debt_paid": 0,
+    "debt_missed": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_debt2.intro",
   "beats": [
     {
       "id": "ev_debt2.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Second installment. The portal greets you by your full legal name." },
-        { "speaker": "narrator", "text": "Nothing friendly ever does." }
+        {
+          "speaker": "narrator",
+          "text": "Second installment. The portal remembers you now — it greets you by your full legal name, the way nothing friendly ever does."
+        }
       ],
       "variants": [
         {
-          "when": { "var": "debt_missed", "op": ">=", "value": 1 },
+          "when": {
+            "var": "debt_missed",
+            "op": ">=",
+            "value": 1
+          },
           "lines": [
-            { "speaker": "narrator", "text": "Second installment — plus the missed one, plus fees." },
-            { "speaker": "narrator", "text": "This letter mentions the apartment by address. That's new." }
+            {
+              "speaker": "narrator",
+              "text": "Second installment — plus the one you missed, plus the late fee. The letters have stopped being polite. This one mentions the apartment by address."
+            }
           ]
         }
       ],
@@ -36,67 +50,37 @@
     {
       "id": "ev_debt2.d1",
       "type": "decision",
-      "prompt": "Log in?",
-      "choices": [
-        { "id": "ev_debt2.d1_0", "label": "Coffee first. Then numbers.", "next": "ev_debt2.stairs" },
-        { "id": "ev_debt2.d1_1", "label": "Face it cold.", "next": "ev_debt2.stairs" },
-        { "id": "ev_debt2.d1_2", "label": "Open it one-eyed.", "next": "ev_debt2.stairs" }
-      ]
-    },
-    {
-      "id": "ev_debt2.stairs",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "On the stairs, the landlord is replacing a bulb. Or listening. Both." },
-        { "speaker": "landlord", "text": "You good this month? Asking as a friend. Also as your landlord." }
-      ],
-      "next": "ev_debt2.d2"
-    },
-    {
-      "id": "ev_debt2.d2",
-      "type": "decision",
-      "prompt": "The landlord waits.",
-      "choices": [
-        { "id": "ev_debt2.d2_0", "label": "Never better.", "next": "ev_debt2.desk" },
-        { "id": "ev_debt2.d2_1", "label": "Define 'good'.", "next": "ev_debt2.desk" },
-        { "id": "ev_debt2.d2_2", "label": "The bulb looks great.", "next": "ev_debt2.desk" }
-      ]
-    },
-    {
-      "id": "ev_debt2.desk",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "landlord", "text": "That's what everyone says right before the yellow notices." },
-        { "speaker": "narrator", "text": "Back at the desk, the portal hasn't blinked. It can wait forever." },
-        { "speaker": "narrator", "text": "This month's payment, the whole hole, or the door marked 'later'." }
-      ],
-      "next": "ev_debt2.d3"
-    },
-    {
-      "id": "ev_debt2.d3",
-      "type": "decision",
       "prompt": "The balance is watching.",
       "choices": [
         {
-          "id": "ev_debt2.d3_0",
+          "id": "ev_debt2.d1_0",
           "label": "Pay this month.",
-          "cash_cost": 20,
           "next": "ev_debt2.fin_paid",
-          "effects": { "debt_paid": 1 }
+          "cash_cost": 20,
+          "effects": {
+            "debt_paid": 1
+          }
         },
         {
-          "id": "ev_debt2.d3_1",
+          "id": "ev_debt2.d1_1",
           "label": "Catch up on everything.",
-          "cash_cost": 35,
           "next": "ev_debt2.fin_catchup",
-          "effects": { "debt_paid": 2, "debt_missed": -1 }
+          "cash_cost": 35,
+          "effects": {
+            "debt_paid": 2,
+            "debt_missed": -1
+          }
         },
         {
-          "id": "ev_debt2.d3_2",
-          "label": "Skip it.",
+          "id": "ev_debt2.d1_2",
+          "label": "Skip it. The city pays badly.",
           "next": "ev_debt2.fin_missed",
-          "effects": { "debt_missed": 1 },
-          "set_flags": { "apartment_at_risk": true }
+          "effects": {
+            "debt_missed": 1
+          },
+          "set_flags": {
+            "apartment_at_risk": true
+          }
         }
       ]
     },
@@ -104,8 +88,10 @@
       "id": "ev_debt2.fin_paid",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Paid. You eat cheap for a few days and call it a diet." },
-        { "speaker": "narrator", "text": "The apartment doesn't thank you. It doesn't have to — it stays." }
+        {
+          "speaker": "narrator",
+          "text": "Paid. You eat cheap for a few days and tell yourself it's a diet. The apartment doesn't thank you. It doesn't have to — it stays."
+        }
       ],
       "next": "_end"
     },
@@ -113,8 +99,10 @@
       "id": "ev_debt2.fin_catchup",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Everything, plus fees. The red banner disappears." },
-        { "speaker": "narrator", "text": "For one night the account is clean and the wallet is very light." }
+        {
+          "speaker": "narrator",
+          "text": "Everything, plus fees. The red banner disappears. For one night, the account and your conscience are both clean, and the wallet is very, very light."
+        }
       ],
       "next": "_end"
     },
@@ -122,20 +110,31 @@
       "id": "ev_debt2.fin_missed",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Skipped. The portal logs it without comment." },
-        { "speaker": "narrator", "text": "Machines don't threaten. They schedule." }
+        {
+          "speaker": "narrator",
+          "text": "Skipped. The portal logs it without comment. Machines don't threaten — they schedule."
+        }
       ],
       "variants": [
         {
-          "when": { "var": "debt_missed", "op": ">=", "value": 2 },
+          "when": {
+            "var": "debt_missed",
+            "op": ">=",
+            "value": 2
+          },
           "lines": [
-            { "speaker": "narrator", "text": "Two missed now. The next letter won't be a letter." },
-            { "speaker": "narrator", "text": "It'll be yellow, on the door, where the whole hallway can read it." }
+            {
+              "speaker": "narrator",
+              "text": "Two missed now. The next letter won't be a letter. It'll be a notice on the door — the yellow kind the whole hallway can read."
+            }
           ]
         }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

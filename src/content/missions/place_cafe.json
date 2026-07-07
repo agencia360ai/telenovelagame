@@ -1,0 +1,117 @@
+{
+  "schema": "mission@1",
+  "id": "place_cafe",
+  "title": "Corner Café",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "place",
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Corner café" },
+  "speakers": { "partner": "Partner", "stranger": "Stranger" },
+  "reward": 0,
+  "initial_variables": { "energy": 0, "love": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "pl_cafe.intro",
+  "beats": [
+    {
+      "id": "pl_cafe.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The café with the weird hours. The espresso machine coughs like a smoker." },
+        { "speaker": "narrator", "text": "Nobody you know today. Just the hum, the steam, the city outside." }
+      ],
+      "variants": [
+        {
+          "when": { "var": "love", "op": ">=", "value": 3 },
+          "lines": [
+            { "speaker": "narrator", "text": "The café with the weird hours — and a familiar figure at the window table." },
+            { "speaker": "partner", "text": "You found me. Or I'm predictable. Don't answer that." }
+          ]
+        },
+        {
+          "when": { "flag": "met_stranger" },
+          "lines": [
+            { "speaker": "narrator", "text": "The café with the weird hours. The reader looks up from the same book." },
+            { "speaker": "stranger", "text": "Back for the burnt espresso? Brave." }
+          ]
+        }
+      ],
+      "next": "pl_cafe.d1"
+    },
+    {
+      "id": "pl_cafe.d1",
+      "type": "decision",
+      "prompt": "Your break, your order.",
+      "choices": [
+        {
+          "id": "pl_cafe.d1_0",
+          "label": "The usual espresso.",
+          "cash_cost": 3,
+          "next": "pl_cafe.fin_coffee",
+          "effects": { "energy": 2 },
+          "set_flags": { "visited_cafe": true }
+        },
+        {
+          "id": "pl_cafe.d1_1",
+          "label": "Something sweet too.",
+          "cash_cost": 6,
+          "next": "pl_cafe.fin_sweet",
+          "effects": { "energy": 2, "love": 1 },
+          "set_flags": { "visited_cafe": true }
+        },
+        {
+          "id": "pl_cafe.d1_2",
+          "label": "Just sit. Tap water is free.",
+          "next": "pl_cafe.fin_sit",
+          "effects": { "energy": 1 },
+          "set_flags": { "visited_cafe": true }
+        }
+      ]
+    },
+    {
+      "id": "pl_cafe.fin_coffee",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Burnt, bitter, perfect. Your hands remember how to be still." }
+      ],
+      "variants": [
+        {
+          "when": { "var": "love", "op": ">=", "value": 3 },
+          "lines": [
+            { "speaker": "partner", "text": "Two espressos. One conversation you don't have to explain yourself in." },
+            { "speaker": "narrator", "text": "The break ends too soon. They always do. This one counts double anyway." }
+          ]
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "pl_cafe.fin_sweet",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "The pastry is yesterday's. You eat it like it's a reward, because it is." }
+      ],
+      "variants": [
+        {
+          "when": { "var": "love", "op": ">=", "value": 3 },
+          "lines": [
+            { "speaker": "partner", "text": "You bought the last one. I'm choosing to find that romantic." },
+            { "speaker": "narrator", "text": "You split it down the middle. Fair, like always." }
+          ]
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "pl_cafe.fin_sit",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "You nurse the free water and watch the street move." },
+        { "speaker": "narrator", "text": "Nobody needs saving in this window. Ten minutes of that is worth money." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

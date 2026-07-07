@@ -2,9 +2,9 @@
   "schema": "mission@1",
   "id": "call_infestation",
   "title": "My House Is Full of Pests!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
   "category": "daily",
   "tags": [
     "real",
@@ -29,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_infestation.b0",
   "assets": [
     {
       "key": "call-infestation",
@@ -42,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_infestation.b0",
   "beats": [
     {
       "id": "call_infestation.b0",

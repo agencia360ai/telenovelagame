@@ -30,18 +30,20 @@ export type DayTemplate = {
 };
 
 /**
- * Default week — matches the design brief:
- *   Mon–Fri: one Daily call (one of them becomes the Game Plot day at random)
- *   Sat:     one Weekend call
+ * Default week — 12-week narrative package brief (6 days × 3 calls):
+ *   Mon–Fri: three Daily calls; the plot day APPENDS its story call at the end
+ *            of the shift (keepDailyOnPlotDay).
+ *   Sat:     two Daily calls + the Weekend scene (weeks that have one authored;
+ *            otherwise the slot falls back to a daily call).
  *   Sun:     rest day (skipped)
  */
 export const DEFAULT_WEEK_TEMPLATE: DayTemplate[] = [
-  { id: "monday", label: "Monday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
-  { id: "tuesday", label: "Tuesday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
-  { id: "wednesday", label: "Wednesday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
-  { id: "thursday", label: "Thursday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
-  { id: "friday", label: "Friday", slots: ["daily"], gamePlotEligible: true, eventEligible: true },
-  { id: "saturday", label: "Saturday", slots: ["weekend"] },
+  { id: "monday", label: "Monday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
+  { id: "tuesday", label: "Tuesday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
+  { id: "wednesday", label: "Wednesday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
+  { id: "thursday", label: "Thursday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
+  { id: "friday", label: "Friday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
+  { id: "saturday", label: "Saturday", slots: ["daily", "daily", "weekend"] },
   { id: "sunday", label: "Sunday", slots: [] },
 ];
 

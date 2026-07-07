@@ -2,9 +2,9 @@
   "schema": "mission@1",
   "id": "call_green_elves",
   "title": "I See Green Elves",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
   "category": "daily",
   "tags": [
     "mixed",
@@ -28,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_green_elves.b0",
   "assets": [
     {
       "key": "call-green-elves",
@@ -41,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_green_elves.b0",
   "beats": [
     {
       "id": "call_green_elves.b0",

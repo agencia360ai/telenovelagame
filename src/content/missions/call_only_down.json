@@ -1,0 +1,126 @@
+{
+  "schema": "mission@1",
+  "id": "call_only_down",
+  "title": "The Elevator Only Goes Down",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "daily",
+  "tags": [
+    "weird"
+  ],
+  "caller": {
+    "name": "Whisperer",
+    "type": "WELFARE CHECK",
+    "location": "Meridian Tower"
+  },
+  "units": [
+    "police",
+    "ambulance",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "call_only_down.b0",
+  "beats": [
+    {
+      "id": "call_only_down.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A whisper from inside an office building that officially closed four hours ago."
+        }
+      ],
+      "next": "call_only_down.b1"
+    },
+    {
+      "id": "call_only_down.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "I can't find the exit. The elevator only goes down. My badge won't open the stairwell. My team says the exit is a myth."
+        }
+      ],
+      "next": "call_only_down.d1"
+    },
+    {
+      "id": "call_only_down.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_only_down.d1_0",
+          "label": "How long have you been in the building?",
+          "next": "call_only_down.b2"
+        },
+        {
+          "id": "call_only_down.d1_1",
+          "label": "Your TEAM says what?",
+          "next": "call_only_down.b2"
+        }
+      ]
+    },
+    {
+      "id": "call_only_down.b2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "What year is it out there? We have a quarterly party if I reach my numbers. There's melon."
+        }
+      ],
+      "next": "call_only_down.d2"
+    },
+    {
+      "id": "call_only_down.d2",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_only_down.d2_0",
+          "label": "Stay by the elevator. I'm sending someone in.",
+          "next": "call_only_down.b3"
+        },
+        {
+          "id": "call_only_down.d2_1",
+          "label": "Take the melon and RUN. 😏",
+          "next": "call_only_down.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_only_down.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "They're telling me the call is a wellness metric. Please hurry. The music is starting again."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Patrol walks a very pale accountant out of a basement 'productivity retreat.' HR has questions. The accountant has melon. Everyone has a long week.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

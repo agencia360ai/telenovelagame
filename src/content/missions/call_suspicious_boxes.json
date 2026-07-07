@@ -2,9 +2,9 @@
   "schema": "mission@1",
   "id": "call_suspicious_boxes",
   "title": "Something's Off Across the Street",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
   "category": "daily",
   "tags": [
     "real",
@@ -28,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_suspicious_boxes.b0",
   "assets": [
     {
       "key": "call-suspicious-boxes",
@@ -41,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_suspicious_boxes.b0",
   "beats": [
     {
       "id": "call_suspicious_boxes.b0",

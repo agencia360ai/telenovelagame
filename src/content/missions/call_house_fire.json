@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "call_house_fire",
   "title": "My House Is on Fire",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "fire"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_house_fire.intro",
   "assets": [
     {
       "key": "call-house-fire",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_house_fire.intro",
   "beats": [
     {
       "id": "call_house_fire.intro",
@@ -159,10 +160,10 @@
           "text": "3259 Wescam Court. Please hurry!"
         }
       ],
-      "next": "d3"
+      "next": "dispatch"
     },
     {
-      "id": "d3",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "firefighters",

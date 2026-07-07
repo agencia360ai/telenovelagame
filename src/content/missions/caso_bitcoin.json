@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "caso_bitcoin",
   "title": "I Lost Everything in Bitcoin",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
+  "category": "daily",
   "tags": [
     "mixed",
     "police"
@@ -27,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "caso_bitcoin.intro",
   "assets": [
     {
       "key": "call-bitcoin-lost",
@@ -40,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "caso_bitcoin.intro",
   "beats": [
     {
       "id": "caso_bitcoin.intro",
@@ -99,7 +100,7 @@
         {
           "id": "caso_bitcoin.d3_0",
           "label": "I'm going to have to send the police.",
-          "next": "caso_bitcoin.d_ther2",
+          "next": "dispatch",
           "effects": {
             "money": 200,
             "trust": 1,
@@ -138,7 +139,7 @@
         {
           "id": "caso_bitcoin.d3c_0",
           "label": "Deal.",
-          "next": "caso_bitcoin.d_ther2",
+          "next": "dispatch",
           "effects": {
             "money": 150,
             "don": 1,
@@ -148,7 +149,7 @@
         {
           "id": "caso_bitcoin.d3c_1",
           "label": "Nah, not worth it.",
-          "next": "caso_bitcoin.d_ther2",
+          "next": "dispatch",
           "effects": {
             "money": 200,
             "trust": 1,
@@ -166,10 +167,10 @@
           "text": "I need therapy to get over this."
         }
       ],
-      "next": "caso_bitcoin.d_ther2"
+      "next": "dispatch"
     },
     {
-      "id": "caso_bitcoin.d_ther2",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "police",

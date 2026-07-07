@@ -1,0 +1,173 @@
+{
+  "schema": "mission@1",
+  "id": "w12_plot",
+  "title": "Week 12 — The Last Shift",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "week": 12,
+  "order": 12,
+  "goal_trust": 36,
+  "unlock": {
+    "minWeek": 12
+  },
+  "caller": {
+    "name": "You",
+    "type": "STORY",
+    "location": "City Hall"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0,
+    "debt_missed": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w12_plot.intro",
+  "speakers": {
+    "director": "Director Hale",
+    "mara": "Mara"
+  },
+  "beats": [
+    {
+      "id": "w12_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "City Hall, a long table, microphones with red lights. The center's numbers on a projector — beautiful, like always. You know what beauty costs now."
+        }
+      ],
+      "variants": [
+        {
+          "when": {
+            "flag": "took_envelope"
+          },
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "City Hall, a long table, microphones. Somewhere in Hale's desk is an envelope logged against YOUR name — his leash on you. Today you find out what it's made of."
+            }
+          ]
+        }
+      ],
+      "next": "w12_plot.v1"
+    },
+    {
+      "id": "w12_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "director",
+          "text": "Before you speak, son — centers run on trust. Break this one and every caller hears it in every voice on every line."
+        },
+        {
+          "speaker": "narrator",
+          "text": "He believes it. That was never the question."
+        }
+      ],
+      "next": "w12_plot.d1"
+    },
+    {
+      "id": "w12_plot.d1",
+      "type": "decision",
+      "prompt": "The microphone is warm. The city is listening.",
+      "choices": [
+        {
+          "id": "w12_plot.d1_0",
+          "label": "Testify. All of it — the logs, the vans, Calder Street.",
+          "next": "w12_plot.fin_testify",
+          "set_flags": {
+            "ending_justice": true
+          }
+        },
+        {
+          "id": "w12_plot.d1_1",
+          "label": "Take the quiet deal: he retires, the victims' fund gets everything.",
+          "next": "w12_plot.fin_deal",
+          "set_flags": {
+            "ending_deal": true
+          }
+        },
+        {
+          "id": "w12_plot.d1_2",
+          "label": "Testify — including about the envelope. About you.",
+          "next": "w12_plot.fin_burn",
+          "set_flags": {
+            "ending_clean": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "w12_plot.fin_testify",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You read the numbers the way he never let them be read: nine, not four. Nineteen, not zero. Hale falls the way institutions fall — slowly, then all at once."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The center gets rebuilt with glass walls. Recruits learn Calder Street by name."
+        }
+      ],
+      "next": "w12_plot.coda"
+    },
+    {
+      "id": "w12_plot.fin_deal",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "He retires 'for health reasons.' The victims' fund is enormous and permanently anonymous. The log stays smooth."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Except one. At 3 a.m., supervisor credentials open one old record and correct it the other way: response time, 9 minutes. Some corrections go toward the truth."
+        }
+      ],
+      "next": "w12_plot.coda"
+    },
+    {
+      "id": "w12_plot.fin_burn",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You testify about the edits, the vans — and the envelope in your jacket that night. The room goes very quiet."
+        },
+        {
+          "speaker": "narrator",
+          "text": "It costs you the badge. It buys you the mirror. Hale falls with you, and only one of you lands clean."
+        }
+      ],
+      "next": "w12_plot.coda"
+    },
+    {
+      "id": "w12_plot.coda",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Months later. A call routes to you like it knows the way."
+        },
+        {
+          "speaker": "mara",
+          "text": "Hey. It's not an emergency. I start college Monday. I just wanted the voice to know."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You watch the city lights hold steady. One call at a time."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}
