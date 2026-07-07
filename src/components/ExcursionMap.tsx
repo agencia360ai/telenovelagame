@@ -6,7 +6,6 @@ import {
   Dimensions,
   Image,
   Pressable,
-  ScrollView,
   ImageSourcePropType,
 } from "react-native";
 import * as Haptics from "expo-haptics";
@@ -20,6 +19,7 @@ import Animated, {
   Easing,
   type SharedValue,
 } from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { RadarStreets } from "./RadarStreets";
@@ -41,10 +41,23 @@ const MAP_DEFS: Record<string, { source: ImageSourcePropType; streets?: boolean 
 };
 const DEFAULT_MAP = "manhattan2";
 
+// ── Zoom config ──────────────────────────────────────────────────────────────
+// Multipliers of the "fit full width" scale (the fully zoomed-out view where the
+// whole map width is visible). Tweak these to change the starting/allowed zoom.
+const INITIAL_ZOOM = 1.0; // 1 = start showing the whole map width; >1 = start more zoomed in
+const MIN_ZOOM = 1.0; //     can't zoom out past the full-width view
+const MAX_ZOOM = 4.0; //     how far the player can pinch-zoom in
+// ─────────────────────────────────────────────────────────────────────────────
+
 const PIN_SIZE = 26; // tappable pin bubble diameter
 const PIN_TIP = Math.round(PIN_SIZE * 0.45);
 const PIN_TOTAL_H = PIN_SIZE + PIN_TIP;
 const HIT_W = 84; // hit-area / label width
+
+function clampW(v: number, lo: number, hi: number) {
+  "worklet";
+  return Math.min(Math.max(v, lo), hi);
+}
 
 type Props = {
   /** Prompt shown above the map (e.g. "¿A dónde quieres ir hoy?"). */
@@ -58,11 +71,14 @@ type Props = {
 };
 
 /**
- * An interactive version of the dispatch radar: the same Manhattan map + street
- * graph, but each destination pin is tappable. Selection is two-step: tapping a
- * pin previews its info (name + description) in a panel below the map; the move
- * only fires — via `onSelectPin` — once the player taps "Move here". The panel
- * (and its confirm button) stay hidden until a pin is tapped.
+ * An interactive map for a `map` beat: pinch-to-zoom + drag-to-pan over the map
+ * image, with tappable destination pins. Selection is two-step — tapping a pin
+ * previews its info (name + description) in a panel; the move only fires (via
+ * `onSelectPin`) once the player taps "Move here".
+ *
+ * The map opens fully zoomed OUT (whole width visible) and can be zoomed IN up to
+ * MAX_ZOOM. Pins keep a constant on-screen size at any zoom (inverse-scaled) so
+ * they stay visible and tappable even in the far-out country view.
  */
 export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
   const insets = useSafeAreaInsets();
@@ -72,14 +88,63 @@ export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
   const [confirmed, setConfirmed] = useState(false);
   const def = MAP_DEFS[map ?? DEFAULT_MAP] ?? MAP_DEFS[DEFAULT_MAP];
   const source = def.source;
-  // Fit the map to the screen HEIGHT keeping the image's real aspect (no
-  // distortion); the horizontal overflow is revealed by panning. Works for a
-  // portrait map (Manhattan) or a wide landscape one (country map).
-  const { width: imgW, height: imgH } = Image.resolveAssetSource(source);
-  const RADAR_H = SCREEN_HEIGHT;
-  const RADAR_W = Math.round(RADAR_H * (imgW / imgH));
-  const INITIAL_PAN_X = Math.max(0, (RADAR_W - SCREEN_WIDTH) / 2);
   const selectedPin = pins.find((p) => p.id === selectedId) ?? null;
+
+  // Canvas sized to the screen HEIGHT at scale 1, keeping the image aspect. The
+  // gesture scale then shrinks/grows it; the fully zoomed-out scale is the one
+  // that makes the canvas width match the screen width ("full horizontal").
+  const { width: imgW, height: imgH } = Image.resolveAssetSource(source);
+  const CANVAS_H = SCREEN_HEIGHT;
+  const CANVAS_W = Math.round(CANVAS_H * (imgW / imgH));
+  const fitWidthScale = SCREEN_WIDTH / CANVAS_W;
+  const minScale = fitWidthScale * MIN_ZOOM;
+  const maxScale = fitWidthScale * MAX_ZOOM;
+  const initialScale = fitWidthScale * INITIAL_ZOOM;
+
+  // Pan/zoom state (shared values driven by the gestures).
+  const scale = useSharedValue(initialScale);
+  const savedScale = useSharedValue(initialScale);
+  const tx = useSharedValue(0);
+  const ty = useSharedValue(0);
+  const savedTx = useSharedValue(0);
+  const savedTy = useSharedValue(0);
+
+  const pinch = Gesture.Pinch()
+    .onUpdate((e) => {
+      scale.value = clampW(savedScale.value * e.scale, minScale, maxScale);
+    })
+    .onEnd(() => {
+      savedScale.value = scale.value;
+      const maxX = Math.max(0, (CANVAS_W * scale.value - SCREEN_WIDTH) / 2);
+      const maxY = Math.max(0, (CANVAS_H * scale.value - SCREEN_HEIGHT) / 2);
+      tx.value = clampW(tx.value, -maxX, maxX);
+      ty.value = clampW(ty.value, -maxY, maxY);
+      savedTx.value = tx.value;
+      savedTy.value = ty.value;
+    });
+
+  const pan = Gesture.Pan()
+    .minDistance(6) // let a still tap reach the pins instead of panning
+    .onUpdate((e) => {
+      const maxX = Math.max(0, (CANVAS_W * scale.value - SCREEN_WIDTH) / 2);
+      const maxY = Math.max(0, (CANVAS_H * scale.value - SCREEN_HEIGHT) / 2);
+      tx.value = clampW(savedTx.value + e.translationX, -maxX, maxX);
+      ty.value = clampW(savedTy.value + e.translationY, -maxY, maxY);
+    })
+    .onEnd(() => {
+      savedTx.value = tx.value;
+      savedTy.value = ty.value;
+    });
+
+  const gesture = Gesture.Simultaneous(pinch, pan);
+
+  const canvasStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: tx.value },
+      { translateY: ty.value },
+      { scale: scale.value },
+    ],
+  }));
 
   // A shared slow pulse driving the attention ring behind every pin.
   const pulse = useSharedValue(0);
@@ -114,56 +179,33 @@ export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
 
   return (
     <View style={styles.root}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentOffset={{ x: INITIAL_PAN_X, y: 0 }}
-        contentContainerStyle={styles.scrollContent}
-        // Let a tap on a pin register while a drag pans the map.
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={[styles.canvas, { width: RADAR_W, height: RADAR_H }]}>
+      <GestureDetector gesture={gesture}>
+        <Animated.View
+          style={[styles.canvas, { width: CANVAS_W, height: CANVAS_H }, canvasStyle]}
+        >
           <Image
             source={source}
-            style={{ width: RADAR_W, height: RADAR_H }}
+            style={{ width: CANVAS_W, height: CANVAS_H }}
             resizeMode="stretch"
           />
-          {def.streets ? <RadarStreets size={RADAR_W} height={RADAR_H} /> : null}
+          {def.streets ? <RadarStreets size={CANVAS_W} height={CANVAS_H} /> : null}
 
-        {pins.map((pin) => {
-          const px = pin.x * RADAR_W;
-          const py = pin.y * RADAR_H;
-          const isChosen = selectedId === pin.id;
-          const isDimmed = selectedId !== null && !isChosen;
-          const color = isChosen ? colors.dispatch.cyan : colors.dispatch.amber;
-          return (
-            <React.Fragment key={pin.id}>
-              <PulseRing x={px} y={py} pulse={pulse} dimmed={isDimmed} />
-              <MapPin x={px} y={py} icon={pin.icon} size={PIN_SIZE} color={color} />
-              <Pressable
-                onPress={() => handlePreview(pin)}
-                disabled={confirmed}
-                hitSlop={8}
-                style={[
-                  styles.hit,
-                  {
-                    left: px - HIT_W / 2,
-                    top: py - PIN_TOTAL_H - 6,
-                    width: HIT_W,
-                    opacity: isDimmed ? 0.35 : 1,
-                  },
-                ]}
-              >
-                <View style={{ height: PIN_TOTAL_H + 4 }} />
-                <Text numberOfLines={1} style={[styles.label, { color }]}>
-                  {pin.label}
-                </Text>
-              </Pressable>
-            </React.Fragment>
-          );
-        })}
-        </View>
-      </ScrollView>
+          {pins.map((pin) => (
+            <PinMarker
+              key={pin.id}
+              pin={pin}
+              px={pin.x * CANVAS_W}
+              py={pin.y * CANVAS_H}
+              mapScale={scale}
+              pulse={pulse}
+              chosen={selectedId === pin.id}
+              dimmed={selectedId !== null && selectedId !== pin.id}
+              disabled={confirmed}
+              onPress={() => handlePreview(pin)}
+            />
+          ))}
+        </Animated.View>
+      </GestureDetector>
 
       {/* Prompt — floats over the top of the map so it costs no vertical space. */}
       {prompt ? (
@@ -213,6 +255,56 @@ export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
   );
 }
 
+/**
+ * One destination pin. Positioned at the map coord (px, py) INSIDE the scaled
+ * canvas, but inverse-scaled by the map's zoom so its on-screen size stays
+ * constant (a real map marker), keeping it visible/tappable at any zoom.
+ */
+function PinMarker({
+  pin,
+  px,
+  py,
+  mapScale,
+  pulse,
+  chosen,
+  dimmed,
+  disabled,
+  onPress,
+}: {
+  pin: MapPinChoice;
+  px: number;
+  py: number;
+  mapScale: SharedValue<number>;
+  pulse: SharedValue<number>;
+  chosen: boolean;
+  dimmed: boolean;
+  disabled: boolean;
+  onPress: () => void;
+}) {
+  // Cancel the parent canvas scale so the marker keeps a fixed screen size.
+  const counter = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 / mapScale.value }],
+  }));
+  const color = chosen ? colors.dispatch.cyan : colors.dispatch.amber;
+  return (
+    <Animated.View style={[styles.pinAnchor, { left: px, top: py }, counter]}>
+      <PulseRing x={0} y={0} pulse={pulse} dimmed={dimmed} />
+      <MapPin x={0} y={0} icon={pin.icon} size={PIN_SIZE} color={color} />
+      <Pressable
+        onPress={onPress}
+        disabled={disabled}
+        hitSlop={12}
+        style={[styles.pinHit, { opacity: dimmed ? 0.35 : 1 }]}
+      >
+        <View style={{ height: PIN_TOTAL_H + 4 }} />
+        <Text numberOfLines={1} style={[styles.label, { color }]}>
+          {pin.label}
+        </Text>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
 /** An expanding, fading ring centered on a pin to signal it's tappable. */
 function PulseRing({
   x,
@@ -245,6 +337,10 @@ function PulseRing({
 const styles = StyleSheet.create({
   root: {
     ...StyleSheet.absoluteFillObject,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#05070d",
   },
   prompt: {
     position: "absolute",
@@ -260,19 +356,20 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
   },
-  scrollContent: {
-    // Center the map when it is narrower than the screen (e.g. very wide
-    // displays); when it is wider, this has no effect and it just scrolls.
-    flexGrow: 1,
-    justifyContent: "center",
-  },
   canvas: {
     position: "relative",
-    overflow: "hidden",
     backgroundColor: "#05070d",
   },
-  hit: {
+  pinAnchor: {
     position: "absolute",
+    width: 0,
+    height: 0,
+  },
+  pinHit: {
+    position: "absolute",
+    left: -HIT_W / 2,
+    top: -(PIN_TOTAL_H + 2),
+    width: HIT_W,
     alignItems: "center",
   },
   label: {
