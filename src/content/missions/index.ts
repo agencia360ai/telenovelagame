@@ -36,6 +36,7 @@ import w4Plot from "./w4_plot.json"; // game_plot, order 40 (The Envelope)
 import w5Plot from "./w5_plot.json"; // game_plot, order 50 (The Stadium Night — 3-way converging finale)
 import w1WeekendCoffee from "./w1_weekend_coffee.json"; // weekend, order 0 (After Hours — alone with the pattern)
 import w1WeekendMap from "./w1_weekend_map.json"; // weekend, order 1 (Día libre — interactive map beat demo)
+import testUsamap from "./test_usamap.json"; // weekend, order 99 (PRUEBA — mapa de USA, estaciones por estado)
 
 // Off-duty events — ordered personal vignettes (category "event", three per
 // week on random weekdays). No dispatch; choices may cost cash (`cash_cost`).
@@ -156,6 +157,7 @@ export const BUNDLED_MISSIONS: Mission[] = [
   w5Plot as unknown as Mission,
   w1WeekendCoffee as unknown as Mission,
   w1WeekendMap as unknown as Mission,
+  testUsamap as unknown as Mission,
   // Off-duty events (category "event") — three per week, choices can spend cash.
   eventDebtLetter as unknown as Mission,
   eventDebtFirst as unknown as Mission,

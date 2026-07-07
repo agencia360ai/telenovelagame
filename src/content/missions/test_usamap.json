@@ -1,0 +1,104 @@
+{
+  "schema": "mission@1",
+  "id": "test_usamap",
+  "title": "Red nacional 911",
+  "version": "1.0.0",
+  "locale_default": "es",
+  "difficulty": 1,
+  "category": "weekend",
+  "order": 99,
+  "reward": 5,
+  "caller": {
+    "name": "Central",
+    "type": "PRUEBA",
+    "location": "Estados Unidos"
+  },
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "intro",
+  "beats": [
+    {
+      "id": "intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "PRUEBA · Red nacional. La llamada rebota entre estados. Elige a qué estación 911 transferirla."
+        }
+      ],
+      "next": "mapa"
+    },
+    {
+      "id": "mapa",
+      "type": "map",
+      "prompt": "Selecciona una estación 911",
+      "map": "usamap",
+      "pins": [
+        {
+          "id": "wa",
+          "x": 0.14,
+          "y": 0.2,
+          "icon": "🚓",
+          "label": "Seattle, WA",
+          "description": "Estación Pacífico Noroeste. Turno de noche, lluvia constante.",
+          "next": "wa_dlg"
+        },
+        {
+          "id": "ca",
+          "x": 0.12,
+          "y": 0.58,
+          "icon": "🚑",
+          "label": "Los Ángeles, CA",
+          "description": "Central de la Costa Oeste. La más saturada del país.",
+          "next": "ca_dlg"
+        },
+        {
+          "id": "tx",
+          "x": 0.52,
+          "y": 0.8,
+          "icon": "🚒",
+          "label": "Houston, TX",
+          "description": "Estación del Golfo. Tormentas y refinerías.",
+          "next": "tx_dlg"
+        },
+        {
+          "id": "il",
+          "x": 0.66,
+          "y": 0.38,
+          "icon": "🚓",
+          "label": "Chicago, IL",
+          "description": "Central del Medio Oeste. El corazón del país.",
+          "next": "il_dlg"
+        },
+        {
+          "id": "ny",
+          "x": 0.86,
+          "y": 0.34,
+          "icon": "🚑",
+          "label": "Nueva York, NY",
+          "description": "Estación Noreste. Nunca duerme.",
+          "next": "ny_dlg"
+        },
+        {
+          "id": "fl",
+          "x": 0.83,
+          "y": 0.87,
+          "icon": "🚒",
+          "label": "Miami, FL",
+          "description": "Central del Sureste. Calor, costa y huracanes.",
+          "next": "fl_dlg"
+        }
+      ]
+    },
+
+    { "id": "wa_dlg", "type": "dialogue", "lines": [{ "speaker": "narrator", "text": "Transferido a Seattle. \"911 de Washington, ¿cuál es su emergencia?\"" }], "next": "_end" },
+    { "id": "ca_dlg", "type": "dialogue", "lines": [{ "speaker": "narrator", "text": "Transferido a Los Ángeles. \"911 de California, lo escuchamos.\"" }], "next": "_end" },
+    { "id": "tx_dlg", "type": "dialogue", "lines": [{ "speaker": "narrator", "text": "Transferido a Houston. \"911 de Texas, adelante.\"" }], "next": "_end" },
+    { "id": "il_dlg", "type": "dialogue", "lines": [{ "speaker": "narrator", "text": "Transferido a Chicago. \"911 de Illinois, ¿en qué ayudamos?\"" }], "next": "_end" },
+    { "id": "ny_dlg", "type": "dialogue", "lines": [{ "speaker": "narrator", "text": "Transferido a Nueva York. \"911 de Nueva York, ¿cuál es la ubicación?\"" }], "next": "_end" },
+    { "id": "fl_dlg", "type": "dialogue", "lines": [{ "speaker": "narrator", "text": "Transferido a Miami. \"911 de Florida, dígame.\"" }], "next": "_end" },
+
+    { "id": "_end", "type": "outcome" }
+  ]
+}

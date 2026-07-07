@@ -28,21 +28,18 @@ import type { MapPinChoice } from "../lib/missions/types";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-// Fit the map to the screen HEIGHT while keeping the image's real proportions
-// (no distortion). Because the map is portrait and narrower-than-tall, fitting
-// the full height makes it a bit WIDER than the screen — the extra width is
-// revealed by panning horizontally (a horizontal ScrollView). The street graph
-// and pins scale by the same RADAR_W/RADAR_H so everything stays aligned.
-const MAP_ASPECT = 720 / 1280; // manhattan2.png width / height (portrait)
-const RADAR_H = SCREEN_HEIGHT;
-const RADAR_W = Math.round(RADAR_H * MAP_ASPECT);
-// Where to start the horizontal pan so the map opens centered.
-const INITIAL_PAN_X = Math.max(0, (RADAR_W - SCREEN_WIDTH) / 2);
-
-/** Background images available to a map beat, keyed like the mission `map` field. */
-const MAP_IMAGES: Record<string, ImageSourcePropType> = {
-  manhattan2: require("../../assets/map/manhattan2.png"),
+/**
+ * Maps available to a `map` beat, keyed like the mission `map` field.
+ * `streets: true` overlays the Manhattan street graph — only meaningful for the
+ * Manhattan radar; other maps (e.g. a country map) render the image alone.
+ * The canvas size is derived from each image's real aspect ratio (below), so
+ * any image — portrait or landscape — is shown without distortion.
+ */
+const MAP_DEFS: Record<string, { source: ImageSourcePropType; streets?: boolean }> = {
+  manhattan2: { source: require("../../assets/map/manhattan2.png"), streets: true },
+  usamap: { source: require("../../assets/map/usamap.png") },
 };
+const DEFAULT_MAP = "manhattan2";
 
 const PIN_SIZE = 26; // tappable pin bubble diameter
 const PIN_TIP = Math.round(PIN_SIZE * 0.45);
@@ -73,7 +70,15 @@ export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // Latched once the player confirms, to lock the UI while the move resolves.
   const [confirmed, setConfirmed] = useState(false);
-  const source = MAP_IMAGES[map ?? "manhattan2"] ?? MAP_IMAGES.manhattan2;
+  const def = MAP_DEFS[map ?? DEFAULT_MAP] ?? MAP_DEFS[DEFAULT_MAP];
+  const source = def.source;
+  // Fit the map to the screen HEIGHT keeping the image's real aspect (no
+  // distortion); the horizontal overflow is revealed by panning. Works for a
+  // portrait map (Manhattan) or a wide landscape one (country map).
+  const { width: imgW, height: imgH } = Image.resolveAssetSource(source);
+  const RADAR_H = SCREEN_HEIGHT;
+  const RADAR_W = Math.round(RADAR_H * (imgW / imgH));
+  const INITIAL_PAN_X = Math.max(0, (RADAR_W - SCREEN_WIDTH) / 2);
   const selectedPin = pins.find((p) => p.id === selectedId) ?? null;
 
   // A shared slow pulse driving the attention ring behind every pin.
@@ -123,7 +128,7 @@ export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
             style={{ width: RADAR_W, height: RADAR_H }}
             resizeMode="stretch"
           />
-          <RadarStreets size={RADAR_W} height={RADAR_H} />
+          {def.streets ? <RadarStreets size={RADAR_W} height={RADAR_H} /> : null}
 
         {pins.map((pin) => {
           const px = pin.x * RADAR_W;
