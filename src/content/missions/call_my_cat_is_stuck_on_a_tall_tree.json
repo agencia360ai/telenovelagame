@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "call_my_cat_is_stuck_on_a_tall_tree",
   "title": "My cat is stuck on a tall tree",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "fire"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_my_cat_is_stuck_on_a_tall_tree.intro",
   "assets": [
     {
       "key": "call-cat-tree",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_my_cat_is_stuck_on_a_tall_tree.intro",
   "beats": [
     {
       "id": "call_my_cat_is_stuck_on_a_tall_tree.intro",
@@ -105,10 +106,10 @@
           "text": "Corner of Maple and 3rd, the big tree."
         }
       ],
-      "next": "call_my_cat_is_stuck_on_a_tall_tree.d2"
+      "next": "dispatch"
     },
     {
-      "id": "call_my_cat_is_stuck_on_a_tall_tree.d2",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "animal_control",

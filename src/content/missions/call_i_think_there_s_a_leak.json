@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "call_i_think_there_s_a_leak",
   "title": "I think there's a leak!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "fire"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_i_think_there_s_a_leak.intro",
   "assets": [
     {
       "key": "call-leak-stink",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_i_think_there_s_a_leak.intro",
   "beats": [
     {
       "id": "call_i_think_there_s_a_leak.intro",
@@ -105,10 +106,10 @@
           "text": "It's 5 Cobble Lane, the corner unit."
         }
       ],
-      "next": "call_i_think_there_s_a_leak.d2"
+      "next": "dispatch"
     },
     {
-      "id": "call_i_think_there_s_a_leak.d2",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "firefighters",

@@ -2,124 +2,93 @@
   "schema": "mission@1",
   "id": "w4_plot",
   "title": "Week 4 — The Envelope",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 2,
   "category": "game_plot",
-  "order": 40,
+  "week": 4,
+  "order": 4,
+  "goal_trust": 12,
+  "unlock": {
+    "minWeek": 4
+  },
   "caller": {
-    "name": "Dispatch",
+    "name": "You",
     "type": "STORY",
-    "location": "Your console"
+    "location": "Dispatch floor"
   },
-  "reward": 15,
+  "reward": 12,
   "initial_variables": {
-    "integrity": 0,
-    "compliance": 0,
-    "don": 0,
-    "loose_thread": 0,
     "case_file": 0,
-    "pawn": 0,
-    "money": 0
+    "love": 0,
+    "debt_missed": 0
   },
-  "initial_flags": {},
   "assets": [],
+  "initial_flags": {},
   "start": "w4_plot.intro",
   "beats": [
     {
       "id": "w4_plot.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "End of shift. An envelope tucked under your keyboard." },
-        { "speaker": "narrator", "text": "Cash." }
+        {
+          "speaker": "narrator",
+          "text": "End of shift. There's an envelope tucked under your keyboard — cash."
+        }
       ],
       "variants": [
         {
-          "when": { "var": "debt_missed", "op": ">=", "value": 1 },
+          "when": {
+            "var": "debt_missed",
+            "op": ">=",
+            "value": 1
+          },
           "lines": [
-            { "speaker": "narrator", "text": "End of shift. An envelope tucked under your keyboard. Cash." },
-            { "speaker": "narrator", "text": "About the size of the installment you missed." },
-            { "speaker": "narrator", "text": "Whoever left it did their homework." }
+            {
+              "speaker": "narrator",
+              "text": "End of shift. There's an envelope tucked under your keyboard — cash. About the size of the installment you missed. Whoever left it did their homework."
+            }
           ]
         },
         {
-          "when": { "var": "cash", "op": "<", "value": 10 },
+          "when": {
+            "var": "cash",
+            "op": "<",
+            "value": 10
+          },
           "lines": [
-            { "speaker": "narrator", "text": "End of shift. An envelope tucked under your keyboard. Cash." },
-            { "speaker": "narrator", "text": "The exact kind your empty wallet dreams about." }
+            {
+              "speaker": "narrator",
+              "text": "End of shift. There's an envelope tucked under your keyboard — cash. The exact kind your empty wallet has been dreaming about all week."
+            }
           ]
         },
         {
-          "when": { "var": "case_file", "op": ">=", "value": 3 },
+          "when": {
+            "var": "case_file",
+            "op": ">=",
+            "value": 3
+          },
           "lines": [
-            { "speaker": "narrator", "text": "End of shift. An envelope tucked under your keyboard. Cash." },
-            { "speaker": "narrator", "text": "Someone noticed the case file you've been building." },
-            { "speaker": "narrator", "text": "This is what noticing costs them." }
+            {
+              "speaker": "narrator",
+              "text": "End of shift. There's an envelope tucked under your keyboard — cash. Someone noticed the case file you've been building. This is what noticing costs them."
+            }
           ]
         },
         {
-          "when": { "var": "love", "op": ">=", "value": 4 },
+          "when": {
+            "var": "love",
+            "op": ">=",
+            "value": 4
+          },
           "lines": [
-            { "speaker": "narrator", "text": "End of shift. An envelope tucked under your keyboard. Cash." },
-            { "speaker": "narrator", "text": "Enough for a real dinner at the corner café. That's your first thought." },
-            { "speaker": "narrator", "text": "That's exactly how they get you." }
+            {
+              "speaker": "narrator",
+              "text": "End of shift. There's an envelope tucked under your keyboard — cash. Enough for a real dinner at the corner café, and then some. That's the first thing you think of. That's exactly how they get you."
+            }
           ]
         }
-      ],
-      "next": "w4_plot.v1"
-    },
-    {
-      "id": "w4_plot.v1",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "No note. No name. Used bills, soft at the edges." },
-        { "speaker": "narrator", "text": "The floor around you is empty." }
-      ],
-      "next": "w4_plot.d0"
-    },
-    {
-      "id": "w4_plot.d0",
-      "type": "decision",
-      "prompt": "It's just sitting there.",
-      "choices": [
-        {
-          "id": "w4_plot.d0_0",
-          "label": "Count it.",
-          "next": "w4_plot.r1",
-          "effects": { "loose_thread": 1 }
-        },
-        {
-          "id": "w4_plot.d0_1",
-          "label": "Don't touch it yet.",
-          "next": "w4_plot.r2",
-          "effects": { "integrity": 1 }
-        }
-      ]
-    },
-    {
-      "id": "w4_plot.r1",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You count with one eye on the door." },
-        { "speaker": "narrator", "text": "More than a week's pay. Less than a conscience." }
-      ],
-      "next": "w4_plot.v2"
-    },
-    {
-      "id": "w4_plot.r2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You check the ceiling first. The camera over your row is dark." },
-        { "speaker": "narrator", "text": "It's been dark all week, you realize." }
-      ],
-      "next": "w4_plot.v2"
-    },
-    {
-      "id": "w4_plot.v2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Calder Street. The stadium. The vans." },
-        { "speaker": "narrator", "text": "Somebody thinks you've seen enough to be worth buying." }
       ],
       "next": "w4_plot.d1"
     },
@@ -131,20 +100,12 @@
         {
           "id": "w4_plot.d1_0",
           "label": "Log it as evidence.",
-          "next": "w4_plot.c_ask",
-          "effects": {
-            "integrity": 1,
-            "case_file": 1
-          }
+          "next": "w4_plot.c_ask"
         },
         {
           "id": "w4_plot.d1_1",
           "label": "Pocket it? Just this once.",
-          "next": "w4_plot.c_ask",
-          "effects": {
-            "don": 1,
-            "pawn": 1
-          }
+          "next": "w4_plot.c_ask"
         }
       ]
     },
@@ -152,27 +113,23 @@
       "id": "w4_plot.c_ask",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Nobody knows anything. No camera caught it." },
-        { "speaker": "narrator", "text": "Turn it in, and you're telling the building something is going on." }
+        {
+          "speaker": "narrator",
+          "text": "Nobody knows anything. No camera caught it. Turn it in, and you're telling the building something is going on."
+        }
       ],
       "variants": [
         {
-          "when": { "flag": "w3_filed_away" },
+          "when": {
+            "flag": "w3_filed_away"
+          },
           "lines": [
-            { "speaker": "narrator", "text": "Nobody knows anything. No camera caught it." },
-            { "speaker": "narrator", "text": "You filed the vans away like the system wanted." },
-            { "speaker": "narrator", "text": "Maybe this is the system saying thank you." }
+            {
+              "speaker": "narrator",
+              "text": "Nobody knows anything. No camera caught it. You filed the vans away like the system wanted — maybe this is the system saying thank you."
+            }
           ]
         }
-      ],
-      "next": "w4_plot.v3"
-    },
-    {
-      "id": "w4_plot.v3",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You sit with it a long minute. The building hums." },
-        { "speaker": "narrator", "text": "This is the offer. There won't be a cleaner one." }
       ],
       "next": "w4_plot.d2"
     },
@@ -184,62 +141,46 @@
         {
           "id": "w4_plot.d2_0",
           "label": "Turn it in anyway.",
-          "next": "w4_plot.c_log",
-          "effects": {
-            "integrity": 2,
-            "case_file": 2
-          },
+          "next": "w4_plot.fin_log",
           "set_flags": {
             "envelope_reported": true
+          },
+          "effects": {
+            "case_file": 1
           }
         },
         {
           "id": "w4_plot.d2_1",
           "label": "Keep it.",
-          "next": "w4_plot.c_take",
-          "effects": {
-            "cash": 60,
-            "don": 2,
-            "pawn": 2
-          },
+          "next": "w4_plot.fin_take",
           "set_flags": {
             "took_envelope": true
+          },
+          "effects": {
+            "cash": 60
           }
         }
       ]
     },
     {
-      "id": "w4_plot.c_log",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You bag it. Photograph it. Log it." },
-        { "speaker": "narrator", "text": "Your hands shake the whole time." }
-      ],
-      "next": "w4_plot.fin_log"
-    },
-    {
       "id": "w4_plot.fin_log",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Now there's paper that says someone paid you to look away." },
-        { "speaker": "narrator", "text": "And that you said no." }
+        {
+          "speaker": "narrator",
+          "text": "You bag it, photograph it, log it. Your hands shake. Now there's paper that says someone paid you to look away — and you said no."
+        }
       ],
       "next": "_end"
-    },
-    {
-      "id": "w4_plot.c_take",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The cash goes in your jacket. Warm. Heavy. Easy." }
-      ],
-      "next": "w4_plot.fin_take"
     },
     {
       "id": "w4_plot.fin_take",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You just learned the price of looking away." },
-        { "speaker": "narrator", "text": "So did whoever gave it to you." }
+        {
+          "speaker": "narrator",
+          "text": "The cash goes in your jacket. Warm, heavy, easy. You just learned the price of looking away. So did whoever gave it to you."
+        }
       ],
       "next": "_end"
     },

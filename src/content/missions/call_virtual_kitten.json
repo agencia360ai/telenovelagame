@@ -2,7 +2,7 @@
   "schema": "mission@1",
   "id": "call_virtual_kitten",
   "title": "I Need Bitcoins",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "daily",
@@ -28,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_virtual_kitten.b0",
   "assets": [
     {
       "key": "call-bitcoin-need",
@@ -41,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_virtual_kitten.b0",
   "beats": [
     {
       "id": "call_virtual_kitten.b0",
@@ -118,7 +118,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "George Cheddar Washington!"
+          "text": "George Cheddar Washington, I already love him!"
         }
       ],
       "next": "dispatch"

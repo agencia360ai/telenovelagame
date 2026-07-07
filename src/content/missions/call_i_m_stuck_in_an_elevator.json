@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "call_i_m_stuck_in_an_elevator",
   "title": "I'm stuck in an elevator!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "fire"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_i_m_stuck_in_an_elevator.intro",
   "assets": [
     {
       "key": "call-elevator",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_i_m_stuck_in_an_elevator.intro",
   "beats": [
     {
       "id": "call_i_m_stuck_in_an_elevator.intro",
@@ -105,10 +106,10 @@
           "text": "Tower B, Westgate Apartments. Between 4 and 5."
         }
       ],
-      "next": "call_i_m_stuck_in_an_elevator.d2"
+      "next": "dispatch"
     },
     {
-      "id": "call_i_m_stuck_in_an_elevator.d2",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "firefighters",

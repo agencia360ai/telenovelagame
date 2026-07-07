@@ -32,6 +32,12 @@
     "neutral": ""
    }
   },
+  "detective": {
+   "name": "Detective",
+   "avatars": {
+    "neutral": ""
+   }
+  },
   "friend": {
    "name": "Old Friend",
    "avatars": {
@@ -2969,6 +2975,179 @@
  "daily_calls": {
   "serve_per_day": 3,
   "library": [
+   {
+    "id": "border-runners",
+    "title": "Movement at the Fence Line",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "b1",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 1,
+     "type": "real",
+     "unit": "border_patrol",
+     "category": "crime"
+    },
+    "beats": [
+     {
+      "id": "b1",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "There's a group cutting across my land near the south fence. Six, maybe seven people, moving fast."
+       },
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "Thank you for calling. Stay inside and keep your distance. Can you see them clearly?"
+       }
+      ],
+      "next": "d1",
+      "x_media": {
+       "key": "border-runners",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "You need the right unit. What do you ask?",
+       "choices": [
+        {
+         "id": "d1_assess",
+         "label": "Are they armed, or does anyone look hurt?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1,
+          "score_bonus": 1
+         },
+         "feedback": "Good situational read before you commit a unit."
+        },
+        {
+         "id": "d1_direction",
+         "label": "Which direction are they heading?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1
+         }
+        },
+        {
+         "id": "d1_confront",
+         "label": "Go out and tell them to stop.",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "score_bonus": -1
+         },
+         "feedback": "Never send a civilian to confront a group — keep them safe."
+        }
+       ]
+      }
+     },
+     {
+      "id": "b2",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "They're heading for the dry creek bed toward the highway."
+       }
+      ],
+      "next": "dispatch",
+      "x_variants": [
+       {
+        "when": {
+         "choice": "d1_assess"
+        },
+        "lines": [
+         {
+          "speaker": "caller",
+          "text": "No weapons that I can see… but one of them is limping, the others are helping him along."
+         },
+         {
+          "speaker": "operator",
+          "text": "Understood — possible injury. I'll flag it for the responding unit."
+         }
+        ]
+       }
+      ],
+      "x_media": {
+       "key": "border-runners",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "dispatch",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "rookie"
+      ],
+      "lines": [
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "An unauthorized crossing on private land near the line is BORDER PATROL's jurisdiction — they coordinate the response and any medical needs."
+       }
+      ],
+      "next": null,
+      "x_dispatch": {
+       "correct": "border_patrol",
+       "prompt": "WHO DO YOU DISPATCH?"
+      }
+     }
+    ],
+    "x_reward": 6,
+    "x_caller": {
+     "name": "Ranch Owner",
+     "type": "SUSPICIOUS ACTIVITY",
+     "location": "County Road 12 · South Fence"
+    },
+    "x_initial_variables": {
+     "intel": 0,
+     "score_bonus": 0
+    },
+    "x_assets": [
+     {
+      "key": "border-runners",
+      "type": "video",
+      "role": "ambient",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     },
+     {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "deploy",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     }
+    ],
+    "x_time_limit_seconds": 15
+   },
    {
     "id": "call_a_man_fell_from_a_2nd_floor",
     "title": "A man fell from a 2nd floor!",
@@ -8687,6 +8866,1608 @@
      "no_unit"
     ],
     "x_time_limit_seconds": 15
+   },
+   {
+    "id": "kitchen-fire",
+    "title": "Apartment Kitchen Fire",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "b1",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 1,
+     "type": "real",
+     "unit": "fire",
+     "category": "fire"
+    },
+    "beats": [
+     {
+      "id": "b1",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "My stove caught fire — the grease just went up! Flames are on the cabinets now!"
+       },
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "Stay calm. Do not throw water on a grease fire. Is anyone still inside the apartment?"
+       }
+      ],
+      "next": "d1",
+      "x_media": {
+       "key": "kitchen-fire",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "Before you send anyone, what's your priority question?",
+       "choices": [
+        {
+         "id": "d1_people",
+         "label": "Is anyone trapped or unable to get out?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1,
+          "score_bonus": 1
+         },
+         "set_flags": {
+          "people_inside": true
+         },
+         "feedback": "Knowing there are people inside changes the response priority."
+        },
+        {
+         "id": "d1_spread",
+         "label": "Get out now — how fast is it spreading?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1
+         }
+        },
+        {
+         "id": "d1_extinguish",
+         "label": "Try to smother it with a lid or baking soda.",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "score_bonus": -1
+         },
+         "feedback": "Risky — never coach a panicking caller to fight a spreading fire."
+        }
+       ]
+      }
+     },
+     {
+      "id": "b2",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "It's climbing the wall — I can't put this out!"
+       }
+      ],
+      "next": "dispatch",
+      "x_variants": [
+       {
+        "when": {
+         "flag": "people_inside",
+         "eq": true
+        },
+        "lines": [
+         {
+          "speaker": "caller",
+          "text": "My grandmother's in the back room — she can't move fast!"
+         },
+         {
+          "speaker": "operator",
+          "text": "Get low, get to her, and head for the nearest exit. Help is on the way."
+         }
+        ]
+       }
+      ],
+      "x_media": {
+       "key": "kitchen-fire",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "dispatch",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "rookie"
+      ],
+      "lines": [
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "A spreading structure fire — with a possible trapped resident — requires FIRE DEPT: suppression plus search-and-rescue."
+       }
+      ],
+      "next": null,
+      "x_dispatch": {
+       "correct": "firefighters",
+       "prompt": "WHO DO YOU DISPATCH?"
+      }
+     }
+    ],
+    "x_reward": 6,
+    "x_caller": {
+     "name": "Resident",
+     "type": "FIRE EMERGENCY",
+     "location": "Maple Court Apts · Unit 4B"
+    },
+    "x_initial_variables": {
+     "intel": 0,
+     "score_bonus": 0
+    },
+    "x_assets": [
+     {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     },
+     {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "deploy",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     }
+    ],
+    "x_time_limit_seconds": 15
+   },
+   {
+    "id": "armed-robbery",
+    "title": "Armed Robbery in Progress",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "b1",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 2,
+     "type": "demo",
+     "unit": "police",
+     "category": "crime"
+    },
+    "beats": [
+     {
+      "id": "b1",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "I'm whispering because I'm hiding. There's a robbery at the QuickMart on 5th and Main."
+       },
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "I've got you. Are you safe right now?"
+       }
+      ],
+      "next": "d1",
+      "x_media": {
+       "key": "armed-robbery",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "The caller is whispering and scared. What do you do first?",
+       "choices": [
+        {
+         "id": "d1_calm",
+         "label": "Keep your voice low and stay hidden — I'm sending help.",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "panic": -1,
+          "intel": 1,
+          "score_bonus": 1
+         },
+         "feedback": "Calm caller, clearer details."
+        },
+        {
+         "id": "d1_count",
+         "label": "How many of them, and are there weapons?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1
+         }
+        },
+        {
+         "id": "d1_nego",
+         "label": "Patch in a hostage negotiator on standby.",
+         "gem_cost": 5,
+         "next": "b2",
+         "effects": {
+          "panic": -2,
+          "intel": 2,
+          "score_bonus": 2
+         },
+         "feedback": "Negotiator standing by — you have the full picture.",
+         "premium": true
+        }
+       ]
+      }
+     },
+     {
+      "id": "b2",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "There's a guy with a gun. The cashier looks terrified — please hurry!"
+       }
+      ],
+      "next": "dispatch",
+      "x_variants": [
+       {
+        "when": {
+         "var": "intel",
+         "op": ">=",
+         "value": 2
+        },
+        "lines": [
+         {
+          "speaker": "caller",
+          "text": "Two men, ski masks. One has a handgun on the cashier. The other's watching the door."
+         },
+         {
+          "speaker": "caller",
+          "text": "They keep shouting about the safe. I'm behind the drinks fridge."
+         }
+        ]
+       }
+      ],
+      "x_media": {
+       "key": "armed-robbery",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "dispatch",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "rookie"
+      ],
+      "lines": [
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "An armed crime in progress requires POLICE — they're trained to respond to active threats and secure the scene."
+       }
+      ],
+      "next": null,
+      "x_dispatch": {
+       "correct": "police",
+       "prompt": "WHO DO YOU DISPATCH?"
+      }
+     }
+    ],
+    "x_order": 1,
+    "x_reward": 8,
+    "x_caller": {
+     "name": "Anonymous Caller",
+     "type": "CRIME IN PROGRESS",
+     "location": "QuickMart · 5th & Main"
+    },
+    "x_initial_variables": {
+     "panic": 1,
+     "intel": 0,
+     "score_bonus": 0
+    },
+    "x_assets": [
+     {
+      "key": "armed-robbery",
+      "type": "video",
+      "role": "ambient",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     },
+     {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "deploy",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     }
+    ],
+    "x_time_limit_seconds": 15
+   },
+   {
+    "id": "kitchen-fire",
+    "title": "Apartment Kitchen Fire",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "b1",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 1,
+     "type": "demo",
+     "unit": "fire",
+     "category": "fire"
+    },
+    "beats": [
+     {
+      "id": "b1",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "My stove caught fire — the grease just went up! Flames are on the cabinets now!"
+       },
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "Stay calm. Do not throw water on a grease fire. Is anyone still inside the apartment?"
+       }
+      ],
+      "next": "d1",
+      "x_media": {
+       "key": "kitchen-fire",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "Before you send anyone, what's your priority question?",
+       "choices": [
+        {
+         "id": "d1_people",
+         "label": "Is anyone trapped or unable to get out?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1,
+          "score_bonus": 1
+         },
+         "set_flags": {
+          "people_inside": true
+         },
+         "feedback": "Knowing there are people inside changes the response priority."
+        },
+        {
+         "id": "d1_spread",
+         "label": "Get out now — how fast is it spreading?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1
+         }
+        },
+        {
+         "id": "d1_extinguish",
+         "label": "Try to smother it with a lid or baking soda.",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "score_bonus": -1
+         },
+         "feedback": "Risky — never coach a panicking caller to fight a spreading fire."
+        }
+       ]
+      }
+     },
+     {
+      "id": "b2",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "It's climbing the wall — I can't put this out!"
+       }
+      ],
+      "next": "dispatch",
+      "x_variants": [
+       {
+        "when": {
+         "flag": "people_inside",
+         "eq": true
+        },
+        "lines": [
+         {
+          "speaker": "caller",
+          "text": "My grandmother's in the back room — she can't move fast!"
+         },
+         {
+          "speaker": "operator",
+          "text": "Get low, get to her, and head for the nearest exit. Help is on the way."
+         }
+        ]
+       }
+      ],
+      "x_media": {
+       "key": "kitchen-fire",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "dispatch",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "rookie"
+      ],
+      "lines": [
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "A spreading structure fire — with a possible trapped resident — requires FIRE DEPT: suppression plus search-and-rescue."
+       }
+      ],
+      "next": null,
+      "x_dispatch": {
+       "correct": "firefighters",
+       "prompt": "WHO DO YOU DISPATCH?"
+      }
+     }
+    ],
+    "x_reward": 6,
+    "x_caller": {
+     "name": "Resident",
+     "type": "FIRE EMERGENCY",
+     "location": "Maple Court Apts · Unit 4B"
+    },
+    "x_initial_variables": {
+     "intel": 0,
+     "score_bonus": 0
+    },
+    "x_assets": [
+     {
+      "key": "kitchen-fire",
+      "type": "video",
+      "role": "ambient",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     },
+     {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "deploy",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     }
+    ],
+    "x_time_limit_seconds": 15
+   },
+   {
+    "id": "border-runners",
+    "title": "Movement at the Fence Line",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "b1",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 1,
+     "type": "demo",
+     "unit": "border_patrol",
+     "category": "crime"
+    },
+    "beats": [
+     {
+      "id": "b1",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "There's a group cutting across my land near the south fence. Six, maybe seven people, moving fast."
+       },
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "Thank you for calling. Stay inside and keep your distance. Can you see them clearly?"
+       }
+      ],
+      "next": "d1",
+      "x_media": {
+       "key": "border-runners",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "You need the right unit. What do you ask?",
+       "choices": [
+        {
+         "id": "d1_assess",
+         "label": "Are they armed, or does anyone look hurt?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1,
+          "score_bonus": 1
+         },
+         "feedback": "Good situational read before you commit a unit."
+        },
+        {
+         "id": "d1_direction",
+         "label": "Which direction are they heading?",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "intel": 1
+         }
+        },
+        {
+         "id": "d1_confront",
+         "label": "Go out and tell them to stop.",
+         "gem_cost": 0,
+         "next": "b2",
+         "effects": {
+          "score_bonus": -1
+         },
+         "feedback": "Never send a civilian to confront a group — keep them safe."
+        }
+       ]
+      }
+     },
+     {
+      "id": "b2",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "caller"
+      ],
+      "lines": [
+       {
+        "speaker": "caller",
+        "expr": "neutral",
+        "text": "They're heading for the dry creek bed toward the highway."
+       }
+      ],
+      "next": "dispatch",
+      "x_variants": [
+       {
+        "when": {
+         "choice": "d1_assess"
+        },
+        "lines": [
+         {
+          "speaker": "caller",
+          "text": "No weapons that I can see… but one of them is limping, the others are helping him along."
+         },
+         {
+          "speaker": "operator",
+          "text": "Understood — possible injury. I'll flag it for the responding unit."
+         }
+        ]
+       }
+      ],
+      "x_media": {
+       "key": "border-runners",
+       "role": "ambient"
+      }
+     },
+     {
+      "id": "dispatch",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "rookie"
+      ],
+      "lines": [
+       {
+        "speaker": "rookie",
+        "expr": "neutral",
+        "text": "An unauthorized crossing on private land near the line is BORDER PATROL's jurisdiction — they coordinate the response and any medical needs."
+       }
+      ],
+      "next": null,
+      "x_dispatch": {
+       "correct": "border_patrol",
+       "prompt": "WHO DO YOU DISPATCH?"
+      }
+     }
+    ],
+    "x_reward": 6,
+    "x_caller": {
+     "name": "Ranch Owner",
+     "type": "SUSPICIOUS ACTIVITY",
+     "location": "County Road 12 · South Fence"
+    },
+    "x_initial_variables": {
+     "intel": 0,
+     "score_bonus": 0
+    },
+    "x_assets": [
+     {
+      "key": "border-runners",
+      "type": "video",
+      "role": "ambient",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     },
+     {
+      "key": "border-runners-intro",
+      "type": "video",
+      "role": "deploy",
+      "spec": {
+       "aspect": "9:16",
+       "loop": true,
+       "muted": true
+      }
+     }
+    ],
+    "x_time_limit_seconds": 15
+   },
+   {
+    "id": "life_rank1",
+    "title": "First Badge",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "life1.intro",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 1,
+     "type": "life",
+     "unit": "none",
+     "category": "life"
+    },
+    "beats": [
+     {
+      "id": "life1.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "Off the clock. First badge in your pocket that says DISPATCHER. The title is small. The way people start looking at it isn't."
+       }
+      ],
+      "next": "life1.sit"
+     },
+     {
+      "id": "life1.sit",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "The ones who used to talk over you, who never bothered to learn your name — they hear what you do now, and something behind their eyes shifts. This kind of respect doesn't get handed to you. You answer for it, one call at a time."
+       }
+      ],
+      "next": "life1.d1"
+     },
+     {
+      "id": "life1.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "How do you carry it?",
+       "choices": [
+        {
+         "id": "life1.d1_0",
+         "label": "Quietly. Let the work speak.",
+         "gem_cost": 0,
+         "next": "life1.fin_quiet",
+         "effects": {
+          "respect": 1
+         }
+        },
+        {
+         "id": "life1.d1_1",
+         "label": "Straight-backed. You earned the room.",
+         "gem_cost": 0,
+         "next": "life1.fin_proud",
+         "effects": {
+          "respect": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "life1.fin_quiet",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "You don't say much. You don't have to. The badge doesn't need announcing — and for the first time, walking your own street, you don't shrink."
+       }
+      ],
+      "next": null
+     },
+     {
+      "id": "life1.fin_proud",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "You hold your head up. Let them look. You spent years being overlooked; tonight you take up your full size, and nobody argues."
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "The neighborhood"
+    },
+    "x_initial_variables": {
+     "respect": 0
+    },
+    "x_assets": [
+     {
+      "key": "pov-rank2",
+      "type": "video",
+      "role": "ambient"
+     }
+    ]
+   },
+   {
+    "id": "life_rank2",
+    "title": "Word Gets Around",
+    "kind": "daily_call",
+    "week": 2,
+    "start_beat": "life2.intro",
+    "tags": {
+     "week_min": 2,
+     "difficulty": 1,
+     "type": "life",
+     "unit": "none",
+     "category": "life"
+    },
+    "beats": [
+     {
+      "id": "life2.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "Senior Dispatcher now. Word gets around a small city. A save you worked makes the local news — a voice on the line that kept someone here long enough for help to arrive."
+       }
+      ],
+      "next": "life2.sit"
+     },
+     {
+      "id": "life2.sit",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "The people who used to wave off the job — 'you just answer phones' — go quiet when it comes up now. They're starting to understand that the phone is the first thing that stands between a bad day and a funeral."
+       }
+      ],
+      "next": "life2.d1"
+     },
+     {
+      "id": "life2.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "The doubters are reconsidering. What sits with you?",
+       "choices": [
+        {
+         "id": "life2.d1_0",
+         "label": "It's not about them. It's about whoever calls next.",
+         "gem_cost": 0,
+         "next": "life2.fin",
+         "effects": {
+          "respect": 1
+         }
+        },
+        {
+         "id": "life2.d1_1",
+         "label": "Feels good to be seen for once.",
+         "gem_cost": 0,
+         "next": "life2.fin",
+         "effects": {
+          "respect": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "life2.fin",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "Either way, the story travels further than you do. You go back to the board the next night the same as always — but the city's picture of you has quietly changed."
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "The city"
+    },
+    "x_initial_variables": {
+     "respect": 0
+    },
+    "x_assets": [
+     {
+      "key": "pov-rank3",
+      "type": "video",
+      "role": "ambient"
+     }
+    ]
+   },
+   {
+    "id": "life_rank3",
+    "title": "Closer to Home",
+    "kind": "daily_call",
+    "week": 3,
+    "start_beat": "life3.intro",
+    "tags": {
+     "week_min": 3,
+     "difficulty": 1,
+     "type": "life",
+     "unit": "none",
+     "category": "life"
+    },
+    "beats": [
+     {
+      "id": "life3.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "Supervisor stripes. The job stops being an abstraction to the people around you the day an emergency lands on a street you know — and the calm voice that walked someone through it came from a room like yours."
+       }
+      ],
+      "next": "life3.sit"
+     },
+     {
+      "id": "life3.sit",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "The ones who used to mock the work don't have jokes anymore. When it's their block, their worst minute, the person on the other end of the line is suddenly the most important voice in the world. They get it now."
+       }
+      ],
+      "next": "life3.d1"
+     },
+     {
+      "id": "life3.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "Respect earned the hard way. How do you meet it?",
+       "choices": [
+        {
+         "id": "life3.d1_0",
+         "label": "Graciously. Everyone's someone's worst day eventually.",
+         "gem_cost": 0,
+         "next": "life3.fin",
+         "effects": {
+          "respect": 1
+         }
+        },
+        {
+         "id": "life3.d1_1",
+         "label": "Let the work keep answering for you.",
+         "gem_cost": 0,
+         "next": "life3.fin",
+         "effects": {
+          "respect": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "life3.fin",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "No speeches, no I-told-you-so. Just the quiet arithmetic of a city learning what you're for. The doubt doesn't survive contact with a real emergency."
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "The neighborhood"
+    },
+    "x_initial_variables": {
+     "respect": 0
+    }
+   },
+   {
+    "id": "life_rank4",
+    "title": "The Weight",
+    "kind": "daily_call",
+    "week": 4,
+    "start_beat": "life4.intro",
+    "tags": {
+     "week_min": 4,
+     "difficulty": 1,
+     "type": "life",
+     "unit": "none",
+     "category": "life"
+    },
+    "beats": [
+     {
+      "id": "life4.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "Commander. The higher you go, the heavier the nights. The calls you carry home now are the ones nobody else could hold. Respect at this rank isn't given — it's the residue of everything you didn't let fall apart."
+       }
+      ],
+      "next": "life4.sit"
+     },
+     {
+      "id": "life4.sit",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "The people who once thought this was easy work will never know the weight of a bad night on the board. That's the trade: they respect the title, and you carry what earns it in silence."
+       }
+      ],
+      "next": "life4.d1"
+     },
+     {
+      "id": "life4.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "The weight is real. How do you hold it?",
+       "choices": [
+        {
+         "id": "life4.d1_0",
+         "label": "Set it down for the night. You did enough today.",
+         "gem_cost": 0,
+         "next": "life4.fin",
+         "effects": {
+          "respect": 1
+         }
+        },
+        {
+         "id": "life4.d1_1",
+         "label": "Carry it. It's the price of being the one they trust.",
+         "gem_cost": 0,
+         "next": "life4.fin",
+         "effects": {
+          "respect": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "life4.fin",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "You breathe. Tomorrow the board lights up again, and again you'll be the steady voice at the center of someone's chaos. That's not a job title anymore. It's who you became."
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "Home, after a shift"
+    },
+    "x_initial_variables": {
+     "respect": 0
+    }
+   },
+   {
+    "id": "life_rank5",
+    "title": "Recognition",
+    "kind": "daily_call",
+    "week": 5,
+    "start_beat": "life5.intro",
+    "tags": {
+     "week_min": 5,
+     "difficulty": 1,
+     "type": "life",
+     "unit": "none",
+     "category": "life"
+    },
+    "beats": [
+     {
+      "id": "life5.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "Chief Operator. A room at City Hall, your name read out loud with the word 'service' after it. Somewhere in the folding chairs sit people who once looked right through you."
+       }
+      ],
+      "next": "life5.sit"
+     },
+     {
+      "id": "life5.sit",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "There's no version of this where they don't have to admit it now. The ones who doubted, who mocked, who never expected anything of you — they're clapping. Respect, finally, out loud and on the record."
+       }
+      ],
+      "next": "life5.d1"
+     },
+     {
+      "id": "life5.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "The recognition you never expected. What do you feel?",
+       "choices": [
+        {
+         "id": "life5.d1_0",
+         "label": "Grateful. And a little proud. You allow yourself that.",
+         "gem_cost": 0,
+         "next": "life5.fin",
+         "effects": {
+          "respect": 1
+         }
+        },
+        {
+         "id": "life5.d1_1",
+         "label": "Focused. The medal doesn't answer calls — you do.",
+         "gem_cost": 0,
+         "next": "life5.fin",
+         "effects": {
+          "respect": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "life5.fin",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "You take the applause, then you take the elevator back down to the floor. The praise is nice. The work is the point. But tonight, just for a moment, the room feels a little bigger."
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "City Hall"
+    },
+    "x_initial_variables": {
+     "respect": 0
+    }
+   },
+   {
+    "id": "life_rank6",
+    "title": "Full Circle",
+    "kind": "daily_call",
+    "week": 6,
+    "start_beat": "life6.intro",
+    "tags": {
+     "week_min": 6,
+     "difficulty": 1,
+     "type": "life",
+     "unit": "none",
+     "category": "life"
+    },
+    "beats": [
+     {
+      "id": "life6.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "Director of the center. Now there are new recruits who look at you the way you once looked at the people who seemed untouchable. The doubt that used to follow you has been replaced by something else entirely: aspiration."
+       }
+      ],
+      "next": "life6.sit"
+     },
+     {
+      "id": "life6.sit",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "The ones who mocked the job are the ones telling the next generation to learn from you. Full circle — from overlooked to the standard other people measure themselves against. You earned this desk one call at a time."
+       }
+      ],
+      "next": "life6.d1"
+     },
+     {
+      "id": "life6.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "What do you pass on to the ones just starting?",
+       "choices": [
+        {
+         "id": "life6.d1_0",
+         "label": "Stay on the line when everyone else would hang up.",
+         "gem_cost": 0,
+         "next": "life6.fin",
+         "effects": {
+          "respect": 1
+         }
+        },
+        {
+         "id": "life6.d1_1",
+         "label": "Be the calm voice in someone's worst minute. That's the whole job.",
+         "gem_cost": 0,
+         "next": "life6.fin",
+         "effects": {
+          "respect": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "life6.fin",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "They hang on the words. Respect isn't something you chase anymore — it's the room you walk into. And it all started with picking up a phone nobody thought mattered."
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "The academy"
+    },
+    "x_initial_variables": {
+     "respect": 0
+    }
+   },
+   {
+    "id": "consequence_the_case",
+    "title": "The Case Moves",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "cq_case.intro",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 1,
+     "type": "consequence",
+     "unit": "none",
+     "category": "consequence"
+    },
+    "beats": [
+     {
+      "id": "cq_case.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "A number you don't know. When you pick up, the voice is careful, low — a detective, off the record."
+       }
+      ],
+      "next": "cq_case.v1"
+     },
+     {
+      "id": "cq_case.v1",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "detective"
+      ],
+      "lines": [
+       {
+        "speaker": "detective",
+        "expr": "neutral",
+        "text": "That case file you kept building? Somebody upstairs finally read it. We're moving. Quietly. I wanted you to hear it from me first."
+       }
+      ],
+      "next": "cq_case.d1"
+     },
+     {
+      "id": "cq_case.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "The thing you documented is becoming real. What do you say?",
+       "choices": [
+        {
+         "id": "cq_case.d1_0",
+         "label": "Tell me what you need. I'm in.",
+         "gem_cost": 0,
+         "next": "cq_case.fin_in",
+         "effects": {
+          "integrity": 1,
+          "case_file": 1
+         }
+        },
+        {
+         "id": "cq_case.d1_1",
+         "label": "Keep my name out of it.",
+         "gem_cost": 0,
+         "next": "cq_case.fin_out",
+         "effects": {
+          "integrity": 1,
+          "loose_thread": 1
+         }
+        },
+        {
+         "id": "cq_case.d1_2",
+         "label": "It took you long enough.",
+         "gem_cost": 0,
+         "next": "cq_case.fin_bitter",
+         "effects": {
+          "integrity": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "cq_case.fin_in",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "You hand over everything — dates, plates, the map you kept on your fridge. For the first time the quiet on Calder Street has someone official listening."
+       }
+      ],
+      "next": null
+     },
+     {
+      "id": "cq_case.fin_out",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "'Understood,' the detective says. Your name stays off it, but the file does the talking. Sometimes that's the bravest way to be brave."
+       }
+      ],
+      "next": null
+     },
+     {
+      "id": "cq_case.fin_bitter",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "'Yeah,' the detective says, not arguing. 'It did.' Then, quieter: 'Thanks for not letting it die.'"
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_speakers": {
+     "detective": "Detective"
+    },
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "Your apartment"
+    },
+    "x_initial_variables": {
+     "integrity": 0,
+     "case_file": 0,
+     "loose_thread": 0
+    }
+   },
+   {
+    "id": "consequence_the_visit",
+    "title": "The Visit",
+    "kind": "daily_call",
+    "week": 1,
+    "start_beat": "cq_visit.intro",
+    "tags": {
+     "week_min": 1,
+     "difficulty": 1,
+     "type": "consequence",
+     "unit": "none",
+     "category": "consequence"
+    },
+    "beats": [
+     {
+      "id": "cq_visit.intro",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "A knock at your door you didn't order. The man on the other side doesn't introduce himself. He doesn't have to."
+       }
+      ],
+      "next": "cq_visit.v1"
+     },
+     {
+      "id": "cq_visit.v1",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [
+       "stranger"
+      ],
+      "lines": [
+       {
+        "speaker": "stranger",
+        "expr": "neutral",
+        "text": "We appreciate a dispatcher who knows when to look away. Keep doing that. It'd be a shame if you forgot how."
+       }
+      ],
+      "next": "cq_visit.d1"
+     },
+     {
+      "id": "cq_visit.d1",
+      "background": "bg_dispatch",
+      "type": "decision",
+      "characters_on_scene": [],
+      "lines": [],
+      "decision": {
+       "prompt": "He's on your doorstep. What do you do?",
+       "choices": [
+        {
+         "id": "cq_visit.d1_0",
+         "label": "Close the door. Don't say a word.",
+         "gem_cost": 0,
+         "next": "cq_visit.fin_quiet",
+         "effects": {
+          "pawn": 1
+         }
+        },
+        {
+         "id": "cq_visit.d1_1",
+         "label": "'I never agreed to anything.'",
+         "gem_cost": 0,
+         "next": "cq_visit.fin_push",
+         "effects": {
+          "integrity": 1,
+          "pawn": 1
+         }
+        },
+        {
+         "id": "cq_visit.d1_2",
+         "label": "Nod. Whatever keeps them gone.",
+         "gem_cost": 0,
+         "next": "cq_visit.fin_nod",
+         "effects": {
+          "don": 1,
+          "pawn": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "id": "cq_visit.fin_quiet",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "You shut the door and stand behind it a long time. The message landed anyway. That was the point."
+       }
+      ],
+      "next": null
+     },
+     {
+      "id": "cq_visit.fin_push",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "He smiles like your words are cute. 'Sure you didn't.' The door clicks shut on his side, and the street is very quiet."
+       }
+      ],
+      "next": null
+     },
+     {
+      "id": "cq_visit.fin_nod",
+      "background": "bg_dispatch",
+      "type": "dialogue",
+      "characters_on_scene": [],
+      "lines": [
+       {
+        "speaker": "narrator",
+        "expr": "neutral",
+        "text": "You nod. He's gone before you finish. You just agreed to something without saying a single word — the cleanest kind of deal."
+       }
+      ],
+      "next": null
+     }
+    ],
+    "x_reward": 0,
+    "x_speakers": {
+     "stranger": "Stranger"
+    },
+    "x_caller": {
+     "name": "You",
+     "type": "OFF DUTY",
+     "location": "Your door"
+    },
+    "x_initial_variables": {
+     "pawn": 0
+    }
    },
    {
     "id": "event_debt_letter",

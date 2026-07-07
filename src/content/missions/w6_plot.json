@@ -1,0 +1,171 @@
+{
+  "schema": "mission@1",
+  "id": "w6_plot",
+  "title": "Week 6 — The Audit",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "week": 6,
+  "order": 6,
+  "goal_trust": 18,
+  "unlock": {
+    "minWeek": 6
+  },
+  "caller": {
+    "name": "Internal Affairs",
+    "type": "STORY",
+    "location": "Glass room"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0,
+    "debt_missed": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w6_plot.intro",
+  "speakers": {
+    "detective": "Detective"
+  },
+  "beats": [
+    {
+      "id": "w6_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A glass room, a folder, and a detective from Internal Affairs who pours you water you didn't ask for."
+        }
+      ],
+      "next": "w6_plot.v1"
+    },
+    {
+      "id": "w6_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "detective",
+          "text": "Response logs on your shift have been edited after hours. 3 a.m., supervisor credentials, going back years."
+        },
+        {
+          "speaker": "detective",
+          "text": "You're not accused. You're the only one whose numbers are clean. That makes you useful — or inconvenient."
+        }
+      ],
+      "variants": [
+        {
+          "when": {
+            "flag": "took_envelope"
+          },
+          "lines": [
+            {
+              "speaker": "detective",
+              "text": "Response logs on your shift have been edited after hours. And one more thing keeps coming up: an envelope."
+            },
+            {
+              "speaker": "detective",
+              "text": "You're sweating, dispatcher. Rooms like this notice."
+            }
+          ]
+        }
+      ],
+      "next": "w6_plot.d1"
+    },
+    {
+      "id": "w6_plot.d1",
+      "type": "decision",
+      "prompt": "IA is watching you across the table. Play it how?",
+      "choices": [
+        {
+          "id": "w6_plot.d1_0",
+          "label": "Point at the pattern — vans, the stadium, the edits.",
+          "next": "w6_plot.c_coop",
+          "set_flags": {
+            "ia_cooperated": true
+          },
+          "effects": {
+            "case_file": 1
+          }
+        },
+        {
+          "id": "w6_plot.d1_1",
+          "label": "Play dumb. Walk out clean.",
+          "next": "w6_plot.c_dumb",
+          "set_flags": {
+            "ia_stonewalled": true
+          }
+        },
+        {
+          "id": "w6_plot.d1_2",
+          "label": "Ask for the raw, unedited logs — quietly.",
+          "next": "w6_plot.c_raw",
+          "gem_cost": 5,
+          "set_flags": {
+            "raw_logs": true
+          },
+          "effects": {
+            "case_file": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "w6_plot.c_coop",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "detective",
+          "text": "Stadium district. Same as the edits. You just connected my dots for me."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The detective slides you a card with a personal number. 'Not the switchboard. Ever.'"
+        }
+      ],
+      "next": "w6_plot.fin"
+    },
+    {
+      "id": "w6_plot.c_dumb",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You give the room nothing. The detective smiles like someone filing you under 'later.'"
+        }
+      ],
+      "next": "w6_plot.fin"
+    },
+    {
+      "id": "w6_plot.c_raw",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "detective",
+          "text": "Raw logs. Off the record."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Every edit traces to one supervisor login — older than your badge, still active. Someone senior never logged out of the past."
+        }
+      ],
+      "next": "w6_plot.fin"
+    },
+    {
+      "id": "w6_plot.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Back on the floor, the center hums like nothing happened. Somewhere in this building, a login is watching the watchers."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

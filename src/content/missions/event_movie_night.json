@@ -2,115 +2,117 @@
   "schema": "mission@1",
   "id": "event_movie_night",
   "title": "Movie Night",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 80,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
-  "speakers": { "partner": "Partner" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Your apartment"
+  },
   "reward": 5,
-  "initial_variables": { "love": 0, "energy": 0 },
-  "initial_flags": {},
+  "order": 80,
+  "initial_variables": {
+    "love": 0,
+    "energy": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_movie.intro",
+  "speakers": {
+    "partner": "Partner"
+  },
   "beats": [
     {
       "id": "ev_movie.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "First time they see your place. The couch dent is shaped like your double shifts." },
-        { "speaker": "partner", "text": "I like it. Very you. Is that a police scanner on the shelf?" }
+        {
+          "speaker": "narrator",
+          "text": "First time they see your place. The couch has a dent shaped like your double shifts, and the fridge has… condiments."
+        },
+        {
+          "speaker": "partner",
+          "text": "Okay, movie's picked. Food situation?"
+        }
       ],
       "next": "ev_movie.d1"
     },
     {
       "id": "ev_movie.d1",
       "type": "decision",
-      "prompt": "The scanner. Explain.",
-      "choices": [
-        { "id": "ev_movie.d1_0", "label": "Decoration. Definitely decoration.", "next": "ev_movie.conv2", "effects": { "love": 1 } },
-        { "id": "ev_movie.d1_1", "label": "I can't sleep without static.", "next": "ev_movie.conv2", "effects": { "love": 1 } },
-        { "id": "ev_movie.d1_2", "label": "Occupational hazard. I'll unplug it.", "next": "ev_movie.conv2", "effects": { "love": 1, "energy": 1 } }
-      ]
-    },
-    {
-      "id": "ev_movie.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "Leave it on. I want the full experience." },
-        { "speaker": "narrator", "text": "They tour the apartment like a crime scene. Verdict: charmed." },
-        { "speaker": "partner", "text": "Now, the movie. I brought three options and strong opinions." }
-      ],
-      "next": "ev_movie.d2"
-    },
-    {
-      "id": "ev_movie.d2",
-      "type": "decision",
-      "prompt": "Pick the genre.",
-      "choices": [
-        { "id": "ev_movie.d2_0", "label": "The rom-com. Know your audience.", "next": "ev_movie.pivot", "effects": { "love": 1 } },
-        { "id": "ev_movie.d2_1", "label": "The noir. Obviously the noir.", "next": "ev_movie.pivot", "effects": { "love": 1 } },
-        { "id": "ev_movie.d2_2", "label": "The bad shark movie.", "next": "ev_movie.pivot", "effects": { "love": 1, "energy": 1 } }
-      ]
-    },
-    {
-      "id": "ev_movie.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "Excellent taste. Suspicious, but excellent." },
-        { "speaker": "narrator", "text": "The disc spins up. The fridge holds condiments and a theory." },
-        { "speaker": "partner", "text": "Okay, movie's picked. Food situation?" }
-      ],
-      "next": "ev_movie.d3"
-    },
-    {
-      "id": "ev_movie.d3",
-      "type": "decision",
       "prompt": "Host mode: activate.",
       "choices": [
-        { "id": "ev_movie.d3_0", "label": "Order the good takeout.", "cash_cost": 12, "next": "ev_movie.fin_takeout", "effects": { "love": 1, "energy": 1 } },
-        { "id": "ev_movie.d3_1", "label": "Cook whatever the fridge allows.", "next": "ev_movie.fin_cook", "effects": { "love": 2 } },
-        { "id": "ev_movie.d3_2", "label": "Popcorn. Dinner of champions.", "cash_cost": 3, "next": "ev_movie.fin_popcorn", "effects": { "love": 1 } }
+        {
+          "id": "ev_movie.d1_0",
+          "label": "Order the good takeout.",
+          "next": "ev_movie.fin_takeout",
+          "cash_cost": 12,
+          "effects": {
+            "love": 1,
+            "energy": 1
+          }
+        },
+        {
+          "id": "ev_movie.d1_1",
+          "label": "Cook whatever the fridge allows.",
+          "next": "ev_movie.fin_cook",
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_movie.d1_2",
+          "label": "Popcorn. Dinner of champions.",
+          "next": "ev_movie.fin_popcorn",
+          "cash_cost": 3,
+          "effects": {
+            "love": 1
+          }
+        }
       ]
     },
     {
       "id": "ev_movie.fin_takeout",
       "type": "dialogue",
       "lines": [
-        { "speaker": "partner", "text": "You have a 'good takeout' place. That's basically a personality." },
-        { "speaker": "narrator", "text": "The noodles arrive hot. The couch dent, it turns out, fits two." }
+        {
+          "speaker": "narrator",
+          "text": "The good noodles arrive hot and the movie's forgettable, which is fine — the couch dent fits two."
+        }
       ],
-      "next": "ev_movie.coda"
+      "next": "_end"
     },
     {
       "id": "ev_movie.fin_cook",
       "type": "dialogue",
       "lines": [
-        { "speaker": "partner", "text": "You made THIS out of three condiments and rice?" },
-        { "speaker": "narrator", "text": "Dispatcher improvisation, kitchen edition. They ask for seconds." }
+        {
+          "speaker": "partner",
+          "text": "You made THIS out of three condiments and rice?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Dispatcher improvisation, kitchen edition. They ask for seconds. The movie never gets finished."
+        }
       ],
-      "next": "ev_movie.coda"
+      "next": "_end"
     },
     {
       "id": "ev_movie.fin_popcorn",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Two bowls, extra butter, zero pretension." },
-        { "speaker": "partner", "text": "I'm stealing your bowl. This is a test of character." },
-        { "speaker": "narrator", "text": "You allow it. This is serious, then." }
-      ],
-      "next": "ev_movie.coda"
-    },
-    {
-      "id": "ev_movie.coda",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The movie is forgettable, which is fine. Nobody's watching it." },
-        { "speaker": "narrator", "text": "The credits roll on two people who missed the ending on purpose." }
+        {
+          "speaker": "narrator",
+          "text": "Two bowls, extra butter, zero pretension. Halfway in they steal your bowl. You allow it. This is serious, then."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

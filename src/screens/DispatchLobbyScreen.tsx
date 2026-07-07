@@ -45,6 +45,10 @@ import { useWardrobe } from "../context/WardrobeContext";
 import { usePaywall } from "../context/PaywallContext";
 import { resolveSkin, getLobbyVideo } from "../game/assets";
 import { getMissionById } from "../content/missions";
+import { CITY_PLACES } from "../game/places";
+import { evaluateCondition } from "../lib/missions/engine";
+import { useDispatchStory } from "../context/DispatchStoryContext";
+import { ExcursionMap } from "../components/ExcursionMap";
 import { getXPProgress, RANKS } from "../game/ranks";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
@@ -52,8 +56,16 @@ import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DispatchLobby">;
 
-const COUNTDOWN_START = 8;
-const FIRST_CALL_COUNTDOWN = 5; // the very first call rings faster
+// Cooldown between calls ramps with experience: 8s on the earliest calls,
+// growing linearly until it caps at 30s from call #20 onward — early game
+// stays snappy, later shifts breathe (and leave room for the off-duty life).
+const COOLDOWN_MIN_S = 8;
+const COOLDOWN_MAX_S = 30;
+const COOLDOWN_RAMP_CALLS = 20;
+function cooldownFor(callsHandled: number): number {
+  const t = Math.min(callsHandled, COOLDOWN_RAMP_CALLS) / COOLDOWN_RAMP_CALLS;
+  return Math.round(COOLDOWN_MIN_S + (COOLDOWN_MAX_S - COOLDOWN_MIN_S) * t);
+}
 // Unit unlocks the player has already been congratulated for (popup shown once).
 const UNITS_SEEN_KEY = "fleet_units_seen_v1";
 
@@ -91,8 +103,58 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   };
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
   const [countdown, setCountdown] = useState(
-    progress.callsHandled === 0 ? FIRST_CALL_COUNTDOWN : COUNTDOWN_START
+    cooldownFor(progress.callsHandled)
   );
+
+  // After hours: when the next scheduled moment is an off-duty EVENT, the
+  // evening opens on the city map — travel somewhere (bus fare, plays that
+  // place's scene: no XP, no calendar advance, story flags persist) or head
+  // straight into whatever the night has planned. No countdown, no ring.
+  const nextScheduled = calendar.getNextMission();
+  const nextEventId = (() => {
+    if (calendar.isWeekComplete || !nextScheduled) return null;
+    const m = getMissionById(nextScheduled.missionId);
+    return m?.category === "event" ? m.id : null;
+  })();
+  const afterHours = nextEventId != null;
+  const story = useDispatchStory();
+  const [mapOpen, setMapOpen] = useState(false);
+  useEffect(() => {
+    if (afterHours) setMapOpen(true);
+  }, [afterHours]);
+  // Done wandering (or skipped it) → play the evening's event scene.
+  const continueEvening = () => {
+    if (!nextEventId) return;
+    setMapOpen(false);
+    audio.playSfx("tap");
+    navigation.replace("Mission", { missionId: nextEventId });
+  };
+  const travelTo = (pinId: string) => {
+    const place = CITY_PLACES.find((p) => p.id === pinId);
+    if (!place) return;
+    if (place.fare > 0 && !fleet.spendCash(place.fare)) {
+      setMapOpen(false);
+      Alert.alert(
+        "Not enough cash",
+        `Bus fare to ${place.label} is $${place.fare}.`
+      );
+      return;
+    }
+    const rt = {
+      variables: story.variables,
+      flags: story.flags,
+      choices_made: [] as string[],
+    };
+    const scene =
+      place.scenes.find((s) => !s.when || evaluateCondition(s.when, rt)) ??
+      place.scenes[place.scenes.length - 1];
+    setMapOpen(false);
+    audio.playSfx("tap");
+    navigation.replace("Mission", {
+      missionId: scene.missionId,
+      lifeScene: true,
+    } as any);
+  };
 
   // Units unlocked since the last visit → congratulate with a popup, once.
   const [newUnits, setNewUnits] = useState<FleetKind[]>([]);
@@ -207,26 +269,16 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     }
   }, [calendar.isWeekComplete]);
 
-  // Pending off-duty event scene? Personal moments don't ring the phone —
-  // flow straight into the scene (covers app relaunch mid-day).
   useEffect(() => {
-    if (calendar.isWeekComplete) return;
-    const next = calendar.getNextMission();
-    if (!next) return;
-    if (getMissionById(next.missionId)?.category === "event") {
-      navigation.replace("Mission", { missionId: next.missionId });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (phase !== "idle") return;
+    // After hours there is no next call — the map is open, the phone is quiet.
+    if (phase !== "idle" || afterHours) return;
     if (countdown <= 0) {
       setPhase("ringing");
       return;
     }
     const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(t);
-  }, [countdown, phase]);
+  }, [countdown, phase, afterHours]);
 
   useEffect(() => {
     if (phase === "ringing") {
@@ -401,7 +453,18 @@ export function DispatchLobbyScreen({ navigation }: Props) {
 
       {/* Bottom console */}
       <View style={styles.console}>
-        {phase === "idle" && (
+        {phase === "idle" && afterHours && (
+          <View style={styles.standby}>
+            <Text style={styles.standbyLabel}>AFTER HOURS</Text>
+            <Text style={styles.standbyHint}>Off the clock…</Text>
+            {/* Reopen the map if it was dismissed by the system back gesture. */}
+            <Pressable style={styles.travelBtn} onPress={() => setMapOpen(true)}>
+              <Text style={styles.travelBtnText}>🗺️ SALIR</Text>
+            </Pressable>
+          </View>
+        )}
+
+        {phase === "idle" && !afterHours && (
           <View style={styles.standby}>
             <Text style={styles.standbyLabel}>NEXT CALL IN</Text>
             <Text style={styles.countdown}>
@@ -477,6 +540,34 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           </View>
         )}
       </View>
+
+      {/* City map — the after-hours moment opens here: travel to a place
+          (its scene plays, then the evening resumes) or go straight to
+          whatever the night has planned. */}
+      <Modal
+        visible={mapOpen && afterHours}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setMapOpen(false)}
+      >
+        <View style={styles.mapBackdrop}>
+          <ExcursionMap
+            prompt="Off the clock. Where to?"
+            pins={CITY_PLACES.map((p) => ({
+              id: p.id,
+              x: p.x,
+              y: p.y,
+              icon: p.icon,
+              label: p.fare > 0 ? `${p.label} · $${p.fare}` : p.label,
+              next: "",
+            }))}
+            onSelectPin={(pin) => travelTo(pin.id)}
+          />
+          <Pressable style={styles.mapCloseBtn} onPress={continueEvening}>
+            <Text style={styles.mapCloseText}>CONTINUE THE EVENING ▸</Text>
+          </Pressable>
+        </View>
+      </Modal>
 
       {/* New unit unlocked — one-time congratulation popup. */}
       <Modal
@@ -759,6 +850,42 @@ const styles = StyleSheet.create({
     color: colors.dispatch.amber,
     fontSize: sizes.font.sm,
     fontWeight: "800",
+  },
+  // Travel (SALIR + city map)
+  travelBtn: {
+    marginTop: 6,
+    backgroundColor: "rgba(34, 211, 238, 0.14)",
+    borderColor: "rgba(34, 211, 238, 0.4)",
+    borderWidth: 1,
+    borderRadius: sizes.radius.md,
+    paddingHorizontal: 22,
+    paddingVertical: 8,
+  },
+  travelBtnText: {
+    color: colors.dispatch.cyan,
+    fontSize: 13,
+    fontWeight: "900",
+    letterSpacing: 1,
+  },
+  mapBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(2, 6, 14, 0.96)",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 14,
+  },
+  mapCloseBtn: {
+    borderColor: colors.dispatch.border,
+    borderWidth: 1,
+    borderRadius: sizes.radius.md,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+  },
+  mapCloseText: {
+    color: colors.dispatch.textMuted,
+    fontSize: 12,
+    fontWeight: "900",
+    letterSpacing: 1,
   },
   // New-unit-unlocked popup
   unlockBackdrop: {

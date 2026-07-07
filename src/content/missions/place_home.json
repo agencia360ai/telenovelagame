@@ -1,0 +1,114 @@
+{
+  "schema": "mission@1",
+  "id": "place_home",
+  "title": "Home",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "place",
+  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
+  "reward": 0,
+  "initial_variables": { "energy": 0 },
+  "initial_flags": {},
+  "assets": [],
+  "start": "pl_home.intro",
+  "beats": [
+    {
+      "id": "pl_home.intro",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Your door, your lock, your quiet." },
+        { "speaker": "narrator", "text": "The break is short. The couch doesn't care." }
+      ],
+      "variants": [
+        {
+          "when": { "var": "debt_missed", "op": ">=", "value": 1 },
+          "lines": [
+            { "speaker": "narrator", "text": "Your door — with an envelope wedged under it." },
+            { "speaker": "narrator", "text": "The university's crest. They know where you live. That's the point." }
+          ]
+        },
+        {
+          "when": { "flag": "took_envelope" },
+          "lines": [
+            { "speaker": "narrator", "text": "Your door, your lock, your quiet." },
+            { "speaker": "narrator", "text": "The jacket with the cash hangs by the door. You look at it longer than you mean to." }
+          ]
+        },
+        {
+          "when": { "var": "love", "op": ">=", "value": 4 },
+          "lines": [
+            { "speaker": "narrator", "text": "Your door, your lock — and a second toothbrush in the bathroom now." },
+            { "speaker": "narrator", "text": "The place is starting to feel like two people live in it." }
+          ]
+        }
+      ],
+      "next": "pl_home.d1"
+    },
+    {
+      "id": "pl_home.d1",
+      "type": "decision",
+      "prompt": "A few minutes that are yours.",
+      "choices": [
+        {
+          "id": "pl_home.d1_0",
+          "label": "Power nap on the couch.",
+          "next": "pl_home.fin_nap",
+          "effects": { "energy": 2 },
+          "set_flags": { "visited_home": true }
+        },
+        {
+          "id": "pl_home.d1_1",
+          "label": "Check the mail.",
+          "next": "pl_home.fin_mail",
+          "effects": { "loose_thread": 1 },
+          "set_flags": { "visited_home": true }
+        },
+        {
+          "id": "pl_home.d1_2",
+          "label": "Shower. Reset.",
+          "next": "pl_home.fin_shower",
+          "effects": { "energy": 1 },
+          "set_flags": { "visited_home": true }
+        }
+      ]
+    },
+    {
+      "id": "pl_home.fin_nap",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Twenty minutes, dead to the world. The couch dent earns its keep." },
+        { "speaker": "narrator", "text": "You wake up sharper. The city can call now." }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "pl_home.fin_mail",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Flyers, a bill, a postcard from nobody you remember." },
+        { "speaker": "narrator", "text": "Nothing urgent. Somehow that's the best news of the day." }
+      ],
+      "variants": [
+        {
+          "when": { "var": "debt_missed", "op": ">=", "value": 1 },
+          "lines": [
+            { "speaker": "narrator", "text": "The university letter goes on the fridge with the others." },
+            { "speaker": "narrator", "text": "The magnet barely holds the stack now. Friday is circled twice." }
+          ]
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "pl_home.fin_shower",
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "narrator", "text": "Hot water until the mirror fogs. The headset marks fade off your ears." },
+        { "speaker": "narrator", "text": "New person. Same shift. Fair trade." }
+      ],
+      "next": "_end"
+    },
+    { "id": "_end", "type": "outcome" }
+  ]
+}

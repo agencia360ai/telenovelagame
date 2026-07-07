@@ -1,0 +1,127 @@
+{
+  "schema": "mission@1",
+  "id": "call_quarry_kid",
+  "title": "The Lights Flicker When I Say His Name",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "daily",
+  "tags": [
+    "real",
+    "weird"
+  ],
+  "caller": {
+    "name": "Kid (walkie-talkie)",
+    "type": "MISSING PERSON",
+    "location": "Old quarry"
+  },
+  "units": [
+    "police",
+    "ambulance",
+    "ghost_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "call_quarry_kid.b0",
+  "beats": [
+    {
+      "id": "call_quarry_kid.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A kid's voice, radio static — someone's patched a walkie-talkie into a phone line. Impressive. Concerning."
+        }
+      ],
+      "next": "call_quarry_kid.b1"
+    },
+    {
+      "id": "call_quarry_kid.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "My friend went missing by the old quarry. Also — don't laugh — the flashlight flickers when I say his name."
+        }
+      ],
+      "next": "call_quarry_kid.d1"
+    },
+    {
+      "id": "call_quarry_kid.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_quarry_kid.d1_0",
+          "label": "When and where did you last see him?",
+          "next": "call_quarry_kid.b2"
+        },
+        {
+          "id": "call_quarry_kid.d1_1",
+          "label": "Say the name again. Slowly. 👀",
+          "next": "call_quarry_kid.b2"
+        }
+      ]
+    },
+    {
+      "id": "call_quarry_kid.b2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "After school, by the fence. We tell each other everything. He'd NEVER just leave. Over."
+        }
+      ],
+      "next": "call_quarry_kid.d2"
+    },
+    {
+      "id": "call_quarry_kid.d2",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_quarry_kid.d2_0",
+          "label": "Stay OUT of the quarry. Units are coming.",
+          "next": "call_quarry_kid.b3"
+        },
+        {
+          "id": "call_quarry_kid.d2_1",
+          "label": "Keep the walkie on. I want ears out there.",
+          "next": "call_quarry_kid.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_quarry_kid.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Copy that. Hurry. It's getting dark and the flashlight's doing it again. Over."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "police",
+      "explanation": "Search unit finds the friend asleep in a drainage pipe with a sprained ankle and zero supernatural powers. The flashlight needed batteries. Probably.",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-police",
+        "role": "deploy"
+      }
+    }
+  ]
+}

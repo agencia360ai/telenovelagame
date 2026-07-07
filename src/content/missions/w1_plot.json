@@ -2,11 +2,16 @@
   "schema": "mission@1",
   "id": "w1_plot",
   "title": "Week 1 — The Call That Drops",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "game_plot",
-  "order": 10,
+  "week": 1,
+  "order": 1,
+  "goal_trust": 3,
+  "unlock": {
+    "minWeek": 1
+  },
   "caller": {
     "name": "Caller",
     "type": "STORY CALL",
@@ -14,39 +19,22 @@
   },
   "reward": 12,
   "initial_variables": {
-    "integrity": 0,
-    "compliance": 0,
-    "don": 0,
-    "loose_thread": 0,
     "case_file": 0,
-    "pawn": 0
+    "love": 0,
+    "debt_missed": 0
   },
+  "assets": [],
   "initial_flags": {},
-  "assets": [
-    {
-      "key": "plot-w1-van",
-      "type": "video",
-      "role": "intro"
-    },
-    {
-      "key": "plot-w1-call",
-      "type": "video",
-      "role": "ambient"
-    },
-    {
-      "key": "plot-w1-corte1",
-      "type": "video",
-      "role": "ambient_next"
-    }
-  ],
   "start": "w1_plot.intro",
   "beats": [
     {
       "id": "w1_plot.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "03:14. The night queue is dead quiet." },
-        { "speaker": "narrator", "text": "Then line three lights up." }
+        {
+          "speaker": "narrator",
+          "text": "A young woman has been kidnapped."
+        }
       ],
       "next": "w1_plot.v1"
     },
@@ -54,71 +42,10 @@
       "id": "w1_plot.v1",
       "type": "dialogue",
       "lines": [
-        { "speaker": "caller", "text": "They took her. A girl — they just took her—" },
-        { "speaker": "caller", "text": "A van. Gray. No plates that I saw." }
-      ],
-      "next": "w1_plot.v2"
-    },
-    {
-      "id": "w1_plot.v2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "caller", "text": "I'm at, a house on Calder's Street, Please I nee—" }
-      ],
-      "next": "w1_plot.v3"
-    },
-    {
-      "id": "w1_plot.v3",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Dead air." },
-        { "speaker": "narrator", "text": "Not a hang-up. A cut." }
-      ],
-      "next": "w1_plot.d0"
-    },
-    {
-      "id": "w1_plot.d0",
-      "type": "decision",
-      "prompt": "Ten seconds. Use them.",
-      "choices": [
         {
-          "id": "w1_plot.d0_0",
-          "label": "Replay the recording.",
-          "next": "w1_plot.r1",
-          "effects": { "case_file": 1 }
-        },
-        {
-          "id": "w1_plot.d0_1",
-          "label": "Pull the tower ping.",
-          "next": "w1_plot.r2",
-          "effects": { "loose_thread": 1 }
+          "speaker": "caller",
+          "text": "I'm at, a house on Calder's Street, Please I nee—"
         }
-      ]
-    },
-    {
-      "id": "w1_plot.r1",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You play it back. Under her voice: an engine, idling." },
-        { "speaker": "narrator", "text": "Someone was waiting outside." }
-      ],
-      "next": "w1_plot.v4"
-    },
-    {
-      "id": "w1_plot.r2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "The ping lands on Calder Street. Then the signal simply stops." },
-        { "speaker": "narrator", "text": "Phones don't do that on their own." }
-      ],
-      "next": "w1_plot.v4"
-    },
-    {
-      "id": "w1_plot.v4",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Calder Street. No unit assigned. No supervisor awake." },
-        { "speaker": "narrator", "text": "Just you and a dead line." }
       ],
       "next": "w1_plot.d1"
     },
@@ -130,24 +57,18 @@
         {
           "id": "w1_plot.d1_0",
           "label": "Call the number back.",
-          "next": "w1_plot.cb1",
-          "effects": {
-            "integrity": 1,
-            "case_file": 1,
-            "compliance": -1
-          },
+          "next": "w1_plot.fin_callback",
           "set_flags": {
             "w1_called_back": true
+          },
+          "effects": {
+            "case_file": 1
           }
         },
         {
           "id": "w1_plot.d1_1",
           "label": "Send a Police Car.",
-          "next": "w1_plot.p1",
-          "effects": {
-            "compliance": 1,
-            "pawn": 1
-          },
+          "next": "w1_plot.fin_police",
           "set_flags": {
             "w1_police_sent": true
           }
@@ -155,42 +76,39 @@
       ]
     },
     {
-      "id": "w1_plot.cb1",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Against procedure. You dial anyway." },
-        { "speaker": "narrator", "text": "One ring. Two." }
-      ],
-      "next": "w1_plot.fin_callback"
-    },
-    {
       "id": "w1_plot.fin_callback",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Straight to a dead tone — the line's been pulled." },
-        { "speaker": "narrator", "text": "You write the address down anyway. Calder Street." }
+        {
+          "speaker": "narrator",
+          "text": "Straight to a dead tone — the line's been pulled."
+        }
       ],
-      "next": "_end"
-    },
-    {
-      "id": "w1_plot.p1",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You key the dispatch. By the book, every word." },
-        { "speaker": "narrator", "text": "A patrol turns toward Calder Street." }
-      ],
-      "next": "w1_plot.fin_police"
+      "next": "w1_plot.memory"
     },
     {
       "id": "w1_plot.fin_police",
       "type": "dialogue",
-      "media": {
-        "type": "video",
-        "key": "plot-w1-resolution"
-      },
       "lines": [
-        { "speaker": "narrator", "text": "The Police rushes in." },
-        { "speaker": "narrator", "text": "The house is dark. The van is already gone." }
+        {
+          "speaker": "narrator",
+          "text": "Units roll on Calder Street. Sirens first, questions after. The house is empty — one shoe by the door."
+        }
+      ],
+      "next": "w1_plot.memory"
+    },
+    {
+      "id": "w1_plot.memory",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Calder Street. You grew up two doors down from that address."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Red lights passed your window once and kept going — to the wrong house. You never told anyone at the center."
+        }
       ],
       "next": "_end"
     },

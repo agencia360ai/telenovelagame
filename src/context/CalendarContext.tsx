@@ -24,7 +24,6 @@ import {
   generateWeek,
   nextPlayableDay,
   resolveNextPlot,
-  resolveNextWeekend,
   resolveNextEvents,
   shortDayLabel,
 } from "../lib/calendar/schedule";
@@ -48,7 +47,15 @@ import { unitUnlockedAt, useFleet } from "./FleetContext";
 // v6: three events per week (friends & partner personal arc).
 // v7: student-debt installment events inserted into the sequence.
 // v8: crosstown travel event added (paid displacement → plot clue).
-const STORAGE_KEY = "dispatch_calendar_v8";
+// v9: game_plot missions folded INTO the event sequence (no separate plot
+// tier/day) — w1..w5 are now events at orders 6/36/63/91/121.
+// v10: 12-week narrative package (Hale arc). Plots are back to a weekly
+// game_plot slot (12 chapters, `unlock.minWeek` gated), weekends are authored
+// for weeks 1/6/11 (matched by `week`), and the week grows to 6 days × 3 calls.
+// v11: three events per week, INSERTED between the day's calls (not appended)
+// so the standby waits carry personal moments; daily pool fixed to the 30-call
+// list (package extras out of rotation).
+const STORAGE_KEY = "dispatch_calendar_v11";
 
 /**
  * The unit a call effectively REQUIRES to be resolved — its correct dispatch,
@@ -131,8 +138,12 @@ function buildWeek(
     rankIndex,
     week,
   });
-  const weekendMissionId = resolveNextWeekend(buildWeekendList(), weekendIndex);
-  // Up to three off-duty scenes per week, in authored order.
+  // Weekend scenes are authored for specific weeks (1/6/11) — matched by the
+  // mission's `week` field, not a sequential pointer.
+  const weekendMissionId =
+    buildWeekendList().find((m) => (m as any).week === week)?.id ?? null;
+  // Up to three off-duty scenes per week, in authored order, woven between
+  // calls (the 16 events front-load the run; the back half belongs to the plot).
   const eventMissionIds = resolveNextEvents(buildEventList(), eventIndex, 3);
   const schedule = generateWeek(
     week,

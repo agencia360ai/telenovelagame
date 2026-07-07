@@ -2,38 +2,57 @@
   "schema": "mission@1",
   "id": "event_debt_deadline",
   "title": "The Deadline",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 92,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
-  "speakers": { "clerk": "Clerk" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Your apartment"
+  },
   "reward": 5,
-  "initial_variables": { "debt_paid": 0, "debt_missed": 0 },
-  "initial_flags": {},
+  "order": 92,
+  "initial_variables": {
+    "debt_paid": 0,
+    "debt_missed": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_debt3.intro",
   "beats": [
     {
       "id": "ev_debt3.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Final installment. One more payment and the university lets go of your collar." }
+        {
+          "speaker": "narrator",
+          "text": "Final installment of the semester's plan. One more payment and the university lets go of your collar for a while."
+        }
       ],
       "variants": [
         {
-          "when": { "var": "debt_missed", "op": ">=", "value": 2 },
+          "when": {
+            "var": "debt_missed",
+            "op": ">=",
+            "value": 2
+          },
           "lines": [
-            { "speaker": "narrator", "text": "A notice on your door. The yellow kind." },
-            { "speaker": "narrator", "text": "Pay by Friday or the apartment stops being yours." }
+            {
+              "speaker": "narrator",
+              "text": "A notice on your door. The yellow kind. Pay what's owed by Friday, or the apartment stops being yours. The hallway pretends it didn't read it. It read it."
+            }
           ]
         },
         {
-          "when": { "flag": "took_envelope" },
+          "when": {
+            "flag": "took_envelope"
+          },
           "lines": [
-            { "speaker": "narrator", "text": "Final installment. You have the money — you've had it since the envelope." },
-            { "speaker": "narrator", "text": "It spends like any other money. You tell yourself that twice." }
+            {
+              "speaker": "narrator",
+              "text": "Final installment. You have the money — you've had it since the envelope. It spends like any other money. You tell yourself that twice."
+            }
           ]
         }
       ],
@@ -42,69 +61,43 @@
     {
       "id": "ev_debt3.d1",
       "type": "decision",
-      "prompt": "Friday is circled.",
-      "choices": [
-        { "id": "ev_debt3.d1_0", "label": "Call the bursar's office.", "next": "ev_debt3.phone" },
-        { "id": "ev_debt3.d1_1", "label": "Count the cash twice.", "next": "ev_debt3.phone" },
-        { "id": "ev_debt3.d1_2", "label": "Clean the apartment first.", "next": "ev_debt3.phone" }
-      ]
-    },
-    {
-      "id": "ev_debt3.phone",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You end up on the phone with the office anyway. Everyone does." },
-        { "speaker": "clerk", "text": "Balance shows due Friday. The system doesn't do 'almost'." }
-      ],
-      "next": "ev_debt3.d2"
-    },
-    {
-      "id": "ev_debt3.d2",
-      "type": "decision",
-      "prompt": "One question left.",
-      "choices": [
-        { "id": "ev_debt3.d2_0", "label": "What happens if I miss?", "next": "ev_debt3.eve" },
-        { "id": "ev_debt3.d2_1", "label": "Any hardship extension?", "next": "ev_debt3.eve" },
-        { "id": "ev_debt3.d2_2", "label": "Thanks for nothing.", "next": "ev_debt3.eve" }
-      ]
-    },
-    {
-      "id": "ev_debt3.eve",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "clerk", "text": "Officially? Collections. Unofficially? Don't find out." },
-        { "speaker": "narrator", "text": "Thursday night. The cash, the portal, the kitchen light doing its flicker." },
-        { "speaker": "narrator", "text": "You are the only variable left." }
-      ],
-      "next": "ev_debt3.d3"
-    },
-    {
-      "id": "ev_debt3.d3",
-      "type": "decision",
       "prompt": "Friday is not moving.",
       "choices": [
         {
-          "id": "ev_debt3.d3_0",
+          "id": "ev_debt3.d1_0",
           "label": "Pay the installment.",
-          "cash_cost": 25,
           "next": "ev_debt3.fin_cleared",
-          "effects": { "debt_paid": 1 },
-          "set_flags": { "debt_cleared": true }
+          "cash_cost": 25,
+          "effects": {
+            "debt_paid": 1
+          },
+          "set_flags": {
+            "debt_cleared": true
+          }
         },
         {
-          "id": "ev_debt3.d3_1",
+          "id": "ev_debt3.d1_1",
           "label": "Pay EVERYTHING you owe.",
-          "cash_cost": 45,
           "next": "ev_debt3.fin_all",
-          "effects": { "debt_paid": 2, "debt_missed": -2 },
-          "set_flags": { "debt_cleared": true }
+          "cash_cost": 45,
+          "effects": {
+            "debt_paid": 2,
+            "debt_missed": -2
+          },
+          "set_flags": {
+            "debt_cleared": true
+          }
         },
         {
-          "id": "ev_debt3.d3_2",
-          "label": "You can't pay.",
+          "id": "ev_debt3.d1_2",
+          "label": "You can't pay. Face it.",
           "next": "ev_debt3.fin_lost",
-          "effects": { "debt_missed": 1 },
-          "set_flags": { "apartment_lost": true }
+          "effects": {
+            "debt_missed": 1
+          },
+          "set_flags": {
+            "apartment_lost": true
+          }
         }
       ]
     },
@@ -112,8 +105,10 @@
       "id": "ev_debt3.fin_cleared",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "PAID — the semester's plan, closed. The apartment is yours, every scuffed meter." },
-        { "speaker": "narrator", "text": "You stand in the kitchen a while, just because you can." }
+        {
+          "speaker": "narrator",
+          "text": "PAID — the semester's plan, closed. The apartment is yours, every scuffed square meter of it. You stand in the kitchen a while, just because you can."
+        }
       ],
       "next": "_end"
     },
@@ -121,8 +116,10 @@
       "id": "ev_debt3.fin_all",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "All of it, fees included. The zero looks fake. You screenshot it." },
-        { "speaker": "narrator", "text": "Some trophies are just receipts." }
+        {
+          "speaker": "narrator",
+          "text": "All of it, fees included. The account shows a zero so clean it looks fake. You screenshot it. Some trophies are just receipts."
+        }
       ],
       "next": "_end"
     },
@@ -130,11 +127,16 @@
       "id": "ev_debt3.fin_lost",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You box what matters in two trips. A friend's couch, for now." },
-        { "speaker": "narrator", "text": "The city keeps calling all night. It only cares that you answer." }
+        {
+          "speaker": "narrator",
+          "text": "You box what matters in two trips. A friend's couch, for now. The city keeps calling all night anyway — it doesn't care where you sleep, only that you answer."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

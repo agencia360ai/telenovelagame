@@ -1,0 +1,126 @@
+{
+  "schema": "mission@1",
+  "id": "call_billboard_man",
+  "title": "Handcuffed to a Billboard",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "daily",
+  "tags": [
+    "weird"
+  ],
+  "caller": {
+    "name": "Entrepreneur",
+    "type": "RESCUE",
+    "location": "Billboard, Route 9"
+  },
+  "units": [
+    "firefighters",
+    "police",
+    "no_unit"
+  ],
+  "reward": 5,
+  "time_limit_seconds": 15,
+  "initial_variables": {
+    "trust": 0
+  },
+  "initial_flags": {},
+  "assets": [],
+  "start": "call_billboard_man.b0",
+  "beats": [
+    {
+      "id": "call_billboard_man.b0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Wind noise, traffic far below, and a man speaking with the confidence of someone whose plan is still — technically — in progress."
+        }
+      ],
+      "next": "call_billboard_man.b1"
+    },
+    {
+      "id": "call_billboard_man.b1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Okay, first: this is a marketing activation. Second: I'm handcuffed to the billboard on Route 9. Third: the key is in my other pants."
+        }
+      ],
+      "next": "call_billboard_man.d1"
+    },
+    {
+      "id": "call_billboard_man.d1",
+      "type": "decision",
+      "prompt": "Respond",
+      "choices": [
+        {
+          "id": "call_billboard_man.d1_0",
+          "label": "Where are the other pants?",
+          "next": "call_billboard_man.b2"
+        },
+        {
+          "id": "call_billboard_man.d1_1",
+          "label": "Marketing for WHAT, exactly?",
+          "next": "call_billboard_man.b2"
+        }
+      ]
+    },
+    {
+      "id": "call_billboard_man.b2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "The pants are with my business partner. Who is also my ex-wife. Who is not answering. The billboard says 'ESCAPE ROOMS — YOU'LL NEVER WANT TO LEAVE.'"
+        }
+      ],
+      "next": "call_billboard_man.d2"
+    },
+    {
+      "id": "call_billboard_man.d2",
+      "type": "decision",
+      "prompt": "Decide",
+      "choices": [
+        {
+          "id": "call_billboard_man.d2_0",
+          "label": "Ladder unit's coming. Don't wave at traffic.",
+          "next": "call_billboard_man.b3"
+        },
+        {
+          "id": "call_billboard_man.d2_1",
+          "label": "Honestly? The campaign is working. 😏",
+          "next": "call_billboard_man.b3"
+        }
+      ]
+    },
+    {
+      "id": "call_billboard_man.b3",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "caller",
+          "text": "Tell them to bring bolt cutters and maybe a sandwich. The irony up here is very filling but not, like, food."
+        }
+      ],
+      "next": "dispatch"
+    },
+    {
+      "id": "dispatch",
+      "type": "dispatch",
+      "prompt": "WHO DO YOU DISPATCH?",
+      "correct": "firefighters",
+      "explanation": "Ladder crew frees one entrepreneur, forty feet up, zero regrets. The escape room gets its best review ever: 'Couldn't leave. Five stars.'",
+      "next": "outcome"
+    },
+    {
+      "id": "outcome",
+      "type": "outcome",
+      "deploy_media": {
+        "key": "deploy-firefighters",
+        "role": "deploy"
+      }
+    }
+  ]
+}

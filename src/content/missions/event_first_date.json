@@ -2,40 +2,38 @@
   "schema": "mission@1",
   "id": "event_first_date",
   "title": "First Date",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 50,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Small restaurant" },
-  "speakers": { "date": "Your Date" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Small restaurant"
+  },
   "reward": 5,
-  "initial_variables": { "love": 0 },
-  "initial_flags": {},
+  "order": 50,
+  "initial_variables": {
+    "love": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_date1.intro",
+  "speakers": {
+    "date": "Date"
+  },
   "beats": [
     {
       "id": "ev_date1.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The reader from the café was there again last week. This time you didn't take your cup to go. Tonight: dinner. A candle in a bottle, the kind of nervous that feels good." },
-        { "speaker": "date", "text": "So — a 911 operator. Do you ever get to say 'what's your emergency' in real life?" }
-      ],
-      "variants": [
         {
-          "when": { "flag": "got_number" },
-          "lines": [
-            { "speaker": "narrator", "text": "The napkin number turned into a dinner. Small place, a candle in a bottle, the kind of nervous that feels good." },
-            { "speaker": "date", "text": "So — a 911 operator. Do you ever get to say 'what's your emergency' in real life?" }
-          ]
+          "speaker": "narrator",
+          "text": "The napkin number turned into a dinner. Small place, candle in a bottle, the kind of nervous that feels good."
         },
         {
-          "when": { "flag": "met_stranger" },
-          "lines": [
-            { "speaker": "narrator", "text": "Three more weird-hour coffees did what the napkin never had to. Tonight: dinner. A candle in a bottle, the kind of nervous that feels good." },
-            { "speaker": "date", "text": "So — a 911 operator. Do you ever get to say 'what's your emergency' in real life?" }
-          ]
+          "speaker": "date",
+          "text": "So a 911 operator. Do you ever get to say 'what's your emergency' in real life?"
         }
       ],
       "next": "ev_date1.d1"
@@ -43,58 +41,48 @@
     {
       "id": "ev_date1.d1",
       "type": "decision",
-      "prompt": "How do you answer?",
-      "choices": [
-        { "id": "ev_date1.d1_0", "label": "Only when someone forgets to hang up. Mostly I just listen.", "next": "ev_date1.conv2", "effects": { "love": 1 } },
-        { "id": "ev_date1.d1_1", "label": "All night. Then I come home and my plants don't answer.", "next": "ev_date1.conv2", "effects": { "love": 1 } },
-        { "id": "ev_date1.d1_2", "label": "You'd be surprised what people confess at 3 a.m.", "next": "ev_date1.conv2", "effects": { "love": 1 } }
-      ]
-    },
-    {
-      "id": "ev_date1.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "date", "text": "Listening. That's the part people never notice about the job." },
-        { "speaker": "narrator", "text": "They lean in. The candle gutters. For once you're the one being asked the questions." },
-        { "speaker": "date", "text": "So why that line of work? Nobody grows up dreaming about the worst night of a stranger's life." }
-      ],
-      "next": "ev_date1.d2"
-    },
-    {
-      "id": "ev_date1.d2",
-      "type": "decision",
-      "prompt": "Why did you take the job?",
-      "choices": [
-        { "id": "ev_date1.d2_0", "label": "Someone picked up for my family once. I never forgot the voice.", "next": "ev_date1.beforecheck", "effects": { "love": 2 } },
-        { "id": "ev_date1.d2_1", "label": "Steady paycheck, steady hands. Somebody has to answer.", "next": "ev_date1.beforecheck", "effects": { "love": 1 } },
-        { "id": "ev_date1.d2_2", "label": "Honestly? Ask me again in a year — I'm still finding out.", "next": "ev_date1.beforecheck", "effects": { "love": 1 } }
-      ]
-    },
-    {
-      "id": "ev_date1.beforecheck",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "date", "text": "...and here I thought I'd be the interesting one tonight." },
-        { "speaker": "narrator", "text": "The plates clear. The check lands between you, face-down and patient. Some decisions aren't emergencies — they still say something." }
-      ],
-      "next": "ev_date1.d3"
-    },
-    {
-      "id": "ev_date1.d3",
-      "type": "decision",
       "prompt": "The check lands between you.",
       "choices": [
-        { "id": "ev_date1.d3_0", "label": "Take the whole check.", "cash_cost": 15, "next": "ev_date1.fin_pay", "effects": { "love": 2 } },
-        { "id": "ev_date1.d3_1", "label": "Split it down the middle.", "cash_cost": 8, "next": "ev_date1.fin_split", "effects": { "love": 1 } },
-        { "id": "ev_date1.d3_2", "label": "'You grab this one, I'll get the next.'", "next": "ev_date1.fin_next", "effects": { "love": 1 } }
+        {
+          "id": "ev_date1.d1_0",
+          "label": "Take the whole check.",
+          "next": "ev_date1.fin_pay",
+          "cash_cost": 15,
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_date1.d1_1",
+          "label": "Split it down the middle.",
+          "next": "ev_date1.fin_split",
+          "cash_cost": 8,
+          "effects": {
+            "love": 1
+          }
+        },
+        {
+          "id": "ev_date1.d1_2",
+          "label": "'You grab this one, I'll get the next.'",
+          "next": "ev_date1.fin_next",
+          "effects": {
+            "love": 1
+          }
+        }
       ]
     },
     {
       "id": "ev_date1.fin_pay",
       "type": "dialogue",
       "lines": [
-        { "speaker": "date", "text": "Smooth. Okay — next one's on me. And there WILL be a next one." },
-        { "speaker": "narrator", "text": "You walk out lighter in the wallet and lighter everywhere else too. The night keeps a little of its warmth all the way home." }
+        {
+          "speaker": "date",
+          "text": "Smooth. Okay — next one's on me. And there WILL be a next one."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You walk out lighter in the wallet and lighter everywhere else too."
+        }
       ],
       "next": "_end"
     },
@@ -102,8 +90,10 @@
       "id": "ev_date1.fin_split",
       "type": "dialogue",
       "lines": [
-        { "speaker": "date", "text": "Fair. I like fair." },
-        { "speaker": "narrator", "text": "Half and half, no fuss. Somehow that lands better than a grand gesture — and they text before you've even reached the corner." }
+        {
+          "speaker": "narrator",
+          "text": "Half and half, no fuss. 'Fair,' they say, approvingly. Somehow that lands better than a grand gesture."
+        }
       ],
       "next": "_end"
     },
@@ -111,11 +101,16 @@
       "id": "ev_date1.fin_next",
       "type": "dialogue",
       "lines": [
-        { "speaker": "date", "text": "Bold — assuming a second date." },
-        { "speaker": "narrator", "text": "They pay, smiling. On the sidewalk they say it out loud: 'Tuesday works.'" }
+        {
+          "speaker": "narrator",
+          "text": "'Bold — assuming a second date.' They pay, smiling. On the sidewalk they say it: 'Tuesday works.'"
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

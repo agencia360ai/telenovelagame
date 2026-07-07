@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "call_a_man_fell_from_a_2nd_floor",
   "title": "A man fell from a 2nd floor!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "ambulance"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_a_man_fell_from_a_2nd_floor.intro",
   "assets": [
     {
       "key": "call-man-fell",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_a_man_fell_from_a_2nd_floor.intro",
   "beats": [
     {
       "id": "call_a_man_fell_from_a_2nd_floor.intro",
@@ -105,10 +106,10 @@
           "text": "We're at 14 Almond Court, by the bakery."
         }
       ],
-      "next": "call_a_man_fell_from_a_2nd_floor.d2"
+      "next": "dispatch"
     },
     {
-      "id": "call_a_man_fell_from_a_2nd_floor.d2",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "ambulance",

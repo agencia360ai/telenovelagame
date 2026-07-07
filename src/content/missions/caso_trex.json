@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "caso_trex",
   "title": "I Found a Baby Dinosaur",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 2,
+  "difficulty": 1,
+  "category": "daily",
   "tags": [
     "exotic",
     "animal_control"
@@ -28,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "caso_trex.intro",
   "assets": [
     {
       "key": "call-baby-dino",
@@ -41,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "caso_trex.intro",
   "beats": [
     {
       "id": "caso_trex.intro",
@@ -162,7 +163,7 @@
           "text": "18th, Jurassic St."
         }
       ],
-      "next": "caso_trex.d4"
+      "next": "dispatch"
     },
     {
       "id": "caso_trex.loc_patrol",
@@ -173,10 +174,10 @@
           "text": "18th, Jurassic St."
         }
       ],
-      "next": "caso_trex.d4"
+      "next": "dispatch"
     },
     {
-      "id": "caso_trex.d4",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "dino_control",

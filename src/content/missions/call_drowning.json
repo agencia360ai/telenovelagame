@@ -2,9 +2,9 @@
   "schema": "mission@1",
   "id": "call_drowning",
   "title": "Someone's Drowning!",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
-  "difficulty": 3,
+  "difficulty": 1,
   "category": "daily",
   "tags": [
     "real",
@@ -29,7 +29,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "call_drowning.b0",
   "assets": [
     {
       "key": "call-drowning",
@@ -42,6 +41,7 @@
       "role": "deploy"
     }
   ],
+  "start": "call_drowning.b0",
   "beats": [
     {
       "id": "call_drowning.b0",
@@ -60,7 +60,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Help! My daugther's choking — she can't breathe!"
+          "text": "Help! Someone's drowning — he went under and he's not coming back up!"
         }
       ],
       "next": "call_drowning.b2"
@@ -72,7 +72,7 @@
       "choices": [
         {
           "id": "call_drowning.b2_0",
-          "label": "Can you see her right now?",
+          "label": "Can you see them right now?",
           "next": "call_drowning.b3",
           "effects": {
             "integrity": 1
@@ -80,7 +80,7 @@
         },
         {
           "id": "call_drowning.b2_1",
-          "label": "I'm tracking your location.",
+          "label": "Don't jump in — are YOU safe?",
           "next": "call_drowning.b3",
           "effects": {
             "integrity": 1
@@ -88,7 +88,7 @@
         },
         {
           "id": "call_drowning.b2_2",
-          "label": "Just learn to do the Heimlich Technique.",
+          "label": "Just learn to swim 🏊",
           "next": "call_drowning.b3",
           "effects": {
             "trust": -1
@@ -102,7 +102,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "What do you mean, should I just wait!?"
+          "text": "He came up once! There's a life ring on the dock — should I throw it?!"
         }
       ],
       "next": "call_drowning.b4"
@@ -114,7 +114,7 @@
       "choices": [
         {
           "id": "call_drowning.b4_0",
-          "label": "Yes, help is coming.",
+          "label": "Throw the ring — don't go in after him.",
           "next": "call_drowning.b5",
           "effects": {
             "integrity": 1
@@ -122,7 +122,7 @@
         },
         {
           "id": "call_drowning.b4_1",
-          "label": "Just stay calmed.",
+          "label": "Keep eyes on him. Help is coming.",
           "next": "call_drowning.b5",
           "effects": {
             "integrity": 1
@@ -144,7 +144,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Ok, PLEASE hurry!"
+          "text": "I got the ring to him! He's holding on — Eastside Lake, the public dock. PLEASE hurry!"
         }
       ],
       "next": "dispatch"
@@ -154,7 +154,7 @@
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "ambulance",
-      "explanation": "Ambulance rolling. Open their door, help her breathe again — you kept him alive.",
+      "explanation": "Ambulance and water rescue rolling. Get him out, check his breathing — you kept him alive.",
       "next": "outcome"
     },
     {

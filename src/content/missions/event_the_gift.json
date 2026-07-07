@@ -2,38 +2,54 @@
   "schema": "mission@1",
   "id": "event_the_gift",
   "title": "The Gift",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 100,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Shop window" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Shop window"
+  },
   "reward": 5,
-  "initial_variables": { "love": 0 },
-  "initial_flags": {},
+  "order": 100,
+  "initial_variables": {
+    "love": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_gift.intro",
   "beats": [
     {
       "id": "ev_gift.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Their birthday is Thursday. You've been staring at the same shop window for ten minutes." },
-        { "speaker": "narrator", "text": "The nice edition of the café book. The one with the map inside the cover." }
+        {
+          "speaker": "narrator",
+          "text": "Their birthday is Thursday. You've been staring at the same shop window for ten minutes: the nice edition of the book from the café, the one with the map inside the cover."
+        }
       ],
       "variants": [
         {
-          "when": { "flag": "took_envelope" },
+          "when": {
+            "flag": "took_envelope"
+          },
           "lines": [
-            { "speaker": "narrator", "text": "Their birthday is Thursday. The nice edition waits in the window." },
-            { "speaker": "narrator", "text": "For once you can afford it without checking your balance. You know exactly why." }
+            {
+              "speaker": "narrator",
+              "text": "Their birthday is Thursday. The nice edition sits in the window, and for once you can afford it without checking your balance. You know exactly why — and you spend the whole walk there not thinking about it."
+            }
           ]
         },
         {
-          "when": { "flag": "envelope_reported" },
+          "when": {
+            "flag": "envelope_reported"
+          },
           "lines": [
-            { "speaker": "narrator", "text": "Their birthday is Thursday. Money's been thin since you bagged that envelope." },
-            { "speaker": "narrator", "text": "The building's least popular honest person, window-shopping. The glass doesn't care about integrity." }
+            {
+              "speaker": "narrator",
+              "text": "Their birthday is Thursday. Money's been thin since you bagged that envelope and became the building's least popular honest person. The shop window doesn't care about integrity."
+            }
           ]
         }
       ],
@@ -42,58 +58,44 @@
     {
       "id": "ev_gift.d1",
       "type": "decision",
-      "prompt": "Ten minutes at the glass.",
-      "choices": [
-        { "id": "ev_gift.d1_0", "label": "Go in. Just to look.", "next": "ev_gift.conv2", "effects": { "love": 1 } },
-        { "id": "ev_gift.d1_1", "label": "Check the balance first.", "next": "ev_gift.conv2" },
-        { "id": "ev_gift.d1_2", "label": "Walk a lap. Think.", "next": "ev_gift.conv2" }
-      ]
-    },
-    {
-      "id": "ev_gift.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Inside, the book smells like the café did that first night." },
-        { "speaker": "narrator", "text": "The map in the cover opens somewhere better. The price tag doesn't." },
-        { "speaker": "narrator", "text": "The clerk pretends not to watch you do math with your face." }
-      ],
-      "next": "ev_gift.d2"
-    },
-    {
-      "id": "ev_gift.d2",
-      "type": "decision",
-      "prompt": "What's a gift actually for?",
-      "choices": [
-        { "id": "ev_gift.d2_0", "label": "Proof you were paying attention.", "next": "ev_gift.pivot", "effects": { "love": 1 } },
-        { "id": "ev_gift.d2_1", "label": "Proof you can provide.", "next": "ev_gift.pivot" },
-        { "id": "ev_gift.d2_2", "label": "Proof this is real.", "next": "ev_gift.pivot", "effects": { "love": 1 } }
-      ]
-    },
-    {
-      "id": "ev_gift.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "You put the book down. Pick it up again. The clerk sighs." },
-        { "speaker": "narrator", "text": "Thursday is coming either way. The register waits. So does your rent." }
-      ],
-      "next": "ev_gift.d3"
-    },
-    {
-      "id": "ev_gift.d3",
-      "type": "decision",
       "prompt": "Thursday is coming either way.",
       "choices": [
-        { "id": "ev_gift.d3_0", "label": "Buy the nice edition.", "cash_cost": 25, "next": "ev_gift.fin_buy", "effects": { "love": 2 } },
-        { "id": "ev_gift.d3_1", "label": "Frame the original napkin instead.", "cash_cost": 6, "next": "ev_gift.fin_napkin", "effects": { "love": 2 } },
-        { "id": "ev_gift.d3_2", "label": "Write them a letter. Just words.", "next": "ev_gift.fin_letter", "effects": { "love": 1 } }
+        {
+          "id": "ev_gift.d1_0",
+          "label": "Buy the nice edition.",
+          "next": "ev_gift.fin_buy",
+          "cash_cost": 25,
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_gift.d1_1",
+          "label": "Frame the original napkin instead.",
+          "next": "ev_gift.fin_napkin",
+          "cash_cost": 6,
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_gift.d1_2",
+          "label": "Write them a letter. Just words.",
+          "next": "ev_gift.fin_letter",
+          "effects": {
+            "love": 1
+          }
+        }
       ]
     },
     {
       "id": "ev_gift.fin_buy",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Thursday: they unwrap it and freeze." },
-        { "speaker": "narrator", "text": "They read the map inside the cover for a full minute. Worth every shift." }
+        {
+          "speaker": "narrator",
+          "text": "Thursday: they unwrap it, freeze, and read the map inside the cover for a full minute before saying anything. Worth every shift it cost."
+        }
       ],
       "next": "_end"
     },
@@ -101,8 +103,10 @@
       "id": "ev_gift.fin_napkin",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "The phone-number napkin, framed in cheap wood. They laugh, then don't." },
-        { "speaker": "narrator", "text": "It goes on the wall by the door, where keys live. The important spot." }
+        {
+          "speaker": "narrator",
+          "text": "The napkin with the phone number, framed in cheap wood. They laugh, then don't. It goes on the wall by the door, where keys live — the important spot."
+        }
       ],
       "next": "_end"
     },
@@ -110,11 +114,16 @@
       "id": "ev_gift.fin_letter",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "A page and a half, in your careful report-writing hand. Weird hours, burnt espresso." },
-        { "speaker": "narrator", "text": "They keep it in a jacket pocket. You catch them re-reading it twice." }
+        {
+          "speaker": "narrator",
+          "text": "A page and a half, in your careful report-writing hand, about weird hours and burnt espresso. They keep it in a jacket pocket. You catch them re-reading it twice."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

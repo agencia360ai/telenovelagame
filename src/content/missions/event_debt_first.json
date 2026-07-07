@@ -2,93 +2,60 @@
   "schema": "mission@1",
   "id": "event_debt_first",
   "title": "First Installment",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 32,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your apartment" },
-  "speakers": { "partner": "Partner" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Your apartment"
+  },
   "reward": 5,
-  "initial_variables": { "debt_paid": 0, "debt_missed": 0 },
-  "initial_flags": {},
+  "order": 32,
+  "initial_variables": {
+    "debt_paid": 0,
+    "debt_missed": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_debt1.intro",
   "beats": [
     {
       "id": "ev_debt1.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Shift's over. The reminder goes off as you hang up the headset." },
-        { "speaker": "narrator", "text": "First installment. Due by midnight." }
+        {
+          "speaker": "narrator",
+          "text": "The reminder goes off as you hang up your headset. First installment, due by midnight. The payment portal loads slower than any emergency line you've ever worked."
+        }
       ],
       "next": "ev_debt1.d1"
     },
     {
       "id": "ev_debt1.d1",
       "type": "decision",
-      "prompt": "The reminder glows.",
-      "choices": [
-        { "id": "ev_debt1.d1_0", "label": "Check the balance now.", "next": "ev_debt1.locker" },
-        { "id": "ev_debt1.d1_1", "label": "Ignore it until home.", "next": "ev_debt1.locker" },
-        { "id": "ev_debt1.d1_2", "label": "Show Partner the notification.", "next": "ev_debt1.locker" }
-      ]
-    },
-    {
-      "id": "ev_debt1.locker",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Partner reads your face before you say a word. Occupational hazard." },
-        { "speaker": "partner", "text": "Student loans? I finished paying mine the year my kid started hers." }
-      ],
-      "next": "ev_debt1.d2"
-    },
-    {
-      "id": "ev_debt1.d2",
-      "type": "decision",
-      "prompt": "Partner waits for a reply.",
-      "choices": [
-        { "id": "ev_debt1.d2_0", "label": "At least it's character-building.", "next": "ev_debt1.bus" },
-        { "id": "ev_debt1.d2_1", "label": "Any advice?", "next": "ev_debt1.bus" },
-        { "id": "ev_debt1.d2_2", "label": "Don't jinx me.", "next": "ev_debt1.bus" }
-      ]
-    },
-    {
-      "id": "ev_debt1.bus",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "Advice? Pay the ones that know your address." },
-        { "speaker": "narrator", "text": "The bus home takes the long way. It always does when you're broke." }
-      ],
-      "next": "ev_debt1.kitchen"
-    },
-    {
-      "id": "ev_debt1.kitchen",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "Kitchen table. Portal open. The clock counts down to midnight, unhurried." },
-        { "speaker": "narrator", "text": "The number isn't big. It's just bigger than comfortable." }
-      ],
-      "next": "ev_debt1.d3"
-    },
-    {
-      "id": "ev_debt1.d3",
-      "type": "decision",
       "prompt": "Due by midnight.",
       "choices": [
         {
-          "id": "ev_debt1.d3_0",
+          "id": "ev_debt1.d1_0",
           "label": "Pay it.",
-          "cash_cost": 15,
           "next": "ev_debt1.fin_paid",
-          "effects": { "debt_paid": 1 }
+          "cash_cost": 15,
+          "effects": {
+            "debt_paid": 1
+          }
         },
         {
-          "id": "ev_debt1.d3_1",
-          "label": "Not this week.",
+          "id": "ev_debt1.d1_1",
+          "label": "You can't. Not this week.",
           "next": "ev_debt1.fin_missed",
-          "effects": { "debt_missed": 1 },
-          "set_flags": { "apartment_at_risk": true }
+          "effects": {
+            "debt_missed": 1
+          },
+          "set_flags": {
+            "apartment_at_risk": true
+          }
         }
       ]
     },
@@ -96,8 +63,10 @@
       "id": "ev_debt1.fin_paid",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Paid. The balance barely notices." },
-        { "speaker": "narrator", "text": "But the apartment stays yours another month. That's the whole game." }
+        {
+          "speaker": "narrator",
+          "text": "Paid. The balance barely notices, but the apartment stays yours another month. You make coffee in it like a small ceremony."
+        }
       ],
       "next": "_end"
     },
@@ -105,11 +74,16 @@
       "id": "ev_debt1.fin_missed",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "A late fee and a red banner, stamped at 12:01." },
-        { "speaker": "narrator", "text": "In the fine print, the word 'lien' appears for the first time." }
+        {
+          "speaker": "narrator",
+          "text": "The portal adds a late fee and a red banner. Somewhere in the fine print, the word 'lien' appears for the first time. It reads like a countdown."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

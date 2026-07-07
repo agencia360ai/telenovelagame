@@ -2,22 +2,21 @@
   "schema": "mission@1",
   "id": "prologue",
   "title": "First Shift",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "intro",
-  "reward": 0,
   "caller": {
     "name": "Dispatch",
     "type": "INTRO",
     "location": "Dispatch floor"
   },
+  "reward": 0,
   "initial_variables": {
     "integrity": 0,
     "compliance": 0,
     "don": 0
   },
-  "initial_flags": {},
   "assets": [
     {
       "key": "pov-first-shift",
@@ -25,6 +24,7 @@
       "role": "ambient"
     }
   ],
+  "initial_flags": {},
   "start": "prologue.intro",
   "beats": [
     {
@@ -34,6 +34,21 @@
         {
           "speaker": "narrator",
           "text": "Night one — someone is about to need you."
+        }
+      ],
+      "next": "prologue.memory"
+    },
+    {
+      "id": "prologue.memory",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "For half a second you're nine years old again — a corded phone, rain on the glass, a busy signal that never ends."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You know why you're here. You've always known."
         }
       ],
       "next": "prologue.sys"
@@ -57,26 +72,17 @@
         {
           "id": "prologue.d1_0",
           "label": "I'm here to help all of them.",
-          "next": "prologue.fin",
-          "effects": {
-            "integrity": 1
-          }
+          "next": "prologue.fin"
         },
         {
           "id": "prologue.d1_1",
           "label": "Learn the job.",
-          "next": "prologue.fin",
-          "effects": {
-            "compliance": 1
-          }
+          "next": "prologue.fin"
         },
         {
           "id": "prologue.d1_2",
           "label": "Whatever keeps the paycheck coming.",
-          "next": "prologue.fin",
-          "effects": {
-            "don": 1
-          }
+          "next": "prologue.fin"
         }
       ]
     },

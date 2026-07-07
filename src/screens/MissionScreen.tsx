@@ -113,8 +113,14 @@ export function MissionScreen({ navigation, route }: Props) {
   // Looping CCTV background for the whole call. Regular calls prefer the intro
   // clip (bundled = instant); game-plot scenes keep intro and ambient SEPARATE:
   // the intro plays once on the big opening screen, the ambient loops in chat.
+  // Story scenes (former game_plot, now served as events) keep intro and
+  // ambient separate; regular calls prefer the bundled intro clip.
+  const isStoryScene =
+    mission.category === "game_plot" ||
+    mission.category === "event" ||
+    mission.category === "place";
   const ambientKey =
-    (mission.category === "game_plot"
+    (isStoryScene
       ? ambientAssetKey ?? introAsset?.key
       : introAsset?.key ?? ambientAssetKey) ?? mission.id;
   // The dispatch ("deploying") clip, read from the mission's outcome beat — or
@@ -134,11 +140,11 @@ export function MissionScreen({ navigation, route }: Props) {
     );
   const unitOptions = DISPATCH_OPTIONS.filter((o) => units.includes(o.id));
 
-  // Game-plot scenes open on a large one-shot video with the intro text — the
-  // "intro" asset when declared (e.g. w1's van clip), else the ambient clip.
-  // The ambient then loops behind the dialogue as usual.
-  const hasPlotIntro =
-    mission.category === "game_plot" && Boolean(introAsset ?? ambientAssetKey);
+  // Story scenes with media open on a large one-shot video with the intro
+  // text — the "intro" asset when declared (e.g. w1's van clip), else the
+  // ambient clip. The ambient then loops behind the dialogue as usual.
+  // Plain events (no assets) skip straight to the dialogue.
+  const hasPlotIntro = isStoryScene && Boolean(introAsset ?? ambientAssetKey);
   const plotIntroKey = introAsset?.key ?? ambientKey;
   const [phase, setPhase] = useState<Phase>(
     hasPlotIntro ? "plotIntro" : introAsset ? "intro" : "play"
@@ -206,7 +212,8 @@ export function MissionScreen({ navigation, route }: Props) {
   ).current;
   // Off-duty event scenes are personal moments, not calls — presented without
   // the LIVE call framing and entered directly after a call (no lobby ring).
-  const isEventMission = mission.category === "event";
+  const isEventMission =
+    mission.category === "event" || mission.category === "place";
 
   const beat = getBeat(mission, beatId);
 
@@ -671,9 +678,10 @@ export function MissionScreen({ navigation, route }: Props) {
       setShowRankUp(true);
       return;
     }
-    // Off-duty event next in the day? Flow straight into the personal scene —
-    // no lobby, no ringing phone: it shouldn't feel like another call.
-    if (!isIntro && !isLifeScene) {
+    // A place scene is the evening's single outing: when it ends, the night
+    // flows straight into the scheduled off-duty event — the map does NOT
+    // reopen (SALIR is one destination per evening).
+    if (mission.category === "place") {
       const next = calendar.getNextMission();
       const nextMission = next ? getMissionById(next.missionId) : null;
       if (nextMission?.category === "event") {
@@ -681,6 +689,9 @@ export function MissionScreen({ navigation, route }: Props) {
         return;
       }
     }
+    // Off-duty event next in the day? Back to the lobby, which detects the
+    // after-hours moment and opens the city map (travel or continue the
+    // evening) — still no ringing phone: it shouldn't feel like another call.
     // After the prologue (intro), play the "NIGHT SHIFT" shot before the menu.
     navigation.replace(isIntro ? "IntroCinematic" : "DispatchLobby");
   };
@@ -711,7 +722,8 @@ export function MissionScreen({ navigation, route }: Props) {
         <View style={styles.headerLeft}>
           {!isEventMission && <View style={styles.liveDot} />}
           <Text style={styles.callType}>
-            {isEventMission ? "OFF DUTY" : "LIVE"}
+            {/* Events show their own tag (OFF DUTY, BREAK, STORY CALL…). */}
+            {isEventMission ? mission.caller.type || "OFF DUTY" : "LIVE"}
           </Text>
         </View>
         <View style={styles.headerRight}>
@@ -907,7 +919,8 @@ export function MissionScreen({ navigation, route }: Props) {
               <Text style={styles.sceneTitle}>
                 {isIntro
                   ? "WELCOME TO THE FLOOR"
-                  : isEventMission
+                  : isEventMission &&
+                    !mission.caller.type.includes("STORY")
                   ? "OFF DUTY"
                   : "CASE COMPLETED"}
               </Text>

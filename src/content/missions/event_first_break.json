@@ -2,99 +2,61 @@
   "schema": "mission@1",
   "id": "event_first_break",
   "title": "First Break",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 10,
   "caller": {
     "name": "You",
     "type": "BREAK",
     "location": "Break room"
   },
-  "speakers": { "partner": "Partner" },
   "reward": 5,
+  "order": 10,
   "initial_variables": {
     "energy": 0,
     "money_spent": 0
   },
-  "initial_flags": {},
   "assets": [],
+  "initial_flags": {},
   "start": "event_break1.intro",
   "beats": [
     {
       "id": "event_break1.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "First break of the shift. The vending machine hums like it knows things." },
-        { "speaker": "narrator", "text": "Your stomach files a formal complaint." }
+        {
+          "speaker": "narrator",
+          "text": "First break of the shift. The vending machine hums, the microwave light flickers, and your stomach files a formal complaint."
+        }
       ],
       "next": "event_break1.d1"
     },
     {
       "id": "event_break1.d1",
       "type": "decision",
-      "prompt": "Ten minutes. Spend them.",
-      "choices": [
-        { "id": "event_break1.d1_0", "label": "Claim the good chair.", "next": "event_break1.chat" },
-        { "id": "event_break1.d1_1", "label": "Stretch by the window.", "next": "event_break1.chat" },
-        { "id": "event_break1.d1_2", "label": "Study the vending machine.", "next": "event_break1.chat" }
-      ]
-    },
-    {
-      "id": "event_break1.chat",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "First rough call tonight? You've got the stare. We all get the stare." },
-        { "speaker": "narrator", "text": "Partner slides a coffee across the table. Break-room diplomacy." }
-      ],
-      "next": "event_break1.d2"
-    },
-    {
-      "id": "event_break1.d2",
-      "type": "decision",
-      "prompt": "Partner's watching you.",
-      "choices": [
-        { "id": "event_break1.d2_0", "label": "I'm fine. Mostly.", "next": "event_break1.reply" },
-        { "id": "event_break1.d2_1", "label": "Does it get easier?", "next": "event_break1.reply" },
-        { "id": "event_break1.d2_2", "label": "Nice stare yourself.", "next": "event_break1.reply" }
-      ]
-    },
-    {
-      "id": "event_break1.reply",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "It doesn't get easier. You just get better at ten-minute recoveries." },
-        { "speaker": "partner", "text": "Step one: eat something. Trust the veteran." },
-        { "speaker": "narrator", "text": "Partner heads back. Three minutes left, one humming machine, one thin wallet." }
-      ],
-      "next": "event_break1.d3"
-    },
-    {
-      "id": "event_break1.d3",
-      "type": "decision",
       "prompt": "Your break. Your wallet.",
       "choices": [
         {
-          "id": "event_break1.d3_0",
+          "id": "event_break1.d1_0",
           "label": "Buy some nuts.",
-          "cash_cost": 5,
           "next": "event_break1.fin_nuts",
+          "cash_cost": 5,
           "effects": {
             "energy": 1
           }
         },
         {
-          "id": "event_break1.d3_1",
+          "id": "event_break1.d1_1",
           "label": "Buy a proper dinner.",
-          "cash_cost": 12,
           "next": "event_break1.fin_dinner",
+          "cash_cost": 12,
           "effects": {
             "energy": 2
           }
         },
         {
-          "id": "event_break1.d3_2",
+          "id": "event_break1.d1_2",
           "label": "Just water. Save the money.",
           "next": "event_break1.fin_water"
         }
@@ -104,8 +66,10 @@
       "id": "event_break1.fin_nuts",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "A bag of nuts. Not a meal — a rumor of one." },
-        { "speaker": "narrator", "text": "Still, your hands stop shaking halfway through the next call." }
+        {
+          "speaker": "narrator",
+          "text": "A bag of nuts from the vending machine. Not a meal, but your hands stop shaking halfway through the next call."
+        }
       ],
       "next": "_end"
     },
@@ -113,8 +77,10 @@
       "id": "event_break1.fin_dinner",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "A real plate, hot food, ten quiet minutes." },
-        { "speaker": "narrator", "text": "You walk back to the console feeling like a person again." }
+        {
+          "speaker": "narrator",
+          "text": "A real plate, hot food, ten quiet minutes. You walk back to the console feeling like a person again."
+        }
       ],
       "next": "_end"
     },
@@ -122,8 +88,10 @@
       "id": "event_break1.fin_water",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Tap water in a paper cup. Free, cold, loud in an empty stomach." },
-        { "speaker": "narrator", "text": "Somewhere in your pocket, the money quietly survives." }
+        {
+          "speaker": "narrator",
+          "text": "Tap water in a paper cup. Free, cold, and loud in an empty stomach. The city doesn't care if you ate."
+        }
       ],
       "next": "_end"
     },

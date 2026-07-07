@@ -2,85 +2,83 @@
   "schema": "mission@1",
   "id": "event_the_question",
   "title": "The Question",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "event",
-  "order": 90,
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Fire escape" },
-  "speakers": { "partner": "Partner" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Fire escape"
+  },
   "reward": 5,
-  "initial_variables": { "love": 0, "energy": 0 },
-  "initial_flags": {},
+  "order": 90,
+  "initial_variables": {
+    "love": 0,
+    "energy": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "ev_quest.intro",
+  "speakers": {
+    "partner": "Partner"
+  },
   "beats": [
     {
       "id": "ev_quest.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "Late. The fire escape, two mugs, the city humming below." },
-        { "speaker": "partner", "text": "You came home quiet again. Third time this week." }
+        {
+          "speaker": "narrator",
+          "text": "Late. The city hums below the fire escape. You came home quiet again, and this time they didn't pretend not to notice."
+        },
+        {
+          "speaker": "partner",
+          "text": "The job takes pieces of you some nights. Where do they go?"
+        }
       ],
       "next": "ev_quest.d1"
     },
     {
       "id": "ev_quest.d1",
       "type": "decision",
-      "prompt": "They noticed.",
+      "prompt": "Nobody's ever asked it like that.",
       "choices": [
-        { "id": "ev_quest.d1_0", "label": "Long shift. Long everything.", "next": "ev_quest.conv2", "effects": { "love": 1 } },
-        { "id": "ev_quest.d1_1", "label": "Quiet? I'm always charming.", "next": "ev_quest.conv2", "effects": { "love": 1 } },
-        { "id": "ev_quest.d1_2", "label": "Say nothing. Sit closer.", "next": "ev_quest.conv2", "effects": { "love": 1, "energy": 1 } }
-      ]
-    },
-    {
-      "id": "ev_quest.conv2",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "narrator", "text": "They don't rush to fill the silence. You respect that in a person." },
-        { "speaker": "partner", "text": "You count sirens, you know. In your sleep. Under your breath." }
-      ],
-      "next": "ev_quest.d2"
-    },
-    {
-      "id": "ev_quest.d2",
-      "type": "decision",
-      "prompt": "Busted.",
-      "choices": [
-        { "id": "ev_quest.d2_0", "label": "Old habit. I count everything.", "next": "ev_quest.pivot", "effects": { "love": 1 } },
-        { "id": "ev_quest.d2_1", "label": "How high did I get?", "next": "ev_quest.pivot", "effects": { "love": 1 } },
-        { "id": "ev_quest.d2_2", "label": "You listen to me sleep?", "next": "ev_quest.pivot", "effects": { "love": 1 } }
-      ]
-    },
-    {
-      "id": "ev_quest.pivot",
-      "type": "dialogue",
-      "lines": [
-        { "speaker": "partner", "text": "Somebody should keep track of you for a change." },
-        { "speaker": "narrator", "text": "The city hums. They set their mug down, careful, deliberate." },
-        { "speaker": "partner", "text": "The job takes pieces of you some nights. Where do they go?" },
-        { "speaker": "narrator", "text": "Nobody's ever asked it like that." }
-      ],
-      "next": "ev_quest.d3"
-    },
-    {
-      "id": "ev_quest.d3",
-      "type": "decision",
-      "prompt": "Where do the pieces go?",
-      "choices": [
-        { "id": "ev_quest.d3_0", "label": "Answer honestly. All of it.", "next": "ev_quest.fin_open", "effects": { "love": 2, "energy": 1 } },
-        { "id": "ev_quest.d3_1", "label": "'They come back when I'm here.'", "next": "ev_quest.fin_sweet", "effects": { "love": 2 } },
-        { "id": "ev_quest.d3_2", "label": "'I'm fine. Really.'", "next": "ev_quest.fin_fine", "effects": { "love": -1 } }
+        {
+          "id": "ev_quest.d1_0",
+          "label": "Answer honestly. All of it.",
+          "next": "ev_quest.fin_open",
+          "effects": {
+            "love": 2,
+            "energy": 1
+          }
+        },
+        {
+          "id": "ev_quest.d1_1",
+          "label": "'They come back when I'm here.'",
+          "next": "ev_quest.fin_sweet",
+          "effects": {
+            "love": 2
+          }
+        },
+        {
+          "id": "ev_quest.d1_2",
+          "label": "'I'm fine. Really.'",
+          "next": "ev_quest.fin_fine",
+          "effects": {
+            "love": -1
+          }
+        }
       ]
     },
     {
       "id": "ev_quest.fin_open",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You talk until the streetlights buzz off. Voices you couldn't save. Ones you did." },
-        { "speaker": "partner", "text": "Thank you for trusting me with them." },
-        { "speaker": "narrator", "text": "They hold your coffee so your hands are free to shake. It helps." }
+        {
+          "speaker": "narrator",
+          "text": "You talk until the streetlights buzz off. Voices you couldn't save, ones you did. They hold your coffee so your hands are free to shake. It helps. All of it helps."
+        }
       ],
       "next": "_end"
     },
@@ -88,8 +86,10 @@
       "id": "ev_quest.fin_sweet",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "It's the truest thing you've said all week. You both know it." },
-        { "speaker": "narrator", "text": "The city hums. Nobody moves for a long time." }
+        {
+          "speaker": "narrator",
+          "text": "It's the truest thing you've said all week, and you both know it. The city hums. Nobody moves for a long time."
+        }
       ],
       "next": "_end"
     },
@@ -97,11 +97,16 @@
       "id": "ev_quest.fin_fine",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "'Fine.' The word every operator knows means the opposite." },
-        { "speaker": "narrator", "text": "They let it go, this time. The space between you keeps its exact width." }
+        {
+          "speaker": "narrator",
+          "text": "'Fine.' The word every operator knows means the opposite. They let it go — this time — and the space between you keeps its exact width."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

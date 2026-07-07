@@ -1,0 +1,95 @@
+{
+  "schema": "mission@1",
+  "id": "w11_weekend_eve",
+  "title": "The Night Before",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "weekend",
+  "week": 11,
+  "order": 11,
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "After hours"
+  },
+  "reward": 8,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w11_weekend.intro",
+  "beats": [
+    {
+      "id": "w11_weekend.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You don't sleep. The folder sits on the table like a guest who won't leave."
+        }
+      ],
+      "variants": [
+        {
+          "when": {
+            "var": "love",
+            "op": ">=",
+            "value": 4
+          },
+          "lines": [
+            {
+              "speaker": "narrator",
+              "text": "You don't sleep, but you don't sit alone either. They put their hand flat on the folder — not to open it. Just so it isn't only yours all night."
+            }
+          ]
+        }
+      ],
+      "next": "w11_weekend.d1"
+    },
+    {
+      "id": "w11_weekend.d1",
+      "type": "decision",
+      "prompt": "Tomorrow has one shape or another. Tonight, choose yours.",
+      "choices": [
+        {
+          "id": "w11_weekend.d1_0",
+          "label": "Rehearse every word you'll say.",
+          "next": "w11_weekend.fin_rehearse"
+        },
+        {
+          "id": "w11_weekend.d1_1",
+          "label": "Call your mother's old number. Let it ring once.",
+          "next": "w11_weekend.fin_ring"
+        }
+      ]
+    },
+    {
+      "id": "w11_weekend.fin_rehearse",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "By 4 a.m. the speech is clean, short, unanswerable. Like a good dispatch."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "w11_weekend.fin_ring",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Disconnected, of course. You let it ring once anyway. 'One call at a time,' you tell the dial tone, and finally sleep."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

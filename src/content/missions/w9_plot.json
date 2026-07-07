@@ -1,0 +1,150 @@
+{
+  "schema": "mission@1",
+  "id": "w9_plot",
+  "title": "Week 9 — Two Alarms",
+  "version": "2.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "game_plot",
+  "week": 9,
+  "order": 9,
+  "goal_trust": 27,
+  "unlock": {
+    "minWeek": 9
+  },
+  "caller": {
+    "name": "The Voice",
+    "type": "STORY CALL",
+    "location": "Downtown / Gate C"
+  },
+  "reward": 12,
+  "initial_variables": {
+    "case_file": 0,
+    "love": 0,
+    "debt_missed": 0
+  },
+  "assets": [],
+  "initial_flags": {},
+  "start": "w9_plot.intro",
+  "speakers": {
+    "voice": "The Voice"
+  },
+  "beats": [
+    {
+      "id": "w9_plot.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "11:58 p.m. A bus rollover downtown, twenty callers at once. And underneath the noise: a silent alarm — stadium warehouse, Gate C."
+        }
+      ],
+      "next": "w9_plot.v1"
+    },
+    {
+      "id": "w9_plot.v1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "voice",
+          "text": "Busy night, dispatcher. Bus full of people, or an empty old warehouse. Choose. That's the job, isn't it?"
+        },
+        {
+          "speaker": "narrator",
+          "text": "He's on the line like he owns it. The screens don't disagree."
+        }
+      ],
+      "next": "w9_plot.d1"
+    },
+    {
+      "id": "w9_plot.d1",
+      "type": "decision",
+      "prompt": "Every unit you have, and one too few. Call it.",
+      "choices": [
+        {
+          "id": "w9_plot.d1_0",
+          "label": "Everything to the bus. People first, always.",
+          "next": "w9_plot.c_bus",
+          "set_flags": {
+            "bus_only": true
+          }
+        },
+        {
+          "id": "w9_plot.d1_1",
+          "label": "Split coverage — bus heavy, one unit to Gate C.",
+          "next": "w9_plot.c_split",
+          "set_flags": {
+            "split_units": true
+          },
+          "effects": {
+            "case_file": 1
+          }
+        },
+        {
+          "id": "w9_plot.d1_2",
+          "label": "Call in off-duty favors to cover both.",
+          "next": "w9_plot.c_favors",
+          "gem_cost": 8,
+          "set_flags": {
+            "both_covered": true
+          },
+          "effects": {
+            "case_file": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "w9_plot.c_bus",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The bus empties into ambulances — everyone lives. At Gate C, cameras catch three vans leaving in convoy. Cargo unknown. He counted on your decency like it was a schedule."
+        }
+      ],
+      "next": "w9_plot.fin"
+    },
+    {
+      "id": "w9_plot.c_split",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Bus scene holds — barely. The lone unit at Gate C radios in: 'Container row. You need to see this.' Then, quieter: 'Bolt cutters. Now.'"
+        }
+      ],
+      "next": "w9_plot.fin"
+    },
+    {
+      "id": "w9_plot.c_favors",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Retired badges, off-shift medics, one tow-truck saint. The bus empties AND Gate C gets lit up like a match day. Some debts are worth owing."
+        }
+      ],
+      "next": "w9_plot.fin"
+    },
+    {
+      "id": "w9_plot.fin",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "voice",
+          "text": "Interesting choice. I'll remember the shape of it."
+        },
+        {
+          "speaker": "narrator",
+          "text": "So will you. Whatever happens at the stadium now happens on the map YOU drew tonight."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ]
+}

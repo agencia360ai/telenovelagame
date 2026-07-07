@@ -2,24 +2,34 @@
   "schema": "mission@1",
   "id": "consequence_the_visit",
   "title": "The Visit",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
   "category": "consequence",
-  "requires_flag": "took_envelope",
-  "caller": { "name": "You", "type": "OFF DUTY", "location": "Your door" },
-  "speakers": { "stranger": "Stranger" },
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Your door"
+  },
   "reward": 0,
-  "initial_variables": { "pawn": 0 },
-  "initial_flags": {},
+  "initial_variables": {
+    "pawn": 0
+  },
   "assets": [],
+  "initial_flags": {},
   "start": "cq_visit.intro",
+  "speakers": {
+    "stranger": "Stranger"
+  },
   "beats": [
     {
       "id": "cq_visit.intro",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "A knock at your door you didn't order. The man on the other side doesn't introduce himself. He doesn't have to." }
+        {
+          "speaker": "narrator",
+          "text": "A knock at your door you didn't order. The man on the other side doesn't introduce himself. He doesn't have to."
+        }
       ],
       "next": "cq_visit.v1"
     },
@@ -27,7 +37,10 @@
       "id": "cq_visit.v1",
       "type": "dialogue",
       "lines": [
-        { "speaker": "stranger", "text": "We appreciate a dispatcher who knows when to look away. Keep doing that. It'd be a shame if you forgot how." }
+        {
+          "speaker": "stranger",
+          "text": "We appreciate a dispatcher who knows when to look away. Keep doing that. It'd be a shame if you forgot how."
+        }
       ],
       "next": "cq_visit.d1"
     },
@@ -36,16 +49,42 @@
       "type": "decision",
       "prompt": "He's on your doorstep. What do you do?",
       "choices": [
-        { "id": "cq_visit.d1_0", "label": "Close the door. Don't say a word.", "next": "cq_visit.fin_quiet", "effects": { "pawn": 1 } },
-        { "id": "cq_visit.d1_1", "label": "'I never agreed to anything.'", "next": "cq_visit.fin_push", "effects": { "integrity": 1, "pawn": 1 } },
-        { "id": "cq_visit.d1_2", "label": "Nod. Whatever keeps them gone.", "next": "cq_visit.fin_nod", "effects": { "don": 1, "pawn": 1 } }
+        {
+          "id": "cq_visit.d1_0",
+          "label": "Close the door. Don't say a word.",
+          "next": "cq_visit.fin_quiet",
+          "effects": {
+            "pawn": 1
+          }
+        },
+        {
+          "id": "cq_visit.d1_1",
+          "label": "'I never agreed to anything.'",
+          "next": "cq_visit.fin_push",
+          "effects": {
+            "integrity": 1,
+            "pawn": 1
+          }
+        },
+        {
+          "id": "cq_visit.d1_2",
+          "label": "Nod. Whatever keeps them gone.",
+          "next": "cq_visit.fin_nod",
+          "effects": {
+            "don": 1,
+            "pawn": 1
+          }
+        }
       ]
     },
     {
       "id": "cq_visit.fin_quiet",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You shut the door and stand behind it a long time. The message landed anyway. That was the point." }
+        {
+          "speaker": "narrator",
+          "text": "You shut the door and stand behind it a long time. The message landed anyway. That was the point."
+        }
       ],
       "next": "_end"
     },
@@ -53,7 +92,10 @@
       "id": "cq_visit.fin_push",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "He smiles like your words are cute. 'Sure you didn't.' The door clicks shut on his side, and the street is very quiet." }
+        {
+          "speaker": "narrator",
+          "text": "He smiles like your words are cute. 'Sure you didn't.' The door clicks shut on his side, and the street is very quiet."
+        }
       ],
       "next": "_end"
     },
@@ -61,10 +103,16 @@
       "id": "cq_visit.fin_nod",
       "type": "dialogue",
       "lines": [
-        { "speaker": "narrator", "text": "You nod. He's gone before you finish. You just agreed to something without saying a single word — the cleanest kind of deal." }
+        {
+          "speaker": "narrator",
+          "text": "You nod. He's gone before you finish. You just agreed to something without saying a single word — the cleanest kind of deal."
+        }
       ],
       "next": "_end"
     },
-    { "id": "_end", "type": "outcome" }
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
   ]
 }

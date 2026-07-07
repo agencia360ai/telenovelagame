@@ -2,9 +2,10 @@
   "schema": "mission@1",
   "id": "caso_cocina",
   "title": "My Kitchen's on Fire",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "locale_default": "en",
   "difficulty": 1,
+  "category": "daily",
   "tags": [
     "real",
     "fire"
@@ -27,7 +28,6 @@
     "money": 0
   },
   "initial_flags": {},
-  "start": "caso_cocina.intro",
   "assets": [
     {
       "key": "kitchen-on-fire",
@@ -40,6 +40,7 @@
       "role": "deploy"
     }
   ],
+  "start": "caso_cocina.intro",
   "beats": [
     {
       "id": "caso_cocina.intro",
@@ -209,10 +210,10 @@
           "text": "989 Burb Street."
         }
       ],
-      "next": "caso_cocina.d4"
+      "next": "dispatch"
     },
     {
-      "id": "caso_cocina.d4",
+      "id": "dispatch",
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "firefighters",
