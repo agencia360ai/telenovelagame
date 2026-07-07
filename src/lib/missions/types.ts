@@ -99,6 +99,17 @@ export type MapPinChoice = {
   icon: string;
   /** Visible name under the pin. */
   label: string;
+  /**
+   * System note echoed into the chat when this pin is picked, so the player
+   * sees a record of where they went (e.g. "Moved to the Hospital"). Defaults
+   * to `Moved to {label}` when omitted.
+   */
+  note?: string;
+  /**
+   * Short blurb shown in the map's info panel when the pin is tapped, before
+   * the player confirms the move. Optional.
+   */
+  description?: string;
   /** Mutate numeric variables (same as MissionChoice). */
   effects?: Record<string, number>;
   /** Set boolean flags (persist into the mission runtime). */
@@ -136,6 +147,8 @@ export type MissionBeat = {
   map?: string;
   /** Destination pins the player can pick from. */
   pins?: MapPinChoice[];
+  /** Label for the button that opens the map from the chat (default "Go to map"). */
+  map_cta?: string;
 
   // dispatch
   correct?: DispatchType;

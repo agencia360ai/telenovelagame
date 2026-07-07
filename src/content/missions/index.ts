@@ -46,7 +46,8 @@ import w12Plot from "./w12_plot.json"; // week 12 — The Last Shift (finale)
 import w1WeekendCoffee from "./w1_weekend_coffee.json"; // week 1 — After Hours
 import w6WeekendPartner from "./w6_weekend_partner.json"; // week 6 — Coffee at 3 A.M.
 import w11WeekendEve from "./w11_weekend_eve.json"; // week 11 — The Night Before
-import w1WeekendMap from "./w1_weekend_map.json"; // legacy map demo (out of rotation)
+import w1WeekendMap from "./w1_weekend_map.json"; // interactive-map weekend demo (out of rotation)
+import testUsamap from "./test_usamap.json"; // interactive-map USA test (out of rotation)
 
 // Off-duty events — ordered personal vignettes (category "event", three per
 // week on random weekdays). No dispatch; choices may cost cash (`cash_cost`).
@@ -218,9 +219,11 @@ void armedRobbery;
 void kitchenFire;
 void borderRunners;
 // Out of rotation since the 12-week package: crosstown travel event (superseded
-// by the after-hours city map) and the interactive-map weekend demo.
+// by the after-hours city map) and the interactive-map weekend/USA demos (kept
+// importable so they're still loadable by id for testing).
 void eventCrosstown;
 void w1WeekendMap;
+void testUsamap;
 // Out of rotation: extra package calls — the daily pool is the user's fixed
 // 30-call list (re-add here to rotate them back in).
 void CallUnderControl;
