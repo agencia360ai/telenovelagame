@@ -44,7 +44,7 @@ const DEFAULT_MAP = "manhattan2";
 // ── Zoom config ──────────────────────────────────────────────────────────────
 // Multipliers of the "fit full width" scale (the fully zoomed-out view where the
 // whole map width is visible). Tweak these to change the starting/allowed zoom.
-const INITIAL_ZOOM = 1.0; // 1 = start showing the whole map width; >1 = start more zoomed in
+const INITIAL_ZOOM = 2.0; // 1 = start showing the whole map width; >1 = start more zoomed in
 const MIN_ZOOM = 1.0; //     can't zoom out past the full-width view
 const MAX_ZOOM = 4.0; //     how far the player can pinch-zoom in
 // ─────────────────────────────────────────────────────────────────────────────
