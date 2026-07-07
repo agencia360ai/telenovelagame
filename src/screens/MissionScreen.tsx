@@ -1019,7 +1019,7 @@ export function MissionScreen({ navigation, route }: Props) {
       )}
 
       {phase === "map" && beat?.type === "map" && (
-        <View style={[styles.mapOverlay, { paddingTop: insets.top }]}>
+        <View style={styles.mapOverlay}>
           <ExcursionMap
             prompt={beat.prompt}
             map={beat.map}
@@ -1236,9 +1236,7 @@ const styles = StyleSheet.create({
   deployVideoOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(5, 8, 16, 0.55)" },
   mapOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(5, 8, 16, 0.94)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#05070d",
   },
   deployClipTag: {
     position: "absolute",

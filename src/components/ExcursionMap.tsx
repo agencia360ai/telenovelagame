@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   Pressable,
+  ScrollView,
   ImageSourcePropType,
 } from "react-native";
 import * as Haptics from "expo-haptics";
@@ -19,6 +20,7 @@ import Animated, {
   Easing,
   type SharedValue,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { RadarStreets } from "./RadarStreets";
 import { MapPin } from "./MapPin";
@@ -26,12 +28,16 @@ import type { MapPinChoice } from "../lib/missions/types";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-// Same portrait Manhattan canvas as DispatchRadar: keep the image's exact aspect
-// ratio so normalized (x÷width, y÷height) pin coords land on the streets. A touch
-// shorter than the radar so the info panel below the map has room to breathe.
+// Fit the map to the screen HEIGHT while keeping the image's real proportions
+// (no distortion). Because the map is portrait and narrower-than-tall, fitting
+// the full height makes it a bit WIDER than the screen — the extra width is
+// revealed by panning horizontally (a horizontal ScrollView). The street graph
+// and pins scale by the same RADAR_W/RADAR_H so everything stays aligned.
 const MAP_ASPECT = 720 / 1280; // manhattan2.png width / height (portrait)
-const RADAR_H = Math.min(SCREEN_HEIGHT * 0.55, (SCREEN_WIDTH - 32) / MAP_ASPECT);
-const RADAR_W = RADAR_H * MAP_ASPECT;
+const RADAR_H = SCREEN_HEIGHT;
+const RADAR_W = Math.round(RADAR_H * MAP_ASPECT);
+// Where to start the horizontal pan so the map opens centered.
+const INITIAL_PAN_X = Math.max(0, (RADAR_W - SCREEN_WIDTH) / 2);
 
 /** Background images available to a map beat, keyed like the mission `map` field. */
 const MAP_IMAGES: Record<string, ImageSourcePropType> = {
@@ -62,6 +68,7 @@ type Props = {
  * (and its confirm button) stay hidden until a pin is tapped.
  */
 export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
+  const insets = useSafeAreaInsets();
   // The pin being previewed (null = nothing tapped yet, so no panel/button).
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // Latched once the player confirms, to lock the UI while the move resolves.
@@ -92,21 +99,31 @@ export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
     onSelectPin(selectedPin);
   };
 
+  // Dismiss the preview: clears the selection so the panel hides (revealing any
+  // pin it covered) and the pins un-dim. No-op once the move is confirmed.
+  const handleClose = () => {
+    if (confirmed) return;
+    Haptics.selectionAsync();
+    setSelectedId(null);
+  };
+
   return (
     <View style={styles.root}>
-      {prompt ? (
-        <Animated.Text entering={FadeIn.duration(400)} style={styles.prompt}>
-          {prompt}
-        </Animated.Text>
-      ) : null}
-
-      <View style={[styles.canvas, { width: RADAR_W, height: RADAR_H }]}>
-        <Image
-          source={source}
-          style={{ width: RADAR_W, height: RADAR_H }}
-          resizeMode="stretch"
-        />
-        <RadarStreets size={RADAR_W} height={RADAR_H} />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentOffset={{ x: INITIAL_PAN_X, y: 0 }}
+        contentContainerStyle={styles.scrollContent}
+        // Let a tap on a pin register while a drag pans the map.
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={[styles.canvas, { width: RADAR_W, height: RADAR_H }]}>
+          <Image
+            source={source}
+            style={{ width: RADAR_W, height: RADAR_H }}
+            resizeMode="stretch"
+          />
+          <RadarStreets size={RADAR_W} height={RADAR_H} />
 
         {pins.map((pin) => {
           const px = pin.x * RADAR_W;
@@ -140,16 +157,36 @@ export function ExcursionMap({ prompt, map, pins, onSelectPin }: Props) {
             </React.Fragment>
           );
         })}
-      </View>
+        </View>
+      </ScrollView>
 
-      {/* Info panel — hidden until a pin is tapped. Shows the place's name and a
-          short description, plus the button that confirms the move. */}
+      {/* Prompt — floats over the top of the map so it costs no vertical space. */}
+      {prompt ? (
+        <Animated.Text
+          entering={FadeIn.duration(400)}
+          style={[styles.prompt, { top: insets.top + 10 }]}
+        >
+          {prompt}
+        </Animated.Text>
+      ) : null}
+
+      {/* Info panel — hidden until a pin is tapped. Floats over the bottom of the
+          map. Shows the place's name + description and the confirm button. */}
       {selectedPin ? (
         <Animated.View
           key={selectedPin.id}
           entering={FadeInDown.duration(220)}
-          style={styles.infoPanel}
+          style={[styles.infoPanel, { bottom: insets.bottom + 14 }]}
         >
+          <Pressable
+            style={styles.closeBtn}
+            onPress={handleClose}
+            disabled={confirmed}
+            hitSlop={10}
+            accessibilityLabel="Cerrar"
+          >
+            <Text style={styles.closeLabel}>✕</Text>
+          </Pressable>
           <Text style={styles.infoName}>
             {selectedPin.icon} {selectedPin.label}
           </Text>
@@ -202,23 +239,30 @@ function PulseRing({
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 16,
+    ...StyleSheet.absoluteFillObject,
   },
   prompt: {
+    position: "absolute",
+    left: 0,
+    right: 0,
     color: colors.dispatch.cyan,
     fontSize: 18,
     fontWeight: "700",
     letterSpacing: 0.5,
     textAlign: "center",
     paddingHorizontal: 24,
+    textShadowColor: "rgba(0,0,0,0.9)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
+  scrollContent: {
+    // Center the map when it is narrower than the screen (e.g. very wide
+    // displays); when it is wider, this has no effect and it just scrolls.
+    flexGrow: 1,
+    justifyContent: "center",
   },
   canvas: {
     position: "relative",
-    borderWidth: 1,
-    borderColor: "rgba(34, 211, 238, 0.25)",
-    borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "#05070d",
   },
@@ -240,8 +284,9 @@ const styles = StyleSheet.create({
     borderColor: colors.dispatch.amber,
   },
   infoPanel: {
-    width: RADAR_W + 40,
-    maxWidth: SCREEN_WIDTH - 24,
+    position: "absolute",
+    left: 12,
+    right: 12,
     gap: 8,
     padding: 16,
     borderRadius: 14,
@@ -256,6 +301,27 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "900",
     letterSpacing: 0.3,
+    paddingRight: 34, // clear the close button in the top-right
+  },
+  closeBtn: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "rgba(226, 232, 240, 0.25)",
+    backgroundColor: "rgba(226, 232, 240, 0.06)",
+    zIndex: 2,
+  },
+  closeLabel: {
+    color: "rgba(226, 232, 240, 0.85)",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 16,
   },
   infoDesc: {
     color: "rgba(226, 232, 240, 0.72)",
