@@ -30,7 +30,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The group chat wakes up after months asleep. Someone found a taquería that's open late. Everyone's in. Everyone's asking about you."
+          "text": "The group chat wakes up after months asleep. Everyone's asking about you."
         },
         {
           "speaker": "friend",
@@ -80,7 +80,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Tacos, bad jokes, someone's terrible karaoke. Nobody asks about the sirens. For three hours you're just a person at a table."
+          "text": "Tacos and bad jokes. For three hours you're just a person at a table."
         }
       ],
       "next": "_end"
@@ -91,7 +91,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "You nurse one soda and stay two hours anyway. Turns out the company was the thing, not the tacos."
+          "text": "You nurse one soda and stay two hours anyway."
         }
       ],
       "next": "_end"
@@ -102,7 +102,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The chat posts photos until 1 a.m. You sleep early, wake rested, and scroll through the night you didn't have."
+          "text": "The chat posts photos until 1 a.m."
         }
       ],
       "next": "_end"
@@ -111,5 +111,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

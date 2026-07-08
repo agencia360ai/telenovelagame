@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_spin_cycle",
+  "title": "Spin Cycle",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 204,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_spin_cycle.intro",
+  "beats": [
+    {
+      "id": "life_spin_cycle.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Sunday-quiet laundromat, machines humming like a call center for clothes."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Your work shirts go around and around. So does the week."
+        }
+      ],
+      "next": "life_spin_cycle.d1"
+    },
+    {
+      "id": "life_spin_cycle.d1",
+      "type": "decision",
+      "prompt": "Forty minutes of forced stillness.",
+      "choices": [
+        {
+          "id": "life_spin_cycle.d1_0",
+          "label": "Fold everything perfectly.",
+          "next": "life_spin_cycle.fin_0"
+        },
+        {
+          "id": "life_spin_cycle.d1_1",
+          "label": "Read the notice board.",
+          "next": "life_spin_cycle.fin_1"
+        },
+        {
+          "id": "life_spin_cycle.d1_2",
+          "label": "Doze against the warm dryer.",
+          "next": "life_spin_cycle.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_spin_cycle.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Crisp stacks, sorted by day. Somewhere inside you, a supervisor smiles."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_spin_cycle.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Lost cat, guitar lessons, roommate wanted. The city's small emergencies. Not your department tonight."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_spin_cycle.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The buzz wakes you. Warm laundry in your arms like a reward for surviving."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

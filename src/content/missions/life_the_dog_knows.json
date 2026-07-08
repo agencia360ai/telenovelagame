@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_the_dog_knows",
+  "title": "The Dog Knows",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 223,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_the_dog_knows.intro",
+  "beats": [
+    {
+      "id": "life_the_dog_knows.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The neighbor's old dog waits in the hallway at shift-change hour, tail on a low, patient setting."
+        },
+        {
+          "speaker": "narrator",
+          "text": "It has decided your schedule is its business. Someone should tell it that's your job."
+        }
+      ],
+      "next": "life_the_dog_knows.d1"
+    },
+    {
+      "id": "life_the_dog_knows.d1",
+      "type": "decision",
+      "prompt": "The inspector approaches.",
+      "choices": [
+        {
+          "id": "life_the_dog_knows.d1_0",
+          "label": "Full ear-scratch protocol.",
+          "next": "life_the_dog_knows.fin_0"
+        },
+        {
+          "id": "life_the_dog_knows.d1_1",
+          "label": "Report on your day. It listens.",
+          "next": "life_the_dog_knows.fin_1"
+        },
+        {
+          "id": "life_the_dog_knows.d1_2",
+          "label": "Sneak it the biscuit you carry now.",
+          "next": "life_the_dog_knows.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_the_dog_knows.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Two minutes of unconditional approval. Cheaper than therapy, almost as effective."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_dog_knows.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The dog hears about the prank calls and the save. It sighs at the right parts. Excellent listener."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_dog_knows.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Yes, you buy biscuits now. For a dog that isn't yours. This is who you've become. No regrets."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

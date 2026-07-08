@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_the_long_route",
+  "title": "The Long Route",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 203,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_the_long_route.intro",
+  "beats": [
+    {
+      "id": "life_the_long_route.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Last bus of the night, half empty, windows fogged with other people's day."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Your reflection looks like someone who answered phones for nine hours."
+        }
+      ],
+      "next": "life_the_long_route.d1"
+    },
+    {
+      "id": "life_the_long_route.d1",
+      "type": "decision",
+      "prompt": "The ride is yours.",
+      "choices": [
+        {
+          "id": "life_the_long_route.d1_0",
+          "label": "Window seat. Watch the city go.",
+          "next": "life_the_long_route.fin_0"
+        },
+        {
+          "id": "life_the_long_route.d1_1",
+          "label": "Eyes closed. Just one stop.",
+          "next": "life_the_long_route.fin_1"
+        },
+        {
+          "id": "life_the_long_route.d1_2",
+          "label": "Give your seat to the night nurse.",
+          "next": "life_the_long_route.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_the_long_route.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Storefronts, strangers, a dog in a raincoat. The city you protect, doing fine without you for a minute."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_long_route.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You wake exactly at your stop. Dispatcher's internal clock. Never fails."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_long_route.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "She nods like colleagues do. Different uniforms, same war."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

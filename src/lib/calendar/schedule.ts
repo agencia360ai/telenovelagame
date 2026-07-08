@@ -101,8 +101,10 @@ export function generateWeek(
   usedDailyInit: string[] = [],
   /** Career calls completed BEFORE this week — gates pranks off the first calls. */
   careerCallsBefore: number = 0,
-  /** The week's off-duty event scenes, in play order (empty = none). */
-  eventMissionIds: string[] = []
+  /** Off-site (weekend) event scenes — the personal-life arc, in play order. */
+  eventMissionIds: string[] = [],
+  /** On-site (weekday) event scenes, spread across the week's work days. */
+  onsiteEventIds: string[] = []
 ): WeekSchedule {
   // Choose the plot day among eligible weekdays (only if we have a plot to
   // place). Never the FIRST eligible day, so the week always opens on a daily
@@ -115,29 +117,31 @@ export function generateWeek(
     gamePlotDayId = chosen?.id ?? null;
   }
 
-  // Spread the week's events over distinct eligible days (avoiding the plot
-  // day so story and off-duty scenes don't stack). Days keep template order,
-  // so events play in their authored sequence across the week.
-  const eventDayIds: string[] = [];
-  if (eventMissionIds.length > 0) {
-    const eligible = template.filter(
-      (d) => d.eventEligible && d.id !== gamePlotDayId
-    );
-    const pool = [...eligible];
-    while (eventDayIds.length < eventMissionIds.length && pool.length > 0) {
-      const chosen = pick(pool, rng)!;
-      pool.splice(pool.indexOf(chosen), 1);
-      eventDayIds.push(chosen.id);
-    }
-    // Restore template (chronological) order for assignment.
-    eventDayIds.sort(
-      (a, b) =>
-        template.findIndex((d) => d.id === a) -
-        template.findIndex((d) => d.id === b)
-    );
+  // Setting-based placement: OFF-SITE beats (the personal-life arc) all land on
+  // the weekend day; ON-SITE beats spread across weekday eligible days. Each day
+  // serves its own ordered list of event ids.
+  const weekendDayId =
+    template.find((d) => d.slots.includes("weekend"))?.id ?? null;
+  const eventsForDay: Record<string, string[]> = {};
+  if (weekendDayId && eventMissionIds.length > 0) {
+    eventsForDay[weekendDayId] = [...eventMissionIds];
   }
-  // Serve events in authored order as their days come up.
-  const eventQueue = [...eventMissionIds];
+  const weekdayEligible = template.filter(
+    (d) => d.eventEligible && d.id !== gamePlotDayId && d.id !== weekendDayId
+  );
+  onsiteEventIds.forEach((id, i) => {
+    const day = weekdayEligible.length
+      ? weekdayEligible[i % weekdayEligible.length]
+      : null;
+    if (!day) return;
+    if (!eventsForDay[day.id]) eventsForDay[day.id] = [];
+    eventsForDay[day.id].push(id);
+  });
+  const eventDayIds = Object.keys(eventsForDay).sort(
+    (a, b) =>
+      template.findIndex((d) => d.id === a) -
+      template.findIndex((d) => d.id === b)
+  );
 
   // Seed with the dailies already served in earlier weeks so the week avoids
   // repeats across the whole run (not just within the week). When every daily
@@ -184,12 +188,18 @@ export function generateWeek(
     if (isPlotDay && plotMissionId) {
       slots = day.keepDailyOnPlotDay ? [...day.slots, "game_plot"] : ["game_plot"];
     }
-    // Event days INSERT the off-duty scene between the day's calls (random
-    // position after at least one call) so the waits between calls carry the
-    // personal life too — not just the end of the shift.
-    if (eventDayIds.includes(day.id)) {
-      const at = 1 + Math.floor(rng() * slots.length);
-      slots = [...slots.slice(0, at), "event", ...slots.slice(at)];
+    // Weekend (off the clock): off-site beats close the day after the shift.
+    // Weekdays: on-site beats are inserted into the dead time between calls.
+    const dayEvents = [...(eventsForDay[day.id] ?? [])];
+    if (dayEvents.length > 0) {
+      if (day.id === weekendDayId) {
+        slots = [...slots, ...(Array(dayEvents.length).fill("event") as DayKind[])];
+      } else {
+        for (let e = 0; e < dayEvents.length; e++) {
+          const at = 1 + Math.floor(rng() * slots.length);
+          slots = [...slots.slice(0, at), "event" as DayKind, ...slots.slice(at)];
+        }
+      }
     }
 
     const missionIds: string[] = [];
@@ -203,7 +213,7 @@ export function generateWeek(
         }
       } else if (kind === "event") {
         // Off-duty scene: no dispatch, so it doesn't move the call counters.
-        id = eventQueue.shift();
+        id = dayEvents.shift();
       } else if (kind === "weekend") {
         // Sequential by `order`. Fall back to the daily pool when no weekend
         // mission is authored / the sequence is exhausted.

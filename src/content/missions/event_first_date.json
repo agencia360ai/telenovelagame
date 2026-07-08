@@ -29,7 +29,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The napkin number turned into a dinner. Small place, candle in a bottle, the kind of nervous that feels good."
+          "text": "The napkin number turned into dinner. The kind of nervousness that feels good."
         },
         {
           "speaker": "date",
@@ -81,7 +81,7 @@
         },
         {
           "speaker": "narrator",
-          "text": "You walk out lighter in the wallet and lighter everywhere else too."
+          "text": "You walk out with her grabbing your arm."
         }
       ],
       "next": "_end"
@@ -92,7 +92,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Half and half, no fuss. 'Fair,' they say, approvingly. Somehow that lands better than a grand gesture."
+          "text": "Half and half, no fuss. 'Fair,' they say, approvingly."
         }
       ],
       "next": "_end"
@@ -103,7 +103,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "'Bold — assuming a second date.' They pay, smiling. On the sidewalk they say it: 'Tuesday works.'"
+          "text": "'Bold — assuming a second date.'"
         }
       ],
       "next": "_end"
@@ -112,5 +112,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

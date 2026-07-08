@@ -32,18 +32,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Off the clock. First badge in your pocket that says DISPATCHER. The title is small. The way people start looking at it isn't."
-        }
-      ],
-      "next": "life1.sit"
-    },
-    {
-      "id": "life1.sit",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "The ones who used to talk over you, who never bothered to learn your name — they hear what you do now, and something behind their eyes shifts. This kind of respect doesn't get handed to you. You answer for it, one call at a time."
+          "text": "You are no longer a rookie, your clothes says DISPATCHER. The title is small but you are feeling great."
         }
       ],
       "next": "life1.d1"
@@ -63,7 +52,7 @@
         },
         {
           "id": "life1.d1_1",
-          "label": "Straight-backed. You earned the room.",
+          "label": "Straight-backed. People need you.",
           "next": "life1.fin_proud",
           "effects": {
             "respect": 1
@@ -77,7 +66,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "You don't say much. You don't have to. The badge doesn't need announcing — and for the first time, walking your own street, you don't shrink."
+          "text": "You don't say much. You don't have to. The badge doesn't need introduction."
         }
       ],
       "next": "_end"
@@ -88,7 +77,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "You hold your head up. Let them look. You spent years being overlooked; tonight you take up your full size, and nobody argues."
+          "text": "You hold your head up. Tonight you take up your full size, and nobody argues."
         }
       ],
       "next": "_end"

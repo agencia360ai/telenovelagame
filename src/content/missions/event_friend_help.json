@@ -29,7 +29,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "A call at an hour that's never good news. Your friend's voice is doing the thing yours does on the worst shifts — steady on purpose."
+          "text": "A call at an hour that's never good news."
         },
         {
           "speaker": "friend",
@@ -96,7 +96,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Sent. No lecture attached. The 'thank you' that comes back is three words long and heavier than it looks."
+          "text": "Sent. No lecture attached."
         }
       ],
       "next": "_end"
@@ -107,7 +107,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Half the money and a full plate. You eat together on a Tuesday, and the rent stops being the point."
+          "text": "Half the money and a full plate."
         }
       ],
       "next": "_end"
@@ -118,7 +118,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "You can't fix Friday, so you spend an hour on the phone fixing everything else. It's not twenty bucks. It's not nothing, either."
+          "text": "You can't fix Friday, so you spend an hour on the phone fixing everything else."
         }
       ],
       "next": "_end"
@@ -127,5 +127,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_roof_air",
+  "title": "Roof Air",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 201,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_roof_air.intro",
+  "beats": [
+    {
+      "id": "life_roof_air.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The roof door sticks, then gives. The city spreads out, indifferent and alive."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Up here the sirens are just weather."
+        }
+      ],
+      "next": "life_roof_air.d1"
+    },
+    {
+      "id": "life_roof_air.d1",
+      "type": "decision",
+      "prompt": "Five minutes. Spend them how?",
+      "choices": [
+        {
+          "id": "life_roof_air.d1_0",
+          "label": "Just breathe. Count exhales.",
+          "next": "life_roof_air.fin_0"
+        },
+        {
+          "id": "life_roof_air.d1_1",
+          "label": "Count the sirens instead.",
+          "next": "life_roof_air.fin_1"
+        },
+        {
+          "id": "life_roof_air.d1_2",
+          "label": "Text someone 'thinking of you.'",
+          "next": "life_roof_air.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_roof_air.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Ten slow ones. The shift washes off like grime under a hose."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_roof_air.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Three. One of them is yours — you can tell by the route. Old habit."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_roof_air.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The reply is a photo of their coffee. It helps more than the sky does."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

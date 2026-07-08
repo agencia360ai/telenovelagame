@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_c4_again",
+  "title": "C4, Again",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 202,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_c4_again.intro",
+  "beats": [
+    {
+      "id": "life_c4_again.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The vending machine takes your dollar with the confidence of a career criminal."
+        },
+        {
+          "speaker": "narrator",
+          "text": "C4 — the good crackers — hangs by a thread. Everyone has watched this tragedy."
+        }
+      ],
+      "next": "life_c4_again.d1"
+    },
+    {
+      "id": "life_c4_again.d1",
+      "type": "decision",
+      "prompt": "The machine has your money.",
+      "choices": [
+        {
+          "id": "life_c4_again.d1_0",
+          "label": "Shake it. Justice.",
+          "next": "life_c4_again.fin_0"
+        },
+        {
+          "id": "life_c4_again.d1_1",
+          "label": "Pay again. Rise above.",
+          "next": "life_c4_again.fin_1"
+        },
+        {
+          "id": "life_c4_again.d1_2",
+          "label": "Walk away with dignity.",
+          "next": "life_c4_again.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_c4_again.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Two bags fall. The break room applauds. You are, briefly, a hero."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_c4_again.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Both bags drop. Wealth. You leave one on the new operator's desk."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_c4_again.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The machine keeps the dollar. You keep the moral high ground. Fair trade, maybe."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

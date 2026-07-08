@@ -30,7 +30,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The café near the station, the one open at weird hours for people with weird hours. Someone at the counter is reading the book you own two copies of."
+          "text": "The café near the station. Someone at the counter is reading the book you own two copies of."
         },
         {
           "speaker": "stranger",
@@ -98,7 +98,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Twenty minutes about the book, the city, the espresso. No numbers exchanged — but this café has weird hours, and so do you both."
+          "text": "Twenty minutes about the book, the city, the espresso. No numbers exchanged."
         }
       ],
       "next": "_end"
@@ -109,7 +109,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "You take the cup and the exit. Through the window, the reader turns a page. Maybe next time."
+          "text": "You take the cup and the exit. Maybe next time."
         }
       ],
       "next": "_end"
@@ -118,5 +118,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

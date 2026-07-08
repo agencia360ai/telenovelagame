@@ -26,7 +26,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Their birthday is Thursday. You've been staring at the same shop window for ten minutes: the nice edition of the book from the café, the one with the map inside the cover."
+          "text": "Their birthday is Thursday."
         }
       ],
       "variants": [
@@ -125,5 +125,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

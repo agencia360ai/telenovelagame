@@ -79,7 +79,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The good noodles arrive hot and the movie's forgettable, which is fine — the couch dent fits two."
+          "text": "The good noodles arrive hot and the movie's forgettable."
         }
       ],
       "next": "_end"
@@ -94,7 +94,7 @@
         },
         {
           "speaker": "narrator",
-          "text": "Dispatcher improvisation, kitchen edition. They ask for seconds. The movie never gets finished."
+          "text": "Dispatcher improvisation, kitchen edition."
         }
       ],
       "next": "_end"
@@ -105,7 +105,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Two bowls, extra butter, zero pretension. Halfway in they steal your bowl. You allow it. This is serious, then."
+          "text": "Two bowls, extra butter, zero pretension."
         }
       ],
       "next": "_end"
@@ -114,5 +114,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

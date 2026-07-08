@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_aisle_nine",
+  "title": "Aisle Nine",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 208,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_aisle_nine.intro",
+  "beats": [
+    {
+      "id": "life_aisle_nine.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Payday groceries. The basket starts honest: eggs, rice, the cheap coffee."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Aisle nine has the good stuff. Aisle nine knows what it's doing."
+        }
+      ],
+      "next": "life_aisle_nine.d1"
+    },
+    {
+      "id": "life_aisle_nine.d1",
+      "type": "decision",
+      "prompt": "The basket is watching.",
+      "choices": [
+        {
+          "id": "life_aisle_nine.d1_0",
+          "label": "The good dinner. You earned it.",
+          "next": "life_aisle_nine.fin_0"
+        },
+        {
+          "id": "life_aisle_nine.d1_1",
+          "label": "Noodles again. Save the rest.",
+          "next": "life_aisle_nine.fin_1"
+        },
+        {
+          "id": "life_aisle_nine.d1_2",
+          "label": "Basics plus ONE ridiculous thing.",
+          "next": "life_aisle_nine.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_aisle_nine.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Real ingredients, real cooking, kitchen smelling like a home. Worth every cent."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_aisle_nine.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The wallet approves. The noodles are, as always, fine. Fine is fine."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_aisle_nine.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The fancy chocolate rides home like contraband. Balance in all things."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

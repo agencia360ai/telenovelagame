@@ -55,7 +55,11 @@ import { unitUnlockedAt, useFleet } from "./FleetContext";
 // v11: three events per week, INSERTED between the day's calls (not appended)
 // so the standby waits carry personal moments; daily pool fixed to the 30-call
 // list (package extras out of rotation).
-const STORAGE_KEY = "dispatch_calendar_v11";
+// v12: off-duty events were weekend-only (all three on Saturday).
+// v13: story beats spread across the whole week, hidden random 5–30s wait.
+// v14: setting-based split — OFF-SITE beats (the personal-life arc, `offsite`)
+// play on the weekend; ON-SITE beats rotate through the weekdays. Rebuild v13.
+const STORAGE_KEY = "dispatch_calendar_v14";
 
 /**
  * The unit a call effectively REQUIRES to be resolved — its correct dispatch,
@@ -118,9 +122,29 @@ function buildWeekendList(): Mission[] {
   return sortByOrder(getMissionsByCategory("weekend"));
 }
 
-/** off-duty event missions sorted by `order` — the event sequence. */
-function buildEventList(): Mission[] {
-  return sortByOrder(getMissionsByCategory("event"));
+/** All off-duty scenes (events + life moments). */
+function offDutyScenes(): Mission[] {
+  return [
+    ...getMissionsByCategory("event"),
+    ...getMissionsByCategory("life_moment"),
+  ];
+}
+/** Off-site scenes (the personal-life arc), sorted by `order` — weekend pool. */
+function buildOffsiteList(): Mission[] {
+  return sortByOrder(offDutyScenes().filter((m) => (m as any).offsite));
+}
+/** On-site scenes (at the dispatch center), sorted by `order` — weekday pool. */
+function buildOnsiteList(): Mission[] {
+  return sortByOrder(offDutyScenes().filter((m) => !(m as any).offsite));
+}
+/** Deterministic weekly rotation through the on-site pool: `k` scenes for the
+ *  given 1-based week, cycling with no repeats until the pool is exhausted. */
+function rotateOnsite(list: Mission[], week: number, k: number): string[] {
+  if (list.length === 0) return [];
+  const start = ((week - 1) * k) % list.length;
+  const out: string[] = [];
+  for (let i = 0; i < k; i++) out.push(list[(start + i) % list.length].id);
+  return out;
 }
 
 /** Build a fresh, frozen week and position the player on its first playable day. */
@@ -142,9 +166,10 @@ function buildWeek(
   // mission's `week` field, not a sequential pointer.
   const weekendMissionId =
     buildWeekendList().find((m) => (m as any).week === week)?.id ?? null;
-  // Up to three off-duty scenes per week, in authored order, woven between
-  // calls (the 16 events front-load the run; the back half belongs to the plot).
-  const eventMissionIds = resolveNextEvents(buildEventList(), eventIndex, 3);
+  // Off-site personal-life beats (the arc) play on the weekend, in order; on-site
+  // beats rotate through the weekdays. Weekend: 3, weekdays: 2 → 5 scenes/week.
+  const eventMissionIds = resolveNextEvents(buildOffsiteList(), eventIndex, 3);
+  const onsiteEventIds = rotateOnsite(buildOnsiteList(), week, 2);
   const schedule = generateWeek(
     week,
     DEFAULT_WEEK_TEMPLATE,
@@ -154,7 +179,8 @@ function buildWeek(
     Math.random,
     servedDaily,
     callsHandled,
-    eventMissionIds
+    eventMissionIds,
+    onsiteEventIds
   );
   // Track which dailies have now been served; once the whole pool has been seen,
   // restart the cycle (keep just this week's so we don't immediately repeat).

@@ -27,7 +27,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The reminder goes off as you hang up your headset. First installment, due by midnight. The payment portal loads slower than any emergency line you've ever worked."
+          "text": "The reminder goes off as you hang up your headset."
         }
       ],
       "next": "ev_debt1.d1"
@@ -65,7 +65,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Paid. The balance barely notices, but the apartment stays yours another month. You make coffee in it like a small ceremony."
+          "text": "Paid. The balance barely notices, but the apartment stays yours another month."
         }
       ],
       "next": "_end"
@@ -76,7 +76,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The portal adds a late fee and a red banner. Somewhere in the fine print, the word 'lien' appears for the first time. It reads like a countdown."
+          "text": "The portal adds a late fee and a red banner.It reads like a countdown."
         }
       ],
       "next": "_end"
@@ -85,5 +85,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

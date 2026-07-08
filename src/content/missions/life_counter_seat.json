@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_counter_seat",
+  "title": "Counter Seat",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 213,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_counter_seat.intro",
+  "beats": [
+    {
+      "id": "life_counter_seat.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The diner that never closes, for the people whose jobs never do."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The counter seat knows your order before you sit."
+        }
+      ],
+      "next": "life_counter_seat.d1"
+    },
+    {
+      "id": "life_counter_seat.d1",
+      "type": "decision",
+      "prompt": "The night menu:",
+      "choices": [
+        {
+          "id": "life_counter_seat.d1_0",
+          "label": "Pie. The answer is pie.",
+          "next": "life_counter_seat.fin_0"
+        },
+        {
+          "id": "life_counter_seat.d1_1",
+          "label": "Just coffee, bottomless.",
+          "next": "life_counter_seat.fin_1"
+        },
+        {
+          "id": "life_counter_seat.d1_2",
+          "label": "Whatever the cook recommends.",
+          "next": "life_counter_seat.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_counter_seat.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Cherry, warm, no notes. The cook nods at your headset tan like a salute."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_counter_seat.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Third refill free. You and a cab driver watch the rain commit crimes outside."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_counter_seat.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "'Trust me' turns out to be the best plate of the week. Trust: extended."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

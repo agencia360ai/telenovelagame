@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_the_plant",
+  "title": "The Plant",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 205,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_the_plant.intro",
+  "beats": [
+    {
+      "id": "life_the_plant.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Someone left a small plant on your desk years before you got it. It survives on vending-machine water and spite."
+        },
+        {
+          "speaker": "narrator",
+          "text": "It has one new leaf. You didn't notice when that happened."
+        }
+      ],
+      "next": "life_the_plant.d1"
+    },
+    {
+      "id": "life_the_plant.d1",
+      "type": "decision",
+      "prompt": "The plant waits.",
+      "choices": [
+        {
+          "id": "life_the_plant.d1_0",
+          "label": "Water it. Rotate it toward the light.",
+          "next": "life_the_plant.fin_0"
+        },
+        {
+          "id": "life_the_plant.d1_1",
+          "label": "Name it. It's earned that.",
+          "next": "life_the_plant.fin_1"
+        },
+        {
+          "id": "life_the_plant.d1_2",
+          "label": "Leave a sticky note: 'good job.'",
+          "next": "life_the_plant.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_the_plant.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Small green thing, doing its best on a desk where people save lives. You get it."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_plant.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "'Backup.' Because it's always there. The name stays between you two."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_plant.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The next shift adds a smiley. The plant now has a fan club of exhausted people."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

@@ -22,6 +22,33 @@ import lifeRank4 from "./life_rank4.json";
 import lifeRank5 from "./life_rank5.json";
 import lifeRank6 from "./life_rank6.json";
 
+// Life moments (category "life_moment") — 24 standalone off-duty POV vignettes,
+// served on weekends after the personal-life arc (high `order`).
+import lifeMomRoofAir from "./life_roof_air.json";
+import lifeMomC4Again from "./life_c4_again.json";
+import lifeMomTheLongRoute from "./life_the_long_route.json";
+import lifeMomSpinCycle from "./life_spin_cycle.json";
+import lifeMomThePlant from "./life_the_plant.json";
+import lifeMomStaticLullaby from "./life_static_lullaby.json";
+import lifeMomTheRegular from "./life_the_regular.json";
+import lifeMomAisleNine from "./life_aisle_nine.json";
+import lifeMomRainCheck from "./life_rain_check.json";
+import lifeMomThePhoto from "./life_the_photo.json";
+import lifeMomRitual from "./life_ritual.json";
+import lifeMomSixtySecondsOfPlank from "./life_sixty_seconds_of_plank.json";
+import lifeMomCounterSeat from "./life_counter_seat.json";
+import lifeMomGameFace from "./life_game_face.json";
+import lifeMomNumbersThatAreYours from "./life_numbers_that_are_yours.json";
+import lifeMomElevenFloors from "./life_eleven_floors.json";
+import lifeMomShiftsEnd from "./life_shifts_end.json";
+import lifeMomAddressedToAVoice from "./life_addressed_to_a_voice.json";
+import lifeMomTwoForOne from "./life_two_for_one.json";
+import lifeMomTheQuietBlocks from "./life_the_quiet_blocks.json";
+import lifeMomThirdCup from "./life_third_cup.json";
+import lifeMomTheViewFromB from "./life_the_view_from_b.json";
+import lifeMomTheDogKnows from "./life_the_dog_knows.json";
+import lifeMomSavedMessage from "./life_saved_message.json";
+
 // Consequence / fallout events — pay off the player's main-arc choices,
 // triggered by story flags (e.g. took_envelope / envelope_reported).
 import consequenceVisit from "./consequence_the_visit.json";
@@ -171,6 +198,31 @@ export const BUNDLED_MISSIONS: Mission[] = [
   lifeRank4 as unknown as Mission,
   lifeRank5 as unknown as Mission,
   lifeRank6 as unknown as Mission,
+  // Life moments (category "life_moment") — standalone weekend vignettes.
+  lifeMomRoofAir as unknown as Mission,
+  lifeMomC4Again as unknown as Mission,
+  lifeMomTheLongRoute as unknown as Mission,
+  lifeMomSpinCycle as unknown as Mission,
+  lifeMomThePlant as unknown as Mission,
+  lifeMomStaticLullaby as unknown as Mission,
+  lifeMomTheRegular as unknown as Mission,
+  lifeMomAisleNine as unknown as Mission,
+  lifeMomRainCheck as unknown as Mission,
+  lifeMomThePhoto as unknown as Mission,
+  lifeMomRitual as unknown as Mission,
+  lifeMomSixtySecondsOfPlank as unknown as Mission,
+  lifeMomCounterSeat as unknown as Mission,
+  lifeMomGameFace as unknown as Mission,
+  lifeMomNumbersThatAreYours as unknown as Mission,
+  lifeMomElevenFloors as unknown as Mission,
+  lifeMomShiftsEnd as unknown as Mission,
+  lifeMomAddressedToAVoice as unknown as Mission,
+  lifeMomTwoForOne as unknown as Mission,
+  lifeMomTheQuietBlocks as unknown as Mission,
+  lifeMomThirdCup as unknown as Mission,
+  lifeMomTheViewFromB as unknown as Mission,
+  lifeMomTheDogKnows as unknown as Mission,
+  lifeMomSavedMessage as unknown as Mission,
   // Consequence / fallout events (category "consequence").
   consequenceVisit as unknown as Mission,
   consequenceCase as unknown as Mission,

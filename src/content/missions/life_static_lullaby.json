@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_static_lullaby",
+  "title": "Static Lullaby",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 206,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_static_lullaby.intro",
+  "beats": [
+    {
+      "id": "life_static_lullaby.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The scanner murmurs on the shelf — off-duty, you still leave it breathing."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Low static, distant codes. The city talking in its sleep."
+        }
+      ],
+      "next": "life_static_lullaby.d1"
+    },
+    {
+      "id": "life_static_lullaby.d1",
+      "type": "decision",
+      "prompt": "Sleep needs convincing.",
+      "choices": [
+        {
+          "id": "life_static_lullaby.d1_0",
+          "label": "Leave it on. It's a lullaby.",
+          "next": "life_static_lullaby.fin_0"
+        },
+        {
+          "id": "life_static_lullaby.d1_1",
+          "label": "Turn it off. Real silence.",
+          "next": "life_static_lullaby.fin_1"
+        },
+        {
+          "id": "life_static_lullaby.d1_2",
+          "label": "One more sweep of the bands.",
+          "next": "life_static_lullaby.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_static_lullaby.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Somewhere a unit clears a scene, code four. All quiet. You sleep like the city lets you."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_static_lullaby.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The silence is enormous at first. Then it's just yours. You'd forgotten it could be."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_static_lullaby.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Nothing but a tow request and someone's lost drone. Good. Boring is beautiful."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

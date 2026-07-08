@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_sixty_seconds_of_plank",
+  "title": "Sixty Seconds of Plank",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 212,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_sixty_seconds_of_plank.intro",
+  "beats": [
+    {
+      "id": "life_sixty_seconds_of_plank.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The building's 'gym': one bench, one mat, a mirror with trust issues."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Your back has opinions about desk chairs. Time to negotiate."
+        }
+      ],
+      "next": "life_sixty_seconds_of_plank.d1"
+    },
+    {
+      "id": "life_sixty_seconds_of_plank.d1",
+      "type": "decision",
+      "prompt": "The mat awaits.",
+      "choices": [
+        {
+          "id": "life_sixty_seconds_of_plank.d1_0",
+          "label": "Full routine. Be a legend.",
+          "next": "life_sixty_seconds_of_plank.fin_0"
+        },
+        {
+          "id": "life_sixty_seconds_of_plank.d1_1",
+          "label": "Day pass at the real gym.",
+          "next": "life_sixty_seconds_of_plank.fin_1"
+        },
+        {
+          "id": "life_sixty_seconds_of_plank.d1_2",
+          "label": "One plank. Symbolic.",
+          "next": "life_sixty_seconds_of_plank.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_sixty_seconds_of_plank.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Twenty minutes. You leave taller. The mirror almost apologizes."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_sixty_seconds_of_plank.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Machines with screens, towels that smell like ambition. Your back files a thank-you note."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_sixty_seconds_of_plank.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Sixty honest seconds. The ceiling gets a good long look. Better than zero."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

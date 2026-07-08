@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_third_cup",
+  "title": "Third Cup",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 221,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_third_cup.intro",
+  "beats": [
+    {
+      "id": "life_third_cup.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The break-room coffee has two settings: jet fuel and regret. The pot is fresh, which means jet fuel."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Cup three hovers at the edge of wisdom."
+        }
+      ],
+      "next": "life_third_cup.d1"
+    },
+    {
+      "id": "life_third_cup.d1",
+      "type": "decision",
+      "prompt": "The pot is watching.",
+      "choices": [
+        {
+          "id": "life_third_cup.d1_0",
+          "label": "Pour it. No fear.",
+          "next": "life_third_cup.fin_0"
+        },
+        {
+          "id": "life_third_cup.d1_1",
+          "label": "Half cup. Diplomacy.",
+          "next": "life_third_cup.fin_1"
+        },
+        {
+          "id": "life_third_cup.d1_2",
+          "label": "Water instead. Growth.",
+          "next": "life_third_cup.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_third_cup.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Cup three. Your handwriting on the log gets 8% more decisive. Worth it."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_third_cup.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The compromise of professionals. Alert, not vibrating. The log stays legible."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_third_cup.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The body says thank you in small print. The coffee pot pretends not to take it personally."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

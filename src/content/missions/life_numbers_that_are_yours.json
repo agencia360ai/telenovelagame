@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_numbers_that_are_yours",
+  "title": "Numbers That Are Yours",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 215,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_numbers_that_are_yours.intro",
+  "beats": [
+    {
+      "id": "life_numbers_that_are_yours.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The deposit lands. For one whole minute, the balance looks like a real adult's."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The bills are lined up like patient callers. But this minute is yours."
+        }
+      ],
+      "next": "life_numbers_that_are_yours.d1"
+    },
+    {
+      "id": "life_numbers_that_are_yours.d1",
+      "type": "decision",
+      "prompt": "The balance blinks.",
+      "choices": [
+        {
+          "id": "life_numbers_that_are_yours.d1_0",
+          "label": "Move some to savings. Future you.",
+          "next": "life_numbers_that_are_yours.fin_0"
+        },
+        {
+          "id": "life_numbers_that_are_yours.d1_1",
+          "label": "One small treat. Present you.",
+          "next": "life_numbers_that_are_yours.fin_1"
+        },
+        {
+          "id": "life_numbers_that_are_yours.d1_2",
+          "label": "Just stare at it a minute.",
+          "next": "life_numbers_that_are_yours.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_numbers_that_are_yours.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Twenty to the emergency fund. The irony of you having an emergency fund is not lost."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_numbers_that_are_yours.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A tiny luxury, ordered before guilt loads. Present you says thanks."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_numbers_that_are_yours.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Numbers you answered four hundred calls for. You close the app gently, like tucking it in."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

@@ -192,7 +192,8 @@ export type MissionCategory =
   /** Travel destination scene — played on demand from the city map, never
    *  scheduled by the calendar. */
   | "place"
-  | "life";
+  | "life"
+  | "life_moment";
 
 export type Mission = {
   schema: "mission@1";
@@ -204,6 +205,8 @@ export type Mission = {
   tags?: string[];
   /** Calendar bucket (default "daily"). */
   category?: MissionCategory;
+  /** Setting: true = off-site (off the clock → weekend); absent/false = on-site. */
+  offsite?: boolean;
   /** Serving order for sequential missions ("game_plot" and "weekend"). Lower plays first. */
   order?: number;
   /**

@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_addressed_to_a_voice",
+  "title": "Addressed to a Voice",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 218,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_addressed_to_a_voice.intro",
+  "beats": [
+    {
+      "id": "life_addressed_to_a_voice.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "An envelope in the center's mail, addressed to 'The operator on Tuesday night, the calm one.'"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Inside: a card. 'You stayed on the line. The doctors say that's why my dad's okay. Thank you.'"
+        }
+      ],
+      "next": "life_addressed_to_a_voice.d1"
+    },
+    {
+      "id": "life_addressed_to_a_voice.d1",
+      "type": "decision",
+      "prompt": "The card weighs nothing and everything.",
+      "choices": [
+        {
+          "id": "life_addressed_to_a_voice.d1_0",
+          "label": "Pin it on the board.",
+          "next": "life_addressed_to_a_voice.fin_0"
+        },
+        {
+          "id": "life_addressed_to_a_voice.d1_1",
+          "label": "Keep it in your locker.",
+          "next": "life_addressed_to_a_voice.fin_1"
+        },
+        {
+          "id": "life_addressed_to_a_voice.d1_2",
+          "label": "Read it twice. Then work.",
+          "next": "life_addressed_to_a_voice.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_addressed_to_a_voice.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "It joins the wall of reasons. New operators read that wall on bad nights. Now it's one card stronger."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_addressed_to_a_voice.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Some fuel you keep private. The locker door closes on it like a heart pocket."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_addressed_to_a_voice.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The next caller gets the calmest voice in the building. That's the thank-you, forwarded."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

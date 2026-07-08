@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_saved_message",
+  "title": "Saved Message",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 224,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_saved_message.intro",
+  "beats": [
+    {
+      "id": "life_saved_message.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "One voicemail lives permanently at the top of the list, starred, immortal."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You know it by heart. Sometimes that's exactly why you press play."
+        }
+      ],
+      "next": "life_saved_message.d1"
+    },
+    {
+      "id": "life_saved_message.d1",
+      "type": "decision",
+      "prompt": "Thumb over the play button.",
+      "choices": [
+        {
+          "id": "life_saved_message.d1_0",
+          "label": "Play it. Once.",
+          "next": "life_saved_message.fin_0"
+        },
+        {
+          "id": "life_saved_message.d1_1",
+          "label": "Not tonight. Call someone living.",
+          "next": "life_saved_message.fin_1"
+        },
+        {
+          "id": "life_saved_message.d1_2",
+          "label": "Save it again, just to be sure.",
+          "next": "life_saved_message.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_saved_message.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The voice fills the kitchen for forty seconds. You mouth the last line along with it. Then dishes, gently."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_saved_message.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Twenty minutes about nothing with someone who's here. The starred message keeps; that's what saved means."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_saved_message.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Still starred. Still there. The phone promises. You believe it tonight."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

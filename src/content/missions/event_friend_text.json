@@ -30,11 +30,11 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Shift's over. Your phone buzzes — a name you haven't seen since before the academy."
+          "text": "Shift's over. Your phone buzzes — a name you haven't seen in a while."
         },
         {
           "speaker": "friend",
-          "text": "Heard you're working the 911 lines now?? That's insane. Wanna catch up sometime?"
+          "text": "Heard you're working the 911 lines now?? Wanna catch up sometime?"
         }
       ],
       "next": "ev_friend1.d1"
@@ -84,7 +84,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Two burgers, one hour, five years covered. The laugh is the same as ever. You'd forgotten what off-duty felt like."
+          "text": "Two burgers, one hour, five years covered."
         }
       ],
       "next": "_end"
@@ -95,7 +95,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "'Soon.' A thumbs up comes back. People say 'soon' a lot in this job. Some of them mean it."
+          "text": "'Soon.' A thumbs up comes back."
         }
       ],
       "next": "_end"
@@ -106,7 +106,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The message sits there, read and unanswered. The city takes your voice all night; sometimes there's none left over."
+          "text": "The message sits there, read and unanswered."
         }
       ],
       "next": "_end"
@@ -115,5 +115,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

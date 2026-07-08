@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_the_regular",
+  "title": "The Regular",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 207,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_the_regular.intro",
+  "beats": [
+    {
+      "id": "life_the_regular.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A grey cat waits by the back door like it's on the payroll."
+        },
+        {
+          "speaker": "narrator",
+          "text": "It looks at you, then at the spot where food should be. Clear dispatch."
+        }
+      ],
+      "next": "life_the_regular.d1"
+    },
+    {
+      "id": "life_the_regular.d1",
+      "type": "decision",
+      "prompt": "The regular has demands.",
+      "choices": [
+        {
+          "id": "life_the_regular.d1_0",
+          "label": "Buy it something at the corner.",
+          "next": "life_the_regular.fin_0"
+        },
+        {
+          "id": "life_the_regular.d1_1",
+          "label": "Share your sandwich.",
+          "next": "life_the_regular.fin_1"
+        },
+        {
+          "id": "life_the_regular.d1_2",
+          "label": "Just sit with it a minute.",
+          "next": "life_the_regular.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_the_regular.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "It eats like it's off-duty too. You get one slow blink — feline for 'good work, operator.'"
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_regular.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Half for you, half for the department mascot nobody officially has."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_regular.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Neither of you says anything. Best conversation of the day."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

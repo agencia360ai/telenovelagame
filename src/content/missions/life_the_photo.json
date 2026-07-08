@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_the_photo",
+  "title": "The Photo",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 210,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_the_photo.intro",
+  "beats": [
+    {
+      "id": "life_the_photo.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Bottom drawer, under the manuals: a photograph gone soft at the corners."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You don't take it out often. Tonight it comes out on its own."
+        }
+      ],
+      "next": "life_the_photo.d1"
+    },
+    {
+      "id": "life_the_photo.d1",
+      "type": "decision",
+      "prompt": "The past sits in your hand.",
+      "choices": [
+        {
+          "id": "life_the_photo.d1_0",
+          "label": "Look. Really look.",
+          "next": "life_the_photo.fin_0"
+        },
+        {
+          "id": "life_the_photo.d1_1",
+          "label": "Put it on the shelf. Out loud.",
+          "next": "life_the_photo.fin_1"
+        },
+        {
+          "id": "life_the_photo.d1_2",
+          "label": "Not tonight.",
+          "next": "life_the_photo.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_the_photo.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You let it hurt the clean way, like stretching a scar. Then it goes back under the manuals, safe."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_photo.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "No more drawer. Some things deserve daylight. It watches you cook dinner like company."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_photo.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The drawer closes gently. Knowing where it is, is enough for now."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

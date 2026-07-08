@@ -58,7 +58,6 @@ import { DispatchType } from "../game/types";
 import { resolveVideo, DEPLOY_VIDEOS } from "../game/assets";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
-import { DispatchRadar } from "../components/DispatchRadar";
 import { ExcursionMap } from "../components/ExcursionMap";
 import { CutscenePlayer } from "../components/CutscenePlayer";
 import { ResultBreakdown } from "../components/ResultBreakdown";
@@ -104,6 +103,21 @@ export function MissionScreen({ navigation, route }: Props) {
   const fleet = useFleet();
   const story = useDispatchStory();
   const scrollRef = useRef<ScrollView>(null);
+  // Auto-scroll only while the player is already at the bottom. If they scroll
+  // up to re-read the conversation, stop yanking them back down until they
+  // return to the bottom themselves.
+  const stickToBottom = useRef(true);
+  const onChatScroll = (e: {
+    nativeEvent: {
+      layoutMeasurement: { height: number };
+      contentOffset: { y: number };
+      contentSize: { height: number };
+    };
+  }) => {
+    const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
+    stickToBottom.current =
+      contentOffset.y + layoutMeasurement.height >= contentSize.height - 60;
+  };
 
   // Capture the week/day label once so it stays stable after the call advances.
   const calendarLabel = useRef(calendar.shortLabel).current;
@@ -296,39 +310,30 @@ export function MissionScreen({ navigation, route }: Props) {
       } catch {}
       return;
     }
-    if (deployStage === "clip") {
-      // Stage 1: play the unit's deploy clip full-screen ALL THE WAY THROUGH
-      // (no loop), then hand off to the radar closer when it ends. A generous
-      // safety cap prevents a stalled stream from trapping the player here.
-      let done = false;
-      const toRadar = () => {
-        if (done) return;
-        done = true;
-        setDeployStage("radar");
-      };
-      let sub: { remove: () => void } | undefined;
+    // Play the unit's deploy clip full-screen ALL THE WAY THROUGH (no loop),
+    // then go straight to the result — the radar closer is disabled. A generous
+    // safety cap prevents a stalled stream from trapping the player here.
+    let done = false;
+    const finishDeploy = () => {
+      if (done) return;
+      done = true;
+      handleDeployComplete();
+    };
+    let sub: { remove: () => void } | undefined;
+    try {
+      deployPlayer.loop = false;
+      deployPlayer.muted = false;
       try {
-        deployPlayer.loop = false;
-        deployPlayer.muted = false;
-        try {
-          deployPlayer.currentTime = 0;
-        } catch {}
-        deployPlayer.play();
-        sub = deployPlayer.addListener("playToEnd", toRadar);
+        deployPlayer.currentTime = 0;
       } catch {}
-      const t = setTimeout(toRadar, 20000);
-      return () => {
-        clearTimeout(t);
-        sub?.remove();
-      };
-    } else {
-      // Stage 2: the clip holds on its last frame (muted, no loop) behind the
-      // radar closer — it already played in full during stage 1.
-      try {
-        deployPlayer.loop = false;
-        deployPlayer.muted = true;
-      } catch {}
-    }
+      deployPlayer.play();
+      sub = deployPlayer.addListener("playToEnd", finishDeploy);
+    } catch {}
+    const t = setTimeout(finishDeploy, 20000);
+    return () => {
+      clearTimeout(t);
+      sub?.remove();
+    };
   }, [phase, deployStage]);
 
   // Dispatch countdown. Hitting 0 means no dispatch was sent: the call is
@@ -355,7 +360,10 @@ export function MissionScreen({ navigation, route }: Props) {
   }, [phase, dispatchTimer]);
 
   const scrollSoon = () =>
-    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
+    setTimeout(() => {
+      if (stickToBottom.current)
+        scrollRef.current?.scrollToEnd({ animated: true });
+    }, 80);
 
   // Paced reveal machinery: one pending step at a time (next line, choices, or
   // next beat). A tap on the chat fires the pending step immediately.
@@ -780,19 +788,24 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
       </View>
 
-      {/* Tapping the chat skips the current message wait (paced reveal). */}
-      <Pressable style={styles.chatArea} onPress={paceSkip}>
+      {/* The tap-to-skip Pressable lives INSIDE the ScrollView (below), so it
+          never steals the scroll gesture — the list stays scrollable on Android. */}
+      <View style={styles.chatArea}>
         <ScrollView
           ref={scrollRef}
           style={styles.chatScroll}
           contentContainerStyle={styles.chatContent}
           showsVerticalScrollIndicator
-          // Auto-scroll once the new bubble has actually laid out — smoother than
-          // a fixed timeout, which fires before the content has grown.
-          onContentSizeChange={() =>
-            scrollRef.current?.scrollToEnd({ animated: true })
-          }
+          scrollEventThrottle={16}
+          onScroll={onChatScroll}
+          // Auto-scroll new bubbles into view — but only while the player is at
+          // the bottom, so scrolling up to re-read is never interrupted.
+          onContentSizeChange={() => {
+            if (stickToBottom.current)
+              scrollRef.current?.scrollToEnd({ animated: true });
+          }}
         >
+          <Pressable onPress={paceSkip} style={styles.chatInner}>
           {phase === "play" && displayedLines.length === 0 && !showChoices && (
             <Animated.View entering={FadeIn} style={styles.introWrap}>
               {isFirstMission && (
@@ -978,8 +991,9 @@ export function MissionScreen({ navigation, route }: Props) {
               </Text>
             </Animated.View>
           )}
+          </Pressable>
         </ScrollView>
-      </Pressable>
+      </View>
 
       {phase === "result" && (
         <View style={[styles.bottomBar, { paddingBottom: insets.bottom + sizes.spacing.md }]}>
@@ -1097,34 +1111,6 @@ export function MissionScreen({ navigation, route }: Props) {
               …
             </Text>
           </View>
-        </View>
-      )}
-
-      {phase === "deploying" && chosenDispatch && deployStage === "radar" && (
-        // Stage 2: the radar closer (clip loops softly behind a dark overlay).
-        <View style={StyleSheet.absoluteFill}>
-          {deploySource && (
-            <>
-              <VideoView
-                player={deployPlayer}
-                style={StyleSheet.absoluteFill}
-                contentFit="cover"
-                nativeControls={false}
-              />
-              <View style={styles.deployVideoOverlay} />
-            </>
-          )}
-          <DispatchRadar
-            location={mission.caller.location}
-            unitId={chosenDispatch ?? undefined}
-            unitIcon={unitOptions.find((o) => o.id === chosenDispatch)?.icon ?? "🚔"}
-            unitLabel={
-              unitOptions.find((o) => o.id === chosenDispatch)?.label.replace("\n", " ") ??
-              "UNIT"
-            }
-            callId={mission.id}
-            onComplete={handleDeployComplete}
-          />
         </View>
       )}
 
@@ -1267,6 +1253,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
   chatArea: { flex: 1 },
+  chatInner: { gap: 10 },
   chatScroll: { flex: 1 },
   chatContent: { padding: sizes.spacing.md, paddingBottom: sizes.spacing.xxl, gap: 10 },
   introWrap: { paddingVertical: sizes.spacing.xl, alignItems: "center" },

@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_ritual",
+  "title": "Ritual",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 211,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_ritual.intro",
+  "beats": [
+    {
+      "id": "life_ritual.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Before every shift, the same eleven seconds: wipe the headset, coil the cable, tap the mic twice."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nobody taught you this. The job grew it."
+        }
+      ],
+      "next": "life_ritual.d1"
+    },
+    {
+      "id": "life_ritual.d1",
+      "type": "decision",
+      "prompt": "The ritual, tonight:",
+      "choices": [
+        {
+          "id": "life_ritual.d1_0",
+          "label": "Do it slow. It matters.",
+          "next": "life_ritual.fin_0"
+        },
+        {
+          "id": "life_ritual.d1_1",
+          "label": "Add a second mic tap. Live a little.",
+          "next": "life_ritual.fin_1"
+        },
+        {
+          "id": "life_ritual.d1_2",
+          "label": "Skip it. See what happens.",
+          "next": "life_ritual.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_ritual.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Eleven seconds of order before hours of chaos. Cheap armor, but armor."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_ritual.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Three taps. Reckless. The night, unaware, proceeds anyway."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_ritual.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The whole shift feels one degree off-axis. Never again. The ritual wins."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

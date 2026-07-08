@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_game_face",
+  "title": "Game Face",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 214,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_game_face.intro",
+  "beats": [
+    {
+      "id": "life_game_face.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Thirty seconds before the shift. The mirror shows someone who's done this a hundred times and still shows up."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You fix the collar. The collar was fine. That's not what this is about."
+        }
+      ],
+      "next": "life_game_face.d1"
+    },
+    {
+      "id": "life_game_face.d1",
+      "type": "decision",
+      "prompt": "Say it.",
+      "choices": [
+        {
+          "id": "life_game_face.d1_0",
+          "label": "'One call at a time.'",
+          "next": "life_game_face.fin_0"
+        },
+        {
+          "id": "life_game_face.d1_1",
+          "label": "Nothing. Just nod.",
+          "next": "life_game_face.fin_1"
+        },
+        {
+          "id": "life_game_face.d1_2",
+          "label": "Wink. Chaos mode.",
+          "next": "life_game_face.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_game_face.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The old line. It still works. It always works. You go be the calm in someone's worst day."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_game_face.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You and the mirror have an understanding. Words would cheapen it."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_game_face.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The mirror disapproves. The shift, somehow, goes great. Science can't explain this."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

@@ -27,7 +27,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Second installment. The portal remembers you now — it greets you by your full legal name, the way nothing friendly ever does."
+          "text": "Second installment."
         }
       ],
       "variants": [
@@ -90,7 +90,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Paid. You eat cheap for a few days and tell yourself it's a diet. The apartment doesn't thank you. It doesn't have to — it stays."
+          "text": "Paid. You eat cheap for a few days and tell yourself it's a diet."
         }
       ],
       "next": "_end"
@@ -101,7 +101,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Everything, plus fees. The red banner disappears. For one night, the account and your conscience are both clean, and the wallet is very, very light."
+          "text": "Everything, plus fees. The red banner disappears"
         }
       ],
       "next": "_end"
@@ -112,7 +112,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Skipped. The portal logs it without comment. Machines don't threaten — they schedule."
+          "text": "Skipped. The portal logs it without comment."
         }
       ],
       "variants": [
@@ -136,5 +136,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

@@ -31,7 +31,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The café for people with weird hours. Your partner stirs sugar into coffee that stopped being coffee an hour ago."
+          "text": "Your partner stirs sugar into coffee that stopped being hot an hour ago."
         }
       ],
       "next": "w6_weekend.v1"
@@ -42,7 +42,7 @@
       "lines": [
         {
           "speaker": "partner",
-          "text": "Everyone signs one correction eventually. Times get smoothed, response looks better, the city sleeps."
+          "text": "Everyone signs one correction eventually."
         },
         {
           "speaker": "partner",

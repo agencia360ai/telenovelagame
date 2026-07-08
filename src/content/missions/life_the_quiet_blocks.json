@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_the_quiet_blocks",
+  "title": "The Quiet Blocks",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 220,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_the_quiet_blocks.intro",
+  "beats": [
+    {
+      "id": "life_the_quiet_blocks.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "3 a.m., off-duty, wide awake — the shift clock doesn't believe in weekends."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The street is empty the way a stage is empty. The city breathes slow. You know its sleeping face better than anyone."
+        }
+      ],
+      "next": "life_the_quiet_blocks.d1"
+    },
+    {
+      "id": "life_the_quiet_blocks.d1",
+      "type": "decision",
+      "prompt": "The night is unlocked.",
+      "choices": [
+        {
+          "id": "life_the_quiet_blocks.d1_0",
+          "label": "Walk the block twice.",
+          "next": "life_the_quiet_blocks.fin_0"
+        },
+        {
+          "id": "life_the_quiet_blocks.d1_1",
+          "label": "Sit on the stoop. Listen.",
+          "next": "life_the_quiet_blocks.fin_1"
+        },
+        {
+          "id": "life_the_quiet_blocks.d1_2",
+          "label": "Back inside. Warm milk, old movie.",
+          "next": "life_the_quiet_blocks.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_the_quiet_blocks.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Familiar cracks, familiar cats. The patrol nobody assigned you. You sleep fine after."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_quiet_blocks.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A distant train, a nearer argument ending in laughter, tires on wet asphalt. All code four."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_quiet_blocks.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The movie's terrible. The milk works. The clock surrenders at last."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

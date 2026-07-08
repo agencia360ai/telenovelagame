@@ -56,15 +56,14 @@ import { sizes } from "../theme/sizes";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DispatchLobby">;
 
-// Cooldown between calls ramps with experience: 8s on the earliest calls,
-// growing linearly until it caps at 30s from call #20 onward — early game
-// stays snappy, later shifts breathe (and leave room for the off-duty life).
-const COOLDOWN_MIN_S = 8;
-const COOLDOWN_MAX_S = 30;
-const COOLDOWN_RAMP_CALLS = 20;
-function cooldownFor(callsHandled: number): number {
-  const t = Math.min(callsHandled, COOLDOWN_RAMP_CALLS) / COOLDOWN_RAMP_CALLS;
-  return Math.round(COOLDOWN_MIN_S + (COOLDOWN_MAX_S - COOLDOWN_MIN_S) * t);
+// The wait between calls is a HIDDEN random gap (no countdown shown): the next
+// call arrives unannounced 5–30s after the last one. The first call of a
+// session comes quickly so the player isn't left staring at an empty console.
+const GAP_MIN_S = 5;
+const GAP_MAX_S = 30;
+const FIRST_GAP_S = 3;
+function randomGap(): number {
+  return GAP_MIN_S + Math.floor(Math.random() * (GAP_MAX_S - GAP_MIN_S + 1));
 }
 // Unit unlocks the player has already been congratulated for (popup shown once).
 const UNITS_SEEN_KEY = "fleet_units_seen_v1";
@@ -102,8 +101,8 @@ export function DispatchLobbyScreen({ navigation }: Props) {
     );
   };
   const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
-  const [countdown, setCountdown] = useState(
-    cooldownFor(progress.callsHandled)
+  const [countdown, setCountdown] = useState(() =>
+    progress.callsHandled === 0 ? FIRST_GAP_S : randomGap()
   );
 
   // After hours: when the next scheduled moment is an off-duty EVENT, the
@@ -114,14 +113,20 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   const nextEventId = (() => {
     if (calendar.isWeekComplete || !nextScheduled) return null;
     const m = getMissionById(nextScheduled.missionId);
-    return m?.category === "event" ? m.id : null;
+    return m?.category === "event" || m?.category === "life_moment"
+      ? m.id
+      : null;
   })();
   const afterHours = nextEventId != null;
+  // The city map ("Off the clock. Where to?") is a WEEKEND ritual; weekday
+  // story beats instead surface silently in the dead time between calls.
+  const isWeekend = /^sat/i.test(calendar.dayLabel);
+  const afterHoursWeekend = afterHours && isWeekend;
   const story = useDispatchStory();
   const [mapOpen, setMapOpen] = useState(false);
   useEffect(() => {
-    if (afterHours) setMapOpen(true);
-  }, [afterHours]);
+    if (afterHoursWeekend) setMapOpen(true);
+  }, [afterHoursWeekend]);
   // Done wandering (or skipped it) → play the evening's event scene.
   const continueEvening = () => {
     if (!nextEventId) return;
@@ -270,15 +275,22 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   }, [calendar.isWeekComplete]);
 
   useEffect(() => {
-    // After hours there is no next call — the map is open, the phone is quiet.
-    if (phase !== "idle" || afterHours) return;
+    // The weekend map opens on its own; otherwise the silent gap ticks down.
+    if (phase !== "idle" || afterHoursWeekend) return;
     if (countdown <= 0) {
-      setPhase("ringing");
+      // Daily call → the phone rings (icon + effects). A weekday story beat
+      // instead surfaces silently, here in the dead time (no ring).
+      if (afterHours) {
+        if (nextEventId)
+          navigation.replace("Mission", { missionId: nextEventId });
+      } else {
+        setPhase("ringing");
+      }
       return;
     }
     const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(t);
-  }, [countdown, phase, afterHours]);
+  }, [countdown, phase, afterHours, afterHoursWeekend, nextEventId]);
 
   useEffect(() => {
     if (phase === "ringing") {
@@ -453,7 +465,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
 
       {/* Bottom console */}
       <View style={styles.console}>
-        {phase === "idle" && afterHours && (
+        {phase === "idle" && afterHoursWeekend && (
           <View style={styles.standby}>
             <Text style={styles.standbyLabel}>AFTER HOURS</Text>
             <Text style={styles.standbyHint}>Off the clock…</Text>
@@ -464,13 +476,9 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           </View>
         )}
 
-        {phase === "idle" && !afterHours && (
+        {phase === "idle" && !afterHoursWeekend && (
           <View style={styles.standby}>
-            <Text style={styles.standbyLabel}>NEXT CALL IN</Text>
-            <Text style={styles.countdown}>
-              0:{countdown.toString().padStart(2, "0")}
-            </Text>
-
+            <Text style={styles.standbyLabel}>ON DUTY</Text>
             <Text style={styles.standbyHint}>Stand by, operator…</Text>
 
             {/* Week / day progress */}
@@ -545,7 +553,7 @@ export function DispatchLobbyScreen({ navigation }: Props) {
           (its scene plays, then the evening resumes) or go straight to
           whatever the night has planned. */}
       <Modal
-        visible={mapOpen && afterHours}
+        visible={mapOpen && afterHoursWeekend}
         transparent
         animationType="fade"
         onRequestClose={() => setMapOpen(false)}

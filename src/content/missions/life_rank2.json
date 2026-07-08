@@ -32,7 +32,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Senior Dispatcher now. Word gets around a small city. A save you worked makes the local news — a voice on the line that kept someone here long enough for help to arrive."
+          "text": "Senior Dispatcher now."
         }
       ],
       "next": "life2.sit"
@@ -43,7 +43,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The people who used to wave off the job — 'you just answer phones' — go quiet when it comes up now. They're starting to understand that the phone is the first thing that stands between a bad day and a funeral."
+          "text": "You now understand that the phone is the first thing that stands between a bad day and a funeral."
         }
       ],
       "next": "life2.d1"
@@ -51,11 +51,11 @@
     {
       "id": "life2.d1",
       "type": "decision",
-      "prompt": "The doubters are reconsidering. What sits with you?",
+      "prompt": "What sits with you?",
       "choices": [
         {
           "id": "life2.d1_0",
-          "label": "It's not about them. It's about whoever calls next.",
+          "label": "It's about whoever calls next.",
           "next": "life2.fin",
           "effects": {
             "respect": 1
@@ -63,7 +63,7 @@
         },
         {
           "id": "life2.d1_1",
-          "label": "Feels good to be seen for once.",
+          "label": "Feels good to be of help.",
           "next": "life2.fin",
           "effects": {
             "respect": 1
@@ -77,7 +77,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Either way, the story travels further than you do. You go back to the board the next night the same as always — but the city's picture of you has quietly changed."
+          "text": "You go back to the board the next night the same as always — but the city's picture has quietly changed."
         }
       ],
       "next": "_end"

@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_rain_check",
+  "title": "Rain Check",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 209,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_rain_check.intro",
+  "beats": [
+    {
+      "id": "life_rain_check.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Sideways rain, one working streetlight, and a stranger without an umbrella doing the math on getting soaked."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You have an umbrella. You have thirty seconds to be a certain kind of person."
+        }
+      ],
+      "next": "life_rain_check.d1"
+    },
+    {
+      "id": "life_rain_check.d1",
+      "type": "decision",
+      "prompt": "The rain doesn't wait.",
+      "choices": [
+        {
+          "id": "life_rain_check.d1_0",
+          "label": "Share it. Obviously.",
+          "next": "life_rain_check.fin_0"
+        },
+        {
+          "id": "life_rain_check.d1_1",
+          "label": "Give it away. You like rain.",
+          "next": "life_rain_check.fin_1"
+        },
+        {
+          "id": "life_rain_check.d1_2",
+          "label": "Keep it. You're beat.",
+          "next": "life_rain_check.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_rain_check.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Two strangers, one umbrella, four blocks of small talk. The city feels briefly hand-sized."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_rain_check.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "They protest twice, take it on the third. You walk home soaked and weirdly light."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_rain_check.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Fair. You've given enough of yourself today. The stranger survives; people do."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

@@ -31,10 +31,10 @@ export type DayTemplate = {
 
 /**
  * Default week — 12-week narrative package brief (6 days × 3 calls):
- *   Mon–Fri: three Daily calls; the plot day APPENDS its story call at the end
- *            of the shift (keepDailyOnPlotDay).
- *   Sat:     two Daily calls + the Weekend scene (weeks that have one authored;
- *            otherwise the slot falls back to a daily call).
+ *   Mon–Sat: three Daily calls; off-duty story beats (≥4/week) are spread
+ *            across random days and INSERTED between calls — they surface in
+ *            the dead time, not at the start or end of a shift.
+ *   Sat:     also hosts the authored Weekend scene when one exists.
  *   Sun:     rest day (skipped)
  */
 export const DEFAULT_WEEK_TEMPLATE: DayTemplate[] = [
@@ -43,7 +43,7 @@ export const DEFAULT_WEEK_TEMPLATE: DayTemplate[] = [
   { id: "wednesday", label: "Wednesday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
   { id: "thursday", label: "Thursday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
   { id: "friday", label: "Friday", slots: ["daily", "daily", "daily"], gamePlotEligible: true, eventEligible: true, keepDailyOnPlotDay: true },
-  { id: "saturday", label: "Saturday", slots: ["daily", "daily", "weekend"] },
+  { id: "saturday", label: "Saturday", slots: ["daily", "daily", "weekend"], eventEligible: true },
   { id: "sunday", label: "Sunday", slots: [] },
 ];
 

@@ -27,7 +27,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "First break of the shift. The vending machine hums, the microwave light flickers, and your stomach files a formal complaint."
+          "text": "First break of the shift. The vending machine hums and your stomach files a formal complaint."
         }
       ],
       "next": "event_break1.d1"
@@ -47,17 +47,8 @@
           }
         },
         {
-          "id": "event_break1.d1_1",
-          "label": "Buy a proper dinner.",
-          "next": "event_break1.fin_dinner",
-          "cash_cost": 12,
-          "effects": {
-            "energy": 2
-          }
-        },
-        {
           "id": "event_break1.d1_2",
-          "label": "Just water. Save the money.",
+          "label": "Just water. Save some money.",
           "next": "event_break1.fin_water"
         }
       ]
@@ -68,18 +59,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "A bag of nuts from the vending machine. Not a meal, but your hands stop shaking halfway through the next call."
-        }
-      ],
-      "next": "_end"
-    },
-    {
-      "id": "event_break1.fin_dinner",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "A real plate, hot food, ten quiet minutes. You walk back to the console feeling like a person again."
+          "text": "A bag of nuts from the vending machine. Not a meal, but your hands stop shaking."
         }
       ],
       "next": "_end"
@@ -90,7 +70,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Tap water in a paper cup. Free, cold, and loud in an empty stomach. The city doesn't care if you ate."
+          "text": "Cold Water in an empty stomach."
         }
       ],
       "next": "_end"
@@ -99,5 +79,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": false
 }

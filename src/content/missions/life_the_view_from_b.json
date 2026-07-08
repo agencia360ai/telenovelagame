@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_the_view_from_b",
+  "title": "The View From B",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 222,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_the_view_from_b.intro",
+  "beats": [
+    {
+      "id": "life_the_view_from_b.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "There's one window on the floor, by console B, and at dusk it turns the whole city into a circuit board."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Lights come on in waves — homes, signs, streetlamps. Every one of them is a person you might talk to someday."
+        }
+      ],
+      "next": "life_the_view_from_b.d1"
+    },
+    {
+      "id": "life_the_view_from_b.d1",
+      "type": "decision",
+      "prompt": "Dusk does its thing.",
+      "choices": [
+        {
+          "id": "life_the_view_from_b.d1_0",
+          "label": "Find your own window out there.",
+          "next": "life_the_view_from_b.fin_0"
+        },
+        {
+          "id": "life_the_view_from_b.d1_1",
+          "label": "Count the new lights.",
+          "next": "life_the_view_from_b.fin_1"
+        },
+        {
+          "id": "life_the_view_from_b.d1_2",
+          "label": "Get back before the phones notice.",
+          "next": "life_the_view_from_b.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_the_view_from_b.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Somewhere in that grid is your lamp on a timer. Tiny. Yours. The thought fits in a pocket."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_view_from_b.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Seven, then too many. The city waking into evening while you guard the line. Good trade."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_the_view_from_b.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Two seconds after you sit, line one rings. The window winks. It knew."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": false
+}

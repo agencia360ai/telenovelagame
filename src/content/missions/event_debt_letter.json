@@ -27,11 +27,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Bills, flyers, and one envelope with the university's crest. You know before opening it: the student loan office found your new address."
-        },
-        {
-          "speaker": "narrator",
-          "text": "Installments start this month. Miss them, and the lien lands on the one thing you own — the apartment."
+          "text": "Bills, flyers, and one official envelope. The loan office found your new address."
         }
       ],
       "next": "ev_debt0.d1"
@@ -39,11 +35,11 @@
     {
       "id": "ev_debt0.d1",
       "type": "decision",
-      "prompt": "Your monthly math just changed.",
+      "prompt": "Payments start this month. Miss them and they come after the apartment.",
       "choices": [
         {
           "id": "ev_debt0.d1_0",
-          "label": "Pin it to the fridge. You'll make the payments.",
+          "label": "Pin it to the fridge. You'll pay it.",
           "next": "ev_debt0.fin_plan",
           "set_flags": {
             "debt_active": true
@@ -65,7 +61,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The letter goes on the fridge, next to the shift schedule. Two pieces of paper that own your life now. You'll answer to both."
+          "text": "The letter goes on the fridge, next to the shift schedule."
         }
       ],
       "next": "_end"
@@ -76,7 +72,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Forty minutes on hold to learn the interest is 'non-negotiable.' You're better on the other side of a phone line. The installments stand."
+          "text": "Forty minutes on hold to hear the interest won't budge."
         }
       ],
       "next": "_end"
@@ -85,5 +81,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

@@ -27,7 +27,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Final installment of the semester's plan. One more payment and the university lets go of your collar for a while."
+          "text": "Final installment. One more payment and they are off your back."
         }
       ],
       "variants": [
@@ -107,7 +107,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "PAID — the semester's plan, closed. The apartment is yours, every scuffed square meter of it. You stand in the kitchen a while, just because you can."
+          "text": "PAID — The apartment is yours. You stand in the kitchen a while, just because you can."
         }
       ],
       "next": "_end"
@@ -118,7 +118,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "All of it, fees included. The account shows a zero so clean it looks fake. You screenshot it. Some trophies are just receipts."
+          "text": "All of it, fees included. You screenshot it. Some trophies are just receipts."
         }
       ],
       "next": "_end"
@@ -129,7 +129,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "You box what matters in two trips. A friend's couch, for now. The city keeps calling all night anyway — it doesn't care where you sleep, only that you answer."
+          "text": "You box what matters in two trips. A friend's couch, for now."
         }
       ],
       "next": "_end"
@@ -138,5 +138,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

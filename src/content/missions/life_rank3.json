@@ -26,7 +26,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Supervisor stripes. The job stops being an abstraction to the people around you the day an emergency lands on a street you know — and the calm voice that walked someone through it came from a room like yours."
+          "text": "Supervisor stripes."
         }
       ],
       "next": "life3.sit"
@@ -37,7 +37,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "The ones who used to mock the work don't have jokes anymore. When it's their block, their worst minute, the person on the other end of the line is suddenly the most important voice in the world. They get it now."
+          "text": "The person on the other end of the line is suddenly the most important voice in the world."
         }
       ],
       "next": "life3.d1"
@@ -71,7 +71,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "No speeches, no I-told-you-so. Just the quiet arithmetic of a city learning what you're for. The doubt doesn't survive contact with a real emergency."
+          "text": "No speeches. Just the quiet arithmetic of a city learning what you're for. The doubt doesn't survive contact with a real emergency."
         }
       ],
       "next": "_end"

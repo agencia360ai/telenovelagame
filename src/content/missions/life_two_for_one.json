@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_two_for_one",
+  "title": "Two for One",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 219,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_two_for_one.intro",
+  "beats": [
+    {
+      "id": "life_two_for_one.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The fruit stand on the corner runs on shouting and abundance."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The vendor holds up two oranges like evidence. 'Two for one! For you? Still two for one!'"
+        }
+      ],
+      "next": "life_two_for_one.d1"
+    },
+    {
+      "id": "life_two_for_one.d1",
+      "type": "decision",
+      "prompt": "The oranges await judgment.",
+      "choices": [
+        {
+          "id": "life_two_for_one.d1_0",
+          "label": "Take the deal. Obviously.",
+          "next": "life_two_for_one.fin_0"
+        },
+        {
+          "id": "life_two_for_one.d1_1",
+          "label": "Buy the sad-looking apple too.",
+          "next": "life_two_for_one.fin_1"
+        },
+        {
+          "id": "life_two_for_one.d1_2",
+          "label": "Just window-shop the pyramid.",
+          "next": "life_two_for_one.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_two_for_one.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Two oranges ride in your jacket like small suns. Vitamin C for the switchboard soldier."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_two_for_one.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "'Nobody buys that one.' You did. The vendor throws in a plum, moved by justice."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_two_for_one.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Architecture, honestly. You leave with nothing but respect."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

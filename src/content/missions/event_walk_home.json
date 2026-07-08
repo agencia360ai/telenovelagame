@@ -30,7 +30,7 @@
       "lines": [
         {
           "speaker": "narrator",
-          "text": "Second date, no restaurant this time — just the long way home through streets you usually only hear about through a headset."
+          "text": "Second date, no restaurant this time — just the long way home."
         },
         {
           "speaker": "date",
@@ -108,5 +108,6 @@
       "id": "_end",
       "type": "outcome"
     }
-  ]
+  ],
+  "offsite": true
 }

@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_shifts_end",
+  "title": "Shift's End",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 217,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_shifts_end.intro",
+  "beats": [
+    {
+      "id": "life_shifts_end.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The night shift lets you out just as the sky starts negotiating with the sun."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The city you kept safe all night doesn't know your name. The sunrise doesn't either. It shows off anyway."
+        }
+      ],
+      "next": "life_shifts_end.d1"
+    },
+    {
+      "id": "life_shifts_end.d1",
+      "type": "decision",
+      "prompt": "Walk or watch?",
+      "choices": [
+        {
+          "id": "life_shifts_end.d1_0",
+          "label": "Watch the whole thing.",
+          "next": "life_shifts_end.fin_0"
+        },
+        {
+          "id": "life_shifts_end.d1_1",
+          "label": "Walk home the long way.",
+          "next": "life_shifts_end.fin_1"
+        },
+        {
+          "id": "life_shifts_end.d1_2",
+          "label": "Photo. For the archive.",
+          "next": "life_shifts_end.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_shifts_end.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Orange, then gold, then ordinary blue. Ten minutes of payment no paycheck covers."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_shifts_end.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Bakery smells, shutters rolling up, the early crew of the world. You're part of a relay race."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_shifts_end.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You send it to someone with 'made it.' The reply: a sleepy thumbs-up. Enough."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}

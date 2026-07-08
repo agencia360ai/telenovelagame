@@ -1,0 +1,97 @@
+{
+  "schema": "mission@1",
+  "id": "life_eleven_floors",
+  "title": "Eleven Floors",
+  "version": "1.0.0",
+  "locale_default": "en",
+  "difficulty": 1,
+  "category": "life_moment",
+  "caller": {
+    "name": "You",
+    "type": "OFF DUTY",
+    "location": "Off the clock"
+  },
+  "reward": 0,
+  "order": 216,
+  "initial_variables": {},
+  "initial_flags": {},
+  "assets": [],
+  "start": "life_eleven_floors.intro",
+  "beats": [
+    {
+      "id": "life_eleven_floors.intro",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "The elevator gathers its usual congregation: you, the neighbor with the enormous headphones, floor buttons glowing like a tiny switchboard."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Eleven floors. Social contract: silence. Tonight, the neighbor slides one headphone off."
+        }
+      ],
+      "next": "life_eleven_floors.d1"
+    },
+    {
+      "id": "life_eleven_floors.d1",
+      "type": "decision",
+      "prompt": "Contact.",
+      "choices": [
+        {
+          "id": "life_eleven_floors.d1_0",
+          "label": "'Long day?' Classic.",
+          "next": "life_eleven_floors.fin_0"
+        },
+        {
+          "id": "life_eleven_floors.d1_1",
+          "label": "Compliment the headphones.",
+          "next": "life_eleven_floors.fin_1"
+        },
+        {
+          "id": "life_eleven_floors.d1_2",
+          "label": "Respect the silence. Nod.",
+          "next": "life_eleven_floors.fin_2"
+        }
+      ]
+    },
+    {
+      "id": "life_eleven_floors.fin_0",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Turns out they work nights too — hospital kitchen. Eleven floors become the good kind of short."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_eleven_floors.fin_1",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Five-minute review of noise cancellation. You learn things. The elevator has never been this efficient."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "life_eleven_floors.fin_2",
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A perfect nod, returned perfectly. Community, at the correct volume."
+        }
+      ],
+      "next": "_end"
+    },
+    {
+      "id": "_end",
+      "type": "outcome"
+    }
+  ],
+  "offsite": true
+}
