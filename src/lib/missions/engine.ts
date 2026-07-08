@@ -90,6 +90,12 @@ export function applyChoice(
       variables[key] = (variables[key] ?? 0) + delta;
     }
   }
+  // Absolute assignment runs AFTER the deltas, so on a shared key set_vars wins.
+  if (choice.set_vars) {
+    for (const [key, val] of Object.entries(choice.set_vars)) {
+      variables[key] = val;
+    }
+  }
   const flags = { ...rt.flags };
   if (choice.set_flags) {
     for (const [key, val] of Object.entries(choice.set_flags)) {
@@ -109,6 +115,12 @@ export function applyPin(rt: MissionRuntime, pin: MapPinChoice): MissionRuntime 
   if (pin.effects) {
     for (const [key, delta] of Object.entries(pin.effects)) {
       variables[key] = (variables[key] ?? 0) + delta;
+    }
+  }
+  // Absolute assignment runs AFTER the deltas, so on a shared key set_vars wins.
+  if (pin.set_vars) {
+    for (const [key, val] of Object.entries(pin.set_vars)) {
+      variables[key] = val;
     }
   }
   const flags = { ...rt.flags };

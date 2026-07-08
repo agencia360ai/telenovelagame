@@ -26,7 +26,10 @@ export type Choice = {
   label: string;
   gem_cost: number;
   premium?: boolean;
+  /** Add a delta to numeric variables. */
   effects?: Record<string, number>;
+  /** Set numeric variables to an absolute value; applied after `effects`. */
+  set_vars?: Record<string, number>;
   set_flags?: Record<string, boolean>;
   next: string;
 };

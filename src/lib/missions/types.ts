@@ -71,8 +71,14 @@ export type MissionChoice = {
   /** Cash cost; >0 spends the earned cash wallet (e.g. buying dinner). */
   cash_cost?: number;
   premium?: boolean;
-  /** Mutate numeric variables (e.g. { intel: 1, score_bonus: 2 }). */
+  /** Mutate numeric variables by ADDING a delta (e.g. { intel: 1, score_bonus: 2 }). */
   effects?: Record<string, number>;
+  /**
+   * Set numeric variables to an ABSOLUTE value, overwriting whatever they held
+   * (e.g. { case_file: 0 } to clear it regardless of the running total).
+   * Applied AFTER `effects`, so on a shared key `set_vars` always wins.
+   */
+  set_vars?: Record<string, number>;
   /** Set boolean flags. */
   set_flags?: Record<string, boolean>;
   /** A short operator-feedback line shown right after choosing. */
@@ -110,8 +116,10 @@ export type MapPinChoice = {
    * the player confirms the move. Optional.
    */
   description?: string;
-  /** Mutate numeric variables (same as MissionChoice). */
+  /** Mutate numeric variables by ADDING a delta (same as MissionChoice). */
   effects?: Record<string, number>;
+  /** Set numeric variables to an ABSOLUTE value; applied after `effects`. */
+  set_vars?: Record<string, number>;
   /** Set boolean flags (persist into the mission runtime). */
   set_flags?: Record<string, boolean>;
   /** Optional gating; hidden/disabled when the condition isn't met. */
