@@ -5,7 +5,10 @@ import {
   TouchableOpacity,
   Switch,
   StyleSheet,
+  Alert,
+  DevSettings,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -20,6 +23,27 @@ type Props = NativeStackScreenProps<RootStackParamList, "Settings">;
 export function SettingsScreen({ navigation }: Props) {
   const { t } = useI18n();
   const settings = useSettings();
+
+  const handleResetProgress = () => {
+    Alert.alert(
+      t("settings_reset_confirm_title"),
+      t("settings_reset_confirm_message"),
+      [
+        { text: t("settings_reset_cancel"), style: "cancel" },
+        {
+          text: t("settings_reset_confirm"),
+          style: "destructive",
+          onPress: async () => {
+            // Wipe every persisted key so the app boots as a fresh install.
+            // Contexts read their state from AsyncStorage on mount, so a
+            // reload after clearing is what actually resets the in-memory game.
+            await AsyncStorage.clear();
+            DevSettings.reload();
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -96,6 +120,15 @@ export function SettingsScreen({ navigation }: Props) {
         >
           <Text style={styles.actionText}>{t("settings_restore")}</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.actionRow}
+          onPress={handleResetProgress}
+        >
+          <Text style={[styles.actionText, styles.dangerText]}>
+            {t("settings_reset")}
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -169,5 +202,8 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: sizes.font.lg,
     color: colors.accent.secondary,
+  },
+  dangerText: {
+    color: colors.ui.error,
   },
 });
