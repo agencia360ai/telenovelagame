@@ -10,6 +10,12 @@ export function applyChoiceEffects(
       variables[key] = (variables[key] ?? 0) + delta;
     }
   }
+  // Absolute assignment runs AFTER the deltas, so on a shared key set_vars wins.
+  if (choice.set_vars) {
+    for (const [key, val] of Object.entries(choice.set_vars)) {
+      variables[key] = val;
+    }
+  }
 
   const flags = { ...state.flags };
   if (choice.set_flags) {

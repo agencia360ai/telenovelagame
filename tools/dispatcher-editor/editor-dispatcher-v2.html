@@ -358,7 +358,9 @@ function renderChoices(b){
       <label>Texto</label><input class="c_label" value="${esc(c.label||"")}">
       <div class="row"><div><label>Lleva a →</label>${cnextSelect(c.next||"")}</div><div style="flex:none;width:80px"><label>Gemas</label><input class="c_gem" type="number" min="0" value="${c.gem_cost||0}"></div></div>
       <label class="chk"><input type="checkbox" class="c_prem" ${c.premium?"checked":""}> premium</label>
-      <div class="sub">Efectos</div><div class="c_eff"></div><button class="mini c_addeff">+ Efecto</button>`;
+      <div class="sub">Efectos (suma / resta)</div><div class="c_eff"></div><button class="mini c_addeff">+ Efecto</button>
+      <div class="sub">Set vars (valor absoluto)</div><div class="c_setvar"></div><button class="mini c_addsetvar">+ Set var</button>
+      <div class="sub">Flags (set_flags)</div><div class="c_flags"></div><button class="mini c_addflag">+ Flag</button>`;
     card.querySelector(".c_label").oninput=e=>{c.label=e.target.value;save();};
     card.querySelector('[data-bind="cnext"]').onchange=e=>{c.next=e.target.value||null;save();};
     card.querySelector(".c_gem").oninput=e=>{c.gem_cost=+e.target.value;save();};
@@ -368,18 +370,38 @@ function renderChoices(b){
     card.querySelector(".cdel").onclick=()=>{b.decision.choices.splice(i,1);renderChoices(b);save();};
     renderEff(card.querySelector(".c_eff"),c);
     card.querySelector(".c_addeff").onclick=()=>{c.effects=c.effects||{};c.effects["var"]=1;renderEff(card.querySelector(".c_eff"),c);save();};
+    renderNumMap(card.querySelector(".c_setvar"),c,"set_vars");
+    card.querySelector(".c_addsetvar").onclick=()=>{c.set_vars=c.set_vars||{};c.set_vars["var"]=0;renderNumMap(card.querySelector(".c_setvar"),c,"set_vars");save();};
+    renderFlags(card.querySelector(".c_flags"),c);
+    card.querySelector(".c_addflag").onclick=()=>{c.set_flags=c.set_flags||{};c.set_flags["flag"]=true;renderFlags(card.querySelector(".c_flags"),c);save();};
     wrap.appendChild(card);
   });
 }
-function renderEff(host,obj){
-  host.innerHTML=""; const eff=obj.effects||{};
+// Generic numeric key→value editor for a named field ("effects" = deltas,
+// "set_vars" = absolute assignments). Both serialize the same shape.
+function renderNumMap(host,obj,field){
+  host.innerHTML=""; const eff=obj[field]||{};
   Object.entries(eff).forEach(([k,v])=>{
     const row=document.createElement("div"); row.className="eff";
     row.innerHTML=`<input class="ek" value="${esc(k)}" placeholder="variable"><input class="ev" type="number" value="${v}" style="width:70px;flex:none"><button class="mini danger" style="flex:none">✕</button>`;
     const ek=row.querySelector(".ek"),ev=row.querySelector(".ev");
-    ek.onchange=()=>{const nv=eff[k];delete eff[k];eff[ek.value]=nv;obj.effects=eff;save();};
-    ev.oninput=()=>{eff[ek.value||k]=+ev.value;obj.effects=eff;save();};
-    row.querySelector("button").onclick=()=>{delete eff[ek.value||k];if(Object.keys(eff).length===0)delete obj.effects;renderEff(host,obj);save();};
+    ek.onchange=()=>{const nv=eff[k];delete eff[k];eff[ek.value]=nv;obj[field]=eff;save();};
+    ev.oninput=()=>{eff[ek.value||k]=+ev.value;obj[field]=eff;save();};
+    row.querySelector("button").onclick=()=>{delete eff[ek.value||k];if(Object.keys(eff).length===0)delete obj[field];renderNumMap(host,obj,field);save();};
+    host.appendChild(row);
+  });
+}
+function renderEff(host,obj){ renderNumMap(host,obj,"effects"); }
+// Boolean flag editor (set_flags): variable name → true/false.
+function renderFlags(host,obj){
+  host.innerHTML=""; const fl=obj.set_flags||{};
+  Object.entries(fl).forEach(([k,v])=>{
+    const row=document.createElement("div"); row.className="eff";
+    row.innerHTML=`<input class="fk" value="${esc(k)}" placeholder="flag"><select class="fv" style="width:80px;flex:none"><option value="true" ${v?"selected":""}>true</option><option value="false" ${!v?"selected":""}>false</option></select><button class="mini danger" style="flex:none">✕</button>`;
+    const fk=row.querySelector(".fk"),fv=row.querySelector(".fv");
+    fk.onchange=()=>{const nv=fl[k];delete fl[k];fl[fk.value]=nv;obj.set_flags=fl;save();};
+    fv.onchange=()=>{fl[fk.value||k]=(fv.value==="true");obj.set_flags=fl;save();};
+    row.querySelector("button").onclick=()=>{delete fl[fk.value||k];if(Object.keys(fl).length===0)delete obj.set_flags;renderFlags(host,obj);save();};
     host.appendChild(row);
   });
 }
@@ -407,15 +429,16 @@ function m1_kindToCategory(k){ return k==="weekend"?"weekend":(k==="daily_call"?
 function m1_clampDiff(d){ d=+d||1; return d<1?1:(d>3?3:d); }
 function m1_mapSpeaker(s){ return s==="voice"?"caller":(s||"narrator"); }
 function m1_mapLines(lines){ return (lines||[]).map(l=>{ const o={speaker:m1_mapSpeaker(l.speaker),text:l.text||""}; if(l.expr&&l.expr!=="neutral")o.expr=l.expr; return o; }); }
-function m1_mapChoices(choices){ return (choices||[]).map(c=>{ const o={id:c.id,label:c.label||"",next:c.next||null}; if(c.gem_cost)o.gem_cost=c.gem_cost; if(c.premium)o.premium=true; if(c.effects&&Object.keys(c.effects).length)o.effects=c.effects; return o; }); }
+function m1_mapChoices(choices){ return (choices||[]).map(c=>{ const o={id:c.id,label:c.label||"",next:c.next||null}; if(c.gem_cost)o.gem_cost=c.gem_cost; if(c.premium)o.premium=true; if(c.effects&&Object.keys(c.effects).length)o.effects=c.effects; if(c.set_vars&&Object.keys(c.set_vars).length)o.set_vars=c.set_vars; if(c.set_flags&&Object.keys(c.set_flags).length)o.set_flags=c.set_flags; return o; }); }
 function m1_isTerminal(b){ return b&&(b.type==="chapter_end"||b.type==="cliffhanger"); }
 function m1_beatById(chap,id){ return (chap.beats||[]).find(b=>b.id===id); }
 
 function m1_collectVars(chap){
   const vars={score_bonus:0};
+  const addKeys=o=>["effects","set_vars"].forEach(f=>{ if(o[f])Object.keys(o[f]).forEach(k=>{vars[k]=vars[k]||0;}); });
   (chap.beats||[]).forEach(b=>{
-    if(b.effects)Object.keys(b.effects).forEach(k=>{vars[k]=vars[k]||0;});
-    if(b.decision)(b.decision.choices||[]).forEach(c=>{ if(c.effects)Object.keys(c.effects).forEach(k=>{vars[k]=vars[k]||0;}); });
+    addKeys(b);
+    if(b.decision)(b.decision.choices||[]).forEach(c=>addKeys(c));
   });
   return vars;
 }
