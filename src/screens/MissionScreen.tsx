@@ -55,6 +55,7 @@ import {
   MissionRuntime,
 } from "../lib/missions/types";
 import { DispatchType } from "../game/types";
+import { STATIONS, stationPins } from "../game/stations";
 import { resolveVideo, DEPLOY_VIDEOS } from "../game/assets";
 import { audio } from "../lib/audio";
 import { DispatchTimer } from "../components/DispatchTimer";
@@ -205,6 +206,9 @@ export function MissionScreen({ navigation, route }: Props) {
   const [correctUnit, setCorrectUnit] = useState<DispatchType>("police");
   const [explanation, setExplanation] = useState<string | undefined>(undefined);
   const [showRankUp, setShowRankUp] = useState(false);
+  // Promotion posting map: on rank-up it opens BEFORE the badge cutscene so the
+  // player picks the 911 station they transfer to (persisted as `workplace`).
+  const [showRankMap, setShowRankMap] = useState(false);
   // Narrative missions (game_plot / weekend) have no dispatch: they end on an
   // `outcome` beat and are resolved as a "scene complete" instead of a dispatch.
   const [isNarrative, setIsNarrative] = useState(false);
@@ -599,6 +603,22 @@ export function MissionScreen({ navigation, route }: Props) {
     }, 650);
   };
 
+  // Rank-up posting picked (after the promotion badge): persist the chosen
+  // station as the integer `workplace` story variable, then continue the normal
+  // post-promotion flow — this rank's personal-life scene if any, else lobby.
+  const handleRankStation = (pin: MapPinChoice) => {
+    const station = STATIONS.find((s) => s.id === pin.id);
+    if (station) story.merge({ workplace: station.workplace }, {});
+    audio.playSfx("tap");
+    setShowRankMap(false);
+    const life = getLifeMissionForRank(progress.rankIndex);
+    if (life) {
+      navigation.replace("Mission", { missionId: life.id, lifeScene: true });
+    } else {
+      navigation.replace("DispatchLobby");
+    }
+  };
+
   const doDispatch = (choice: DispatchType) => {
     audio.playSfx("dispatch");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
@@ -697,6 +717,8 @@ export function MissionScreen({ navigation, route }: Props) {
     if (!isLifeScene && progress.lastResult?.rankedUp) {
       audio.playSfx("success");
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      // Promotion: play the rank-up badge first; when it ends the national map
+      // opens to pick the new posting (see the cutscene's onComplete below).
       setShowRankUp(true);
       return;
     }
@@ -1070,6 +1092,17 @@ export function MissionScreen({ navigation, route }: Props) {
         </View>
       )}
 
+      {showRankMap && (
+        <View style={StyleSheet.absoluteFill}>
+          <ExcursionMap
+            prompt="Nuevo puesto: elige tu estación 911."
+            map="usamap"
+            pins={stationPins()}
+            onSelectPin={handleRankStation}
+          />
+        </View>
+      )}
+
       {showRankUp && (
         <View style={StyleSheet.absoluteFill}>
           <CutscenePlayer
@@ -1077,17 +1110,10 @@ export function MissionScreen({ navigation, route }: Props) {
             tag="PROMOTION"
             caption={`You made ${progress.lastResult?.newRankName ?? "the next rank"}!`}
             onComplete={() => {
-              // After the promotion badge, play this rank's personal-life scene
-              // (bully-to-respect arc) if there is one; otherwise back to lobby.
-              const life = getLifeMissionForRank(progress.rankIndex);
-              if (life) {
-                navigation.replace("Mission", {
-                  missionId: life.id,
-                  lifeScene: true,
-                });
-              } else {
-                navigation.replace("DispatchLobby");
-              }
+              // Badge done → open the national map to pick the new posting; the
+              // map's onSelectPin (handleRankStation) then resumes normal flow.
+              setShowRankUp(false);
+              setShowRankMap(true);
             }}
           />
         </View>
