@@ -102,7 +102,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "We're all out on the lawn. There's grandma, the kids, and the dog — and a LOT of bugs following us."
+          "text": "Me, grandma, the kids, and the dog — and a LOT of bugs following us."
         }
       ],
       "next": "call_infestation.b4"

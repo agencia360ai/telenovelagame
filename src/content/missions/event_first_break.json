@@ -17,7 +17,12 @@
     "energy": 0,
     "money_spent": 0
   },
-  "assets": [],
+  "assets": [
+    {
+      "role": "ambient",
+      "key": "event-break-vending"
+    }
+  ],
   "initial_flags": {},
   "start": "event_break1.intro",
   "beats": [
@@ -62,7 +67,10 @@
           "text": "A bag of nuts from the vending machine. Not a meal, but your hands stop shaking."
         }
       ],
-      "next": "_end"
+      "next": "_end",
+      "media": {
+        "key": "event-break-nuts"
+      }
     },
     {
       "id": "event_break1.fin_water",
@@ -73,7 +81,10 @@
           "text": "Cold Water in an empty stomach."
         }
       ],
-      "next": "_end"
+      "next": "_end",
+      "media": {
+        "key": "event-break-water"
+      }
     },
     {
       "id": "_end",

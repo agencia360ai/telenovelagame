@@ -57,10 +57,10 @@ import { sizes } from "../theme/sizes";
 type Props = NativeStackScreenProps<RootStackParamList, "DispatchLobby">;
 
 // The wait between calls is a HIDDEN random gap (no countdown shown): the next
-// call arrives unannounced 5–30s after the last one. The first call of a
+// call arrives unannounced 5–15s after the last one. The first call of a
 // session comes quickly so the player isn't left staring at an empty console.
 const GAP_MIN_S = 5;
-const GAP_MAX_S = 30;
+const GAP_MAX_S = 15;
 const FIRST_GAP_S = 3;
 function randomGap(): number {
   return GAP_MIN_S + Math.floor(Math.random() * (GAP_MAX_S - GAP_MIN_S + 1));
@@ -100,7 +100,9 @@ export function DispatchLobbyScreen({ navigation }: Props) {
       ]
     );
   };
-  const [phase, setPhase] = useState<"idle" | "ringing" | "connecting">("idle");
+  const [phase, setPhase] = useState<
+    "idle" | "ringing" | "connecting" | "break"
+  >("idle");
   const [countdown, setCountdown] = useState(() =>
     progress.callsHandled === 0 ? FIRST_GAP_S : randomGap()
   );
@@ -275,22 +277,21 @@ export function DispatchLobbyScreen({ navigation }: Props) {
   }, [calendar.isWeekComplete]);
 
   useEffect(() => {
-    // The weekend map opens on its own; otherwise the silent gap ticks down.
-    if (phase !== "idle" || afterHoursWeekend) return;
+    if (phase !== "idle") return;
+    if (afterHoursWeekend) return; // the weekend map opens on its own
+    if (afterHours) {
+      // Off-duty story beat → offer the BREAK card immediately on return.
+      setPhase("break");
+      return;
+    }
+    // Daily call: the silent gap ticks down, then the phone rings.
     if (countdown <= 0) {
-      // Daily call → the phone rings (icon + effects). A weekday story beat
-      // instead surfaces silently, here in the dead time (no ring).
-      if (afterHours) {
-        if (nextEventId)
-          navigation.replace("Mission", { missionId: nextEventId });
-      } else {
-        setPhase("ringing");
-      }
+      setPhase("ringing");
       return;
     }
     const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(t);
-  }, [countdown, phase, afterHours, afterHoursWeekend, nextEventId]);
+  }, [countdown, phase, afterHours, afterHoursWeekend]);
 
   useEffect(() => {
     if (phase === "ringing") {
@@ -324,6 +325,12 @@ export function DispatchLobbyScreen({ navigation }: Props) {
       };
     }
   }, [phase]);
+
+  const takeBreak = () => {
+    if (!nextEventId) return;
+    audio.playSfx("tap");
+    navigation.replace("Mission", { missionId: nextEventId });
+  };
 
   const answerCall = () => {
     if (!canPlay) {
@@ -538,6 +545,16 @@ export function DispatchLobbyScreen({ navigation }: Props) {
                 </Pressable>
               </Animated.View>
             </View>
+          </View>
+        )}
+
+        {phase === "break" && (
+          <View style={styles.standby}>
+            <Text style={styles.breakLabel}>☕ BREAK</Text>
+            <Text style={styles.standbyHint}>A moment off the board…</Text>
+            <Pressable style={styles.travelBtn} onPress={takeBreak}>
+              <Text style={styles.travelBtnText}>TAKE A BREAK ▸</Text>
+            </Pressable>
           </View>
         )}
 
@@ -1025,6 +1042,12 @@ const styles = StyleSheet.create({
     fontSize: sizes.font.lg,
     fontWeight: "900",
     letterSpacing: 2,
+  },
+  breakLabel: {
+    color: colors.dispatch.amber,
+    fontSize: sizes.font.lg,
+    fontWeight: "900",
+    letterSpacing: 3,
   },
   answerWrap: {
     justifyContent: "center",

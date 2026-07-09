@@ -90,7 +90,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "It was a challenge! Now they won't leave!"
+          "text": "Now they won't leave!"
         }
       ],
       "next": "call_green_elves.b4"

@@ -118,7 +118,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Thank you for sending someone! 12 Pine Rd."
+          "text": "Thank you for the help! 12 Pine Rd."
         }
       ],
       "next": "dispatch"

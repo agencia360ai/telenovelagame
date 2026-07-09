@@ -17,7 +17,12 @@
     "love": 0,
     "energy": 0
   },
-  "assets": [],
+  "assets": [
+    {
+      "role": "ambient",
+      "key": "event-coffee"
+    }
+  ],
   "initial_flags": {},
   "start": "ev_coffee.intro",
   "speakers": {

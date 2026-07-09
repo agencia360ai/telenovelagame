@@ -87,7 +87,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "At my Mom's. Also my hamburger is gone!"
+          "text": "Also my hamburger is gone!"
         }
       ],
       "next": "call_cat_missing.b4"

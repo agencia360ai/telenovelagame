@@ -17,7 +17,12 @@
     "debt_paid": 0,
     "debt_missed": 0
   },
-  "assets": [],
+  "assets": [
+    {
+      "role": "ambient",
+      "key": "event-letter"
+    }
+  ],
   "initial_flags": {},
   "start": "ev_debt0.intro",
   "beats": [

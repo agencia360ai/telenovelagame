@@ -159,6 +159,28 @@ export const VIDEOS: Record<string, string | number> = {
   "intro-clip":
     "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroPan.mp4",
 
+  // Charlie's origin memories — played once at first launch, before the opening
+  // pan: dialing the phone → waiting at the window → the hand. No dialogue.
+  "memory-phone":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroSequence/TelephoneCall.mp4",
+  "memory-window":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroSequence/wait%20on%20window.mp4",
+  "memory-hand":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/IntroSequence/Hand%20Touched.mp4",
+
+  // Off-duty scene backgrounds (POV gameplay clips): open full-screen, then loop
+  // behind the dialogue. First Break's outcomes swap to the water/nuts clips.
+  "event-letter":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/Loan%20envelope.mp4",
+  "event-coffee":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/Enter%20CoffeeShop.mp4",
+  "event-break-vending":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/VendingMachine.mp4",
+  "event-break-water":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/ANIM-vend_02_take_water.mp4",
+  "event-break-nuts":
+    "https://yonldczzykpqktepipzi.supabase.co/storage/v1/object/public/911%20Clips/POV/ANIM-vend_03_take_nuts.mp4",
+
   // Weekend "excursion" (map beat) destination clips. PLACEHOLDERS: these reuse
   // existing footage so the map demo plays with no new assets — swap each URL
   // for the real "video del lugar" (feria/hospital/mountains/cinema).

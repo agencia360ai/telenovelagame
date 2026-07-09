@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useUserIdentity } from "../context/UserIdentityContext";
 import { CutscenePlayer } from "../components/CutscenePlayer";
+import { CutsceneSequence } from "../components/CutsceneSequence";
 import { VIDEOS } from "../game/assets";
 import { audio } from "../lib/audio";
 import { colors } from "../theme/colors";
@@ -24,12 +25,16 @@ type Props = NativeStackScreenProps<RootStackParamList, "Boot">;
 
 // Opening clip shown at launch, before the prologue (first run only).
 const INTRO_CLIP_KEY = "intro-clip";
+// Origin memories (Charlie): dialing the phone → the window → the hand. Played
+// once at first launch, right before the opening building pan.
+const MEMORY_CLIPS = ["memory-phone", "memory-window", "memory-hand"];
 // Persisted flag: the one-off prologue has been played (set by MissionScreen).
 const INTRO_SEEN_KEY = "dispatch_intro_seen_v1";
 
 export function BootScreen({ navigation }: Props) {
   const { userId, loading } = useUserIdentity();
   const [showIntro, setShowIntro] = useState(false);
+  const [showMemories, setShowMemories] = useState(false);
   // null until we've read whether the prologue was already seen.
   const [introSeen, setIntroSeen] = useState<boolean | null>(null);
 
@@ -76,8 +81,11 @@ export function BootScreen({ navigation }: Props) {
         // Seen the prologue before: skip the clip + dialogue, go straight to
         // the "NIGHT SHIFT" shot, then the menu.
         navigation.replace("IntroCinematic");
+      } else if (MEMORY_CLIPS.every((k) => VIDEOS[k])) {
+        // First run: Charlie's origin memories, then the opening pan.
+        setShowMemories(true);
       } else if (VIDEOS[INTRO_CLIP_KEY]) {
-        // First run: open on the intro clip, then the prologue.
+        // No memory clips available — open straight on the intro pan.
         setShowIntro(true);
       } else {
         afterIntroClip();
@@ -107,11 +115,26 @@ export function BootScreen({ navigation }: Props) {
   const subtitleStyle = useAnimatedStyle(() => ({ opacity: subtitleOpacity.value }));
   const loaderStyle = useAnimatedStyle(() => ({ opacity: loaderOpacity.value }));
 
+  if (showMemories) {
+    return (
+      <CutsceneSequence
+        sources={MEMORY_CLIPS}
+        muted
+        note="12 years ago"
+        onComplete={() => {
+          setShowMemories(false);
+          if (VIDEOS[INTRO_CLIP_KEY]) setShowIntro(true);
+          else afterIntroClip();
+        }}
+      />
+    );
+  }
+
   if (showIntro) {
     return (
       <CutscenePlayer
         source={INTRO_CLIP_KEY}
-        tag="DISPATCH FEED"
+        note="Dispatch Center · Current Day"
         onComplete={afterIntroClip}
       />
     );

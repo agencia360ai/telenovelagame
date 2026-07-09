@@ -98,7 +98,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "White panel van, no plates I can see. And… some of the boxes have air holes. Why would a box need air holes?"
+          "text": "White panel van, no plates I can see."
         }
       ],
       "next": "call_suspicious_boxes.b4"
@@ -140,7 +140,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Corner of Calder and 14th. They're closing the doors — please, send someone before they drive off!"
+          "text": "Corner of 17th and 14th. They're closing the doors — please, send someone before they drive off!"
         }
       ],
       "next": "dispatch"

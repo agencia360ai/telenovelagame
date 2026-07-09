@@ -99,7 +99,7 @@
       "choices": [
         {
           "id": "call_virtual_kitten.b4_0",
-          "label": "You don't need bitcoins for that.",
+          "label": "Really?",
           "next": "call_virtual_kitten.b5"
         },
         {

@@ -72,43 +72,12 @@
         {
           "id": "call_student_loan.b2_0",
           "label": "What debt?",
-          "next": "call_student_loan.b3"
+          "next": "call_student_loan.b5"
         },
         {
           "id": "call_student_loan.b2_1",
           "label": "Why not get a job?",
-          "next": "call_student_loan.b3"
-        }
-      ]
-    },
-    {
-      "id": "call_student_loan.b3",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "caller",
-          "text": "My student loan! They said I'm too young to work."
-        }
-      ],
-      "next": "call_student_loan.b4"
-    },
-    {
-      "id": "call_student_loan.b4",
-      "type": "decision",
-      "prompt": "Decide",
-      "choices": [
-        {
-          "id": "call_student_loan.b4_0",
-          "label": "How old are you?",
           "next": "call_student_loan.b5"
-        },
-        {
-          "id": "call_student_loan.b4_1",
-          "label": "Run away before it's too late! 😏",
-          "next": "call_student_loan.b5",
-          "effects": {
-            "trust": -1
-          }
         }
       ]
     },

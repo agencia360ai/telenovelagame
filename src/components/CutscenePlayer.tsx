@@ -21,10 +21,14 @@ type Props = {
   caption?: string;
   /** Small label top-left, e.g. "DISPATCH FEED". */
   tag?: string;
+  /** Persistent establishing caption shown top-center (e.g. a time/place). */
+  note?: string;
   /** Delay before the SKIP button appears. Default 1200ms. */
   allowSkipAfterMs?: number;
   /** Hard cap so a stalled stream never traps the player. Default 30s. */
   maxDurationMs?: number;
+  /** Mute the clip (memory cinematics carry no dialogue). Default false. */
+  muted?: boolean;
 };
 
 /**
@@ -40,8 +44,10 @@ export function CutscenePlayer({
   onComplete,
   caption,
   tag,
+  note,
   allowSkipAfterMs = 1200,
   maxDurationMs = 30000,
+  muted = false,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [canSkip, setCanSkip] = useState(false);
@@ -49,7 +55,7 @@ export function CutscenePlayer({
 
   const player = useVideoPlayer(resolveVideo(source), (p) => {
     p.loop = false;
-    p.muted = false;
+    p.muted = muted;
     p.play();
   });
 
@@ -109,6 +115,12 @@ export function CutscenePlayer({
         <View style={styles.tagWrap}>
           <View style={styles.recDot} />
           <Text style={styles.tagText}>{tag}</Text>
+        </View>
+      ) : null}
+
+      {note ? (
+        <View pointerEvents="none" style={styles.noteWrap}>
+          <Text style={styles.noteText}>{note}</Text>
         </View>
       ) : null}
 
@@ -180,6 +192,24 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0,0,0,0.8)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
+  },
+  noteWrap: {
+    position: "absolute",
+    top: BAR_HEIGHT + 18,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+  noteText: {
+    color: "#fff",
+    fontSize: sizes.font.sm,
+    fontWeight: "700",
+    fontStyle: "italic",
+    letterSpacing: 3,
+    opacity: 0.85,
+    textShadowColor: "rgba(0,0,0,0.9)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   loadingWrap: {
     alignSelf: "center",

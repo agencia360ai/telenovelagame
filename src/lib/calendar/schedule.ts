@@ -234,6 +234,18 @@ export function generateWeek(
     return { dayId: day.id, label: day.label, missionIds };
   });
 
+  // Scripted opening: week 1 opens on a fixed tutorial day — two calls (green
+  // elves, then the riot) followed by the First Break POV scene.
+  if (week === 1) {
+    const fp = days.findIndex((d) => d.missionIds.length > 0);
+    if (fp >= 0) {
+      days[fp] = {
+        ...days[fp],
+        missionIds: ["call_green_elves", "call_riot", "event_first_break"],
+      };
+    }
+  }
+
   return {
     week,
     days,

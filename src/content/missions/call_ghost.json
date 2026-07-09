@@ -60,7 +60,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "There's a GHOST in my house! It floated through the wall and rearranged my fridge magnets!"
+          "text": "There's a GHOST in my house! It floated through the wall and is being all judgy!"
         }
       ],
       "next": "call_ghost.b2"
@@ -72,7 +72,7 @@
       "choices": [
         {
           "id": "call_ghost.b2_0",
-          "label": "Okay… what did the magnets spell?",
+          "label": "Okay… what did it said?",
           "next": "call_ghost.b3"
         },
         {
@@ -107,7 +107,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "It spelled 'BOO.' Real original. Now it's hovering by the stairs — please send someone who handles… this!"
+          "text": "It said 'BOO.' Real original. Now it's hovering by the stairs — please send someone who handles… this!"
         }
       ],
       "next": "call_ghost.b4"

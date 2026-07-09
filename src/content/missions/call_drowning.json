@@ -12,8 +12,8 @@
   ],
   "caller": {
     "name": "Caller",
-    "type": "WATER EMERGENCY",
-    "location": "Eastside Lake · public dock"
+    "type": "EMERGENCY",
+    "location": "Eastside Lake · apartment 36B"
   },
   "units": [
     "ambulance",
@@ -41,26 +41,15 @@
       "role": "deploy"
     }
   ],
-  "start": "call_drowning.b0",
+  "start": "call_drowning.b1",
   "beats": [
-    {
-      "id": "call_drowning.b0",
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "narrator",
-          "text": "Splashing. A scream swallowed by water. Whoever's calling can barely get the words out."
-        }
-      ],
-      "next": "call_drowning.b1"
-    },
     {
       "id": "call_drowning.b1",
       "type": "dialogue",
       "lines": [
         {
           "speaker": "caller",
-          "text": "Help! Someone's drowning — he went under and he's not coming back up!"
+          "text": "Help! My daughter is choking!"
         }
       ],
       "next": "call_drowning.b2"
@@ -72,7 +61,7 @@
       "choices": [
         {
           "id": "call_drowning.b2_0",
-          "label": "Can you see them right now?",
+          "label": "Can you see her right now?",
           "next": "call_drowning.b3",
           "effects": {
             "integrity": 1
@@ -80,15 +69,7 @@
         },
         {
           "id": "call_drowning.b2_1",
-          "label": "Don't jump in — are YOU safe?",
-          "next": "call_drowning.b3",
-          "effects": {
-            "integrity": 1
-          }
-        },
-        {
-          "id": "call_drowning.b2_2",
-          "label": "Just learn to swim 🏊",
+          "label": "Just learn the Heimlich Technique swim 🏊",
           "next": "call_drowning.b3",
           "effects": {
             "trust": -1
@@ -102,7 +83,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "He came up once! There's a life ring on the dock — should I throw it?!"
+          "text": "Are you serious — what should I do?!"
         }
       ],
       "next": "call_drowning.b4"
@@ -114,7 +95,7 @@
       "choices": [
         {
           "id": "call_drowning.b4_0",
-          "label": "Throw the ring — don't go in after him.",
+          "label": "We are tracking your location.",
           "next": "call_drowning.b5",
           "effects": {
             "integrity": 1
@@ -122,7 +103,7 @@
         },
         {
           "id": "call_drowning.b4_1",
-          "label": "Keep eyes on him. Help is coming.",
+          "label": "Keep your eyes on her. Help is coming.",
           "next": "call_drowning.b5",
           "effects": {
             "integrity": 1
@@ -144,7 +125,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "I got the ring to him! He's holding on — Eastside Lake, the public dock. PLEASE hurry!"
+          "text": "Eastside Lake, apartment 36B. PLEASE hurry!"
         }
       ],
       "next": "dispatch"
@@ -154,7 +135,7 @@
       "type": "dispatch",
       "prompt": "WHO DO YOU DISPATCH?",
       "correct": "ambulance",
-      "explanation": "Ambulance and water rescue rolling. Get him out, check his breathing — you kept him alive.",
+      "explanation": "Ambulance rolling. Check her breathing — you kept her alive.",
       "next": "outcome"
     },
     {

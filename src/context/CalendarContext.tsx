@@ -57,9 +57,10 @@ import { unitUnlockedAt, useFleet } from "./FleetContext";
 // list (package extras out of rotation).
 // v12: off-duty events were weekend-only (all three on Saturday).
 // v13: story beats spread across the whole week, hidden random 5–30s wait.
-// v14: setting-based split — OFF-SITE beats (the personal-life arc, `offsite`)
-// play on the weekend; ON-SITE beats rotate through the weekdays. Rebuild v13.
-const STORAGE_KEY = "dispatch_calendar_v14";
+// v14: setting-based split — OFF-SITE beats play on the weekend; ON-SITE beats
+// rotate through the weekdays.
+// v15: scripted week-1 opening (green elves → riot → First Break). Rebuild v14.
+const STORAGE_KEY = "dispatch_calendar_v15";
 
 /**
  * The unit a call effectively REQUIRES to be resolved — its correct dispatch,

@@ -90,7 +90,7 @@
       "lines": [
         {
           "speaker": "caller",
-          "text": "Nobody's hurt! BUT he won't give me his insurance. The nerve!"
+          "text": "He won't give me his insurance. The nerve!"
         }
       ],
       "next": "call_fender_bender.b4"
@@ -102,7 +102,7 @@
       "choices": [
         {
           "id": "call_fender_bender.b4_0",
-          "label": "Leaving the scene — get a plate, stay safe.",
+          "label": "Get a plate, stay safe.",
           "next": "call_fender_bender.b5",
           "effects": {
             "integrity": 1

@@ -158,7 +158,12 @@ export function MissionScreen({ navigation, route }: Props) {
   // text — the "intro" asset when declared (e.g. w1's van clip), else the
   // ambient clip. The ambient then loops behind the dialogue as usual.
   // Plain events (no assets) skip straight to the dialogue.
-  const hasPlotIntro = isStoryScene && Boolean(introAsset ?? ambientAssetKey);
+  // Events (personal POV scenes) start straight on the dialogue with their clip
+  // looping behind — no full-screen establishing shot. Plot/place scenes keep it.
+  const hasPlotIntro =
+    isStoryScene &&
+    mission.category !== "event" &&
+    Boolean(introAsset ?? ambientAssetKey);
   const plotIntroKey = introAsset?.key ?? ambientKey;
   const [phase, setPhase] = useState<Phase>(
     hasPlotIntro ? "plotIntro" : introAsset ? "intro" : "play"
@@ -873,11 +878,13 @@ export function MissionScreen({ navigation, route }: Props) {
                 return (
                   <Pressable
                     key={c.id}
-                    style={[
+                    style={({ pressed }) => [
                       styles.choiceBtn,
                       c.premium && styles.choiceBtnPremium,
                       cantAfford && styles.choiceBtnDim,
+                      pressed && styles.choiceBtnPressed,
                     ]}
+                    android_ripple={{ color: "rgba(34, 211, 238, 0.18)" }}
                     onPress={() => handleChoice(c)}
                   >
                     <Text style={styles.choiceLabel}>{c.label}</Text>
@@ -890,6 +897,9 @@ export function MissionScreen({ navigation, route }: Props) {
                       <View style={[styles.cashPill, cantAfford && styles.cashPillDim]}>
                         <Text style={styles.cashPillText}>💵 ${cashCost}</Text>
                       </View>
+                    )}
+                    {cost === 0 && cashCost === 0 && (
+                      <Text style={styles.choiceChevron}>›</Text>
                     )}
                   </Pressable>
                 );
@@ -1341,19 +1351,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 8,
-    // Distinct from the dialogue bubbles (neutral dark "panel"): the choices use
-    // a lighter elevated surface + a cyan accent border so they read as tappable
-    // actions, not as more speech.
-    backgroundColor: colors.dispatch.panelLight,
+    // A raised, tactile button: lighter surface, a cyan accent border, and a
+    // soft drop shadow / elevation so it reads as a pressable action, not speech.
+    backgroundColor: "#0F3A48",
     borderWidth: 1,
-    borderColor: "rgba(34, 211, 238, 0.40)",
+    borderColor: "rgba(34, 211, 238, 0.6)",
     borderLeftWidth: 3,
     borderLeftColor: colors.dispatch.cyan,
     borderRadius: sizes.radius.md,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 4,
   },
-  choiceBtnPremium: { borderColor: "rgba(245, 158, 11, 0.45)", borderLeftColor: colors.dispatch.amber },
+  // Pressed: the button "pushes in" — flatter shadow, nudged down, brighter edge.
+  choiceBtnPressed: {
+    transform: [{ translateY: 1 }, { scale: 0.99 }],
+    backgroundColor: "#0B2C38",
+    borderColor: colors.dispatch.cyan,
+    shadowOpacity: 0.12,
+    elevation: 1,
+  },
+  choiceChevron: {
+    color: colors.dispatch.cyan,
+    fontSize: 24,
+    fontWeight: "900",
+    opacity: 0.85,
+    marginLeft: 2,
+    marginTop: -2,
+  },
+  choiceBtnPremium: { borderColor: "rgba(245, 158, 11, 0.55)", borderLeftColor: colors.dispatch.amber },
   choiceLabel: { color: colors.dispatch.text, fontSize: sizes.font.md, fontWeight: "600", flex: 1, lineHeight: 20 },
   gemPill: {
     backgroundColor: "rgba(245, 158, 11, 0.15)",
